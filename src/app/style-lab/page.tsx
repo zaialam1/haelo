@@ -1,7 +1,7 @@
 "use client";
 
 /*
- * TEMPORARY PAGE — not part of Attune.
+ * TEMPORARY PAGE — not part of Haelo.
  * Built to compare font pairings, card treatments and dark palettes side by side.
  * Delete this whole folder once the design decisions are locked in.
  */
@@ -668,7 +668,7 @@ export default function StyleLabPage() {
               className="mt-2 text-[2rem] font-semibold sm:text-[2.5rem]"
               style={{ color: CHARCOAL }}
             >
-              Attune style lab
+              Haelo style lab
             </h1>
             <p
               className="mt-3 max-w-2xl text-[1.0625rem] leading-relaxed"

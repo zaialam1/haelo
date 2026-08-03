@@ -1,8 +1,8 @@
-# VoiceMirror Design System
+# Haelo Design System
 
 ## Brand Personality
 
-VoiceMirror should feel:
+Haelo should feel:
 
 - Calm
 - Reflective
@@ -196,7 +196,7 @@ Do not use overly decorative fonts.
 
 ## VoiceMap
 
-The VoiceMap is the central visual identity of VoiceMirror.
+The VoiceMap is the central visual identity of Haelo.
 
 Deep Violet should be the dominant VoiceMap color.
 

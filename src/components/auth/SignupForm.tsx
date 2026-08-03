@@ -65,6 +65,7 @@ export function SignupForm() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [submitting, setSubmitting] = useState(false);
+  const [checkEmail, setCheckEmail] = useState(false);
 
   const firstNameId = `${formId}-first-name`;
   const emailId = `${formId}-email`;
@@ -113,7 +114,13 @@ export function SignupForm() {
         return;
       }
 
+      if (result.needsEmailConfirmation) {
+        setCheckEmail(true);
+        return;
+      }
+
       router.push("/age-verification");
+      router.refresh();
     } catch {
       setErrors({
         form: "Something went wrong. Try again.",
@@ -121,6 +128,37 @@ export function SignupForm() {
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (checkEmail) {
+    return (
+      <div className="flex flex-col gap-5">
+        <div>
+          <h1
+            className="font-[family-name:var(--font-fraunces)] text-[1.85rem] leading-tight text-[var(--foreground)] sm:text-[2rem]"
+            style={{
+              fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
+              letterSpacing: "-0.015em",
+            }}
+          >
+            Check your email
+          </h1>
+          <p className="mt-2 text-sm text-[var(--foreground-muted)]">
+            We sent a confirmation link to{" "}
+            <span className="font-semibold text-[var(--foreground)]">
+              {email.trim().toLowerCase()}
+            </span>
+            . Open it to finish creating your account.
+          </p>
+        </div>
+        <Link
+          href="/login"
+          className="inline-flex w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)] shadow-[0_10px_28px_color-mix(in_srgb,var(--violet)_30%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+        >
+          Back to Log In
+        </Link>
+      </div>
+    );
   }
 
   return (

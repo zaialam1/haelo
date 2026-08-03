@@ -1,6 +1,6 @@
 <!-- BEGIN:nextjs-agent-rules -->
 
-## VoiceMirror Design
+## Haelo Design
 
 Before creating or modifying any UI, read `DESIGN.md`.
 

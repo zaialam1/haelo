@@ -8,9 +8,9 @@ type AuthShellProps = {
 
 export function AuthShell({ children, brand }: AuthShellProps) {
   return (
-    <div className="flex min-h-full flex-col lg:flex-row">
+    <div className="flex min-h-dvh flex-col lg:flex-row">
       <aside
-        className="relative overflow-hidden border-b px-5 py-8 lg:flex lg:w-[44%] lg:flex-col lg:justify-between lg:border-b-0 lg:border-r lg:px-10 lg:py-12"
+        className="relative flex flex-col overflow-hidden border-b px-5 py-8 sm:px-8 lg:w-[44%] lg:justify-between lg:border-b-0 lg:border-r lg:px-12 lg:py-14 xl:px-16"
         style={{
           borderColor: "color-mix(in srgb, var(--rose) 40%, transparent)",
           background:
@@ -20,12 +20,12 @@ export function AuthShell({ children, brand }: AuthShellProps) {
         <div>
           <Link
             href="/"
-            className="font-[family-name:var(--font-fraunces)] text-xl tracking-tight text-[var(--violet)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--violet)]"
+            className="font-[family-name:var(--font-fraunces)] text-xl tracking-tight text-[var(--violet)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--violet)] sm:text-2xl"
             style={{
               fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
             }}
           >
-            Attune
+            Haelo
           </Link>
           <Link
             href="/"
@@ -35,10 +35,12 @@ export function AuthShell({ children, brand }: AuthShellProps) {
           </Link>
         </div>
 
-        <div className="mt-8 max-w-md lg:mt-0 lg:pb-8">{brand}</div>
+        <div className="mt-10 max-w-lg flex-1 lg:mt-0 lg:flex lg:flex-col lg:justify-center lg:pb-8">
+          {brand}
+        </div>
 
         <div
-          className="pointer-events-none absolute -right-8 -bottom-10 hidden size-40 rounded-full opacity-70 lg:block"
+          className="pointer-events-none absolute -right-8 -bottom-10 hidden size-48 rounded-full opacity-70 lg:block xl:size-56"
           style={{
             background:
               "radial-gradient(circle, var(--gold), color-mix(in srgb, var(--rose) 70%, transparent))",
@@ -47,8 +49,8 @@ export function AuthShell({ children, brand }: AuthShellProps) {
         />
       </aside>
 
-      <div className="flex flex-1 flex-col justify-center px-5 py-10 sm:px-8 lg:px-16 lg:py-16">
-        <div className="mx-auto w-full max-w-md">{children}</div>
+      <div className="flex flex-1 flex-col justify-center px-5 py-12 sm:px-10 lg:px-16 lg:py-16 xl:px-24">
+        <div className="mx-auto w-full max-w-lg">{children}</div>
       </div>
     </div>
   );

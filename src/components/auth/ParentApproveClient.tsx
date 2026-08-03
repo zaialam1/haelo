@@ -45,7 +45,7 @@ function ApproveContent() {
             className="mt-4 text-[1.0625rem] leading-relaxed"
             style={{ color: "var(--foreground-muted)" }}
           >
-            Prototype approval succeeded. Taking you to Attune…
+            Prototype approval succeeded. Taking you to Haelo…
           </p>
         </>
       ) : null}

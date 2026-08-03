@@ -14,15 +14,15 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Attune — Notice the different versions of your voice",
+  title: "Haelo — Notice the different versions of your voice",
   description:
-    "Attune helps you notice how your voice changes across school, friends, family, passion, and challenge — and how it evolves over time.",
+    "Haelo helps you notice how your voice changes across school, friends, family, passion, and challenge — and how it evolves over time.",
 };
 
 const themeInitScript = `
 (function () {
   try {
-    var stored = localStorage.getItem("attune-theme");
+    var stored = localStorage.getItem("haelo-theme");
     var dark = stored === "dark";
     if (!stored) dark = false;
     if (dark) document.documentElement.classList.add("dark");

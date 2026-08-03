@@ -1,22 +1,11 @@
 /**
- * Auth types shaped to match what we'll pass to Supabase Auth later.
- *
- * Supabase equivalent:
- *   supabase.auth.signUp({
- *     email,
- *     password,
- *     options: { data: { first_name: firstName } },
- *   })
- *
- * Do not put API keys here. When wiring Supabase, use env vars such as:
- *   NEXT_PUBLIC_SUPABASE_URL
- *   NEXT_PUBLIC_SUPABASE_ANON_KEY
+ * Auth types for Haelo signup / sign-in against Supabase Auth.
  */
 
 export type SignUpInput = {
   email: string;
   password: string;
-  /** Stored as user metadata `first_name` when Supabase is connected */
+  /** Stored as user metadata `first_name` */
   firstName: string;
 };
 
@@ -27,5 +16,33 @@ export type SignUpErrorCode =
   | "unknown";
 
 export type SignUpResult =
-  | { ok: true }
+  | { ok: true; needsEmailConfirmation: boolean }
   | { ok: false; code: SignUpErrorCode; message: string };
+
+export type SignInInput = {
+  email: string;
+  password: string;
+};
+
+export type SignInErrorCode =
+  | "invalid_email"
+  | "invalid_credentials"
+  | "email_not_confirmed"
+  | "unknown";
+
+export type SignInResult =
+  | { ok: true }
+  | { ok: false; code: SignInErrorCode; message: string };
+
+export type ResetPasswordResult =
+  | { ok: true }
+  | { ok: false; message: string };
+
+export type UpdatePasswordResult =
+  | { ok: true }
+  | { ok: false; message: string };
+
+export type AccountProfile = {
+  firstName: string;
+  email: string;
+};

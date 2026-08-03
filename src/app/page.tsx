@@ -98,7 +98,7 @@ export default function Home() {
                     "color-mix(in srgb, var(--gold) 45%, var(--rose) 25%, var(--background))",
                 }}
               >
-                Attune
+                Haelo
               </p>
               <h1
                 className="mt-5 max-w-xl font-[family-name:var(--font-fraunces)] text-[2.35rem] leading-[1.12] text-[var(--foreground)] sm:text-[3.15rem]"
@@ -276,7 +276,7 @@ export default function Home() {
               className="mt-5 text-[1.0625rem] leading-relaxed"
               style={{ color: "var(--foreground-muted)" }}
             >
-              Over time, Attune gathers those recordings into a private map —
+              Over time, Haelo gathers those recordings into a private map —
               more like a solar system than a report card. Each context is its
               own place. Color, size, and presence shift as you grow. No
               rankings. No comparison to anyone else.
@@ -395,7 +395,7 @@ export default function Home() {
           style={{ color: "var(--foreground-muted)" }}
         >
           <p className="font-[family-name:var(--font-fraunces)] text-[var(--violet)]">
-            Attune
+            Haelo
           </p>
           <p>A private place to notice your voice.</p>
         </div>

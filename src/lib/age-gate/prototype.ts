@@ -13,9 +13,9 @@ export type AgeGateStatus =
   | "awaiting_parent"
   | "parent_approved";
 
-const STATUS_KEY = "attune-age-gate";
-const PARENT_EMAIL_KEY = "attune-parent-email";
-const APPROVAL_TOKEN_KEY = "attune-parent-token";
+const STATUS_KEY = "haelo-age-gate";
+const PARENT_EMAIL_KEY = "haelo-parent-email";
+const APPROVAL_TOKEN_KEY = "haelo-parent-token";
 
 export function getAgeGateStatus(): AgeGateStatus {
   if (typeof window === "undefined") return "unverified";
@@ -63,4 +63,11 @@ export function approveParentConsentPrototype(token: string): boolean {
   if (!expected || expected !== token) return false;
   setAgeGateStatus("parent_approved");
   return true;
+}
+
+export function clearAgeGatePrototype() {
+  if (typeof window === "undefined") return;
+  sessionStorage.removeItem(STATUS_KEY);
+  sessionStorage.removeItem(PARENT_EMAIL_KEY);
+  sessionStorage.removeItem(APPROVAL_TOKEN_KEY);
 }

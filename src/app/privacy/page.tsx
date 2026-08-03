@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Attune",
+  title: "Privacy Policy — Haelo",
 };
 
 export default function PrivacyPage() {
@@ -20,7 +20,7 @@ export default function PrivacyPage() {
         className="mt-4 text-[1.0625rem] leading-relaxed"
         style={{ color: "var(--foreground-muted)" }}
       >
-        Coming soon. We&rsquo;ll publish a real Privacy Policy before Attune
+        Coming soon. We&rsquo;ll publish a real Privacy Policy before Haelo
         stores voice recordings or account data.
       </p>
       <Link

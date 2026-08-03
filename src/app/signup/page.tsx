@@ -3,8 +3,8 @@ import { AuthShell } from "@/components/auth/AuthShell";
 import { SignupForm } from "@/components/auth/SignupForm";
 
 export const metadata: Metadata = {
-  title: "Create account — Attune",
-  description: "Create your Attune account to start noticing how your voice changes across your life.",
+  title: "Create account — Haelo",
+  description: "Create your Haelo account to start noticing how your voice changes across your life.",
 };
 
 export default function SignupPage() {
@@ -23,7 +23,7 @@ export default function SignupPage() {
             Welcome
           </p>
           <h2
-            className="mt-5 font-[family-name:var(--font-fraunces)] text-[2rem] leading-tight text-[var(--violet)] sm:text-[2.35rem]"
+            className="mt-5 font-[family-name:var(--font-fraunces)] text-[2.15rem] leading-tight text-[var(--violet)] sm:text-[2.6rem] lg:text-[2.85rem]"
             style={{
               fontVariationSettings: '"opsz" 84, "SOFT" 55, "WONK" 1, "wght" 550',
               letterSpacing: "-0.02em",
@@ -32,7 +32,7 @@ export default function SignupPage() {
             Start discovering your voice.
           </h2>
           <p
-            className="mt-4 text-[1.0625rem] leading-relaxed"
+            className="mt-4 max-w-md text-[1.0625rem] leading-relaxed sm:text-[1.125rem]"
             style={{ color: "var(--foreground)" }}
           >
             Create an account to notice how you sound across school, friends,

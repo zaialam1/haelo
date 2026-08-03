@@ -16,6 +16,42 @@
   --orbit-ring: color-mix(in srgb, var(--violet) 18%, transparent);
   --shadow-soft: 0 1px 2px rgba(51, 51, 51, 0.05),
     0 12px 32px rgba(51, 51, 51, 0.07);
+  --universe-page: radial-gradient(
+      ellipse 90% 55% at 50% -10%,
+      color-mix(in srgb, var(--violet) 28%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 60% 40% at 100% 60%,
+      color-mix(in srgb, var(--rose) 22%, transparent),
+      transparent 50%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, #9b8ec4 35%, #fff8f0),
+      var(--background) 48%
+    );
+  --universe-map: radial-gradient(
+      ellipse 70% 55% at 50% 35%,
+      color-mix(in srgb, var(--gold) 22%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 80% 70% at 20% 80%,
+      color-mix(in srgb, var(--rose) 26%, transparent),
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse 60% 50% at 85% 20%,
+      color-mix(in srgb, var(--violet) 32%, transparent),
+      transparent 55%
+    ),
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, #7a6aa8 42%, #e8dff5),
+      color-mix(in srgb, #5b4b8a 18%, #fff8f0) 55%,
+      color-mix(in srgb, #c4b8d8 30%, #fff8f0)
+    );
 }
 
 html.dark {
@@ -33,6 +69,33 @@ html.dark {
   --hairline: rgba(242, 234, 227, 0.12);
   --orbit-ring: color-mix(in srgb, var(--violet) 28%, transparent);
   --shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.45);
+  --universe-page: radial-gradient(
+      ellipse 90% 55% at 50% -10%,
+      color-mix(in srgb, var(--violet) 40%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 60% 40% at 100% 60%,
+      color-mix(in srgb, var(--rose) 14%, transparent),
+      transparent 50%
+    ),
+    linear-gradient(180deg, #1a1524, var(--background) 48%);
+  --universe-map: radial-gradient(
+      ellipse 70% 55% at 50% 35%,
+      color-mix(in srgb, var(--gold) 14%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 80% 70% at 20% 80%,
+      color-mix(in srgb, var(--rose) 16%, transparent),
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse 60% 50% at 85% 20%,
+      color-mix(in srgb, var(--violet) 38%, transparent),
+      transparent 55%
+    ),
+    linear-gradient(165deg, #1e1830, #221d24 45%, #2a2233);
 }
 
 @theme inline {
@@ -87,4 +150,98 @@ body {
     opacity: 0.9;
     transform: scale(1.02);
   }
+}
+
+@keyframes universe-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes universe-orbit-counter {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}
+
+@keyframes star-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1) drop-shadow(0 0 18px color-mix(in srgb, var(--gold) 55%, transparent));
+  }
+  50% {
+    transform: scale(1.05);
+    filter: brightness(1.18) drop-shadow(0 0 36px color-mix(in srgb, var(--gold) 90%, transparent));
+  }
+}
+
+@keyframes star-wave {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.16);
+  }
+}
+
+@keyframes planet-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes quote-drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shooting-star {
+  0% {
+    opacity: 0;
+    transform: translate(24px, -18px) rotate(-28deg);
+  }
+  12% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-40px, 28px) rotate(-28deg);
+  }
+}
+
+.universe-starfield {
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 18%, color-mix(in srgb, var(--gold) 70%, transparent), transparent),
+    radial-gradient(1px 1px at 28% 42%, color-mix(in srgb, var(--foreground) 45%, transparent), transparent),
+    radial-gradient(1.5px 1.5px at 48% 14%, color-mix(in srgb, var(--rose) 55%, transparent), transparent),
+    radial-gradient(1px 1px at 62% 36%, color-mix(in srgb, var(--foreground) 40%, transparent), transparent),
+    radial-gradient(1.5px 1.5px at 78% 22%, color-mix(in srgb, var(--gold) 60%, transparent), transparent),
+    radial-gradient(1px 1px at 88% 48%, color-mix(in srgb, var(--foreground) 35%, transparent), transparent),
+    radial-gradient(1px 1px at 18% 68%, color-mix(in srgb, var(--foreground) 40%, transparent), transparent),
+    radial-gradient(1.5px 1.5px at 42% 78%, color-mix(in srgb, var(--rose) 45%, transparent), transparent),
+    radial-gradient(1px 1px at 70% 72%, color-mix(in srgb, var(--foreground) 38%, transparent), transparent),
+    radial-gradient(1px 1px at 92% 80%, color-mix(in srgb, var(--gold) 50%, transparent), transparent);
+  opacity: 0.85;
 }

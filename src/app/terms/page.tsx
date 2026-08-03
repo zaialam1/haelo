@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Terms — Attune",
+  title: "Terms — Haelo",
 };
 
 export default function TermsPage() {
@@ -20,7 +20,7 @@ export default function TermsPage() {
         className="mt-4 text-[1.0625rem] leading-relaxed"
         style={{ color: "var(--foreground-muted)" }}
       >
-        Coming soon. We&rsquo;ll publish real Terms before Attune handles live
+        Coming soon. We&rsquo;ll publish real Terms before Haelo handles live
         accounts.
       </p>
       <Link

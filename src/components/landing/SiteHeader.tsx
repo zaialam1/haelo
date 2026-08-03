@@ -1,40 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-
-function ThemeToggle() {
-  const [dark, setDark] = useState(false);
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    setDark(document.documentElement.classList.contains("dark"));
-    setReady(true);
-  }, []);
-
-  function toggle() {
-    const next = !document.documentElement.classList.contains("dark");
-    document.documentElement.classList.toggle("dark", next);
-    localStorage.setItem("attune-theme", next ? "dark" : "light");
-    setDark(next);
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={toggle}
-      className="rounded-full border px-3 py-2 text-xs font-medium transition-colors hover:bg-[var(--violet-soft)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
-      style={{
-        borderColor: "var(--hairline)",
-        color: "var(--foreground-muted)",
-        visibility: ready ? "visible" : "hidden",
-      }}
-      aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
-    >
-      {dark ? "Light" : "Dark"}
-    </button>
-  );
-}
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 export function SiteHeader() {
   return (
@@ -54,7 +21,7 @@ export function SiteHeader() {
             fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
           }}
         >
-          Attune
+          Haelo
         </Link>
 
         <nav className="flex items-center gap-2 sm:gap-3" aria-label="Account">
