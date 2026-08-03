@@ -1,26 +1,90 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fff8f0;
+  --foreground: #333333;
+  --foreground-muted: #6b6259;
+  --surface: #ffffff;
+  --surface-border: rgba(51, 51, 51, 0.1);
+  --violet: #5b4b8a;
+  --violet-soft: color-mix(in srgb, var(--violet) 14%, transparent);
+  --on-violet: #ffffff;
+  --rose: #e8a0bf;
+  --gold: #f6d365;
+  --on-warm: #3a2e17;
+  --hairline: rgba(51, 51, 51, 0.1);
+  --orbit-ring: color-mix(in srgb, var(--violet) 18%, transparent);
+  --shadow-soft: 0 1px 2px rgba(51, 51, 51, 0.05),
+    0 12px 32px rgba(51, 51, 51, 0.07);
+}
+
+html.dark {
+  --background: #221d24;
+  --foreground: #f2eae3;
+  --foreground-muted: #b0a49b;
+  --surface: #332c38;
+  --surface-border: rgba(242, 234, 227, 0.12);
+  --violet: #a392d6;
+  --violet-soft: color-mix(in srgb, var(--violet) 18%, transparent);
+  --on-violet: #221d24;
+  --rose: #e8a0bf;
+  --gold: #f6d365;
+  --on-warm: #3a2e17;
+  --hairline: rgba(242, 234, 227, 0.12);
+  --orbit-ring: color-mix(in srgb, var(--violet) 28%, transparent);
+  --shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-surface: var(--surface);
+  --color-violet: var(--violet);
+  --color-on-violet: var(--on-violet);
+  --color-rose: var(--rose);
+  --color-gold: var(--gold);
+  --color-on-warm: var(--on-warm);
+  --font-sans: var(--font-jakarta);
+  --font-display: var(--font-fraunces);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--violet) 28%, transparent);
+}
+
+@keyframes orbit-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
 }
