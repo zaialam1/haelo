@@ -48,6 +48,13 @@ export async function updateSession(request: NextRequest) {
     "/speak",
     "/prompt",
     "/topics",
+    "/my-voice",
+    "/express",
+    "/stand",
+    "/connect",
+    "/explore",
+    "/practice",
+    "/journey",
     "/age-verification",
     "/auth/update-password",
   ];

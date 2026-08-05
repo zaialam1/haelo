@@ -25,8 +25,6 @@ export type ShootingStarPrompt = {
   id: string;
   label: string;
 };
-
-/** Fixed layout around the center star — always the same spots */
 export const TOPICS: TopicPlanet[] = [
   {
     id: "friendships",
@@ -105,7 +103,7 @@ export const TOPICS: TopicPlanet[] = [
     label: "Future",
     color: "#9A8BC4",
     x: 50,
-    y: 66,
+    y: 82,
     size: "sm",
     brightness: 0.85,
     detail: "smooth",

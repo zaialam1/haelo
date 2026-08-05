@@ -1,6 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import { TransitionLink } from "@/components/transitions/TransitionLink";
+import { useOptionalPageTransition } from "@/components/transitions/PageTransitionProvider";
 import { useRouter } from "next/navigation";
 import { useId, useState } from "react";
 import { signUp } from "@/lib/auth/signup";
@@ -55,6 +56,7 @@ function inputClassName(hasError: boolean) {
 
 export function SignupForm() {
   const router = useRouter();
+  const transition = useOptionalPageTransition();
   const formId = useId();
 
   const [firstName, setFirstName] = useState("");
@@ -119,7 +121,11 @@ export function SignupForm() {
         return;
       }
 
-      router.push("/age-verification");
+      if (transition) {
+        transition.navigate({ href: "/age-verification", variant: "fade" });
+      } else {
+        router.push("/age-verification");
+      }
       router.refresh();
     } catch {
       setErrors({
@@ -151,12 +157,13 @@ export function SignupForm() {
             . Open it to finish creating your account.
           </p>
         </div>
-        <Link
+        <TransitionLink
+          variant="fade"
           href="/login"
           className="inline-flex w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)] shadow-[0_10px_28px_color-mix(in_srgb,var(--violet)_30%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
           Back to Log In
-        </Link>
+        </TransitionLink>
       </div>
     );
   }
@@ -303,19 +310,21 @@ export function SignupForm() {
 
       <p className="text-center text-xs leading-relaxed text-[var(--foreground-muted)]">
         By creating an account, you agree to the{" "}
-        <Link
+        <TransitionLink
+          variant="fade"
           href="/terms"
           className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline"
         >
           Terms
-        </Link>{" "}
+        </TransitionLink>{" "}
         and{" "}
-        <Link
+        <TransitionLink
+          variant="fade"
           href="/privacy"
           className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline"
         >
           Privacy Policy
-        </Link>
+        </TransitionLink>
         .
       </p>
 
@@ -325,12 +334,13 @@ export function SignupForm() {
 
       <p className="text-center text-sm text-[var(--foreground)]">
         Already have an account?{" "}
-        <Link
+        <TransitionLink
+          variant="fade"
           href="/login"
           className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
           Log in
-        </Link>
+        </TransitionLink>
       </p>
     </form>
   );

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+import { TransitionRoot } from "@/components/transitions/TransitionRoot";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -45,7 +46,9 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        <TransitionRoot>{children}</TransitionRoot>
+      </body>
     </html>
   );
 }

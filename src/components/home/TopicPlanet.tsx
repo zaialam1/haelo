@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { TransitionLink } from "@/components/transitions/TransitionLink";
 import type { TopicPlanet } from "@/lib/home/universe";
 import { planetSizePx } from "@/lib/home/universe";
 
@@ -18,8 +18,10 @@ export function TopicPlanetOrb({
   const floatDuration = 4.2 + (floatDelaySec % 1.6);
 
   return (
-    <Link
+    <TransitionLink
       href={`/topics/${topic.id}`}
+      variant="warp"
+      accent={topic.color}
       className="absolute z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--gold)]"
       style={{
         left: `${topic.x}%`,
@@ -50,6 +52,6 @@ export function TopicPlanetOrb({
           {topic.label}
         </span>
       </span>
-    </Link>
+    </TransitionLink>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import { TransitionLink } from "@/components/transitions/TransitionLink";
+import { useOptionalPageTransition } from "@/components/transitions/PageTransitionProvider";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useId, useState } from "react";
 import { safeNextPath } from "@/lib/auth/paths";
@@ -54,6 +55,7 @@ function inputClassName(hasError: boolean) {
 
 export function LoginForm() {
   const router = useRouter();
+  const transition = useOptionalPageTransition();
   const searchParams = useSearchParams();
   const formId = useId();
 
@@ -100,7 +102,12 @@ export function LoginForm() {
         return;
       }
 
-      router.push(safeNextPath(searchParams.get("next"), "/home"));
+      const next = safeNextPath(searchParams.get("next"), "/home");
+      if (transition) {
+        transition.navigate({ href: next, variant: "fade" });
+      } else {
+        router.push(next);
+      }
       router.refresh();
     } catch {
       setErrors({
@@ -167,12 +174,13 @@ export function LoginForm() {
           >
             Password
           </label>
-          <Link
+          <TransitionLink
             href="/forgot-password"
+            variant="fade"
             className="text-xs font-medium text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           >
             Forgot password?
-          </Link>
+          </TransitionLink>
         </div>
         <div className="relative">
           <input
@@ -215,12 +223,13 @@ export function LoginForm() {
 
       <p className="text-center text-sm text-[var(--foreground)]">
         Don&rsquo;t have an account?{" "}
-        <Link
+        <TransitionLink
           href="/signup"
+          variant="fade"
           className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
           Create an account
-        </Link>
+        </TransitionLink>
       </p>
     </form>
   );

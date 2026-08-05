@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import { TransitionLink } from "@/components/transitions/TransitionLink";
 
 type AuthShellProps = {
   children: React.ReactNode;
@@ -18,21 +20,23 @@ export function AuthShell({ children, brand }: AuthShellProps) {
         }}
       >
         <div>
-          <Link
+          <TransitionLink
             href="/"
+            variant="fade"
             className="font-[family-name:var(--font-fraunces)] text-xl tracking-tight text-[var(--violet)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--violet)] sm:text-2xl"
             style={{
               fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
             }}
           >
             Haelo
-          </Link>
-          <Link
+          </TransitionLink>
+          <TransitionLink
             href="/"
+            variant="fade"
             className="mt-4 inline-flex text-sm font-medium text-[var(--violet)] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           >
             ← Back to home
-          </Link>
+          </TransitionLink>
         </div>
 
         <div className="mt-10 max-w-lg flex-1 lg:mt-0 lg:flex lg:flex-col lg:justify-center lg:pb-8">

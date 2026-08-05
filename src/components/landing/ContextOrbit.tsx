@@ -13,11 +13,10 @@ export type VoiceContext = {
 };
 
 const CONTEXTS: VoiceContext[] = [
-  { id: "passion", label: "Passion", x: 50, y: 18, size: 22, color: "var(--gold)" },
-  { id: "friends", label: "Friends", x: 20, y: 36, size: 18, color: "var(--rose)" },
-  { id: "school", label: "School", x: 80, y: 40, size: 16, color: "var(--violet)" },
-  { id: "family", label: "Family", x: 26, y: 72, size: 17, color: "var(--rose)" },
-  { id: "challenge", label: "Challenge", x: 70, y: 78, size: 15, color: "var(--violet)" },
+  { id: "express", label: "Express", x: 22, y: 28, size: 20, color: "var(--rose)" },
+  { id: "stand", label: "Stand", x: 78, y: 30, size: 18, color: "var(--violet)" },
+  { id: "connect", label: "Connect", x: 28, y: 72, size: 18, color: "var(--rose)" },
+  { id: "explore", label: "Explore", x: 74, y: 74, size: 17, color: "var(--violet)" },
 ];
 
 type ContextOrbitProps = {
@@ -61,8 +60,8 @@ export function ContextOrbit({ className = "" }: ContextOrbitProps) {
       onMouseLeave={() => setPaused(false)}
     >
       <p id={labelId} className="sr-only">
-        Interactive preview of how different parts of your voice relate. Select a
-        context to highlight it.
+        Interactive preview of your voice universe. Select a planet to highlight
+        it.
       </p>
 
       <div
@@ -176,7 +175,7 @@ export function ContextOrbit({ className = "" }: ContextOrbitProps) {
         </span>
         <span className="hidden sm:inline" style={{ color: "var(--foreground-muted)" }}>
           {" "}
-          — tap another context to see it shift
+          — tap another planet to see it shift
         </span>
       </p>
     </div>

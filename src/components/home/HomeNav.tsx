@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
+import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { toggleTheme } from "@/lib/theme";
 
 function ThemeIconButton() {
@@ -60,21 +60,37 @@ function ThemeIconButton() {
   );
 }
 
-export function HomeNav() {
+type HomeNavProps = {
+  /** Pin to the viewport (for scrollable pages like planet detail) */
+  pinned?: boolean;
+};
+
+export function HomeNav({ pinned = false }: HomeNavProps) {
   return (
     <header
-      className="border-b backdrop-blur-md"
-      style={{
-        borderColor: "color-mix(in srgb, var(--violet) 28%, transparent)",
-        backgroundColor:
-          "color-mix(in srgb, var(--violet) 10%, var(--background) 90%)",
-      }}
+      className={`pointer-events-none inset-x-0 top-0 z-40 ${pinned ? "fixed" : "absolute"}`}
     >
-      <div className="relative mx-auto flex h-14 w-full items-center justify-between px-4 sm:h-16 sm:px-6">
+      <div
+        className="pointer-events-auto relative mx-auto flex h-14 w-full items-center justify-between px-4 sm:h-16 sm:px-6"
+        style={{
+          background:
+            "linear-gradient(to bottom, color-mix(in srgb, var(--background) 88%, transparent), transparent)",
+        }}
+      >
+        <p
+          className="font-[family-name:var(--font-fraunces)] text-xl tracking-tight text-[var(--violet)] sm:text-2xl"
+          style={{
+            fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
+          }}
+        >
+          Haelo
+        </p>
+
         <div className="flex items-center gap-0.5">
           <ThemeIconButton />
-          <Link
+          <TransitionLink
             href="/settings"
+            variant="fade"
             className="flex size-10 items-center justify-center rounded-full text-[var(--foreground-muted)] transition-colors hover:bg-[var(--violet-soft)] hover:text-[var(--violet)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
             aria-label="Settings"
           >
@@ -87,20 +103,8 @@ export function HomeNav() {
             >
               <path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.61l-1.92-3.32a.5.5 0 0 0-.59-.22l-2.39.96a7.2 7.2 0 0 0-1.62-.94l-.36-2.54A.5.5 0 0 0 13.5 2h-3a.5.5 0 0 0-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96a.5.5 0 0 0-.59.22L2.77 8.87a.5.5 0 0 0 .12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58a.5.5 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.5.5 0 0 0-.12-.61l-2.03-1.58ZM12 15.6A3.6 3.6 0 1 1 12 8.4a3.6 3.6 0 0 1 0 7.2Z" />
             </svg>
-          </Link>
+          </TransitionLink>
         </div>
-
-        <p
-          className="pointer-events-none absolute left-1/2 -translate-x-1/2 font-[family-name:var(--font-fraunces)] text-xl tracking-tight text-[var(--violet)] sm:text-2xl"
-          style={{
-            fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
-          }}
-        >
-          Haelo
-        </p>
-
-        {/* Balance the left controls so the title stays centered */}
-        <div className="w-[84px]" aria-hidden="true" />
       </div>
     </header>
   );

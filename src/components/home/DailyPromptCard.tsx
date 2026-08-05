@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { useEffect, useState } from "react";
 import { DAILY_COMPLETED_KEY, DAILY_PROMPT } from "@/lib/home/universe";
 
@@ -66,12 +66,13 @@ export function DailyPromptCard() {
           >
             &ldquo;{DAILY_PROMPT.text}&rdquo;
           </p>
-          <Link
+          <TransitionLink
             href="/speak"
+            variant="fade"
             className="mt-5 inline-flex rounded-full bg-[var(--violet)] px-5 py-2.5 text-sm font-semibold text-[var(--on-violet)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           >
             Start Session
-          </Link>
+          </TransitionLink>
         </>
       )}
     </section>

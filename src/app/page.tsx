@@ -1,6 +1,8 @@
-import Link from "next/link";
+"use client";
+
 import { ContextOrbit } from "@/components/landing/ContextOrbit";
 import { SiteHeader } from "@/components/landing/SiteHeader";
+import { TransitionLink } from "@/components/transitions/TransitionLink";
 
 function PrimaryCta({
   href,
@@ -12,12 +14,13 @@ function PrimaryCta({
   className?: string;
 }) {
   return (
-    <Link
+    <TransitionLink
       href={href}
+      variant="fade"
       className={`inline-flex items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3 text-[0.9375rem] font-semibold text-[var(--on-violet)] shadow-[0_10px_28px_color-mix(in_srgb,var(--violet)_35%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] ${className}`}
     >
       {children}
-    </Link>
+    </TransitionLink>
   );
 }
 
@@ -29,43 +32,38 @@ function SecondaryCta({
   children: React.ReactNode;
 }) {
   return (
-    <Link
+    <TransitionLink
       href={href}
+      variant="fade"
       className="inline-flex items-center justify-center rounded-full border-2 border-[var(--violet)] bg-[color-mix(in_srgb,var(--rose)_25%,var(--background))] px-5 py-3 text-[0.9375rem] font-semibold text-[var(--violet)] transition-colors hover:bg-[color-mix(in_srgb,var(--rose)_40%,var(--background))] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
     >
       {children}
-    </Link>
+    </TransitionLink>
   );
 }
 
-const CONTEXTS = [
+const PLANETS = [
   {
-    name: "School",
-    prompt: "Something you learned this week",
-    accent: "var(--violet)",
-    wash: "color-mix(in srgb, var(--violet) 14%, var(--background))",
-  },
-  {
-    name: "Friends",
-    prompt: "Something funny that happened",
+    name: "Express",
+    prompt: "Say what you really think and feel",
     accent: "var(--rose)",
     wash: "color-mix(in srgb, var(--rose) 28%, var(--background))",
   },
   {
-    name: "Family",
-    prompt: "A typical evening at home",
+    name: "Stand",
+    prompt: "Speak up and stand behind what you believe",
+    accent: "var(--violet)",
+    wash: "color-mix(in srgb, var(--violet) 14%, var(--background))",
+  },
+  {
+    name: "Connect",
+    prompt: "Build confidence communicating with other people",
     accent: "var(--rose)",
     wash: "color-mix(in srgb, var(--rose) 22%, var(--gold) 12%, var(--background))",
   },
   {
-    name: "Passion",
-    prompt: "Something you love",
-    accent: "var(--gold)",
-    wash: "color-mix(in srgb, var(--gold) 38%, var(--background))",
-  },
-  {
-    name: "Challenge",
-    prompt: "Something you are working through",
+    name: "Explore",
+    prompt: "Discover what you think and what matters to you",
     accent: "var(--violet)",
     wash: "color-mix(in srgb, var(--violet) 18%, var(--rose) 10%, var(--background))",
   },
@@ -108,15 +106,15 @@ export default function Home() {
                   letterSpacing: "-0.02em",
                 }}
               >
-                You sound different depending on where you are.
+                Practice using your voice — and watch it grow.
               </h1>
               <p
                 className="mt-5 max-w-md text-[1.0625rem] leading-relaxed"
                 style={{ color: "var(--foreground-muted)" }}
               >
-                Notice the different versions of your voice — at school, with
-                friends, at home, when you care about something, when something
-                is hard — and how they grow over time.
+                Short speaking sessions across Express, Stand, Connect, and
+                Explore. Over time, every session becomes part of your personal
+                constellation.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <PrimaryCta href="/signup">Start exploring</PrimaryCta>
@@ -155,16 +153,16 @@ export default function Home() {
                 color: "var(--violet)",
               }}
             >
-              Everyone has more than one voice.
+              Your voice has different strengths to grow.
             </h2>
             <p
               className="mt-5 text-[1.0625rem] leading-relaxed"
               style={{ color: "var(--foreground)" }}
             >
-              You may sound open with friends and quieter in class. More
-              expressive when you talk about something you love. Different at
-              home. Uncertain when something is hard. That isn&rsquo;t good or
-              bad — it&rsquo;s something you can explore.
+              Sometimes you need to say what you feel. Sometimes you need to
+              stand behind an opinion. Sometimes you need to connect with
+              someone else — or figure out what you actually think. Haelo gives
+              you a calm place to practice each of those.
             </p>
           </div>
         </section>
@@ -196,20 +194,20 @@ export default function Home() {
                   letterSpacing: "-0.015em",
                 }}
               >
-                Short recordings across the parts of your life.
+                Short speaking sessions on four planets.
               </h2>
               <p
                 className="mt-5 max-w-2xl text-[1.0625rem] leading-relaxed"
                 style={{ color: "var(--foreground-muted)" }}
               >
-                Answer a simple prompt for about a minute. School. Friends.
-                Family. Passion. Challenge. Come back when you have a spare
-                moment — not as a streak, just as a way to notice yourself.
+                Pick a planet, answer a prompt out loud, and save the moment.
+                Come back when you have a spare minute — not as a streak, just
+                as a way to practice being yourself.
               </p>
             </div>
 
-            <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-              {CONTEXTS.map((item) => (
+            <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {PLANETS.map((item) => (
                 <li
                   key={item.name}
                   className="overflow-hidden rounded-3xl border-2"
@@ -244,7 +242,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Section 3 — What you see (no second map) */}
+        {/* Section 3 — What you see */}
         <section
           className="relative overflow-hidden border-t"
           style={{
@@ -270,33 +268,36 @@ export default function Home() {
                 letterSpacing: "-0.015em",
               }}
             >
-              A living map of how your voice shows up.
+              A universe to practice in — and a journey that grows with you.
             </h2>
             <p
               className="mt-5 text-[1.0625rem] leading-relaxed"
               style={{ color: "var(--foreground-muted)" }}
             >
-              Over time, Haelo gathers those recordings into a private map —
-              more like a solar system than a report card. Each context is its
-              own place. Color, size, and presence shift as you grow. No
-              rankings. No comparison to anyone else.
+              Your home is a private universe of four planets. As you complete
+              sessions, Journey gathers them into a constellation — the story of
+              how your voice develops over time. No rankings. No comparison to
+              anyone else.
             </p>
 
             <ul className="mt-10 flex flex-col gap-3">
               {[
                 {
-                  title: "Each part of your life gets its own place",
-                  detail: "School, friends, family, passion, challenge — distinct, not scored.",
+                  title: "Universe — where you grow next",
+                  detail:
+                    "Choose Express, Stand, Connect, or Explore when you want to practice.",
                   chip: "var(--violet)",
                 },
                 {
-                  title: "It changes as you do",
-                  detail: "Come back over weeks and months and watch the map shift with you.",
+                  title: "Journey — what you’ve practiced",
+                  detail:
+                    "Every completed session becomes a star in your constellation.",
                   chip: "var(--rose)",
                 },
                 {
                   title: "Growth, not grades",
-                  detail: "Private to you. No leaderboards. No comparing yourself to anyone else.",
+                  detail:
+                    "Private to you. No leaderboards. No comparing yourself to anyone else.",
                   chip: "var(--gold)",
                 },
               ].map((row) => (
@@ -355,25 +356,27 @@ export default function Home() {
                 letterSpacing: "-0.015em",
               }}
             >
-              Ready to notice your voice?
+              Ready to practice your voice?
             </h2>
             <p className="mx-auto mt-4 max-w-md text-[1.0625rem] leading-relaxed text-white/90">
-              Start with a few short recordings. Watch how the map begins to
+              Start with a few short sessions. Watch your constellation begin to
               take shape.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link
+              <TransitionLink
+                variant="fade"
                 href="/signup"
                 className="inline-flex items-center justify-center rounded-full bg-[var(--gold)] px-6 py-3 text-[0.9375rem] font-semibold text-[var(--on-warm)] shadow-[0_10px_28px_rgba(0,0,0,0.18)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
                 Start exploring
-              </Link>
-              <Link
+              </TransitionLink>
+              <TransitionLink
+                variant="fade"
                 href="/login"
                 className="inline-flex items-center justify-center rounded-full border-2 border-white/80 bg-white/15 px-5 py-3 text-[0.9375rem] font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
                 Log in
-              </Link>
+              </TransitionLink>
             </div>
             <p className="mt-6 text-sm text-white/85">
               Your recordings stay private to you.
@@ -397,7 +400,7 @@ export default function Home() {
           <p className="font-[family-name:var(--font-fraunces)] text-[var(--violet)]">
             Haelo
           </p>
-          <p>A private place to notice your voice.</p>
+          <p>A private place to practice your voice.</p>
         </div>
       </footer>
     </div>

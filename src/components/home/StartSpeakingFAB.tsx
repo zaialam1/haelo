@@ -1,10 +1,13 @@
-import Link from "next/link";
+"use client";
+
+import { TransitionLink } from "@/components/transitions/TransitionLink";
 
 export function StartSpeakingFAB() {
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center pb-[max(1.25rem,env(safe-area-inset-bottom))]">
-      <Link
+      <TransitionLink
         href="/speak"
+        variant="fade"
         className="pointer-events-auto flex items-center gap-2.5 rounded-full px-7 py-4 text-base font-semibold shadow-[0_10px_32px_color-mix(in_srgb,var(--gold)_45%,transparent)] transition-transform hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--violet)]"
         style={{
           background: "var(--gold)",
@@ -28,7 +31,7 @@ export function StartSpeakingFAB() {
           <path d="M8 22h8" />
         </svg>
         Start Speaking
-      </Link>
+      </TransitionLink>
     </div>
   );
 }
