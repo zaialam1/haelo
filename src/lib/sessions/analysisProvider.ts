@@ -22,7 +22,7 @@ import {
   buildAnalysisUserPayload,
 } from "@/lib/sessions/analysisPrompt";
 import {
-  groundEvidenceQuotes,
+  collectObservationEvidence,
   stripUngroundedQuotes,
 } from "@/lib/sessions/quoteGrounding";
 import type { AnalysisEvidence } from "@/lib/sessions/types";
@@ -169,11 +169,12 @@ export function parseAnalysisJson(
       title: observationTitle,
       description: observationDescription,
     },
-    evidence: groundEvidenceQuotes(raw.evidence, transcript, {
-      maxItems: 2,
-      // Prefer no evidence over a loosely related transcript slice.
-      fallbackSnippet: false,
-    }),
+    evidence: collectObservationEvidence(
+      raw.evidence,
+      observationDescription,
+      transcript,
+      { maxItems: 2 },
+    ),
     experiment: {
       title: experimentTitle,
       instruction: experimentInstruction,

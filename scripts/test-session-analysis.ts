@@ -12,8 +12,10 @@ import {
   parseAnalysisJson,
 } from "../src/lib/sessions/analysisProvider";
 import {
+  collectObservationEvidence,
   groundEvidenceQuotes,
   isQuoteGroundedInTranscript,
+  resolveQuoteAgainstTranscript,
   stripUngroundedQuotes,
 } from "../src/lib/sessions/quoteGrounding";
 import { deriveSpeechMetrics } from "../src/lib/sessions/speechMetrics";
@@ -62,13 +64,29 @@ check("isQuoteGroundedInTranscript matches verbatim excerpts", () => {
     true,
   );
   assert.equal(
-    isQuoteGroundedInTranscript("We've been friends since sixth grade.", transcript),
+    isQuoteGroundedInTranscript(
+      "We've been friends since sixth grade.",
+      transcript,
+    ),
     true,
   );
   assert.equal(
-    isQuoteGroundedInTranscript("Maybe if you could just not do it as much.", transcript),
+    isQuoteGroundedInTranscript(
+      "Maybe if you could just not do it as much.",
+      transcript,
+    ),
     false,
   );
+});
+
+check("resolveQuoteAgainstTranscript recovers punctuation drift", () => {
+  const transcript = "I don't want them to keep joking about it.";
+  const resolved = resolveQuoteAgainstTranscript(
+    "I dont want them to keep joking about it",
+    transcript,
+  );
+  assert.ok(resolved);
+  assert.match(resolved!, /don'?t want them to keep joking/i);
 });
 
 check("groundEvidenceQuotes drops invented quotes", () => {
@@ -84,19 +102,32 @@ check("groundEvidenceQuotes drops invented quotes", () => {
     { maxItems: 2, fallbackSnippet: false },
   );
   assert.equal(evidence.length, 2);
-  assert.ok(evidence.every((e) => transcript.includes(e.text) || isQuoteGroundedInTranscript(e.text, transcript)));
+  assert.ok(
+    evidence.every((e) => isQuoteGroundedInTranscript(e.text, transcript)),
+  );
   assert.ok(!evidence.some((e) => e.text.includes("feelings")));
 });
 
-check("groundEvidenceQuotes falls back to transcript snippet when nothing grounds", () => {
-  const transcript = "Everyone was talking and I just stopped trying to join in.";
+check("groundEvidenceQuotes does not invent fallback snippets by default", () => {
+  const transcript =
+    "Everyone was talking and I just stopped trying to join in.";
   const evidence = groundEvidenceQuotes(
     [{ text: "totally fabricated quote" }],
     transcript,
-    { fallbackSnippet: true },
+  );
+  assert.equal(evidence.length, 0);
+});
+
+check("collectObservationEvidence pulls grounded inline quotes", () => {
+  const transcript =
+    "Everyone was talking and I just stopped trying to join in.";
+  const evidence = collectObservationEvidence(
+    [],
+    'When you said "Everyone was talking and I just stopped trying to join in," it got specific.',
+    transcript,
   );
   assert.equal(evidence.length, 1);
-  assert.ok(transcript.startsWith(evidence[0].text.slice(0, 20)));
+  assert.ok(isQuoteGroundedInTranscript(evidence[0].text, transcript));
 });
 
 check("stripUngroundedQuotes demotes invented quotes", () => {
@@ -125,10 +156,9 @@ check("system prompt focuses on communication not life advice", () => {
   assert.match(ANALYSIS_SYSTEM_PROMPT, /EXPRESS/i);
   assert.match(ANALYSIS_SYSTEM_PROMPT, /do NOT hear the recording/i);
   assert.match(ANALYSIS_SYSTEM_PROMPT, /verbatim/i);
-  assert.doesNotMatch(
-    ANALYSIS_SYSTEM_PROMPT,
-    /tell them what to think about their friend'?s feelings as the default/i,
-  );
+  assert.match(ANALYSIS_SYSTEM_PROMPT, /Almost always include 1 short verbatim/i);
+  assert.match(ANALYSIS_SYSTEM_PROMPT, /evidence array/i);
+  assert.match(ANALYSIS_SYSTEM_PROMPT, /warm/i);
 });
 
 check("planetLensSummary covers all four planets", () => {
@@ -187,7 +217,10 @@ check("Orbit analysis input includes orbit context without changing primary focu
     orbit?: { orbitTitle: string };
   };
   assert.equal(ctx.orbit?.orbitTitle, "Something feels off");
-  assert.match(String((payload.notes as { orbitGuidance?: string }).orbitGuidance), /communication/i);
+  assert.match(
+    String((payload.notes as { orbitGuidance?: string }).orbitGuidance),
+    /communication/i,
+  );
 });
 
 // --- Scenario-shaped parse tests (mock model JSON) ---
@@ -225,9 +258,39 @@ check("Stand scenario: grounded request quote kept; invented empathy quote dropp
   assert.ok(
     !parsed.evidence.some((e) => e.text.toLowerCase().includes("should think")),
   );
-  assert.match(parsed.observation.description, /don'?t want them to keep joking/i);
+  assert.match(
+    parsed.observation.description,
+    /don'?t want them to keep joking/i,
+  );
   assert.match(parsed.experiment.instruction, /boundary|ask|start/i);
   assert.doesNotMatch(parsed.experiment.instruction, /friend'?s feelings/i);
+});
+
+check("observation inline quote becomes evidence when evidence array is empty", () => {
+  const transcript =
+    "I still want to be friends, I just don't want this to keep happening.";
+  const parsed = parseAnalysisJson(
+    {
+      strength: {
+        title: "Clear hope",
+        description: "You kept the friendship in view.",
+      },
+      observation: {
+        title: "Your main point landed late",
+        description:
+          'Your main point became clear when you said "I still want to be friends, I just don\'t want this to keep happening."',
+      },
+      evidence: [],
+      experiment: {
+        title: "Bring it earlier",
+        instruction: "Say that sentence first, then add one detail.",
+      },
+    },
+    transcript,
+    false,
+  );
+  assert.equal(parsed.evidence.length, 1);
+  assert.ok(isQuoteGroundedInTranscript(parsed.evidence[0].text, transcript));
 });
 
 check("Connect scenario: suggests context for the listener, not empathy homework", () => {
@@ -245,7 +308,9 @@ check("Connect scenario: suggests context for the listener, not empathy homework
           'Your main point became clear when you said "I still want to be friends, I just don\'t want this to keep happening." A listener may still need one concrete detail about what happened.',
       },
       evidence: [
-        { text: "I still want to be friends, I just don't want this to keep happening." },
+        {
+          text: "I still want to be friends, I just don't want this to keep happening.",
+        },
       ],
       experiment: {
         title: "Add one concrete detail",
@@ -261,6 +326,7 @@ check("Connect scenario: suggests context for the listener, not empathy homework
     parsed.experiment.instruction,
     /think about how your friend might feel/i,
   );
+  assert.ok(parsed.evidence.length >= 1);
 });
 
 check("Explore scenario: notices recurring idea without forcing a conclusion", () => {
@@ -287,8 +353,12 @@ check("Explore scenario: notices recurring idea without forcing a conclusion", (
     transcript,
     false,
   );
-  assert.match(parsed.observation.description, /returned|recurring|want to do it/i);
+  assert.match(
+    parsed.observation.description,
+    /returned|recurring|want to do it/i,
+  );
   assert.doesNotMatch(parsed.experiment.instruction, /decide once and for all/i);
+  assert.ok(parsed.evidence.length >= 1);
 });
 
 check("Express scenario: concrete example is the evidence", () => {
@@ -318,10 +388,17 @@ check("Express scenario: concrete example is the evidence", () => {
     transcript,
     false,
   );
-  assert.equal(parsed.evidence.length, 1);
+  assert.ok(parsed.evidence.length >= 1);
+  assert.ok(parsed.evidence.length <= 2);
   assert.ok(
-    isQuoteGroundedInTranscript(parsed.evidence[0].text, transcript),
+    parsed.evidence.some((e) =>
+      isQuoteGroundedInTranscript(e.text, transcript),
+    ),
   );
+  assert.ok(
+    parsed.evidence.some((e) => /stopped trying to join in/i.test(e.text)),
+  );
+  assert.ok(!parsed.evidence.some((e) => /sixth grade/i.test(e.text)));
 });
 
 check("Delivery-oriented experiment can cite speech metrics without inventing audio", () => {
@@ -334,7 +411,7 @@ check("Delivery-oriented experiment can cite speech metrics without inventing au
     transcript,
     sourceType: "planet",
     attemptNumber: 1,
-    durationSeconds: 8, // rushed WPM
+    durationSeconds: 8,
   });
   assert.ok(input.speechMetrics?.wordsPerMinute);
   assert.ok((input.speechMetrics?.wordsPerMinute ?? 0) > 100);

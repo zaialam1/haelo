@@ -152,12 +152,27 @@ export function SessionAnalysisPanel({
           >
             {analysis.observation.description}
           </p>
+          {analysis.evidence && analysis.evidence.length > 0 ? (
+            <ul className="mt-4 space-y-2" aria-label="Lines from your recording">
+              {analysis.evidence.map((item, index) => (
+                <li
+                  key={`${item.text}-${index}`}
+                  className="rounded-2xl px-4 py-3 text-[0.9375rem] leading-relaxed"
+                  style={{
+                    background: `color-mix(in srgb, ${accentColor} 10%, var(--surface))`,
+                    color: "var(--foreground)",
+                    border: "1px solid var(--hairline)",
+                  }}
+                >
+                  &ldquo;{item.text}&rdquo;
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </Section>
-      ) : null}
-
-      {analysis.evidence && analysis.evidence.length > 0 ? (
-        <Section title="Evidence">
-          <ul className="space-y-2">
+      ) : analysis.evidence && analysis.evidence.length > 0 ? (
+        <Section title="Something to notice">
+          <ul className="space-y-2" aria-label="Lines from your recording">
             {analysis.evidence.map((item, index) => (
               <li
                 key={`${item.text}-${index}`}
