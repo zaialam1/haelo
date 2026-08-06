@@ -1,4 +1,6 @@
 import { SESSION_AUDIO_BUCKET } from "@/config/recording";
+import { getOrbitByKey } from "@/lib/orbits/catalog";
+import { buildSessionAnalysisInput } from "@/lib/sessions/analysisInput";
 import {
   generateSessionAnalysis,
   getAnalysisProviderStatus,
@@ -193,7 +195,11 @@ export async function processSessionAnalysis(
       id,
       user_id,
       planet,
+      prompt_id,
       prompt_text_snapshot,
+      source,
+      orbit_key,
+      orbit_question_key,
       analysis_status,
       session_attempts (
         id,
@@ -248,14 +254,40 @@ export async function processSessionAnalysis(
   }
 
   try {
-    const result = await generateSessionAnalysis({
+    const activeAttempt = second ?? primary;
+    const activeTranscript = second ? secondTranscript : firstTranscript;
+
+    let orbitContext: {
+      orbitTitle: string;
+      orbitSituation: string;
+      orbitQuestionKey?: string;
+    } | null = null;
+
+    if (sessionRow.source === "orbit" && sessionRow.orbit_key) {
+      const orbit = getOrbitByKey(sessionRow.orbit_key);
+      if (orbit) {
+        orbitContext = {
+          orbitTitle: orbit.title,
+          orbitSituation: orbit.situation,
+          orbitQuestionKey: sessionRow.orbit_question_key ?? undefined,
+        };
+      }
+    }
+
+    const analysisInput = buildSessionAnalysisInput({
       sessionId,
       planet: sessionRow.planet,
       promptText: sessionRow.prompt_text_snapshot,
-      transcript: second ? secondTranscript : firstTranscript,
+      transcript: activeTranscript,
+      sourceType: sessionRow.source ?? "planet",
       attemptNumber: second ? 2 : 1,
       priorTranscript: second ? firstTranscript : undefined,
+      durationSeconds: activeAttempt.duration_seconds,
+      promptId: sessionRow.prompt_id,
+      orbit: orbitContext,
     });
+
+    const result = await generateSessionAnalysis(analysisInput);
 
     await saveReadyAnalysis(sessionId, result);
     return {

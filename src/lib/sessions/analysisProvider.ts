@@ -8,8 +8,23 @@
  * - OPENAI_API_KEY
  * Optional:
  * - OPENAI_ANALYSIS_MODEL (default gpt-4o-mini)
+ *
+ * The model receives transcript + derived speech metrics — not raw audio.
  */
 
+import {
+  buildSessionAnalysisInput,
+  type BuildSessionAnalysisInputArgs,
+  type SessionAnalysisInput,
+} from "@/lib/sessions/analysisInput";
+import {
+  ANALYSIS_SYSTEM_PROMPT,
+  buildAnalysisUserPayload,
+} from "@/lib/sessions/analysisPrompt";
+import {
+  groundEvidenceQuotes,
+  stripUngroundedQuotes,
+} from "@/lib/sessions/quoteGrounding";
 import type { AnalysisEvidence } from "@/lib/sessions/types";
 
 export type AnalysisProviderStatus =
@@ -39,14 +54,8 @@ export function getAnalysisProviderStatus(): AnalysisProviderStatus {
   };
 }
 
-export type GenerateAnalysisInput = {
-  sessionId: string;
-  planet: string;
-  promptText: string;
-  transcript: string | null;
-  attemptNumber: number;
-  priorTranscript?: string | null;
-};
+/** @deprecated Prefer SessionAnalysisInput via generateSessionAnalysis. */
+export type GenerateAnalysisInput = BuildSessionAnalysisInputArgs;
 
 export type GenerateAnalysisResult = {
   strength: { title: string; description: string };
@@ -56,24 +65,13 @@ export type GenerateAnalysisResult = {
   comparisonObservation?: string;
 };
 
-const ANALYSIS_SYSTEM_PROMPT = `You are Haelo, a calm, warm coaching mirror for spoken reflection.
-Your job is to help someone notice what came through in their voice — never to judge, score, or perform therapy.
-
-Tone: reflective, specific, encouraging, personal, and safe. Youthful but not childish. Focus on self-discovery and growth.
-
-Rules:
-- Base every claim on the transcript(s). If something is unclear, say so gently — do not invent.
-- Evidence quotes MUST be short verbatim excerpts from the current transcript (or prior transcript only when comparing). Never fabricate quotes.
-- Keep titles short (a few words). Keep descriptions to 1–3 sentences.
-- The experiment should be one small, concrete speaking practice they can try next.
-- Prefer noticing patterns in clarity, honesty, hesitation, warmth, ownership, or energy — not grammar policing.
-- Respond with a single JSON object matching the schema. No markdown fences.`;
-
 type RawAnalysisJson = {
-  strength?: { title?: unknown; description?: unknown };
-  observation?: { title?: unknown; description?: unknown };
+  strength?: { title?: unknown; description?: unknown } | string;
+  observation?: { title?: unknown; description?: unknown } | string;
   evidence?: unknown;
-  experiment?: { title?: unknown; instruction?: unknown };
+  experiment?:
+    | { title?: unknown; instruction?: unknown; description?: unknown }
+    | string;
   comparisonObservation?: unknown;
 };
 
@@ -84,83 +82,85 @@ function requireNonEmptyString(value: unknown, field: string): string {
   return value.trim();
 }
 
-function parseEvidence(raw: unknown, transcript: string): AnalysisEvidence[] {
-  if (!Array.isArray(raw)) {
-    throw new Error("Analysis response evidence must be an array.");
+/**
+ * Models sometimes return strength/observation/experiment as plain strings
+ * instead of { title, description }. Normalize before strict field checks.
+ */
+function normalizeTitledSection(
+  value: unknown,
+  fallbackTitle: string,
+  descriptionKeys: readonly string[] = ["description"],
+): { title: unknown; description: unknown } {
+  if (typeof value === "string") {
+    return { title: fallbackTitle, description: value };
   }
-
-  const items: AnalysisEvidence[] = [];
-  for (const entry of raw) {
-    if (!entry || typeof entry !== "object") continue;
-    const text =
-      "text" in entry && typeof entry.text === "string"
-        ? entry.text.trim()
-        : "";
-    if (!text) continue;
-
-    // Soft check: prefer quotes that appear in the transcript; skip invented ones.
-    if (!transcript.toLowerCase().includes(text.toLowerCase())) {
-      continue;
-    }
-
-    const item: AnalysisEvidence = { text };
-    if (
-      "startTime" in entry &&
-      typeof entry.startTime === "number" &&
-      Number.isFinite(entry.startTime)
-    ) {
-      item.startTime = entry.startTime;
-    }
-    if (
-      "endTime" in entry &&
-      typeof entry.endTime === "number" &&
-      Number.isFinite(entry.endTime)
-    ) {
-      item.endTime = entry.endTime;
-    }
-    items.push(item);
-    if (items.length >= 3) break;
+  if (!value || typeof value !== "object") {
+    return { title: undefined, description: undefined };
   }
-
-  if (items.length === 0) {
-    // Fall back to a short slice of the transcript so UI has real evidence.
-    const snippet = transcript.trim().slice(0, 140);
-    if (snippet) {
-      items.push({ text: snippet });
+  const obj = value as Record<string, unknown>;
+  let description: unknown = undefined;
+  for (const key of descriptionKeys) {
+    if (typeof obj[key] === "string" && obj[key].trim()) {
+      description = obj[key];
+      break;
     }
   }
-
-  return items;
+  if (description === undefined && typeof obj.body === "string") {
+    description = obj.body;
+  }
+  return {
+    title:
+      typeof obj.title === "string" && obj.title.trim()
+        ? obj.title
+        : fallbackTitle,
+    description,
+  };
 }
 
-function parseAnalysisJson(
+/**
+ * Parse + ground model JSON. Exported for offline tests.
+ */
+export function parseAnalysisJson(
   raw: RawAnalysisJson,
   transcript: string,
   includeComparison: boolean,
 ): GenerateAnalysisResult {
-  const strengthTitle = requireNonEmptyString(
-    raw.strength?.title,
-    "strength.title",
-  );
+  const strength = normalizeTitledSection(raw.strength, "What came through");
+  const observation = normalizeTitledSection(raw.observation, "What I noticed");
+  const experimentRaw = normalizeTitledSection(raw.experiment, "Try this", [
+    "instruction",
+    "description",
+  ]);
+
+  const strengthTitle = requireNonEmptyString(strength.title, "strength.title");
   const strengthDescription = requireNonEmptyString(
-    raw.strength?.description,
+    strength.description,
     "strength.description",
   );
   const observationTitle = requireNonEmptyString(
-    raw.observation?.title,
+    observation.title,
     "observation.title",
   );
-  const observationDescription = requireNonEmptyString(
-    raw.observation?.description,
+  let observationDescription = requireNonEmptyString(
+    observation.description,
     "observation.description",
   );
   const experimentTitle = requireNonEmptyString(
-    raw.experiment?.title,
+    experimentRaw.title,
     "experiment.title",
   );
-  const experimentInstruction = requireNonEmptyString(
-    raw.experiment?.instruction,
+  let experimentInstruction = requireNonEmptyString(
+    experimentRaw.description,
     "experiment.instruction",
+  );
+
+  observationDescription = stripUngroundedQuotes(
+    observationDescription,
+    transcript,
+  );
+  experimentInstruction = stripUngroundedQuotes(
+    experimentInstruction,
+    transcript,
   );
 
   const result: GenerateAnalysisResult = {
@@ -169,7 +169,11 @@ function parseAnalysisJson(
       title: observationTitle,
       description: observationDescription,
     },
-    evidence: parseEvidence(raw.evidence, transcript),
+    evidence: groundEvidenceQuotes(raw.evidence, transcript, {
+      maxItems: 2,
+      // Prefer no evidence over a loosely related transcript slice.
+      fallbackSnippet: false,
+    }),
     experiment: {
       title: experimentTitle,
       instruction: experimentInstruction,
@@ -181,14 +185,17 @@ function parseAnalysisJson(
       raw.comparisonObservation,
       "comparisonObservation",
     );
-    result.comparisonObservation = comparison;
+    result.comparisonObservation = stripUngroundedQuotes(
+      comparison,
+      transcript,
+    );
   }
 
   return result;
 }
 
 async function generateWithOpenAI(
-  input: GenerateAnalysisInput,
+  input: SessionAnalysisInput,
 ): Promise<GenerateAnalysisResult> {
   const apiKey = process.env.OPENAI_API_KEY?.trim();
   if (!apiKey) {
@@ -206,25 +213,7 @@ async function generateWithOpenAI(
   const model =
     process.env.OPENAI_ANALYSIS_MODEL?.trim() || "gpt-4o-mini";
 
-  const userPayload = {
-    sessionId: input.sessionId,
-    planet: input.planet,
-    prompt: input.promptText,
-    attemptNumber: input.attemptNumber,
-    transcript,
-    priorTranscript: includeComparison
-      ? input.priorTranscript?.trim()
-      : undefined,
-    schema: {
-      strength: { title: "string", description: "string" },
-      observation: { title: "string", description: "string" },
-      evidence: [{ text: "string", startTime: "number?", endTime: "number?" }],
-      experiment: { title: "string", instruction: "string" },
-      comparisonObservation: includeComparison
-        ? "string (required when priorTranscript is present)"
-        : "omit",
-    },
-  };
+  const userPayload = buildAnalysisUserPayload(input);
 
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
@@ -274,20 +263,29 @@ async function generateWithOpenAI(
 /**
  * Real analysis entry point. Throws if no provider is configured.
  * Never returns fabricated coaching content.
+ *
+ * Accepts either the canonical SessionAnalysisInput or legacy build args.
  */
 export async function generateSessionAnalysis(
-  input: GenerateAnalysisInput,
+  input: SessionAnalysisInput | BuildSessionAnalysisInputArgs,
 ): Promise<GenerateAnalysisResult> {
   const status = getAnalysisProviderStatus();
   if (!status.available) {
     throw new Error(status.reason);
   }
 
+  const normalized: SessionAnalysisInput =
+    "questionPrompt" in input && "speechMetrics" in input
+      ? (input as SessionAnalysisInput)
+      : buildSessionAnalysisInput(input as BuildSessionAnalysisInputArgs);
+
   if (status.provider === "openai") {
-    return generateWithOpenAI(input);
+    return generateWithOpenAI(normalized);
   }
 
   throw new Error(
     `Analysis provider "${status.provider}" is detected via env but not implemented yet. Use OPENAI_API_KEY.`,
   );
 }
+
+export { ANALYSIS_SYSTEM_PROMPT, buildAnalysisUserPayload };
