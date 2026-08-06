@@ -1,4 +1,5 @@
 import type { VoicePlanetId } from "@/lib/home/voicePlanets";
+import type { OrbitSummativeAnalysisContent } from "@/lib/orbits/types";
 import type { SessionType } from "@/lib/topics/types";
 import type { SessionSource } from "@/lib/sessions/types";
 
@@ -9,6 +10,16 @@ export type JourneyPlanetFilter = "all" | VoicePlanetId;
 
 /** How this star entered Journey history. */
 export type JourneySourceType = "planet" | "daily" | "orbit" | "reflection";
+
+/**
+ * Visual treatment for a constellation node.
+ * Centralized so rendering does not scatter source checks.
+ */
+export type JourneyNodeVariant =
+  | "normal"
+  | "daily"
+  | "orbit"
+  | "orbit_cluster";
 
 /** A single audio/transcript clip within a speaking session */
 export type JourneyClip = {
@@ -24,12 +35,14 @@ export type JourneyClip = {
 };
 
 /**
- * One completed Haelo speaking session → one constellation star.
- * Derived from practice sessions or reflection rows (grouped by session_id).
+ * One completed Haelo speaking session → one constellation star,
+ * OR one completed Orbit → one master-Journey cluster node.
  *
- * Orbit note:
- * - Planet-filtered Journey may show individual Orbit responses (with orbit metadata).
- * - Master Journey should cluster completed Orbits (presentation rule; UI later).
+ * Derived from practice sessions / reflections (no duplicate Journey table).
+ *
+ * Display rules:
+ * - Planet-filtered Journey: individual Orbit responses (orbit variant).
+ * - Master Journey: completed Orbits as clusters; orbit individuals hidden.
  */
 export type JourneySession = {
   sessionId: string;
@@ -47,8 +60,28 @@ export type JourneySession = {
   orbitQuestionKey?: string | null;
   orbitTitle?: string | null;
   userOrbitProgressId?: string | null;
-  /** True when this node is a completed Orbit cluster in master Journey (future UI). */
+  /** Sequence within an Orbit (1–6) when known from definition. */
+  orbitSequenceNumber?: number | null;
+  /** True when this node is a completed Orbit cluster in master Journey. */
   isOrbitCluster?: boolean;
+  /** Cluster-only: when the Orbit was started */
+  orbitStartedAt?: string | null;
+  /** Cluster-only: when the Orbit was completed */
+  orbitCompletedAt?: string | null;
+  orbitRegionKey?: string | null;
+  orbitRegionTitle?: string | null;
+  orbitSituation?: string | null;
+  orbitShortDescription?: string | null;
+  /** Distinct planets involved in the Orbit (cluster) */
+  orbitPlanets?: VoicePlanetId[];
+  /**
+   * Cluster-only: canonical individual Orbit reflections in sequence order.
+   * References the same JourneySession records used in planet Journey.
+   */
+  orbitResponses?: JourneySession[];
+  /** Cluster-only: persisted summative analysis (never regenerated on Journey load) */
+  summativeAnalysis?: OrbitSummativeAnalysisContent | null;
+  summativeStatus?: "pending" | "ready" | "failed" | "missing";
   clips: JourneyClip[];
   /** User-authored written reflection if present */
   userReflection: string | null;
@@ -111,4 +144,25 @@ export function journeySourceFromSessionSource(
   if (source === "orbit") return "orbit";
   if (source === "daily") return "daily";
   return "planet";
+}
+
+/** Resolve visual node variant from a Journey session / cluster. */
+export function getJourneyNodeVariant(
+  session: Pick<
+    JourneySession,
+    "isOrbitCluster" | "sourceType" | "sessionType"
+  >,
+): JourneyNodeVariant {
+  if (session.isOrbitCluster) return "orbit_cluster";
+  if (session.sourceType === "orbit") return "orbit";
+  if (session.sourceType === "daily" || session.sessionType === "daily") {
+    return "daily";
+  }
+  return "normal";
+}
+
+export function isOrbitIndividualSession(
+  session: Pick<JourneySession, "isOrbitCluster" | "sourceType">,
+): boolean {
+  return session.sourceType === "orbit" && !session.isOrbitCluster;
 }

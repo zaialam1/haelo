@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { HomeBottomNav } from "@/components/home/HomeBottomNav";
 import { HomeNav } from "@/components/home/HomeNav";
 import { JourneyConstellation } from "@/components/journey/JourneyConstellation";
+import { JourneyOrbitDetailPanel } from "@/components/journey/JourneyOrbitDetailPanel";
 import { JourneyPlanetFilterBar } from "@/components/journey/JourneyPlanetFilter";
 import { JourneySessionPanel } from "@/components/journey/JourneySessionPanel";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
@@ -49,18 +50,39 @@ export function JourneyExperience({
 
   const journeyEmpty = model.isEmpty;
   const filterEmpty = !journeyEmpty && filteredModel.isEmpty;
-  const count = model.sessions.length;
+  const count = filteredModel.sessions.length;
+  const orbitClusterOpen = Boolean(selected?.isOrbitCluster && panelOpen);
+  const sessionPanelOpen = Boolean(
+    panelOpen && selected && !selected.isOrbitCluster,
+  );
 
   let contextLine: string | null = null;
   if (journeyEmpty) {
     contextLine =
       "Your first completed session will become the first star in your Journey.";
-  } else if (count === 1) {
+  } else if (filterEmpty && filter === "all") {
+    contextLine =
+      "Orbit reflections appear on their planets until you complete the full Orbit.";
+  } else if (filter === "all" && count === 1) {
     contextLine = "Your constellation has begun.";
-  } else if (model.beganAt) {
-    contextLine = `Your journey began ${formatBegan(model.beganAt)} · ${count} sessions`;
+  } else if (filter === "all" && model.beganAt) {
+    contextLine = `Your journey began ${formatBegan(model.beganAt)} · ${count} experiences`;
+  } else if (filter !== "all") {
+    contextLine =
+      count === 0
+        ? null
+        : `${count} ${filterLabel ?? "planet"} reflection${count === 1 ? "" : "s"}`;
   } else {
-    contextLine = `${count} sessions`;
+    contextLine = `${count} experiences`;
+  }
+
+  function handleSelect(node: JourneyNode) {
+    setSelected(node);
+    setPanelOpen(true);
+  }
+
+  function handleClosePanel() {
+    setPanelOpen(false);
   }
 
   return (
@@ -97,7 +119,7 @@ export function JourneyExperience({
                 className="mt-1 max-w-md text-sm leading-relaxed"
                 style={{ color: "var(--foreground-muted)" }}
               >
-                Every session becomes part of your constellation.
+                Everything you&apos;ve explored with your voice.
               </p>
               {contextLine ? (
                 <p
@@ -142,10 +164,7 @@ export function JourneyExperience({
             nodes={filteredModel.nodes}
             monthAnchors={filteredModel.monthAnchors}
             selectedId={panelOpen ? (selected?.sessionId ?? null) : null}
-            onSelect={(node) => {
-              setSelected(node);
-              setPanelOpen(true);
-            }}
+            onSelect={handleSelect}
             journeyEmpty={journeyEmpty}
             filterEmpty={filterEmpty}
             filterLabel={filterLabel}
@@ -168,8 +187,9 @@ export function JourneyExperience({
               className="text-sm"
               style={{ color: "var(--foreground-muted)" }}
             >
-              Practice on {filterLabel ?? "this planet"} to add stars here — or
-              switch back to All.
+              {filter === "all"
+                ? "Complete an Orbit or a planet session to place a star in your overall Journey."
+                : `Practice on ${filterLabel ?? "this planet"} to add stars here — or switch back to All.`}
             </p>
           </div>
         ) : null}
@@ -178,9 +198,15 @@ export function JourneyExperience({
       <HomeBottomNav />
 
       <JourneySessionPanel
-        session={selected}
-        open={panelOpen}
-        onClose={() => setPanelOpen(false)}
+        session={sessionPanelOpen ? selected : null}
+        open={sessionPanelOpen}
+        onClose={handleClosePanel}
+      />
+
+      <JourneyOrbitDetailPanel
+        cluster={orbitClusterOpen ? selected : null}
+        open={orbitClusterOpen}
+        onClose={handleClosePanel}
       />
     </div>
   );

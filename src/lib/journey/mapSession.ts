@@ -1,5 +1,8 @@
 import { getVoicePlanetById, type VoicePlanetId } from "@/lib/home/voicePlanets";
-import { getOrbitByKey } from "@/lib/orbits/catalog";
+import {
+  getOrbitByKey,
+  getOrbitQuestionByKey,
+} from "@/lib/orbits/catalog";
 import { isPlanet } from "@/lib/prompts";
 import { mapAnalysisRow, pickAnalysisRow } from "@/lib/sessions/analysisMap";
 import type {
@@ -13,6 +16,7 @@ import type {
   JourneySession,
 } from "@/lib/journey/types";
 import { journeySourceFromSessionSource } from "@/lib/journey/types";
+import { projectJourneySessions } from "@/lib/journey/orbitClusters";
 
 function resolvePlanet(topicId: string): JourneyPlanet {
   if (isPlanet(topicId)) return topicId;
@@ -164,21 +168,32 @@ export function mapPracticeSessionsToJourneySessions(
       ? `${analysis.observation.title}: ${analysis.observation.description}`
       : null;
 
+    const orbitDef = row.orbit_key ? getOrbitByKey(row.orbit_key) : undefined;
+    const orbitQuestion = row.orbit_question_key
+      ? getOrbitQuestionByKey(row.orbit_question_key)
+      : undefined;
+    // Prefer snapshotted prompt; fall back to current definition only if empty.
+    const promptText =
+      row.prompt_text_snapshot?.trim() ||
+      orbitQuestion?.prompt ||
+      row.prompt_text_snapshot;
+
     sessions.push({
       sessionId: row.id,
       recordedAt,
       planet,
       planetLabel: planetLabel(planet),
-      prompt: row.prompt_text_snapshot,
+      prompt: promptText,
       promptId: row.prompt_id,
       sessionType: row.source === "daily" ? "daily" : "main",
       sourceType: journeySourceFromSessionSource(row.source),
       orbitKey: row.orbit_key ?? null,
       orbitQuestionKey: row.orbit_question_key ?? null,
       orbitTitle: row.orbit_key
-        ? (getOrbitByKey(row.orbit_key)?.title ?? null)
+        ? (orbitDef?.title ?? null)
         : null,
       userOrbitProgressId: row.user_orbit_progress_id ?? null,
+      orbitSequenceNumber: orbitQuestion?.sequenceNumber ?? null,
       isOrbitCluster: false,
       clips,
       userReflection: row.user_reflection,
@@ -225,12 +240,16 @@ export function mergeJourneySessions(
   );
 }
 
+/**
+ * Project Journey sessions for the active filter.
+ * Master Journey clusters completed Orbits; planet Journey keeps Orbit
+ * responses as individual stars for that planet.
+ */
 export function filterSessionsByPlanet(
   sessions: JourneySession[],
   filter: "all" | VoicePlanetId,
 ): JourneySession[] {
-  if (filter === "all") return sessions;
-  return sessions.filter((s) => s.planet === filter);
+  return projectJourneySessions(sessions, filter);
 }
 
 export function planetAccent(planet: JourneyPlanet): string {

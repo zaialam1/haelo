@@ -56,9 +56,11 @@ export function layoutJourneyNodes(sessions: JourneySession[]): JourneyNode[] {
       (i % 2 === 0 ? -0.04 : 0.05);
     const y = Math.min(0.78, Math.max(0.22, 0.5 + wave));
 
-    const size = session.isMilestone
-      ? 1.25
-      : 0.82 + ((i * 17) % 7) * 0.04;
+    const size = session.isOrbitCluster
+      ? 1.18
+      : session.isMilestone
+        ? 1.25
+        : 0.82 + ((i * 17) % 7) * 0.04;
 
     return {
       ...session,

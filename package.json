@@ -10,7 +10,8 @@
     "validate:prompts": "npx tsx scripts/validate-prompts.ts",
     "validate:orbits": "npx tsx scripts/validate-orbits.ts",
     "test:orbit-progression": "npx tsx scripts/test-orbit-progression-isolation.ts",
-    "test:session-analysis": "npx tsx scripts/test-session-analysis.ts"
+    "test:session-analysis": "npx tsx scripts/test-session-analysis.ts",
+    "test:journey-orbit": "npx tsx scripts/test-journey-orbit-integration.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",

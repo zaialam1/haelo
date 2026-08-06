@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { buildJourneyViewModel } from "@/lib/journey/layout";
+import { buildOrbitClusterSessions } from "@/lib/journey/orbitClusters";
 import {
   mapPracticeSessionsToJourneySessions,
   mapReflectionsToJourneySessions,
@@ -10,6 +11,10 @@ import {
   shouldUseJourneyPreview,
 } from "@/lib/journey/preview";
 import type { JourneyViewModel } from "@/lib/journey/types";
+import type {
+  OrbitSummativeAnalysisRow,
+  UserOrbitProgressRow,
+} from "@/lib/orbits/types";
 import type { SessionWithAttempts } from "@/lib/sessions/types";
 import type { ReflectionRow } from "@/lib/topics/types";
 
@@ -101,20 +106,122 @@ export async function getCompletedPracticeSessionsForUser(
   return (data ?? []) as SessionWithAttempts[];
 }
 
+/** Completed Orbit progress rows — used to build master Journey clusters. */
+export async function getCompletedOrbitProgressForUser(
+  userId: string,
+): Promise<UserOrbitProgressRow[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("user_orbit_progress")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("status", "completed")
+    .not("completed_at", "is", null)
+    .order("completed_at", { ascending: true });
+
+  if (error) {
+    console.error("[journey] orbit progress fetch failed:", error.message);
+    return [];
+  }
+
+  return (data ?? []) as UserOrbitProgressRow[];
+}
+
+/** All Orbit progress — title snapshots for historical Journey labels. */
+export async function getAllOrbitProgressForUser(
+  userId: string,
+): Promise<UserOrbitProgressRow[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("user_orbit_progress")
+    .select("*")
+    .eq("user_id", userId)
+    .order("last_activity_at", { ascending: false, nullsFirst: false });
+
+  if (error) {
+    console.error("[journey] orbit progress list failed:", error.message);
+    return [];
+  }
+
+  return (data ?? []) as UserOrbitProgressRow[];
+}
+
+export async function getOrbitSummativeAnalysesForProgressIds(
+  userId: string,
+  progressIds: string[],
+): Promise<Map<string, OrbitSummativeAnalysisRow>> {
+  const map = new Map<string, OrbitSummativeAnalysisRow>();
+  if (progressIds.length === 0) return map;
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("orbit_summative_analyses")
+    .select("*")
+    .eq("user_id", userId)
+    .in("user_orbit_progress_id", progressIds);
+
+  if (error) {
+    console.error("[journey] orbit summative fetch failed:", error.message);
+    return map;
+  }
+
+  for (const row of (data ?? []) as OrbitSummativeAnalysisRow[]) {
+    map.set(row.user_orbit_progress_id, row);
+  }
+  return map;
+}
+
 export async function getJourneyPageData(
   userId: string | null,
   opts?: { preview?: boolean },
 ): Promise<JourneyViewModel> {
-  const [reflectionRows, practiceRows] = userId
+  const [reflectionRows, practiceRows, allOrbitProgress] = userId
     ? await Promise.all([
         getAllReflectionsForUser(userId),
         getCompletedPracticeSessionsForUser(userId),
+        getAllOrbitProgressForUser(userId),
       ])
-    : [[], []];
+    : [[], [], [] as UserOrbitProgressRow[]];
 
+  const completedOrbitProgress = allOrbitProgress.filter(
+    (p) => p.status === "completed" && p.completed_at,
+  );
+
+  const titleByProgressId = new Map(
+    allOrbitProgress
+      .filter((p) => p.orbit_title_snapshot?.trim())
+      .map((p) => [p.id, p.orbit_title_snapshot!.trim()] as const),
+  );
+
+  let practiceSessions = mapPracticeSessionsToJourneySessions(practiceRows);
+  // Prefer title snapshot from progress so renamed Orbits keep historical names.
+  practiceSessions = practiceSessions.map((s) => {
+    if (!s.userOrbitProgressId) return s;
+    const snapshot = titleByProgressId.get(s.userOrbitProgressId);
+    if (!snapshot) return s;
+    return { ...s, orbitTitle: snapshot };
+  });
+
+  const reflectionSessions = mapReflectionsToJourneySessions(reflectionRows);
+
+  const analysesByProgressId = userId
+    ? await getOrbitSummativeAnalysesForProgressIds(
+        userId,
+        completedOrbitProgress.map((p) => p.id),
+      )
+    : new Map<string, OrbitSummativeAnalysisRow>();
+
+  const orbitClusters = buildOrbitClusterSessions(
+    practiceSessions,
+    completedOrbitProgress,
+    analysesByProgressId,
+  );
+
+  // Model holds individuals + clusters. Client projection chooses which to show.
   const realSessions = mergeJourneySessions(
-    mapReflectionsToJourneySessions(reflectionRows),
-    mapPracticeSessionsToJourneySessions(practiceRows),
+    reflectionSessions,
+    practiceSessions,
+    orbitClusters,
   );
 
   const usePreview = shouldUseJourneyPreview({

@@ -10,9 +10,10 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { planetAccent } from "@/lib/journey/mapSession";
-import type {
-  JourneyMonthAnchor,
-  JourneyNode,
+import {
+  getJourneyNodeVariant,
+  type JourneyMonthAnchor,
+  type JourneyNode,
 } from "@/lib/journey/types";
 
 type JourneyConstellationProps = {
@@ -47,10 +48,30 @@ function shortDate(iso: string): string {
   });
 }
 
+function longDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+  });
+}
+
 function truncate(text: string, max = 42): string {
   const t = text.trim();
   if (t.length <= max) return t;
   return `${t.slice(0, max - 1).trim()}…`;
+}
+
+function nodeAriaLabel(n: JourneyNode): string {
+  const variant = getJourneyNodeVariant(n);
+  if (variant === "orbit_cluster") {
+    const count = n.orbitResponses?.length ?? 6;
+    const title = n.orbitTitle ?? n.prompt;
+    return `${title} Orbit, completed ${longDate(n.recordedAt)}, ${count} reflections.`;
+  }
+  if (variant === "orbit") {
+    return `${n.planetLabel} Orbit reflection on ${shortDate(n.recordedAt)}: ${truncate(n.prompt, 60)}`;
+  }
+  return `${n.planetLabel} session on ${shortDate(n.recordedAt)}: ${truncate(n.prompt, 60)}`;
 }
 
 /** Soft origin glow for empty / beginning states */
@@ -213,7 +234,9 @@ export function JourneyConstellation({
   const ariaLabel = journeyEmpty
     ? "Empty journey constellation. Your first completed session will appear here."
     : filterEmpty
-      ? `No ${filterLabel ?? "filtered"} sessions in your journey yet.`
+      ? filterLabel
+        ? `No ${filterLabel} sessions in your journey yet.`
+        : "No experiences in your overall journey yet."
       : `Journey constellation with ${nodes.length} session${nodes.length === 1 ? "" : "s"}`;
 
   return (
@@ -300,7 +323,7 @@ export function JourneyConstellation({
               label={
                 filterLabel
                   ? `No ${filterLabel} stars yet`
-                  : "No sessions for this planet yet"
+                  : "Your overall constellation will grow here"
               }
             />
           ) : (
@@ -342,20 +365,35 @@ export function JourneyConstellation({
               {nodes.map((n) => {
                 const cx = toX(n.x, contentWidth);
                 const cy = toY(n.y);
-                const accent = planetAccent(n.planet);
-                const r = 6.5 * n.size * (n.isMilestone ? 1.15 : 1);
+                const variant = getJourneyNodeVariant(n);
+                const accent =
+                  variant === "orbit_cluster"
+                    ? "var(--violet)"
+                    : planetAccent(n.planet);
+                const r =
+                  6.5 *
+                  n.size *
+                  (n.isMilestone ? 1.15 : variant === "orbit_cluster" ? 1.08 : 1);
                 const selected = selectedId === n.sessionId;
                 const hoveredNow = hoveredId === n.sessionId;
+                const satellites: Array<typeof n.planet | "uncategorized"> =
+                  variant === "orbit_cluster"
+                    ? (n.orbitPlanets && n.orbitPlanets.length > 0
+                        ? n.orbitPlanets
+                        : (["express", "stand", "connect", "explore", "express", "stand"] as const)
+                      ).slice(0, 6)
+                    : [];
 
                 return (
                   <g
                     key={n.sessionId}
                     className="journey-node"
+                    data-variant={variant}
                     transform={`translate(${cx} ${cy})`}
                     style={{ cursor: "pointer" }}
                     role="button"
                     tabIndex={0}
-                    aria-label={`${n.planetLabel} session on ${shortDate(n.recordedAt)}: ${truncate(n.prompt, 60)}`}
+                    aria-label={nodeAriaLabel(n)}
                     aria-describedby={
                       hoveredNow || selected ? tooltipId : undefined
                     }
@@ -378,7 +416,7 @@ export function JourneyConstellation({
                     <circle
                       cx={0}
                       cy={0}
-                      r={Math.max(r + 16, 24)}
+                      r={Math.max(r + (variant === "orbit_cluster" ? 22 : 16), 24)}
                       fill="transparent"
                     />
                     {/* Soft halo — planet-tinted */}
@@ -391,15 +429,90 @@ export function JourneyConstellation({
                       style={{ pointerEvents: "none" }}
                       className="journey-node-halo"
                     />
-                    {/* Planet accent mark (small orbital dot) */}
-                    <circle
-                      cx={r + 5}
-                      cy={-r * 0.35}
-                      r={2.2}
-                      fill={accent}
-                      opacity="0.85"
-                      style={{ pointerEvents: "none" }}
-                    />
+
+                    {/* Orbit individual: subtle orbital ring */}
+                    {variant === "orbit" ? (
+                      <circle
+                        cx={0}
+                        cy={0}
+                        r={r + 6.5}
+                        fill="none"
+                        stroke={accent}
+                        strokeWidth="1"
+                        opacity={selected || hoveredNow ? 0.55 : 0.35}
+                        style={{ pointerEvents: "none" }}
+                        className="journey-orbit-ring"
+                      />
+                    ) : null}
+
+                    {/* Orbit cluster: soft ring + tiny satellites */}
+                    {variant === "orbit_cluster" ? (
+                      <>
+                        <circle
+                          cx={0}
+                          cy={0}
+                          r={r + 10}
+                          fill="none"
+                          stroke="color-mix(in srgb, var(--violet) 55%, var(--gold))"
+                          strokeWidth="1.15"
+                          opacity={selected || hoveredNow ? 0.7 : 0.45}
+                          style={{ pointerEvents: "none" }}
+                          className="journey-orbit-cluster-ring"
+                        />
+                        {satellites.map((planet, i) => {
+                          const angle =
+                            -Math.PI / 2 +
+                            (i / Math.max(satellites.length, 1)) * Math.PI * 2;
+                          const dist = r + 10;
+                          const sx = Math.cos(angle) * dist;
+                          const sy = Math.sin(angle) * dist * 0.72;
+                          const satAccent = planetAccent(planet);
+                          return (
+                            <circle
+                              key={`sat-${i}`}
+                              cx={sx}
+                              cy={sy}
+                              r={1.7}
+                              fill={satAccent}
+                              opacity="0.85"
+                              style={{ pointerEvents: "none" }}
+                            />
+                          );
+                        })}
+                        {/* Faint internal spokes */}
+                        {satellites.slice(0, 3).map((_, i) => {
+                          const angle =
+                            (-Math.PI / 2) +
+                            (i / 3) * Math.PI * 2;
+                          const dist = r + 8;
+                          return (
+                            <line
+                              key={`spoke-${i}`}
+                              x1={0}
+                              y1={0}
+                              x2={Math.cos(angle) * dist}
+                              y2={Math.sin(angle) * dist * 0.72}
+                              stroke="color-mix(in srgb, var(--violet) 30%, transparent)"
+                              strokeWidth="0.75"
+                              opacity="0.5"
+                              style={{ pointerEvents: "none" }}
+                            />
+                          );
+                        })}
+                      </>
+                    ) : null}
+
+                    {/* Planet accent mark (small orbital dot) — skip on cluster */}
+                    {variant !== "orbit_cluster" ? (
+                      <circle
+                        cx={r + 5}
+                        cy={-r * 0.35}
+                        r={variant === "orbit" ? 1.8 : 2.2}
+                        fill={accent}
+                        opacity="0.85"
+                        style={{ pointerEvents: "none" }}
+                      />
+                    ) : null}
                     {n.isMilestone ? (
                       <circle
                         cx={0}
@@ -417,7 +530,7 @@ export function JourneyConstellation({
                       cy={0}
                       r={r + (selected ? 2.5 : 0)}
                       fill={accent}
-                      opacity={selected ? 0.95 : 0.72}
+                      opacity={selected ? 0.95 : variant === "orbit_cluster" ? 0.82 : 0.72}
                       style={{
                         pointerEvents: "none",
                         filter: `drop-shadow(0 0 ${selected ? 16 : 10}px color-mix(in srgb, ${accent} ${selected ? 70 : 45}%, transparent))`,
@@ -469,19 +582,64 @@ export function JourneyConstellation({
               color: "var(--foreground)",
             }}
           >
-            <p
-              className="text-[0.625rem] font-semibold tracking-[0.1em] uppercase"
-              style={{ color: planetAccent(hovered.planet) }}
-            >
-              {hovered.planetLabel}
-              <span className="mx-1.5 opacity-40">·</span>
-              <span style={{ color: "var(--foreground-muted)" }}>
-                {shortDate(hovered.recordedAt)}
-              </span>
-            </p>
-            <p className="mt-1 text-[0.75rem] leading-snug">
-              &ldquo;{truncate(hovered.prompt, 48)}&rdquo;
-            </p>
+            {getJourneyNodeVariant(hovered) === "orbit_cluster" ? (
+              <>
+                <p
+                  className="text-[0.625rem] font-semibold tracking-[0.1em] uppercase"
+                  style={{ color: "var(--gold)" }}
+                >
+                  Orbit
+                  <span className="mx-1.5 opacity-40">·</span>
+                  <span style={{ color: "var(--foreground-muted)" }}>
+                    {shortDate(hovered.recordedAt)}
+                  </span>
+                </p>
+                <p className="mt-1 text-[0.8125rem] font-medium leading-snug">
+                  {hovered.orbitTitle ?? hovered.prompt}
+                </p>
+                <p
+                  className="mt-1 text-[0.6875rem] leading-snug"
+                  style={{ color: "var(--foreground-muted)" }}
+                >
+                  {(hovered.orbitResponses?.length ?? 6)} reflections
+                  {hovered.orbitPlanets && hovered.orbitPlanets.length > 0
+                    ? ` · ${hovered.orbitPlanets
+                        .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+                        .join(" · ")}`
+                    : ""}
+                </p>
+                <p
+                  className="mt-1.5 text-[0.625rem]"
+                  style={{ color: "var(--foreground-muted)" }}
+                >
+                  Click to explore
+                </p>
+              </>
+            ) : (
+              <>
+                <p
+                  className="text-[0.625rem] font-semibold tracking-[0.1em] uppercase"
+                  style={{ color: planetAccent(hovered.planet) }}
+                >
+                  {hovered.planetLabel}
+                  {getJourneyNodeVariant(hovered) === "orbit" ? (
+                    <>
+                      <span className="mx-1.5 opacity-40">·</span>
+                      <span style={{ color: "var(--foreground-muted)" }}>
+                        Orbit
+                      </span>
+                    </>
+                  ) : null}
+                  <span className="mx-1.5 opacity-40">·</span>
+                  <span style={{ color: "var(--foreground-muted)" }}>
+                    {shortDate(hovered.recordedAt)}
+                  </span>
+                </p>
+                <p className="mt-1 text-[0.75rem] leading-snug">
+                  &ldquo;{truncate(hovered.prompt, 48)}&rdquo;
+                </p>
+              </>
+            )}
           </div>
         ) : null}
       </div>
