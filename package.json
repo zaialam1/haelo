@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "validate:prompts": "npx tsx scripts/validate-prompts.ts"
+    "validate:prompts": "npx tsx scripts/validate-prompts.ts",
+    "validate:orbits": "npx tsx scripts/validate-orbits.ts",
+    "test:orbit-progression": "npx tsx scripts/test-orbit-progression-isolation.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",

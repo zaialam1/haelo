@@ -1,4 +1,5 @@
 import { getVoicePlanetById, type VoicePlanetId } from "@/lib/home/voicePlanets";
+import { getOrbitByKey } from "@/lib/orbits/catalog";
 import { isPlanet } from "@/lib/prompts";
 import { mapAnalysisRow, pickAnalysisRow } from "@/lib/sessions/analysisMap";
 import type {
@@ -11,6 +12,7 @@ import type {
   JourneyPlanet,
   JourneySession,
 } from "@/lib/journey/types";
+import { journeySourceFromSessionSource } from "@/lib/journey/types";
 
 function resolvePlanet(topicId: string): JourneyPlanet {
   if (isPlanet(topicId)) return topicId;
@@ -170,6 +172,14 @@ export function mapPracticeSessionsToJourneySessions(
       prompt: row.prompt_text_snapshot,
       promptId: row.prompt_id,
       sessionType: row.source === "daily" ? "daily" : "main",
+      sourceType: journeySourceFromSessionSource(row.source),
+      orbitKey: row.orbit_key ?? null,
+      orbitQuestionKey: row.orbit_question_key ?? null,
+      orbitTitle: row.orbit_key
+        ? (getOrbitByKey(row.orbit_key)?.title ?? null)
+        : null,
+      userOrbitProgressId: row.user_orbit_progress_id ?? null,
+      isOrbitCluster: false,
       clips,
       userReflection: row.user_reflection,
       feelingReflection: row.feeling_reflection ?? null,

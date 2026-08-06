@@ -17,6 +17,7 @@ import {
 } from "@/lib/planets/evolution";
 import { mapAnalysisRow, pickAnalysisRow } from "@/lib/sessions/analysisMap";
 import { resolvePlanetSessionPrompt } from "@/lib/sessions/resolvePrompt";
+import { countsTowardPlanetExperience } from "@/lib/sessions/sourcePolicy";
 import type {
   SessionAnalysisRow,
   SessionWithAttempts,
@@ -38,6 +39,10 @@ const SESSION_SELECT = `
   prompt_text_snapshot,
   status,
   source,
+  orbit_key,
+  orbit_question_key,
+  user_orbit_progress_id,
+  orbit_version,
   user_reflection,
   feeling_reflection,
   sounded_like_you,
@@ -274,6 +279,11 @@ export async function getVoicePlanetPageData(
   ]);
 
   const completedPractice = practiceRows.filter((r) => r.status === "completed");
+  // Visual growth / experience includes Orbit practice on this planet.
+  // Prompt unlock still excludes Orbit (see resolvePlanetSessionPrompt).
+  const experienceSessions = completedPractice.filter((r) =>
+    countsTowardPlanetExperience(r.source),
+  );
   const journeySessions = mergeJourneySessions(
     mapPracticeSessionsToJourneySessions(completedPractice),
     mapInProgressPracticeSessions(practiceRows),
@@ -291,7 +301,7 @@ export async function getVoicePlanetPageData(
     .slice(0, RECENT_LIMIT)
     .map((session) => toRecentSession(session, planetId));
 
-  const completedCount = completedPractice.length;
+  const completedCount = experienceSessions.length;
   const growth = growthFromSessions(journeySessions);
 
   // Same prompt the session page will use when starting from this CTA.

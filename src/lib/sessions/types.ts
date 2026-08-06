@@ -2,7 +2,7 @@ import type { Planet } from "@/lib/prompts";
 
 export type SessionStatus = "in_progress" | "completed";
 
-export type SessionSource = "planet" | "daily";
+export type SessionSource = "planet" | "daily" | "orbit";
 
 /** null = not started; pending = processing; ready = complete; failed = failed */
 export type AnalysisStatus = "pending" | "ready" | "failed";
@@ -28,6 +28,11 @@ export type SessionRow = {
   prompt_text_snapshot: string;
   status: SessionStatus;
   source: SessionSource;
+  /** Present when source === "orbit" */
+  orbit_key: string | null;
+  orbit_question_key: string | null;
+  user_orbit_progress_id: string | null;
+  orbit_version: number | null;
   user_reflection: string | null;
   feeling_reflection: FeelingReflection | null;
   sounded_like_you: SoundedLikeYou | null;
@@ -107,6 +112,11 @@ export type SaveSessionInput = {
   durationSeconds: number;
   mimeType: string;
   source?: SessionSource;
+  /** Orbit metadata — required when source === "orbit" */
+  orbitKey?: string;
+  orbitQuestionKey?: string;
+  userOrbitProgressId?: string;
+  orbitVersion?: number;
   /** When set, adds an attempt to an existing session (e.g. Try Again). */
   sessionId?: string;
   attemptNumber?: number;

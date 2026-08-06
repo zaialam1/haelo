@@ -6,6 +6,7 @@ import {
   type HaeloPrompt,
   type Planet,
 } from "@/lib/prompts";
+import { PLANET_PROGRESSION_SOURCES } from "@/lib/sessions/sourcePolicy";
 
 const RECENT_PROMPT_LIMIT = 40;
 
@@ -19,6 +20,8 @@ export type ResolvedSessionPrompt = {
  * Resolve a curriculum prompt for a planet session.
  * Uses completed session count for level + recent prompt IDs for cooldown.
  * Falls back to Level 1 when the user has no history.
+ *
+ * Only planet + daily sources advance unlock level. Orbit sessions never do.
  */
 export async function resolvePlanetSessionPrompt(
   userId: string,
@@ -28,10 +31,11 @@ export async function resolvePlanetSessionPrompt(
 
   const { data: rows, error } = await supabase
     .from("sessions")
-    .select("prompt_id")
+    .select("prompt_id, source")
     .eq("user_id", userId)
     .eq("planet", planet)
     .eq("status", "completed")
+    .in("source", [...PLANET_PROGRESSION_SOURCES])
     .order("completed_at", { ascending: false })
     .limit(RECENT_PROMPT_LIMIT);
 
@@ -53,7 +57,8 @@ export async function resolvePlanetSessionPrompt(
       .select("id", { count: "exact", head: true })
       .eq("user_id", userId)
       .eq("planet", planet)
-      .eq("status", "completed");
+      .eq("status", "completed")
+      .in("source", [...PLANET_PROGRESSION_SOURCES]);
     exactCount = count ?? completedSessionCount;
   }
 

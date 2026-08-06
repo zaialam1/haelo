@@ -94,6 +94,19 @@ export async function saveSessionAttempt(
   });
 
   if (createdNewSession) {
+    const source = input.source ?? "planet";
+    if (source === "orbit") {
+      if (
+        !input.orbitKey ||
+        !input.orbitQuestionKey ||
+        !input.userOrbitProgressId
+      ) {
+        throw new Error(
+          "Orbit recordings require orbitKey, orbitQuestionKey, and userOrbitProgressId.",
+        );
+      }
+    }
+
     const { error: sessionError } = await supabase.from("sessions").insert({
       id: sessionId,
       user_id: user.id,
@@ -101,7 +114,13 @@ export async function saveSessionAttempt(
       prompt_id: input.promptId,
       prompt_text_snapshot: input.promptTextSnapshot,
       status: "in_progress",
-      source: input.source ?? "planet",
+      source,
+      orbit_key: source === "orbit" ? (input.orbitKey ?? null) : null,
+      orbit_question_key:
+        source === "orbit" ? (input.orbitQuestionKey ?? null) : null,
+      user_orbit_progress_id:
+        source === "orbit" ? (input.userOrbitProgressId ?? null) : null,
+      orbit_version: source === "orbit" ? (input.orbitVersion ?? null) : null,
       analysis_status: "pending",
       completed_at: null,
     });

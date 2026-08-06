@@ -31,6 +31,7 @@ type SessionLite = {
   id: string;
   planet: string;
   status: string;
+  source: string | null;
   completed_at: string | null;
   created_at: string;
   session_attempts: { id: string; created_at: string }[] | null;
@@ -137,13 +138,22 @@ function eventsFromReflections(rows: ReflectionLite[]): PracticeEvent[] {
 /**
  * Planet practice sessions. A day counts when the user saved audio
  * (attempt exists) or finished the session — not empty drafts.
+ *
+ * Orbit sessions only count when completed (not abandoned mid-Orbit).
  */
 function eventsFromSessions(rows: SessionLite[]): PracticeEvent[] {
   const events: PracticeEvent[] = [];
 
   for (const row of rows) {
     const attempts = row.session_attempts ?? [];
-    if (row.status !== "completed" && attempts.length === 0) continue;
+    const isOrbit = row.source === "orbit";
+
+    if (isOrbit) {
+      // Orbits: only completed question sessions count toward streak.
+      if (row.status !== "completed") continue;
+    } else if (row.status !== "completed" && attempts.length === 0) {
+      continue;
+    }
 
     // Completed → finish day; otherwise first practice day (session create).
     const at =
@@ -187,7 +197,7 @@ export async function fetchStreakStats(): Promise<StreakStats> {
       supabase
         .from("sessions")
         .select(
-          "id, planet, status, completed_at, created_at, session_attempts(id, created_at)",
+          "id, planet, status, source, completed_at, created_at, session_attempts(id, created_at)",
         )
         .eq("user_id", user.id)
         .order("created_at", { ascending: true }),

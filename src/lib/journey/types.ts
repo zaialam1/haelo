@@ -1,10 +1,14 @@
 import type { VoicePlanetId } from "@/lib/home/voicePlanets";
 import type { SessionType } from "@/lib/topics/types";
+import type { SessionSource } from "@/lib/sessions/types";
 
 /** Voice planet, or uncategorized for legacy / non-planet sessions */
 export type JourneyPlanet = VoicePlanetId | "uncategorized";
 
 export type JourneyPlanetFilter = "all" | VoicePlanetId;
+
+/** How this star entered Journey history. */
+export type JourneySourceType = "planet" | "daily" | "orbit" | "reflection";
 
 /** A single audio/transcript clip within a speaking session */
 export type JourneyClip = {
@@ -22,6 +26,10 @@ export type JourneyClip = {
 /**
  * One completed Haelo speaking session → one constellation star.
  * Derived from practice sessions or reflection rows (grouped by session_id).
+ *
+ * Orbit note:
+ * - Planet-filtered Journey may show individual Orbit responses (with orbit metadata).
+ * - Master Journey should cluster completed Orbits (presentation rule; UI later).
  */
 export type JourneySession = {
   sessionId: string;
@@ -32,6 +40,15 @@ export type JourneySession = {
   prompt: string;
   promptId: string | null;
   sessionType: SessionType | null;
+  /** Recording origin — planet practice, daily, orbit, or legacy reflection */
+  sourceType?: JourneySourceType;
+  /** Present when sourceType === "orbit" */
+  orbitKey?: string | null;
+  orbitQuestionKey?: string | null;
+  orbitTitle?: string | null;
+  userOrbitProgressId?: string | null;
+  /** True when this node is a completed Orbit cluster in master Journey (future UI). */
+  isOrbitCluster?: boolean;
   clips: JourneyClip[];
   /** User-authored written reflection if present */
   userReflection: string | null;
@@ -86,3 +103,12 @@ export type JourneyViewModel = {
   isPreview: boolean;
   beganAt: string | null;
 };
+
+/** Map session.source to Journey sourceType. */
+export function journeySourceFromSessionSource(
+  source: SessionSource | string | null | undefined,
+): JourneySourceType {
+  if (source === "orbit") return "orbit";
+  if (source === "daily") return "daily";
+  return "planet";
+}
