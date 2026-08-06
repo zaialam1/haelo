@@ -35,7 +35,7 @@ export function JourneyPlanetFilterBar({
             disabled={disabled}
             onClick={() => onChange(f.id)}
             aria-pressed={active}
-            className="rounded-full px-3 py-1.5 text-[0.75rem] font-medium tracking-wide transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] disabled:opacity-50"
+            className="journey-filter-pill rounded-full px-3 py-1.5 text-[0.75rem] font-medium tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] disabled:opacity-50"
             style={{
               color: active ? "var(--foreground)" : "var(--foreground-muted)",
               background: active

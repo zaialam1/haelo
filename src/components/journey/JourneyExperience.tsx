@@ -176,7 +176,7 @@ export function JourneyExperience({
             <TransitionLink
               href="/home"
               variant="fade"
-              className="inline-flex rounded-full bg-[var(--violet)] px-5 py-2.5 text-sm font-semibold text-[var(--on-violet)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+              className="journey-btn haelo-btn inline-flex rounded-full bg-[var(--violet)] px-5 py-2.5 text-sm font-semibold text-[var(--on-violet)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
             >
               Go to Universe
             </TransitionLink>

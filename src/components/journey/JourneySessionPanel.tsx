@@ -73,7 +73,7 @@ export function JourneySessionPanel({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 hover:bg-[var(--violet-soft)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+                  className="journey-btn journey-btn-ghost rounded-full px-2.5 py-1 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
                   style={{ color: "var(--foreground-muted)" }}
                   aria-label="Close session details"
                 >

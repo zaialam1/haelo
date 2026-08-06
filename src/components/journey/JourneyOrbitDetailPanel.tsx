@@ -123,7 +123,7 @@ function OrbitMiniConstellation({
               onClick={() => onSelect(response)}
               aria-label={label}
               aria-pressed={selected}
-              className="group flex min-h-11 w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] sm:flex-col sm:items-start sm:gap-2 sm:px-2.5 sm:py-3"
+              className="journey-orbit-mini-node group flex min-h-11 w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] sm:flex-col sm:items-start sm:gap-2 sm:px-2.5 sm:py-3"
               style={{
                 background: selected
                   ? "color-mix(in srgb, var(--violet) 12%, transparent)"
@@ -142,7 +142,7 @@ function OrbitMiniConstellation({
                   aria-hidden="true"
                 />
                 <span
-                  className="size-3 rounded-full transition-transform duration-200 group-hover:scale-110"
+                  className="size-3 rounded-full transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-125"
                   style={{
                     background: accent,
                     boxShadow: `0 0 12px color-mix(in srgb, ${accent} 55%, transparent)`,
@@ -240,7 +240,7 @@ function SummativeBlock({
           <button
             type="button"
             onClick={handleRetry}
-            className="mt-4 inline-flex min-h-11 items-center rounded-full px-5 py-2.5 text-sm font-semibold"
+            className="journey-btn haelo-btn mt-4 inline-flex min-h-11 items-center rounded-full px-5 py-2.5 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
             style={{
               background: "var(--violet)",
               color: "var(--on-violet)",
@@ -388,7 +388,7 @@ export function JourneyOrbitDetailPanel({
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-full px-2.5 py-1 text-sm font-medium transition-all duration-200 hover:bg-[var(--violet-soft)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+                className="journey-btn journey-btn-ghost rounded-full px-2.5 py-1 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
                 style={{ color: "var(--foreground-muted)" }}
                 aria-label="Close Orbit details"
               >
@@ -401,7 +401,7 @@ export function JourneyOrbitDetailPanel({
                 <button
                   type="button"
                   onClick={() => setSelectedResponse(null)}
-                  className="mb-5 inline-flex min-h-10 items-center rounded-full px-3 py-1.5 text-sm font-medium transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+                  className="journey-btn journey-btn-ghost mb-5 inline-flex min-h-10 items-center rounded-full px-3 py-1.5 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
                   style={{
                     background:
                       "color-mix(in srgb, var(--violet) 10%, transparent)",
@@ -473,7 +473,7 @@ export function JourneyOrbitDetailPanel({
                     <TransitionLink
                       href={cluster.reviewHref}
                       variant="fade"
-                      className="inline-flex min-h-11 items-center rounded-full px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+                      className="journey-btn haelo-btn inline-flex min-h-11 items-center rounded-full px-4 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
                       style={{
                         background:
                           "color-mix(in srgb, var(--violet) 12%, transparent)",

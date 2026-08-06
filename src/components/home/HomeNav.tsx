@@ -22,7 +22,7 @@ function ThemeIconButton() {
     <button
       type="button"
       onClick={onToggle}
-      className="flex size-10 items-center justify-center rounded-full text-[var(--foreground-muted)] transition-colors hover:bg-[var(--violet-soft)] hover:text-[var(--violet)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+      className="flex size-10 items-center justify-center rounded-full text-[var(--foreground-muted)] transition-[color,background-color,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[var(--violet-soft)] hover:text-[var(--violet)] hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
       style={{ visibility: ready ? "visible" : "hidden" }}
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
     >
@@ -91,7 +91,7 @@ export function HomeNav({ pinned = false }: HomeNavProps) {
           <TransitionLink
             href="/settings"
             variant="fade"
-            className="flex size-10 items-center justify-center rounded-full text-[var(--foreground-muted)] transition-colors hover:bg-[var(--violet-soft)] hover:text-[var(--violet)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+            className="flex size-10 items-center justify-center rounded-full text-[var(--foreground-muted)] transition-[color,background-color,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[var(--violet-soft)] hover:text-[var(--violet)] hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
             aria-label="Settings"
           >
             <svg

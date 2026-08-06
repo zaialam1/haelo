@@ -23,9 +23,11 @@ export function TransitionLink({
   replace,
   scroll,
   prefetch,
+  className,
   ...rest
 }: TransitionLinkProps) {
   const transition = useOptionalPageTransition();
+  const mergedClassName = ["haelo-btn", className].filter(Boolean).join(" ");
 
   return (
     <Link
@@ -33,6 +35,7 @@ export function TransitionLink({
       replace={replace}
       scroll={scroll}
       prefetch={prefetch}
+      className={mergedClassName}
       {...rest}
       onClick={(e) => {
         onClick?.(e);

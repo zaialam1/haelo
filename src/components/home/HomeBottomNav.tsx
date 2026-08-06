@@ -22,7 +22,7 @@ function NavItem({
     <TransitionLink
       href={href}
       variant="fade"
-      className={`flex flex-col items-center gap-0.5 rounded-lg px-3 py-1.5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] ${
+      className={`flex flex-col items-center gap-0.5 rounded-lg px-3 py-1.5 transition-[color,transform,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] ${
         emphasize ? "min-w-[6.25rem]" : "min-w-[5.25rem]"
       }`}
       style={{
