@@ -16,6 +16,7 @@ import {
 } from "@/lib/planets/content";
 import { planetLevelFromSessionCount } from "@/lib/prompts";
 import { mapAnalysisRow, pickAnalysisRow } from "@/lib/sessions/analysisMap";
+import { resolvePlanetSessionPrompt } from "@/lib/sessions/resolvePrompt";
 import type {
   SessionAnalysisRow,
   SessionWithAttempts,
@@ -307,9 +308,22 @@ export async function getVoicePlanetPageData(
   const completedCount = completedPractice.length;
   const growth = growthFromSessions(journeySessions);
 
+  // Same prompt the session page will use when starting from this CTA.
+  let tryThis = base.tryThis;
+  let sessionHref = base.sessionHref;
+  try {
+    const resolved = await resolvePlanetSessionPrompt(userId, planetId);
+    tryThis = resolved.prompt.prompt;
+    sessionHref = `${base.sessionHref}?prompt=${encodeURIComponent(resolved.prompt.id)}`;
+  } catch (e) {
+    console.error("[planet] next prompt resolve failed:", e);
+  }
+
   return {
     content: {
       ...base,
+      tryThis,
+      sessionHref,
       growth,
       recentSessions,
     },

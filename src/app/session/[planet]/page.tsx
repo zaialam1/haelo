@@ -3,12 +3,13 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { RecordingSession } from "@/components/recording/RecordingSession";
 import { getPlanetPageContent } from "@/lib/planets/content";
-import { isPlanet } from "@/lib/prompts";
+import { getPromptById, isPlanet } from "@/lib/prompts";
 import { resolvePlanetSessionPrompt } from "@/lib/sessions/resolvePrompt";
 import { createClient } from "@/lib/supabase/server";
 
 type SessionPageProps = {
   params: Promise<{ planet: string }>;
+  searchParams: Promise<{ prompt?: string }>;
 };
 
 export async function generateMetadata({
@@ -25,8 +26,12 @@ export async function generateMetadata({
   };
 }
 
-export default async function SessionPage({ params }: SessionPageProps) {
+export default async function SessionPage({
+  params,
+  searchParams,
+}: SessionPageProps) {
   const { planet: planetParam } = await params;
+  const { prompt: promptParam } = await searchParams;
 
   if (!isPlanet(planetParam)) {
     return (
@@ -78,16 +83,29 @@ export default async function SessionPage({ params }: SessionPageProps) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect(`/login?next=/session/${planet}`);
+    const next =
+      promptParam && getPromptById(promptParam)?.planet === planet
+        ? `/session/${planet}?prompt=${encodeURIComponent(promptParam)}`
+        : `/session/${planet}`;
+    redirect(`/login?next=${encodeURIComponent(next)}`);
   }
 
   let promptPayload: { id: string; text: string };
   try {
-    const resolved = await resolvePlanetSessionPrompt(user.id, planet);
-    promptPayload = {
-      id: resolved.prompt.id,
-      text: resolved.prompt.prompt,
-    };
+    // Honor the prompt previewed on the planet page when the ID is valid.
+    const fromPlanet = promptParam ? getPromptById(promptParam) : undefined;
+    if (fromPlanet && fromPlanet.planet === planet) {
+      promptPayload = {
+        id: fromPlanet.id,
+        text: fromPlanet.prompt,
+      };
+    } else {
+      const resolved = await resolvePlanetSessionPrompt(user.id, planet);
+      promptPayload = {
+        id: resolved.prompt.id,
+        text: resolved.prompt.prompt,
+      };
+    }
   } catch (e) {
     console.error("[session] prompt resolve failed:", e);
     return (
