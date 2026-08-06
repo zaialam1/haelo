@@ -1,102 +1,80 @@
 "use client";
 
 import { TransitionLink } from "@/components/transitions/TransitionLink";
-import {
-  PlanetAtmosphere,
-  PlanetSurface,
-} from "@/components/planets/PlanetSurface";
+import { EvolvedPlanet } from "@/components/planets/EvolvedPlanet";
 import type { VoicePlanet } from "@/lib/home/voicePlanets";
 import { voicePlanetSizePx } from "@/lib/home/voicePlanets";
+import type { PlanetEvolutionLevel } from "@/lib/planets/evolution";
 
 type VoicePlanetOrbProps = {
   planet: VoicePlanet;
+  /** Evolution stage 1–5. Defaults to base. */
+  level?: PlanetEvolutionLevel;
   floatDelaySec?: number;
+  /** Absolute map placement (default). Gallery uses false. */
+  absolute?: boolean;
+  /** Replaces the tagline under the label. */
+  subtitle?: string;
 };
 
 export function VoicePlanetOrb({
   planet,
+  level = 1,
   floatDelaySec = 0,
+  absolute = true,
+  subtitle,
 }: VoicePlanetOrbProps) {
   const px = voicePlanetSizePx(planet.size);
   const floatDuration = 5 + (floatDelaySec % 1.6);
-  const sizeCss = `clamp(5rem, 20vw, ${px}px)`;
-
-  // #region agent log
-  if (planet.id === "connect" || planet.id === "explore") {
-    fetch('http://127.0.0.1:7260/ingest/327a9bfd-1a4e-4e3a-9bbf-2eff52fa2f90',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'d29eb1'},body:JSON.stringify({sessionId:'d29eb1',runId:'post-fix',hypothesisId:'H2',location:'VoicePlanet.tsx:render',message:'Orbit glow color after surface fix',data:{id:planet.id,voicePlanetColor:planet.color},timestamp:Date.now()})}).catch(()=>{});
-  }
-  // #endregion
+  const sizeCss = absolute
+    ? `clamp(5rem, 20vw, ${px}px)`
+    : `clamp(4.5rem, 13vw, ${Math.min(px, 96)}px)`;
+  const caption = subtitle ?? planet.tagline;
 
   return (
     <TransitionLink
       href={planet.href}
       variant="warp"
       accent={planet.color}
-      className="voice-planet group absolute z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--gold)]"
-      style={{
-        left: `${planet.x}%`,
-        top: `${planet.y}%`,
-      }}
-      aria-label={`${planet.label}: ${planet.tagline}`}
+      className={
+        absolute
+          ? "voice-planet group absolute z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--gold)]"
+          : "voice-planet group relative z-10 flex flex-col items-center gap-1.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--gold)]"
+      }
+      style={absolute ? { left: `${planet.x}%`, top: `${planet.y}%` } : undefined}
+      aria-label={`${planet.label}: ${caption}`}
     >
       <span
-        className="flex flex-col items-center gap-2.5 motion-reduce:animate-none"
+        className="flex flex-col items-center gap-1.5 motion-reduce:animate-none"
         style={{
           animation: `planet-float ${floatDuration}s ease-in-out ${floatDelaySec}s infinite`,
         }}
       >
-        <span
-          className="relative flex items-center justify-center"
+        <EvolvedPlanet
+          planetId={planet.id}
+          level={level}
+          variant={absolute ? "map" : "gallery"}
+          gradientPrefix={`map-${planet.id}-L${level}`}
           style={{ width: sizeCss, height: sizeCss }}
-        >
-          <PlanetAtmosphere id={planet.id} color={planet.color} />
-
-          <span
-            className="voice-planet-core relative block size-full overflow-hidden rounded-full transition-transform duration-300 group-hover:scale-[1.05] group-focus-visible:scale-[1.05]"
-            style={{
-              boxShadow: `
-                0 0 ${18 + planet.glow * 28}px color-mix(in srgb, ${planet.color} 45%, transparent),
-                0 8px 28px color-mix(in srgb, var(--violet) 18%, transparent),
-                inset 0 0 0 1px color-mix(in srgb, #fff8f0 22%, transparent)
-              `,
-            }}
-          >
-            <PlanetSurface id={planet.id} gradientPrefix="map" />
-          </span>
-
-          {planet.moons > 0
-            ? Array.from({ length: Math.min(planet.moons, 3) }).map((_, i) => (
-                <span
-                  key={i}
-                  className="voice-planet-moon pointer-events-none absolute rounded-full"
-                  style={{
-                    width: "12%",
-                    height: "12%",
-                    minWidth: 8,
-                    minHeight: 8,
-                    background: `color-mix(in srgb, ${planet.color} 55%, #fff8f0)`,
-                    top: `${8 + i * 22}%`,
-                    right: `${-12 - i * 10}%`,
-                    boxShadow: `0 0 10px color-mix(in srgb, ${planet.color} 35%, transparent)`,
-                  }}
-                  aria-hidden="true"
-                />
-              ))
-            : null}
-        </span>
+          className="transition-transform duration-300 group-hover:scale-[1.05] group-focus-visible:scale-[1.05]"
+        />
 
         <span
-          className="text-center text-xs font-semibold uppercase tracking-[0.12em] sm:text-sm"
+          className="text-center text-[0.625rem] font-semibold uppercase tracking-[0.12em] sm:text-xs"
           style={{ color: "var(--foreground)" }}
         >
           {planet.label}
         </span>
 
         <span
-          className="voice-planet-tagline max-w-[10rem] text-center text-[0.625rem] leading-snug sm:max-w-[12rem] sm:text-[0.6875rem]"
+          className={
+            absolute
+              ? "voice-planet-tagline max-w-[10rem] text-center text-[0.625rem] leading-snug sm:max-w-[12rem] sm:text-[0.6875rem]"
+              : "max-w-[7rem] text-center text-[0.625rem] leading-snug"
+          }
           style={{ color: "var(--foreground-muted)" }}
         >
-          {planet.tagline}
+          {caption}
         </span>
       </span>
     </TransitionLink>

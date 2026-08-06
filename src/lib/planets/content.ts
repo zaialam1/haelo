@@ -1,5 +1,5 @@
 import type { VoicePlanetId } from "@/lib/home/voicePlanets";
-import { getVoicePlanetById } from "@/lib/home/voicePlanets";
+import type { PlanetEvolutionLevel } from "@/lib/planets/evolution";
 
 export type PlanetRecentSession = {
   id: string;
@@ -33,33 +33,16 @@ export type PlanetPageContent = {
 };
 
 /**
- * Progression hooks for planet visuals.
- * Values will eventually be derived from practice history.
+ * @deprecated Prefer PlanetEvolutionLevel + EvolvedPlanet.
+ * Kept as a thin adapter for any leftover call sites.
  */
 export type PlanetProgression = {
+  level: PlanetEvolutionLevel;
   rings: boolean;
   moons: number;
   glow: number;
   showOrbitalDust: boolean;
 };
-
-export const DEFAULT_PROGRESSION: PlanetProgression = {
-  rings: false,
-  moons: 0,
-  glow: 0.55,
-  showOrbitalDust: false,
-};
-
-export function getPlanetProgression(id: VoicePlanetId): PlanetProgression {
-  const planet = getVoicePlanetById(id);
-  if (!planet) return DEFAULT_PROGRESSION;
-  return {
-    rings: planet.rings,
-    moons: planet.moons,
-    glow: planet.glow,
-    showOrbitalDust: planet.atmosphere === "sparkle",
-  };
-}
 
 export const PLANET_PAGES: Record<VoicePlanetId, PlanetPageContent> = {
   express: {

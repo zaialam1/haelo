@@ -7,14 +7,14 @@ import {
 } from "@/lib/journey/mapSession";
 import type { JourneySession } from "@/lib/journey/types";
 import {
-  DEFAULT_PROGRESSION,
   getPlanetPageContent,
-  getPlanetProgression,
   type PlanetPageContent,
-  type PlanetProgression,
   type PlanetRecentSession,
 } from "@/lib/planets/content";
-import { planetLevelFromSessionCount } from "@/lib/prompts";
+import {
+  evolutionLevelFromSessionCount,
+  type PlanetEvolutionLevel,
+} from "@/lib/planets/evolution";
 import { mapAnalysisRow, pickAnalysisRow } from "@/lib/sessions/analysisMap";
 import { resolvePlanetSessionPrompt } from "@/lib/sessions/resolvePrompt";
 import type {
@@ -76,7 +76,8 @@ const SESSION_SELECT = `
 
 export type VoicePlanetPageModel = {
   content: PlanetPageContent;
-  progression: PlanetProgression;
+  /** Visual evolution stage for this planet (1–5). */
+  evolutionLevel: PlanetEvolutionLevel;
   completedCount: number;
 };
 
@@ -207,21 +208,6 @@ function growthFromSessions(sessions: JourneySession[]): string[] {
   return lines;
 }
 
-function progressionFromPractice(
-  planetId: VoicePlanetId,
-  completedCount: number,
-): PlanetProgression {
-  const base = getPlanetProgression(planetId) ?? DEFAULT_PROGRESSION;
-  const level = planetLevelFromSessionCount(completedCount);
-
-  return {
-    rings: base.rings || level >= 3,
-    moons: Math.min(3, Math.max(base.moons, level - 1)),
-    glow: Math.min(1, base.glow + (level - 1) * 0.08),
-    showOrbitalDust: base.showOrbitalDust || level >= 4,
-  };
-}
-
 async function getPlanetPracticeSessions(
   userId: string,
   planetId: VoicePlanetId,
@@ -277,7 +263,7 @@ export async function getVoicePlanetPageData(
   if (!userId) {
     return {
       content: base,
-      progression: getPlanetProgression(planetId),
+      evolutionLevel: 1,
       completedCount: 0,
     };
   }
@@ -327,7 +313,7 @@ export async function getVoicePlanetPageData(
       growth,
       recentSessions,
     },
-    progression: progressionFromPractice(planetId, completedCount),
+    evolutionLevel: evolutionLevelFromSessionCount(completedCount),
     completedCount,
   };
 }
