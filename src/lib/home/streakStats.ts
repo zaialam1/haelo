@@ -1,4 +1,5 @@
 import { TOPICS } from "@/lib/home/universe";
+import { VOICE_PLANETS } from "@/lib/home/voicePlanets";
 import { createClient } from "@/lib/supabase/client";
 
 export type StreakStats = {
@@ -11,11 +12,28 @@ export type StreakStats = {
   weekActive: boolean[];
 };
 
+type PracticeEvent = {
+  at: string;
+  planetId: string | null;
+  /** Distinct activity unit for "sessions today" */
+  unitId: string;
+};
+
 type ReflectionLite = {
+  id?: string;
   recorded_at: string;
   session_id: string | null;
   session_type: string | null;
   topic_id: string;
+};
+
+type SessionLite = {
+  id: string;
+  planet: string;
+  status: string;
+  completed_at: string | null;
+  created_at: string;
+  session_attempts: { id: string; created_at: string }[] | null;
 };
 
 function localDayKey(iso: string): string {
@@ -35,46 +53,20 @@ function shiftDayKey(key: string, delta: number): string {
 }
 
 /**
- * A calendar day counts toward streak when the user completed:
- * daily, a focus session, or a full main session (5 clips),
- * or — as a graceful fallback — any reflection that day.
+ * A calendar day counts when the user practiced their voice that day —
+ * completed planet/daily sessions, or legacy reflections.
  */
-function buildActiveDays(rows: ReflectionLite[]): Set<string> {
-  const byDay = new Map<string, ReflectionLite[]>();
-  for (const row of rows) {
-    const key = localDayKey(row.recorded_at);
-    const list = byDay.get(key) ?? [];
-    list.push(row);
-    byDay.set(key, list);
-  }
-
+function buildActiveDays(events: PracticeEvent[]): Set<string> {
   const active = new Set<string>();
-  for (const [day, list] of byDay) {
-    if (list.some((r) => r.session_type === "daily")) {
-      active.add(day);
-      continue;
-    }
-    if (list.some((r) => r.session_type === "focus")) {
-      active.add(day);
-      continue;
-    }
-    const mainBySession = new Map<string, number>();
-    for (const r of list) {
-      if (r.session_type !== "main" || !r.session_id) continue;
-      mainBySession.set(r.session_id, (mainBySession.get(r.session_id) ?? 0) + 1);
-    }
-    if ([...mainBySession.values()].some((n) => n >= 5)) {
-      active.add(day);
-      continue;
-    }
-    // Any recording still counts so early usage isn't stuck at 0
-    if (list.length > 0) active.add(day);
+  for (const event of events) {
+    active.add(localDayKey(event.at));
   }
   return active;
 }
 
 function computeStreak(active: Set<string>): number {
   const today = todayKey();
+  // Streak continues overnight if yesterday was active and today isn't yet.
   let cursor = active.has(today) ? today : shiftDayKey(today, -1);
   if (!active.has(cursor)) return 0;
 
@@ -86,29 +78,33 @@ function computeStreak(active: Set<string>): number {
   return streak;
 }
 
-function sessionsOnDay(rows: ReflectionLite[], day: string): number {
-  const todays = rows.filter((r) => localDayKey(r.recorded_at) === day);
+function sessionsOnDay(events: PracticeEvent[], day: string): number {
   const ids = new Set<string>();
-  let orphans = 0;
-  for (const r of todays) {
-    if (r.session_id) ids.add(r.session_id);
-    else orphans += 1;
+  for (const event of events) {
+    if (localDayKey(event.at) === day) ids.add(event.unitId);
   }
-  return ids.size + orphans;
+  return ids.size;
 }
 
-function topPlanet(rows: ReflectionLite[]): {
+function topPlanet(events: PracticeEvent[]): {
   id: string | null;
   label: string | null;
 } {
-  if (rows.length === 0) return { id: null, label: null };
+  const withPlanet = events.filter((e) => e.planetId);
+  if (withPlanet.length === 0) return { id: null, label: null };
+
   const counts = new Map<string, number>();
-  for (const r of rows) {
-    counts.set(r.topic_id, (counts.get(r.topic_id) ?? 0) + 1);
+  for (const e of withPlanet) {
+    const id = e.planetId!;
+    counts.set(id, (counts.get(id) ?? 0) + 1);
   }
   const best = [...counts.entries()].sort((a, b) => b[1] - a[1])[0];
   if (!best) return { id: null, label: null };
-  const label = TOPICS.find((t) => t.id === best[0])?.label ?? best[0];
+
+  const label =
+    VOICE_PLANETS.find((p) => p.id === best[0])?.label ??
+    TOPICS.find((t) => t.id === best[0])?.label ??
+    best[0];
   return { id: best[0], label };
 }
 
@@ -116,12 +112,53 @@ function topPlanet(rows: ReflectionLite[]): {
 function currentWeekDayKeys(d = new Date()): string[] {
   const day = d.getDay(); // 0 Sun … 6 Sat
   const mondayOffset = day === 0 ? -6 : 1 - day;
-  const monday = new Date(d.getFullYear(), d.getMonth(), d.getDate() + mondayOffset);
+  const monday = new Date(
+    d.getFullYear(),
+    d.getMonth(),
+    d.getDate() + mondayOffset,
+  );
   return Array.from({ length: 7 }, (_, i) => {
     const x = new Date(monday);
     x.setDate(monday.getDate() + i);
     return todayKey(x);
   });
+}
+
+function eventsFromReflections(rows: ReflectionLite[]): PracticeEvent[] {
+  return rows.map((row, index) => ({
+    at: row.recorded_at,
+    planetId: row.topic_id || null,
+    unitId: row.session_id
+      ? `reflection-session:${row.session_id}`
+      : `reflection:${row.id ?? `${row.recorded_at}-${index}`}`,
+  }));
+}
+
+/**
+ * Planet practice sessions. A day counts when the user saved audio
+ * (attempt exists) or finished the session — not empty drafts.
+ */
+function eventsFromSessions(rows: SessionLite[]): PracticeEvent[] {
+  const events: PracticeEvent[] = [];
+
+  for (const row of rows) {
+    const attempts = row.session_attempts ?? [];
+    if (row.status !== "completed" && attempts.length === 0) continue;
+
+    // Completed → finish day; otherwise first practice day (session create).
+    const at =
+      row.status === "completed"
+        ? (row.completed_at ?? row.created_at)
+        : row.created_at;
+
+    events.push({
+      at,
+      planetId: row.planet,
+      unitId: `session:${row.id}`,
+    });
+  }
+
+  return events;
 }
 
 export async function fetchStreakStats(): Promise<StreakStats> {
@@ -141,26 +178,46 @@ export async function fetchStreakStats(): Promise<StreakStats> {
     } = await supabase.auth.getUser();
     if (!user) return empty;
 
-    const { data, error } = await supabase
-      .from("reflections")
-      .select("recorded_at, session_id, session_type, topic_id")
-      .eq("user_id", user.id)
-      .order("recorded_at", { ascending: true });
+    const [reflectionsRes, sessionsRes] = await Promise.all([
+      supabase
+        .from("reflections")
+        .select("id, recorded_at, session_id, session_type, topic_id")
+        .eq("user_id", user.id)
+        .order("recorded_at", { ascending: true }),
+      supabase
+        .from("sessions")
+        .select(
+          "id, planet, status, completed_at, created_at, session_attempts(id, created_at)",
+        )
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: true }),
+    ]);
 
-    if (error || !data) {
-      console.error("[streak] fetch failed:", error?.message);
-      return empty;
+    if (reflectionsRes.error) {
+      console.error("[streak] reflections fetch failed:", reflectionsRes.error.message);
+    }
+    if (sessionsRes.error) {
+      console.error("[streak] sessions fetch failed:", sessionsRes.error.message);
     }
 
-    const rows = data as ReflectionLite[];
-    const active = buildActiveDays(rows);
-    const planet = topPlanet(rows);
+    const reflectionRows = (reflectionsRes.data ?? []) as ReflectionLite[];
+    const sessionRows = (sessionsRes.data ?? []) as SessionLite[];
+
+    const events = [
+      ...eventsFromReflections(reflectionRows),
+      ...eventsFromSessions(sessionRows),
+    ];
+
+    const active = buildActiveDays(events);
+    const planet = topPlanet(events);
     const weekKeys = currentWeekDayKeys();
 
     return {
       streakDays: computeStreak(active),
-      sessionsToday: sessionsOnDay(rows, todayKey()),
-      totalReflections: rows.length,
+      sessionsToday: sessionsOnDay(events, todayKey()),
+      totalReflections: reflectionRows.length + sessionRows.filter(
+        (s) => s.status === "completed" || (s.session_attempts?.length ?? 0) > 0,
+      ).length,
       topPlanetId: planet.id,
       topPlanetLabel: planet.label,
       weekActive: weekKeys.map((k) => active.has(k)),

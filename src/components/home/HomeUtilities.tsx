@@ -84,15 +84,32 @@ export function HomeUtilities() {
 
   useEffect(() => {
     let cancelled = false;
-    fetchStreakStats()
-      .then((next) => {
-        if (!cancelled) setStats(next);
-      })
-      .catch(() => {
-        if (!cancelled) setStats(null);
-      });
+
+    function load() {
+      fetchStreakStats()
+        .then((next) => {
+          if (!cancelled) setStats(next);
+        })
+        .catch(() => {
+          if (!cancelled) setStats(null);
+        });
+    }
+
+    load();
+
+    function onFocus() {
+      load();
+    }
+    function onVisibility() {
+      if (document.visibilityState === "visible") load();
+    }
+
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onVisibility);
     return () => {
       cancelled = true;
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [panel]);
 
