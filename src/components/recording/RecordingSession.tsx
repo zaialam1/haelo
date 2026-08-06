@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { ResponseReview } from "@/components/session/ResponseReview";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
@@ -14,6 +14,10 @@ import {
   kickoffSessionProcessing,
   saveSessionAttempt,
 } from "@/lib/sessions/saveSession";
+import {
+  planetSessionFlow,
+  type SessionFlowConfig,
+} from "@/lib/sessions/sessionFlow";
 
 export type SessionPromptPayload = {
   id: string;
@@ -32,6 +36,12 @@ type SessionUiPhase =
 type RecordingSessionProps = {
   planet: Planet;
   prompt: SessionPromptPayload;
+  /** Why this reflection matters (Orbit questions). */
+  explanation?: string | null;
+  /** Shared planet/orbit navigation + source metadata. Defaults to planet flow. */
+  flow?: SessionFlowConfig;
+  /** Optional progress / constellation chrome above the prompt. */
+  headerSlot?: ReactNode;
 };
 
 function formatTime(seconds: number): string {
@@ -40,13 +50,20 @@ function formatTime(seconds: number): string {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
-export function RecordingSession({ planet, prompt }: RecordingSessionProps) {
+export function RecordingSession({
+  planet,
+  prompt,
+  explanation,
+  flow: flowProp,
+  headerSlot,
+}: RecordingSessionProps) {
   const content = getPlanetPageContent(planet);
   const voicePlanet = getVoicePlanetById(planet);
   const accent = voicePlanet?.color ?? "var(--violet)";
   const transition = useOptionalPageTransition();
   const router = useRouter();
   const statusId = useId();
+  const flow = flowProp ?? planetSessionFlow(planet);
 
   const recorder = useAudioRecorder({
     maxSeconds: DEFAULT_MAX_RECORDING_SECONDS,
@@ -101,12 +118,16 @@ export function RecordingSession({ planet, prompt }: RecordingSessionProps) {
         blob: recorder.blob,
         durationSeconds: recorder.elapsedSeconds,
         mimeType: recorder.mimeType || recorder.blob.type || "audio/webm",
-        source: "planet",
+        source: flow.source,
         attemptNumber: 1,
         transcript: recorder.transcript,
+        orbitKey: flow.orbit?.orbitKey,
+        orbitQuestionKey: flow.orbit?.orbitQuestionKey,
+        userOrbitProgressId: flow.orbit?.userOrbitProgressId,
+        orbitVersion: flow.orbit?.orbitVersion,
       });
       kickoffSessionProcessing(result.sessionId);
-      router.push(`/session/${planet}/${result.sessionId}/review`);
+      router.push(flow.reviewHref(result.sessionId));
     } catch (e) {
       setSaveError(
         e instanceof Error
@@ -130,8 +151,8 @@ export function RecordingSession({ planet, prompt }: RecordingSessionProps) {
     void recorder.startRecording();
   }
 
-  function exitToPlanet() {
-    const href = `/${planet}`;
+  function handleExit() {
+    const href = flow.exitHref;
     if (transition) {
       transition.navigate({ href, variant: "fade" });
     } else {
@@ -158,13 +179,15 @@ export function RecordingSession({ planet, prompt }: RecordingSessionProps) {
         </div>
         <button
           type="button"
-          onClick={exitToPlanet}
+          onClick={handleExit}
           className="text-sm font-medium transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           style={{ color: "var(--foreground-muted)" }}
         >
-          Exit
+          {flow.exitLabel}
         </button>
       </div>
+
+      {headerSlot ? <div className="mt-6">{headerSlot}</div> : null}
 
       <div className="flex flex-1 flex-col justify-center py-8 sm:py-12">
         <p
@@ -181,6 +204,23 @@ export function RecordingSession({ planet, prompt }: RecordingSessionProps) {
         >
           &ldquo;{prompt.text}&rdquo;
         </h1>
+
+        {explanation ? (
+          <div className="mt-5 max-w-lg">
+            <p
+              className="text-[0.6875rem] font-semibold tracking-[0.1em] uppercase"
+              style={{ color: "var(--foreground-muted)" }}
+            >
+              Why this matters
+            </p>
+            <p
+              className="mt-2 text-[0.9375rem] leading-relaxed"
+              style={{ color: "var(--foreground-muted)" }}
+            >
+              {explanation}
+            </p>
+          </div>
+        ) : null}
 
         {(phase === "ready" || phase === "error") && (
           <p
@@ -365,11 +405,11 @@ export function RecordingSession({ planet, prompt }: RecordingSessionProps) {
 
         {phase === "error" && recorder.error?.kind === "unsupported" && (
           <TransitionLink
-            href={`/${planet}`}
+            href={flow.exitHref}
             variant="fade"
             className="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3 text-sm font-semibold text-[var(--on-violet)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           >
-            Return to {content.label}
+            {flow.source === "orbit" ? "Back to Orbit" : `Return to ${content.label}`}
           </TransitionLink>
         )}
       </div>

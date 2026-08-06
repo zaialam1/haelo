@@ -13,11 +13,18 @@ import {
   kickoffSessionProcessing,
   saveSessionAttempt,
 } from "@/lib/sessions/saveSession";
+import {
+  planetSessionFlow,
+  orbitSessionFlowFromSession,
+  type SessionFlowConfig,
+} from "@/lib/sessions/sessionFlow";
 
 type SessionRetryClientProps = {
   planet: Planet;
   sessionId: string;
   initialSession: SessionDetail;
+  orbitKey?: string;
+  flow?: SessionFlowConfig;
 };
 
 type Phase =
@@ -39,11 +46,24 @@ export function SessionRetryClient({
   planet,
   sessionId,
   initialSession,
+  orbitKey,
+  flow: flowProp,
 }: SessionRetryClientProps) {
   const router = useRouter();
   const content = getPlanetPageContent(planet);
   const accent = getVoicePlanetById(planet)?.color ?? "var(--violet)";
   const statusId = useId();
+  const flow =
+    flowProp ??
+    (orbitKey
+      ? orbitSessionFlowFromSession({
+          orbitKey,
+          planet,
+          orbitQuestionKey: initialSession.orbit_question_key,
+          userOrbitProgressId: initialSession.user_orbit_progress_id,
+          orbitVersion: initialSession.orbit_version,
+        })
+      : planetSessionFlow(planet));
 
   const experiment = initialSession.analysis?.experiment;
   const existingSecond = initialSession.session_attempts.find(
@@ -62,9 +82,9 @@ export function SessionRetryClient({
   // If attempt 2 already exists (refresh), go to compare.
   useEffect(() => {
     if (existingSecond) {
-      router.replace(`/session/${planet}/${sessionId}/compare`);
+      router.replace(flow.compareHref(sessionId));
     }
-  }, [existingSecond, planet, router, sessionId]);
+  }, [existingSecond, flow, router, sessionId]);
 
   let phase: Phase = "ready";
   if (saving) phase = "uploading";
@@ -94,7 +114,7 @@ export function SessionRetryClient({
         transcript: recorder.transcript,
       });
       kickoffSessionProcessing(sessionId);
-      router.push(`/session/${planet}/${sessionId}/compare`);
+      router.push(flow.compareHref(sessionId));
     } catch (e) {
       setSaveError(
         e instanceof Error ? e.message : "Could not save this recording.",

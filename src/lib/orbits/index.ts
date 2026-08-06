@@ -22,3 +22,19 @@ export {
   recordOrbitQuestionCompleted,
   buildOrbitList,
 } from "./progress";
+export {
+  resolveNextOrbitReflection,
+  listOrbitProgressSessions,
+  getCanonicalOrbitSessions,
+} from "./runtime";
+export { ensureOrbitSummativeAnalysis } from "./synthesize";
+export {
+  PLANET_LABEL,
+  PLANET_COLOR,
+  REGION_ACCENT,
+  formatOrbitMeta,
+  formatPlanetList,
+  deriveOrbitHelpPoints,
+  orbitCtaLabel,
+  getOrbitStatus,
+} from "./ui";

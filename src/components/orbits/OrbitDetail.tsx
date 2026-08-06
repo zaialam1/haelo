@@ -1,19 +1,18 @@
 import { TransitionLink } from "@/components/transitions/TransitionLink";
+import { OrbitCelestialMark } from "@/components/orbits/OrbitCelestialMark";
+import { PlanetTags } from "@/components/orbits/PlanetTags";
 import { beginOrbitAction } from "@/lib/orbits/actions";
+import {
+  deriveOrbitHelpPoints,
+  formatOrbitMeta,
+  orbitCtaLabel,
+} from "@/lib/orbits/ui";
 import type { OrbitDefinition, UserOrbitProgressRow } from "@/lib/orbits/types";
 import type { Planet } from "@/lib/prompts";
-
-const PLANET_LABEL: Record<Planet, string> = {
-  express: "Express",
-  stand: "Stand",
-  connect: "Connect",
-  explore: "Explore",
-};
 
 export function OrbitDetail({
   orbit,
   regionTitle,
-  durationLabel,
   planetSequence,
   planetsInvolved,
   progress,
@@ -28,158 +27,186 @@ export function OrbitDetail({
   signedIn: boolean;
 }) {
   const status = progress?.status ?? "not_started";
-  const cta =
-    status === "completed"
-      ? "View progress"
-      : status === "in_progress"
-        ? "Continue Orbit"
-        : "Begin Orbit";
+  const cta = orbitCtaLabel(status);
+  const helpPoints = deriveOrbitHelpPoints(orbit);
+  const loginHref = `/login?next=${encodeURIComponent(`/orbits/${orbit.orbitKey}`)}`;
 
   return (
     <article>
       <TransitionLink
-        href={`/orbits?region=${orbit.regionKey}`}
+        href="/orbits"
         variant="fade"
-        className="text-[0.75rem] font-medium"
+        className="inline-flex items-center gap-1.5 text-[0.75rem] font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         style={{ color: "var(--violet)" }}
       >
-        ← {regionTitle}
+        <span aria-hidden="true">←</span>
+        {regionTitle}
       </TransitionLink>
 
-      <p
-        className="mt-6 text-[0.75rem] font-medium uppercase tracking-[0.14em]"
-        style={{ color: "var(--foreground-muted)" }}
-      >
-        Orbit · {durationLabel}
-      </p>
-      <h1
-        className="mt-2 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight sm:text-4xl"
-        style={{ color: "var(--foreground)" }}
-      >
-        {orbit.openingTitle}
-      </h1>
+      <header className="mt-6 flex gap-5 sm:gap-6">
+        <OrbitCelestialMark
+          orbitKey={orbit.orbitKey}
+          regionKey={orbit.regionKey}
+          status={status}
+          size="lg"
+          className="mt-1"
+        />
+        <div className="min-w-0">
+          <p
+            className="text-[0.75rem] font-medium uppercase tracking-[0.14em]"
+            style={{ color: "var(--foreground-muted)" }}
+          >
+            Orbit · {regionTitle}
+          </p>
+          <h1
+            className="mt-1.5 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight sm:text-5xl"
+            style={{ color: "var(--foreground)" }}
+          >
+            {orbit.title}
+          </h1>
+          <p
+            className="mt-2 max-w-2xl text-base leading-relaxed sm:text-[1.0625rem]"
+            style={{ color: "var(--foreground-muted)" }}
+          >
+            {orbit.shortDescription}
+          </p>
+          {status === "completed" ? (
+            <p
+              className="mt-2 text-[0.6875rem] font-medium uppercase tracking-[0.12em]"
+              style={{
+                color:
+                  "color-mix(in srgb, var(--gold) 85%, var(--foreground-muted))",
+              }}
+            >
+              Completed
+            </p>
+          ) : null}
+          {status === "in_progress" && progress ? (
+            <p
+              className="mt-2 text-[0.8125rem] font-medium"
+              style={{ color: "var(--violet)" }}
+            >
+              {Math.min(6, Math.max(1, progress.current_question_index))} of 6
+              reflections
+            </p>
+          ) : null}
+        </div>
+      </header>
 
       <div
-        className="mt-5 space-y-4 whitespace-pre-line text-[0.9375rem] leading-relaxed"
+        className="mt-8 space-y-4 whitespace-pre-line text-[0.9375rem] leading-relaxed"
         style={{ color: "var(--foreground-muted)" }}
       >
         {orbit.openingBody}
       </div>
 
+      {helpPoints.length > 0 ? (
+        <section className="mt-10" aria-labelledby="orbit-helps-heading">
+          <h2
+            id="orbit-helps-heading"
+            className="text-[0.8125rem] font-semibold tracking-tight"
+            style={{ color: "var(--foreground)" }}
+          >
+            What this Orbit helps you do
+          </h2>
+          <ul className="mt-3 space-y-2.5">
+            {helpPoints.map((point) => (
+              <li key={point} className="flex gap-2.5">
+                <span
+                  className="mt-2 size-1 shrink-0 rounded-full"
+                  style={{
+                    background: "var(--violet)",
+                    boxShadow:
+                      "0 0 8px color-mix(in srgb, var(--violet) 40%, transparent)",
+                  }}
+                  aria-hidden="true"
+                />
+                <span
+                  className="text-[0.875rem] leading-relaxed"
+                  style={{ color: "var(--foreground-muted)" }}
+                >
+                  {point}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      <section className="mt-10" aria-labelledby="orbit-planets-heading">
+        <h2
+          id="orbit-planets-heading"
+          className="text-[0.8125rem] font-semibold tracking-tight"
+          style={{ color: "var(--foreground)" }}
+        >
+          Planets involved
+        </h2>
+        <PlanetTags
+          planets={planetSequence}
+          sequenced
+          className="mt-3"
+        />
+        <p className="sr-only">
+          Unique planets:{" "}
+          {planetsInvolved.map((p) => p).join(", ")}
+        </p>
+      </section>
+
       <p
         className="mt-6 text-[0.8125rem]"
         style={{ color: "var(--foreground-muted)" }}
       >
-        Skills in this Orbit:{" "}
-        {planetsInvolved.map((p) => PLANET_LABEL[p]).join(" · ")}
+        {formatOrbitMeta(orbit)}
       </p>
 
-      <form action={beginOrbitAction} className="mt-8">
-        <input type="hidden" name="orbitKey" value={orbit.orbitKey} />
+      <div className="mt-8">
         {signedIn ? (
-          <button
-            type="submit"
-            className="rounded-full px-6 py-3 text-[0.875rem] font-semibold transition-opacity hover:opacity-90"
-            style={{
-              background: "var(--violet)",
-              color: "var(--background)",
-            }}
-          >
-            {cta}
-          </button>
+          <form action={beginOrbitAction}>
+            <input type="hidden" name="orbitKey" value={orbit.orbitKey} />
+            <button
+              type="submit"
+              className="inline-flex min-h-11 items-center rounded-full px-6 py-3 text-[0.875rem] font-semibold transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+              style={{
+                background: "var(--violet)",
+                color: "var(--on-violet)",
+              }}
+            >
+              {cta}
+            </button>
+          </form>
         ) : (
           <TransitionLink
-            href={`/login?next=${encodeURIComponent(`/orbits/${orbit.orbitKey}`)}`}
+            href={loginHref}
             variant="fade"
-            className="inline-block rounded-full px-6 py-3 text-[0.875rem] font-semibold"
+            className="inline-flex min-h-11 items-center rounded-full px-6 py-3 text-[0.875rem] font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
             style={{
               background: "var(--violet)",
-              color: "var(--background)",
+              color: "var(--on-violet)",
             }}
           >
             Sign in to begin
           </TransitionLink>
         )}
-      </form>
-
-      {status === "in_progress" && progress ? (
-        <p
-          className="mt-3 text-[0.8125rem]"
-          style={{ color: "var(--foreground-muted)" }}
-        >
-          You&apos;re on question {progress.current_question_index} of 6.
-          Recording for Orbit questions will use the shared session flow next.
-        </p>
-      ) : null}
+      </div>
 
       {status === "completed" ? (
         <p
-          className="mt-3 text-[0.8125rem]"
+          className="mt-4 max-w-md text-[0.8125rem] leading-relaxed"
           style={{ color: "var(--foreground-muted)" }}
         >
-          You&apos;ve completed this Orbit. Summative analysis will appear here
-          once generation is wired.
+          You&apos;ve completed this Orbit. Revisit to see what came into focus
+          across your six reflections.
         </p>
       ) : null}
 
-      <section className="mt-12">
-        <h2
-          className="text-lg font-semibold tracking-tight"
-          style={{ color: "var(--foreground)" }}
+      {status === "in_progress" ? (
+        <p
+          className="mt-4 max-w-md text-[0.8125rem] leading-relaxed"
+          style={{ color: "var(--foreground-muted)" }}
         >
-          Six questions
-        </h2>
-        <ol className="mt-4 space-y-3">
-          {orbit.questions.map((q, index) => {
-            const done =
-              status === "completed" ||
-              (progress != null &&
-                progress.current_question_index > q.sequenceNumber);
-            const current =
-              status === "in_progress" &&
-              progress?.current_question_index === q.sequenceNumber;
-            return (
-              <li
-                key={q.questionKey}
-                className="rounded-xl px-4 py-3"
-                style={{
-                  background: current
-                    ? "color-mix(in srgb, var(--violet) 12%, transparent)"
-                    : "color-mix(in srgb, var(--foreground) 3%, transparent)",
-                  border: current
-                    ? "1px solid color-mix(in srgb, var(--violet) 28%, transparent)"
-                    : "1px solid transparent",
-                }}
-              >
-                <div className="flex items-baseline justify-between gap-2">
-                  <span
-                    className="text-[0.6875rem] font-semibold uppercase tracking-wide"
-                    style={{ color: "var(--violet)" }}
-                  >
-                    Q{q.sequenceNumber} · {PLANET_LABEL[q.planet]}
-                    {done ? " · done" : current ? " · now" : ""}
-                  </span>
-                </div>
-                <p
-                  className="mt-1 text-[0.9375rem] font-medium"
-                  style={{ color: "var(--foreground)" }}
-                >
-                  {q.prompt}
-                </p>
-                <p
-                  className="mt-1 text-[0.8125rem] leading-relaxed"
-                  style={{ color: "var(--foreground-muted)" }}
-                >
-                  {q.explanation}
-                </p>
-                <p className="sr-only">
-                  Sequence planet {index + 1}: {planetSequence[index]}
-                </p>
-              </li>
-            );
-          })}
-        </ol>
-      </section>
+          Continue when you&apos;re ready — one reflection at a time.
+        </p>
+      ) : null}
     </article>
   );
 }

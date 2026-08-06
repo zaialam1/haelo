@@ -174,6 +174,14 @@ export function JourneySessionPanel({
                     Daily prompt
                   </p>
                 ) : null}
+                {session.sourceType === "orbit" && session.orbitTitle ? (
+                  <p
+                    className="mt-2 text-[0.75rem] font-medium"
+                    style={{ color: "var(--foreground-muted)" }}
+                  >
+                    Part of: {session.orbitTitle}
+                  </p>
+                ) : null}
               </div>
               <button
                 type="button"

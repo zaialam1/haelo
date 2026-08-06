@@ -6,10 +6,8 @@ export const FIGURING_THINGS_OUT_ORBITS: readonly OrbitDefinition[] = [
     orbitKey: "figuring_things_out_i_dont_know_what_i_want",
     title: "I Don't Know What I Want",
     regionKey: "figuring_things_out",
-    shortDescription:
-      "Uncertain about what you want or which direction to choose.",
-    situation:
-      "Uncertain about what you want or which direction to choose.",
+    shortDescription: "You're unsure what you actually want right now.",
+    situation: "You're unsure what you actually want right now.",
     openingTitle: "I Don't Know What I Want",
     openingBody: `Not knowing doesn't mean you have nothing to say.
 
@@ -57,8 +55,8 @@ Sometimes your own answer is buried underneath expectations, fear, excitement, a
     orbitKey: "figuring_things_out_everyone_else_seems_ahead",
     title: "Everyone Else Seems Ahead",
     regionKey: "figuring_things_out",
-    shortDescription: "Feeling behind compared to people around you.",
-    situation: "Feeling behind compared to people around you.",
+    shortDescription: "It feels like everyone else is further along than you.",
+    situation: "It feels like everyone else is further along than you.",
     openingTitle: "Everyone Else Seems Ahead",
     openingBody: `It's easy to compare the inside of your life to the outside of everyone else's.
 
@@ -105,8 +103,8 @@ This Orbit helps you figure out what the comparison is actually pointing toward.
     orbitKey: "figuring_things_out_something_is_changing",
     title: "Something Is Changing",
     regionKey: "figuring_things_out",
-    shortDescription: "Navigating a transition or shift in your life.",
-    situation: "Navigating a transition or shift in your life.",
+    shortDescription: "Something in your life is shifting, and you're trying to keep up.",
+    situation: "Something in your life is shifting, and you're trying to keep up.",
     openingTitle: "Something Is Changing",
     openingBody: `Change can feel exciting, sad, terrifying, freeing, or all of those things at once.
 
@@ -152,8 +150,8 @@ This Orbit gives you room to notice what's changing without deciding immediately
     orbitKey: "figuring_things_out_what_do_i_actually_care_about",
     title: "What Do I Actually Care About?",
     regionKey: "figuring_things_out",
-    shortDescription: "Trying to figure out what genuinely matters to you.",
-    situation: "Trying to figure out what genuinely matters to you.",
+    shortDescription: "You're trying to figure out what genuinely matters to you.",
+    situation: "You're trying to figure out what genuinely matters to you.",
     openingTitle: "What Do I Actually Care About?",
     openingBody: `Sometimes you're so busy doing things that you don't stop to ask why any of them matter.
 
@@ -200,8 +198,8 @@ This Orbit is about noticing what feels genuinely important to you.`,
     orbitKey: "figuring_things_out_who_am_i_around_different_people",
     title: "Who Am I Around Different People?",
     regionKey: "figuring_things_out",
-    shortDescription: "Noticing how you change around different people.",
-    situation: "Noticing how you change around different people.",
+    shortDescription: "You notice yourself changing depending on who you're with.",
+    situation: "You notice yourself changing depending on who you're with.",
     openingTitle: "Who Am I Around Different People?",
     openingBody: `Most people aren't exactly the same around everyone. That isn't automatically fake.
 
@@ -248,8 +246,8 @@ This Orbit helps you notice which differences feel natural and which ones make y
     orbitKey: "figuring_things_out_i_changed_my_mind",
     title: "I Changed My Mind",
     regionKey: "figuring_things_out",
-    shortDescription: "Your perspective or beliefs have shifted.",
-    situation: "Your perspective or beliefs have shifted.",
+    shortDescription: "Your perspective shifted, and you're making sense of that.",
+    situation: "Your perspective shifted, and you're making sense of that.",
     openingTitle: "I Changed My Mind",
     openingBody: `Changing your mind isn't automatically weakness. Sometimes it's evidence that you learned something.
 
@@ -296,9 +294,8 @@ This Orbit helps you understand what changed and whether you actually believe so
     orbitKey: "figuring_things_out_big_decision",
     title: "Big Decision",
     regionKey: "figuring_things_out",
-    shortDescription:
-      "Facing a choice that feels important or high-stakes.",
-    situation: "Facing a choice that feels important or high-stakes.",
+    shortDescription: "You're choosing between options that both matter.",
+    situation: "You're choosing between options that both matter.",
     openingTitle: "Big Decision",
     openingBody: `Some choices feel bigger because they seem like they're deciding your whole future. Usually they aren't.
 
@@ -346,8 +343,8 @@ But they still deserve real thought.`,
     orbitKey: "figuring_things_out_am_i_doing_this_for_me",
     title: "Am I Doing This for Me?",
     regionKey: "figuring_things_out",
-    shortDescription: "Wondering whether a goal is really yours.",
-    situation: "Wondering whether a goal is really yours.",
+    shortDescription: "You're wondering whether a goal is really yours.",
+    situation: "You're wondering whether a goal is really yours.",
     openingTitle: "Am I Doing This for Me?",
     openingBody: `Sometimes it's hard to tell where your own ambition ends and everyone else's expectations begin.
 
@@ -394,8 +391,8 @@ This Orbit helps you separate the two.`,
     orbitKey: "figuring_things_out_i_feel_stuck",
     title: "I Feel Stuck",
     regionKey: "figuring_things_out",
-    shortDescription: "Feeling unable to move forward in some area of life.",
-    situation: "Feeling unable to move forward in some area of life.",
+    shortDescription: "You know something needs to change but don't know how to move.",
+    situation: "You know something needs to change but don't know how to move.",
     openingTitle: "I Feel Stuck",
     openingBody: `Sometimes you don't need a giant breakthrough.
 
@@ -442,9 +439,8 @@ You need to figure out what is actually keeping you in the same place.`,
     orbitKey: "figuring_things_out_what_kind_of_person_do_i_want_to_be",
     title: "What Kind of Person Do I Want to Be?",
     regionKey: "figuring_things_out",
-    shortDescription:
-      "Thinking about the qualities you want to carry forward.",
-    situation: "Thinking about the qualities you want to carry forward.",
+    shortDescription: "You're thinking about the kind of person you want to become.",
+    situation: "You're thinking about the kind of person you want to become.",
     openingTitle: "What Kind of Person Do I Want to Be?",
     openingBody: `You don't need to know exactly who you're becoming.
 

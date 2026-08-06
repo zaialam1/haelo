@@ -22,21 +22,66 @@ import {
   type FeelingReflection,
   type SoundedLikeYou,
 } from "@/lib/sessions/types";
+import {
+  planetSessionFlow,
+  orbitSessionFlowFromSession,
+  type SessionFlowConfig,
+} from "@/lib/sessions/sessionFlow";
 
 type SessionReviewClientProps = {
   planet: Planet;
   sessionId: string;
   initialSession: SessionDetail;
+  /** Prefer orbitKey over flow — flow contains functions and cannot cross RSC. */
+  orbitKey?: string;
+  flow?: SessionFlowConfig;
 };
 
 export function SessionReviewClient({
   planet,
   sessionId,
   initialSession,
+  orbitKey,
+  flow: flowProp,
 }: SessionReviewClientProps) {
   const router = useRouter();
   const content = getPlanetPageContent(planet);
   const accent = getVoicePlanetById(planet)?.color ?? "var(--violet)";
+  const flow =
+    flowProp ??
+    (orbitKey
+      ? orbitSessionFlowFromSession({
+          orbitKey,
+          planet,
+          orbitQuestionKey: initialSession.orbit_question_key,
+          userOrbitProgressId: initialSession.user_orbit_progress_id,
+          orbitVersion: initialSession.orbit_version,
+        })
+      : planetSessionFlow(planet));
+
+  // #region agent log
+  fetch("http://127.0.0.1:7260/ingest/327a9bfd-1a4e-4e3a-9bbf-2eff52fa2f90", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Debug-Session-Id": "965f52",
+    },
+    body: JSON.stringify({
+      sessionId: "965f52",
+      runId: "post-fix",
+      hypothesisId: "B",
+      location: "SessionReviewClient.tsx:init",
+      message: "SessionReviewClient resolved flow on client",
+      data: {
+        flowSource: flow.source,
+        usedOrbitKeyProp: Boolean(orbitKey),
+        usedFlowProp: Boolean(flowProp),
+        reviewHrefType: typeof flow.reviewHref,
+      },
+      timestamp: Date.now(),
+    }),
+  }).catch(() => {});
+  // #endregion
 
   const [session, setSession] = useState(initialSession);
   const [feeling, setFeeling] = useState<FeelingReflection | null>(
@@ -164,7 +209,7 @@ export function SessionReviewClient({
     try {
       await persistReflectionNow();
       await completeSession(sessionId);
-      router.push(`/session/${planet}/${sessionId}/complete`);
+      router.push(flow.afterCompleteHref(sessionId));
     } catch (e) {
       setError(
         e instanceof Error ? e.message : "Could not finish this session.",
@@ -179,7 +224,7 @@ export function SessionReviewClient({
     try {
       await persistReflectionNow();
       await completeSession(sessionId);
-      router.push(`/session/${planet}/${sessionId}/complete`);
+      router.push(flow.afterCompleteHref(sessionId));
     } catch (e) {
       setError(
         e instanceof Error ? e.message : "Could not finish this session.",
@@ -189,7 +234,7 @@ export function SessionReviewClient({
   }
 
   function handleTryAgain() {
-    router.push(`/session/${planet}/${sessionId}/retry`);
+    router.push(flow.retryHref(sessionId));
   }
 
   return (
@@ -207,7 +252,7 @@ export function SessionReviewClient({
             fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
           }}
         >
-          Session Review
+          {flow.reviewTitle ?? "Session Review"}
         </h1>
       </header>
 
@@ -441,9 +486,7 @@ export function SessionReviewClient({
               <button
                 type="button"
                 disabled={busy}
-                onClick={() =>
-                  router.push(`/session/${planet}/${sessionId}/compare`)
-                }
+                onClick={() => router.push(flow.compareHref(sessionId))}
                 className="inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3.5 text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
                 style={{
                   background: "var(--gold)",
@@ -459,7 +502,7 @@ export function SessionReviewClient({
               onClick={() => void handleFinish()}
               className="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-sm font-semibold text-[var(--on-violet)] transition-opacity hover:opacity-90 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
             >
-              Finish Session
+              {flow.finishLabel}
             </button>
           </div>
         </section>
@@ -477,12 +520,14 @@ export function SessionReviewClient({
 
       <div className="mt-auto pt-12">
         <TransitionLink
-          href={`/${planet}`}
+          href={flow.exitHref}
           variant="fade"
           className="text-sm font-medium transition-opacity hover:opacity-70"
           style={{ color: "var(--foreground-muted)" }}
         >
-          Back to {content.label}
+          {flow.source === "orbit"
+            ? "Back to Orbit"
+            : `Back to ${content.label}`}
         </TransitionLink>
       </div>
     </div>

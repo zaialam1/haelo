@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 import { HomeBottomNav } from "@/components/home/HomeBottomNav";
 import { HomeNav } from "@/components/home/HomeNav";
-import { OrbitsBrowse } from "@/components/orbits/OrbitsBrowse";
-import { ORBIT_REGIONS } from "@/lib/orbits/regions";
-import { isOrbitRegionKey } from "@/lib/orbits/regions";
+import { OrbitsExperience } from "@/components/orbits/OrbitsExperience";
+import { ORBIT_REGIONS, isOrbitRegionKey } from "@/lib/orbits/regions";
 import { buildOrbitList } from "@/lib/orbits/progress";
+import type { OrbitRegionKey } from "@/lib/orbits/types";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "Orbits — Haelo",
   description:
-    "Short guided voice experiences for real situations — separate from your planet journey.",
+    "Choose an Orbit to work through a real situation one reflection at a time.",
 };
 
 type OrbitsPageProps = {
@@ -19,59 +19,85 @@ type OrbitsPageProps = {
 
 export default async function OrbitsPage({ searchParams }: OrbitsPageProps) {
   const params = await searchParams;
-  const regionKey =
-    params.region && isOrbitRegionKey(params.region) ? params.region : undefined;
+  const initialRegion: OrbitRegionKey | null =
+    params.region && isOrbitRegionKey(params.region) ? params.region : null;
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let items: Awaited<ReturnType<typeof buildOrbitList>> = [];
+  let loadError: string | null = null;
 
-  const items = await buildOrbitList({
-    userId: user?.id ?? null,
-    regionKey,
-  });
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    items = await buildOrbitList({
+      userId: user?.id ?? null,
+    });
+  } catch (err) {
+    console.error("[orbits] browse load failed:", err);
+    loadError = "progress_unavailable";
+    try {
+      items = await buildOrbitList({ userId: null });
+    } catch {
+      items = [];
+    }
+  }
 
   return (
-    <div className="relative min-h-dvh overflow-hidden">
+    <div className="orbits-page relative min-h-dvh w-full overflow-x-hidden">
       <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 50% at 50% -10%, color-mix(in srgb, var(--violet) 22%, transparent), transparent 70%), radial-gradient(ellipse 60% 40% at 80% 80%, color-mix(in srgb, var(--rose) 12%, transparent), transparent 65%)",
-        }}
-        aria-hidden
+        className="universe-nebula-stars pointer-events-none absolute inset-0 z-0 opacity-40"
+        aria-hidden="true"
       />
+      <div
+        className="universe-nebula-haze pointer-events-none absolute inset-0 z-0"
+        aria-hidden="true"
+      />
+      <div
+        className="orbits-page-depth pointer-events-none absolute inset-0 z-0"
+        aria-hidden="true"
+      />
+
       <HomeNav />
-      <main className="relative z-10 mx-auto max-w-3xl px-4 pb-28 pt-20 sm:px-6">
-        <header className="mb-8">
-          <p
-            className="text-[0.75rem] font-medium uppercase tracking-[0.14em]"
-            style={{ color: "var(--foreground-muted)" }}
-          >
-            Navigate something happening now
-          </p>
+
+      <main className="relative z-10 w-full pb-28 pt-16 sm:pt-20">
+        <header className="mb-5 max-w-xl px-4 sm:mb-6 sm:px-8 lg:px-12">
           <h1
-            className="mt-2 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight sm:text-4xl"
-            style={{ color: "var(--foreground)" }}
+            className="font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight sm:text-4xl"
+            style={{
+              color: "var(--foreground)",
+              fontVariationSettings:
+                '"opsz" 72, "SOFT" 45, "WONK" 0, "wght" 550',
+            }}
           >
             Orbits
           </h1>
           <p
-            className="mt-3 max-w-xl text-[0.9375rem] leading-relaxed"
+            className="mt-2.5 text-[0.9375rem] leading-relaxed"
             style={{ color: "var(--foreground-muted)" }}
           >
-            Short guided sequences for real-life situations. They practice the
-            same four voice skills — without moving your normal planet
-            progression.
+            Sometimes you come to Haelo to grow.
+            <br className="hidden sm:block" />{" "}
+            Sometimes you come because something is happening right now.
+          </p>
+          <p
+            className="mt-1.5 text-[0.8125rem] leading-relaxed"
+            style={{ color: "var(--foreground-muted)" }}
+          >
+            Choose an Orbit to work through a situation one reflection at a
+            time.
           </p>
         </header>
-        <OrbitsBrowse
-          regions={[...ORBIT_REGIONS]}
+
+        <OrbitsExperience
+          regions={ORBIT_REGIONS}
           items={items}
-          activeRegion={regionKey ?? null}
+          initialRegion={initialRegion}
+          loadError={loadError}
         />
       </main>
+
       <HomeBottomNav />
     </div>
   );

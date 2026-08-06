@@ -18,21 +18,41 @@ import {
   AUTHENTICITY_OPTIONS,
   type AuthenticityChoice,
 } from "@/lib/sessions/types";
+import {
+  planetSessionFlow,
+  orbitSessionFlowFromSession,
+  type SessionFlowConfig,
+} from "@/lib/sessions/sessionFlow";
 
 type SessionCompareClientProps = {
   planet: Planet;
   sessionId: string;
   initialSession: SessionDetail;
+  orbitKey?: string;
+  flow?: SessionFlowConfig;
 };
 
 export function SessionCompareClient({
   planet,
   sessionId,
   initialSession,
+  orbitKey,
+  flow: flowProp,
 }: SessionCompareClientProps) {
   const router = useRouter();
   const content = getPlanetPageContent(planet);
   const accent = getVoicePlanetById(planet)?.color ?? "var(--violet)";
+  const flow =
+    flowProp ??
+    (orbitKey
+      ? orbitSessionFlowFromSession({
+          orbitKey,
+          planet,
+          orbitQuestionKey: initialSession.orbit_question_key,
+          userOrbitProgressId: initialSession.user_orbit_progress_id,
+          orbitVersion: initialSession.orbit_version,
+        })
+      : planetSessionFlow(planet));
 
   const [session, setSession] = useState(initialSession);
   const [choice, setChoice] = useState<AuthenticityChoice | null>(
@@ -49,9 +69,9 @@ export function SessionCompareClient({
 
   useEffect(() => {
     if (!second) {
-      router.replace(`/session/${planet}/${sessionId}/review`);
+      router.replace(flow.reviewHref(sessionId));
     }
-  }, [second, planet, router, sessionId]);
+  }, [second, flow, router, sessionId]);
 
   useEffect(() => {
     if (session.analysis_status !== "pending") return;
@@ -71,7 +91,7 @@ export function SessionCompareClient({
         await updateAuthenticityChoice(sessionId, choice);
       }
       await completeSession(sessionId);
-      router.push(`/session/${planet}/${sessionId}/complete`);
+      router.push(flow.afterCompleteHref(sessionId));
     } catch (e) {
       setError(
         e instanceof Error ? e.message : "Could not finish this session.",
@@ -240,7 +260,7 @@ export function SessionCompareClient({
           onClick={() => void handleFinish()}
           className="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-sm font-semibold text-[var(--on-violet)] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
-          Finish Session
+          {flow.finishLabel}
         </button>
       </div>
     </div>

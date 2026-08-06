@@ -2,13 +2,24 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { startOrResumeOrbit } from "@/lib/orbits/progress";
+import { getOrbitByKey } from "@/lib/orbits/catalog";
+import {
+  getUserOrbitProgress,
+  startOrResumeOrbit,
+} from "@/lib/orbits/progress";
+import { ensureOrbitSummativeAnalysis } from "@/lib/orbits/synthesize";
+import type { OrbitSummativeAnalysisContent } from "@/lib/orbits/types";
 import { createClient } from "@/lib/supabase/server";
 
 export async function beginOrbitAction(formData: FormData) {
   const orbitKey = String(formData.get("orbitKey") ?? "").trim();
   if (!orbitKey) {
     throw new Error("Missing orbit key.");
+  }
+
+  const orbit = getOrbitByKey(orbitKey);
+  if (!orbit || !orbit.isActive) {
+    throw new Error("Orbit not found.");
   }
 
   const supabase = await createClient();
@@ -24,7 +35,55 @@ export async function beginOrbitAction(formData: FormData) {
   revalidatePath("/orbits");
   revalidatePath(`/orbits/${orbitKey}`);
 
-  // Recording flow wiring comes next; for now land on the Orbit detail
-  // with progress started so Continue / question list is accurate.
-  redirect(`/orbits/${orbitKey}?started=1&q=${progress.current_question_index}`);
+  if (progress.status === "completed") {
+    redirect(`/orbits/${orbitKey}/complete`);
+  }
+
+  redirect(`/orbits/${orbitKey}/reflect`);
+}
+
+export async function runOrbitSynthesisAction(
+  orbitKey: string,
+  opts?: { forceRetry?: boolean },
+): Promise<
+  | { ok: true; content: OrbitSummativeAnalysisContent }
+  | { ok: false; message: string }
+> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { ok: false, message: "Sign in to continue." };
+  }
+
+  const progress = await getUserOrbitProgress(user.id, orbitKey);
+  if (!progress) {
+    return { ok: false, message: "Orbit progress not found." };
+  }
+
+  const result = await ensureOrbitSummativeAnalysis({
+    userId: user.id,
+    progress,
+    forceRetry: opts?.forceRetry ?? false,
+  });
+
+  revalidatePath(`/orbits/${orbitKey}/complete`);
+
+  if (result.status === "ready") {
+    return { ok: true, content: result.content };
+  }
+
+  return {
+    ok: false,
+    message:
+      result.status === "failed"
+        ? result.message
+        : "We're having trouble creating your final reflection. Try again.",
+  };
+}
+
+export async function retryOrbitSynthesisAction(orbitKey: string) {
+  return runOrbitSynthesisAction(orbitKey, { forceRetry: true });
 }

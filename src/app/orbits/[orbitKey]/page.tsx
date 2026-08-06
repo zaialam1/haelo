@@ -44,26 +44,33 @@ export default async function OrbitDetailPage({ params }: OrbitDetailPageProps) 
     : null;
 
   return (
-    <div className="relative min-h-dvh overflow-hidden">
+    <div className="orbits-page relative min-h-dvh w-full overflow-x-hidden">
       <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 70% 45% at 40% 0%, color-mix(in srgb, var(--violet) 20%, transparent), transparent 70%)",
-        }}
-        aria-hidden
+        className="universe-nebula-stars pointer-events-none absolute inset-0 z-0 opacity-45"
+        aria-hidden="true"
       />
+      <div
+        className="universe-nebula-haze pointer-events-none absolute inset-0 z-0"
+        aria-hidden="true"
+      />
+      <div
+        className="orbits-page-depth pointer-events-none absolute inset-0 z-0"
+        aria-hidden="true"
+      />
+
       <HomeNav />
-      <main className="relative z-10 mx-auto max-w-2xl px-4 pb-28 pt-20 sm:px-6">
-        <OrbitDetail
-          orbit={orbit}
-          regionTitle={region?.title ?? orbit.regionKey}
-          durationLabel={formatOrbitDuration(orbit)}
-          planetSequence={getOrbitPlanetSequence(orbit)}
-          planetsInvolved={getOrbitPlanetsInvolved(orbit)}
-          progress={progress}
-          signedIn={Boolean(user)}
-        />
+      <main className="relative z-10 w-full pb-28 pt-16 sm:pt-20">
+        <div className="mx-auto w-full max-w-4xl px-4 sm:px-8 lg:px-12">
+          <OrbitDetail
+            orbit={orbit}
+            regionTitle={region?.title ?? orbit.regionKey}
+            durationLabel={formatOrbitDuration(orbit)}
+            planetSequence={getOrbitPlanetSequence(orbit)}
+            planetsInvolved={getOrbitPlanetsInvolved(orbit)}
+            progress={progress}
+            signedIn={Boolean(user)}
+          />
+        </div>
       </main>
       <HomeBottomNav />
     </div>

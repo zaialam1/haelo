@@ -194,9 +194,12 @@ export function mapPracticeSessionsToJourneySessions(
       voiceNotes: [],
       themeLabel: null,
       changeObservation: analysis?.comparisonObservation ?? null,
-      reviewHref: isPlanet(row.planet)
-        ? `/session/${row.planet}/${row.id}/review`
-        : null,
+      reviewHref:
+        row.source === "orbit" && row.orbit_key
+          ? `/orbits/${row.orbit_key}/session/${row.id}/review`
+          : isPlanet(row.planet)
+            ? `/session/${row.planet}/${row.id}/review`
+            : null,
       isMilestone: false,
     });
   }

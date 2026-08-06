@@ -6,10 +6,8 @@ export const FRIENDSHIPS_PEOPLE_ORBITS: readonly OrbitDefinition[] = [
     orbitKey: "friendships_people_something_feels_off",
     title: "Something Feels Off",
     regionKey: "friendships_people",
-    shortDescription:
-      "A friendship feels different, distant, uncomfortable, or confusing.",
-    situation:
-      "A friendship feels different, distant, uncomfortable, or confusing.",
+    shortDescription: "A friendship has changed, but you aren't sure why.",
+    situation: "A friendship has changed, but you aren't sure why.",
     openingTitle: "Something Feels Off",
     openingBody: `Sometimes you notice that something has changed before you can explain exactly what it is.
 
@@ -66,10 +64,8 @@ You don't need to know the answer yet.`,
     orbitKey: "friendships_people_left_out",
     title: "Left Out",
     regionKey: "friendships_people",
-    shortDescription:
-      "Feeling excluded, forgotten, ignored, or like you don't belong.",
-    situation:
-      "Feeling excluded, forgotten, ignored, or like you don't belong.",
+    shortDescription: "You feel excluded, overlooked, or outside the group.",
+    situation: "You feel excluded, overlooked, or outside the group.",
     openingTitle: "Left Out",
     openingBody: `Being left out can make your brain start filling in the blanks very quickly.
 
@@ -122,10 +118,8 @@ Before deciding what everyone else thinks about you, this Orbit helps you unders
     orbitKey: "friendships_people_i_need_to_fix_this",
     title: "I Need to Fix This",
     regionKey: "friendships_people",
-    shortDescription:
-      "You made a mistake, hurt someone, argued, or want to repair a relationship.",
-    situation:
-      "The user made a mistake, hurt someone, argued with someone, or wants to repair a relationship.",
+    shortDescription: "You wish you had handled something differently.",
+    situation: "You wish you had handled something differently.",
     openingTitle: "I Need to Fix This",
     openingBody: `Sometimes you replay a conversation and know you wish part of it had gone differently.
 
@@ -176,8 +170,8 @@ It means understanding your part clearly enough to decide what you want to do ne
     orbitKey: "friendships_people_we_keep_having_the_same_fight",
     title: "We Keep Having the Same Fight",
     regionKey: "friendships_people",
-    shortDescription: "A recurring conflict keeps happening with the same person.",
-    situation: "A recurring conflict keeps happening with the same person.",
+    shortDescription: "The same conflict keeps coming back with someone you care about.",
+    situation: "The same conflict keeps coming back with someone you care about.",
     openingTitle: "We Keep Having the Same Fight",
     openingBody: `Some arguments end.
 
@@ -290,9 +284,8 @@ This Orbit gives you space to understand what the friendship has meant, what's d
     orbitKey: "friendships_people_the_third_wheel",
     title: "The Third Wheel",
     regionKey: "friendships_people",
-    shortDescription:
-      "Feeling pushed aside when two friends become closer.",
-    situation: "Feeling pushed aside when two friends become closer.",
+    shortDescription: "You feel pushed aside as two friends get closer.",
+    situation: "You feel pushed aside as two friends get closer.",
     openingTitle: "The Third Wheel",
     openingBody: `Three-person friendships can get complicated fast.
 
@@ -348,9 +341,8 @@ This Orbit helps you understand what's actually happening and what you need.`,
     orbitKey: "friendships_people_they_hurt_me_but_i_still_care",
     title: "They Hurt Me, But I Still Care",
     regionKey: "friendships_people",
-    shortDescription:
-      "Someone you care about did something hurtful.",
-    situation: "Someone the user cares about did something hurtful.",
+    shortDescription: "Someone you care about hurt you, and you're still figuring out what that means.",
+    situation: "Someone you care about hurt you, and you're still figuring out what that means.",
     openingTitle: "They Hurt Me, But I Still Care",
     openingBody: `You can be angry with someone and still care about them.
 
@@ -403,10 +395,8 @@ Two things can be true at the same time.`,
     orbitKey: "friendships_people_new_friend_now_what",
     title: "New Friend, Now What?",
     regionKey: "friendships_people",
-    shortDescription:
-      "You recently met someone you like and want the friendship to grow.",
-    situation:
-      "The user recently met someone they like and wants the friendship to grow.",
+    shortDescription: "A new friendship is starting, and you're not sure how to move into it.",
+    situation: "A new friendship is starting, and you're not sure how to move into it.",
     openingTitle: "New Friend, Now What?",
     openingBody: `Sometimes meeting someone is easy.
 
@@ -460,10 +450,8 @@ This Orbit helps you notice what you like about the connection and how you might
     orbitKey: "friendships_people_friend_group_drama",
     title: "Friend Group Drama",
     regionKey: "friendships_people",
-    shortDescription:
-      "Caught in gossip, sides, alliances, or group conflict.",
-    situation:
-      "The user is caught in gossip, sides, alliances, or group conflict.",
+    shortDescription: "Tension or conflict is stirring inside your friend group.",
+    situation: "Tension or conflict is stirring inside your friend group.",
     openingTitle: "Friend Group Drama",
     openingBody: `When a whole group gets involved, it can become hard to tell what you actually think from what everyone else is saying.
 
@@ -515,10 +503,8 @@ This Orbit helps you step outside the noise and figure out your own position.`,
     orbitKey: "friendships_people_i_dont_feel_like_myself_around_them",
     title: "I Don't Feel Like Myself Around Them",
     regionKey: "friendships_people",
-    shortDescription:
-      "A friendship or group makes you shrink, perform, edit, or change yourself.",
-    situation:
-      "A friendship or group makes the user shrink, perform, edit, or change themselves.",
+    shortDescription: "You act differently around them, and it doesn't feel like you.",
+    situation: "You act differently around them, and it doesn't feel like you.",
     openingTitle: "I Don't Feel Like Myself Around Them",
     openingBody: `Sometimes you can like people and still notice that you become a different version of yourself around them.
 

@@ -6,8 +6,8 @@ export const PUTTING_YOURSELF_OUT_THERE_ORBITS: readonly OrbitDefinition[] = [
     orbitKey: "putting_yourself_out_there_i_have_an_idea",
     title: "I Have an Idea",
     regionKey: "putting_yourself_out_there",
-    shortDescription: "You have an idea you want to explain or share.",
-    situation: "You have an idea you want to explain or share.",
+    shortDescription: "You want to explain something you're excited about.",
+    situation: "You want to explain something you're excited about.",
     openingTitle: "I Have an Idea",
     openingBody: `Ideas can feel obvious inside your own head and suddenly confusing when you try to explain them.
 
@@ -55,10 +55,8 @@ This Orbit helps you find the heart of your idea and practice sharing it.`,
     orbitKey: "putting_yourself_out_there_new_room",
     title: "New Room",
     regionKey: "putting_yourself_out_there",
-    shortDescription:
-      "Starting at a new school, club, camp, team, job, or group.",
-    situation:
-      "Starting at a new school, club, camp, team, job, or group.",
+    shortDescription: "You're walking into a new place, group, or situation.",
+    situation: "You're walking into a new place, group, or situation.",
     openingTitle: "New Room",
     openingBody: `Walking into a new group can make you suddenly see yourself through everyone else's eyes.
 
@@ -107,9 +105,8 @@ This Orbit helps you enter something new without feeling like you have to invent
     orbitKey: "putting_yourself_out_there_this_matters_to_me",
     title: "This Matters to Me",
     regionKey: "putting_yourself_out_there",
-    shortDescription:
-      "Something important you want to find words for.",
-    situation: "Something important you want to find words for.",
+    shortDescription: "Something important to you still needs clearer words.",
+    situation: "Something important to you still needs clearer words.",
     openingTitle: "This Matters to Me",
     openingBody: `Some things feel important before you know how to explain why.
 
@@ -159,10 +156,8 @@ This Orbit helps you find the words for something you genuinely care about.`,
     orbitKey: "putting_yourself_out_there_big_opportunity",
     title: "Big Opportunity",
     regionKey: "putting_yourself_out_there",
-    shortDescription:
-      "Audition, competition, interview, application, leadership role, tryout, or other opportunity.",
-    situation:
-      "Audition, competition, interview, application, leadership role, tryout, or other opportunity.",
+    shortDescription: "You're preparing to put yourself forward for something that matters.",
+    situation: "You're preparing to put yourself forward for something that matters.",
     openingTitle: "Big Opportunity",
     openingBody: `Wanting something can make the possibility of not getting it feel much bigger.
 
@@ -212,10 +207,8 @@ This Orbit helps you separate excitement from pressure and practice showing up a
     orbitKey: "putting_yourself_out_there_tell_my_story",
     title: "Tell My Story",
     regionKey: "putting_yourself_out_there",
-    shortDescription:
-      "Personal statements, interviews, presentations, introductions, or learning to describe oneself.",
-    situation:
-      "Personal statements, interviews, presentations, introductions, or learning to describe oneself.",
+    shortDescription: "You want to share a story about yourself with more clarity.",
+    situation: "You want to share a story about yourself with more clarity.",
     openingTitle: "Tell My Story",
     openingBody: `You have thousands of moments you could use to explain who you are.
 
@@ -260,10 +253,8 @@ The hard part is figuring out which ones actually say something meaningful.`,
     orbitKey: "putting_yourself_out_there_i_want_to_lead",
     title: "I Want to Lead",
     regionKey: "putting_yourself_out_there",
-    shortDescription:
-      "Leadership roles, clubs, teams, group projects, campaigns, or taking initiative.",
-    situation:
-      "Leadership roles, clubs, teams, group projects, campaigns, or taking initiative.",
+    shortDescription: "You want to step into a leadership role or take initiative.",
+    situation: "You want to step into a leadership role or take initiative.",
     openingTitle: "I Want to Lead",
     openingBody: `Leadership isn't only about being the loudest person in the room.
 
@@ -309,10 +300,8 @@ This Orbit helps you figure out why you want to lead and what kind of leader you
     orbitKey: "putting_yourself_out_there_showing_something_i_made",
     title: "Showing Something I Made",
     regionKey: "putting_yourself_out_there",
-    shortDescription:
-      "Sharing art, music, writing, code, a project, or other creative work.",
-    situation:
-      "Sharing art, music, writing, code, a project, or other creative work.",
+    shortDescription: "You're about to share something you created.",
+    situation: "You're about to share something you created.",
     openingTitle: "Showing Something I Made",
     openingBody: `Making something and showing it to someone are two completely different experiences.
 
@@ -360,10 +349,8 @@ This Orbit helps you prepare for the vulnerable part where your work leaves your
     orbitKey: "putting_yourself_out_there_speaking_in_front_of_people",
     title: "Speaking in Front of People",
     regionKey: "putting_yourself_out_there",
-    shortDescription:
-      "Presentations, speeches, performances, class participation, or public speaking.",
-    situation:
-      "Presentations, speeches, performances, class participation, or public speaking.",
+    shortDescription: "You need to speak in front of a group.",
+    situation: "You need to speak in front of a group.",
     openingTitle: "Speaking in Front of People",
     openingBody: `Sometimes you know exactly what you want to say until a room full of people is looking at you.
 
@@ -409,8 +396,8 @@ This Orbit helps you prepare your message — and your relationship with the aud
     orbitKey: "putting_yourself_out_there_talking_to_someone_new",
     title: "Talking to Someone New",
     regionKey: "putting_yourself_out_there",
-    shortDescription: "Meeting someone you want to get to know.",
-    situation: "Meeting someone the user wants to know.",
+    shortDescription: "You want to talk with someone you're just getting to know.",
+    situation: "You want to talk with someone you're just getting to know.",
     openingTitle: "Talking to Someone New",
     openingBody: `You don't need the perfect opening line.
 
@@ -457,10 +444,8 @@ You mostly need somewhere to begin. This Orbit helps you take the pressure off m
     orbitKey: "putting_yourself_out_there_take_the_chance",
     title: "Take the Chance",
     regionKey: "putting_yourself_out_there",
-    shortDescription:
-      "Trying out, applying, reaching out, performing, entering, submitting, or taking a meaningful risk.",
-    situation:
-      "Trying out, applying, reaching out, performing, entering, submitting, or taking a meaningful risk.",
+    shortDescription: "There's a chance in front of you, and you're deciding whether to take it.",
+    situation: "There's a chance in front of you, and you're deciding whether to take it.",
     openingTitle: "Take the Chance",
     openingBody: `Sometimes you know you want to try something and still keep finding reasons not to.
 

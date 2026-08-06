@@ -6,8 +6,8 @@ export const SPEAKING_UP_ORBITS: readonly OrbitDefinition[] = [
     orbitKey: "speaking_up_draw_the_line",
     title: "Draw the Line",
     regionKey: "speaking_up",
-    shortDescription: "Setting a boundary.",
-    situation: "Setting a boundary.",
+    shortDescription: "Something keeps crossing a boundary you want to make clearer.",
+    situation: "Something keeps crossing a boundary you want to make clearer.",
     openingTitle: "Draw the Line",
     openingBody: `Sometimes you know something bothers you, but actually saying “stop” feels much harder.
 
@@ -57,10 +57,8 @@ This Orbit helps you figure out where your line is and practice communicating it
     orbitKey: "speaking_up_i_need_to_ask",
     title: "I Need to Ask",
     regionKey: "speaking_up",
-    shortDescription:
-      "Asking for help, flexibility, clarification, permission, or support.",
-    situation:
-      "Asking for help, flexibility, clarification, permission, or support.",
+    shortDescription: "You need help, flexibility, clarification, or support.",
+    situation: "You need help, flexibility, clarification, or support.",
     openingTitle: "I Need to Ask",
     openingBody: `Sometimes asking feels harder than needing.
 
@@ -109,8 +107,8 @@ This Orbit helps you get clear about what you want and practice making the reque
     orbitKey: "speaking_up_i_disagree",
     title: "I Disagree",
     regionKey: "speaking_up",
-    shortDescription: "Expressing an unpopular or different opinion.",
-    situation: "Expressing an unpopular or different opinion.",
+    shortDescription: "You think something different and want to say it clearly.",
+    situation: "You think something different and want to say it clearly.",
     openingTitle: "I Disagree",
     openingBody: `Having an opinion feels different when everyone around you has another one.
 
@@ -161,10 +159,8 @@ This Orbit helps you figure out what you actually believe and practice saying it
     orbitKey: "speaking_up_talking_to_a_teacher",
     title: "Talking to a Teacher",
     regionKey: "speaking_up",
-    shortDescription:
-      "Asking a teacher for help, clarification, reconsideration, or discussing a problem.",
-    situation:
-      "Asking a teacher for help, clarification, reconsideration, or discussing a problem.",
+    shortDescription: "You need to talk with a teacher about something that matters.",
+    situation: "You need to talk with a teacher about something that matters.",
     openingTitle: "Talking to a Teacher",
     openingBody: `Talking to an adult with authority can make a simple question feel much bigger.
 
@@ -212,8 +208,8 @@ This Orbit helps you figure out what you need to communicate before you're stand
     orbitKey: "speaking_up_saying_no",
     title: "Saying No",
     regionKey: "speaking_up",
-    shortDescription: "Turning down something you don't want to do.",
-    situation: "Turning down something the user doesn't want to do.",
+    shortDescription: "You want to turn something down without making it a whole thing.",
+    situation: "You want to turn something down without making it a whole thing.",
     openingTitle: "Saying No",
     openingBody: `“No” is a complete idea.
 
@@ -262,10 +258,8 @@ This Orbit helps you understand why you're saying no and practice doing it witho
     orbitKey: "speaking_up_that_joke_isnt_funny_to_me",
     title: "That Joke Isn't Funny to Me",
     regionKey: "speaking_up",
-    shortDescription:
-      "Calling out teasing, jokes, comments, or behavior that crosses a line.",
-    situation:
-      "Calling out teasing, jokes, comments, or behavior that crosses a line.",
+    shortDescription: "A joke or comment landed wrong, and you want to say so.",
+    situation: "A joke or comment landed wrong, and you want to say so.",
     openingTitle: "That Joke Isn't Funny to Me",
     openingBody: `Sometimes everyone else is laughing and you're the person wondering whether you're “allowed” to be bothered.
 
@@ -316,10 +310,8 @@ This Orbit helps you figure out what crossed the line and how you might say it.`
     orbitKey: "speaking_up_i_deserve_credit",
     title: "I Deserve Credit",
     regionKey: "speaking_up",
-    shortDescription:
-      "Someone is taking credit for or overlooking your work.",
-    situation:
-      "Someone is taking credit for or overlooking the user's work.",
+    shortDescription: "Your work or idea got overlooked, and you want recognition.",
+    situation: "Your work or idea got overlooked, and you want recognition.",
     openingTitle: "I Deserve Credit",
     openingBody: `Speaking up about your own contribution can feel awkward.
 
@@ -370,9 +362,8 @@ This Orbit helps you advocate for your work without feeling like you need to bra
     orbitKey: "speaking_up_i_need_more_time",
     title: "I Need More Time",
     regionKey: "speaking_up",
-    shortDescription:
-      "Asking for time, space, an extension, or time to think.",
-    situation: "Asking for time, space, an extension, or time to think.",
+    shortDescription: "You need more time, space, or room to think.",
+    situation: "You need more time, space, or room to think.",
     openingTitle: "I Need More Time",
     openingBody: `Sometimes the most responsible answer isn't yes or no.
 
@@ -420,8 +411,8 @@ This Orbit helps you communicate that before pressure makes the decision for you
     orbitKey: "speaking_up_stop_pressuring_me",
     title: "Stop Pressuring Me",
     regionKey: "speaking_up",
-    shortDescription: "Peer pressure or pressure from another person.",
-    situation: "Peer pressure or pressure from another person.",
+    shortDescription: "Someone is pushing you, and you want the pressure to stop.",
+    situation: "Someone is pushing you, and you want the pressure to stop.",
     openingTitle: "Stop Pressuring Me",
     openingBody: `Sometimes you already know your answer.
 
@@ -469,9 +460,8 @@ This Orbit helps you hold onto your decision under pressure.`,
     orbitKey: "speaking_up_i_need_to_say_this",
     title: "I Need to Say This",
     regionKey: "speaking_up",
-    shortDescription:
-      "A difficult conversation that doesn't fit another Orbit.",
-    situation: "A difficult conversation that does not fit another Orbit.",
+    shortDescription: "There's something hard you need to say out loud.",
+    situation: "There's something hard you need to say out loud.",
     openingTitle: "I Need to Say This",
     openingBody: `You've been carrying something you want another person to know.
 

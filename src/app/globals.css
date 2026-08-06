@@ -1024,3 +1024,270 @@ html.dark .journey-session-panel[data-open="true"] {
 html.dark .planet-session-row:hover {
   background: color-mix(in srgb, var(--violet) 14%, transparent);
 }
+
+/* ── Orbits browse ─────────────────────────────────────────────── */
+
+@keyframes orbits-ring-drift {
+  from {
+    transform: translate(-50%, -50%) rotate(var(--orbit-tilt, 0deg));
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(calc(var(--orbit-tilt, 0deg) + 360deg));
+  }
+}
+
+@keyframes orbits-node-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes orbits-progress-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes orbits-region-glow {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@keyframes orbits-constellation-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes orbits-map-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+.orbits-page {
+  background: var(--universe-map);
+}
+
+.orbits-page-depth {
+  background:
+    radial-gradient(
+      ellipse 50% 40% at 20% 25%,
+      color-mix(in srgb, var(--rose) 22%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 45% 38% at 82% 22%,
+      color-mix(in srgb, var(--violet) 26%, transparent),
+      transparent 58%
+    ),
+    radial-gradient(
+      ellipse 48% 42% at 18% 78%,
+      color-mix(in srgb, var(--gold) 16%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 50% 40% at 85% 80%,
+      color-mix(in srgb, #6b9bc7 18%, transparent),
+      transparent 58%
+    );
+  opacity: 1;
+}
+
+.orbits-star-map {
+  isolation: isolate;
+  min-height: min(78vh, 720px);
+  height: min(78vh, 720px);
+  width: 100%;
+  background:
+    radial-gradient(
+      ellipse 70% 55% at 50% 48%,
+      color-mix(in srgb, #fff8f0 38%, transparent),
+      transparent 70%
+    ),
+    color-mix(in srgb, var(--violet) 7%, transparent);
+  border-block: 1px solid color-mix(in srgb, var(--violet) 18%, transparent);
+  /* Do NOT animate transform on this container — it breaks stacking of children */
+  overflow: visible;
+}
+
+.orbits-map-drift-layer {
+  animation: orbits-map-drift 22s ease-in-out infinite;
+}
+
+.orbits-map-haze {
+  background:
+    radial-gradient(
+      ellipse 55% 45% at 50% 50%,
+      color-mix(in srgb, #ffffff 16%, transparent),
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse 40% 35% at 30% 30%,
+      color-mix(in srgb, var(--rose) 14%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 38% 34% at 75% 70%,
+      color-mix(in srgb, var(--violet) 12%, transparent),
+      transparent 70%
+    );
+}
+
+.orbits-sky-stars {
+  opacity: 0.95;
+  background-image:
+    radial-gradient(1.2px 1.2px at 4% 10%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 9% 28%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1.4px 1.4px at 15% 6%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1px 1px at 21% 48%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1.2px 1.2px at 27% 16%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 33% 66%, rgba(255, 255, 255, 0.65), transparent),
+    radial-gradient(1.3px 1.3px at 39% 8%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1px 1px at 45% 40%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 51% 78%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1.4px 1.4px at 57% 20%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 63% 52%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1.2px 1.2px at 69% 12%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 75% 60%, rgba(255, 255, 255, 0.65), transparent),
+    radial-gradient(1.3px 1.3px at 81% 28%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1px 1px at 87% 70%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1.2px 1.2px at 93% 16%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 97% 44%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 12% 84%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1.3px 1.3px at 24% 92%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 36% 88%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1.2px 1.2px at 64% 90%, rgba(255, 255, 255, 0.75), transparent),
+    radial-gradient(1px 1px at 78% 94%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1.3px 1.3px at 90% 86%, rgba(255, 255, 255, 0.8), transparent);
+}
+
+.orbits-sky-stars--far {
+  opacity: 0.55;
+  transform: scale(1.08);
+  background-image:
+    radial-gradient(1px 1px at 7% 55%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 18% 35%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 29% 72%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 41% 24%, rgba(255, 255, 255, 0.45), transparent),
+    radial-gradient(1px 1px at 53% 58%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1px 1px at 66% 34%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 74% 76%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 85% 42%, rgba(255, 255, 255, 0.45), transparent),
+    radial-gradient(1px 1px at 92% 68%, rgba(255, 255, 255, 0.55), transparent);
+}
+
+.orbits-sky-decor {
+  transition: opacity 400ms ease;
+}
+
+.orbits-region-nebula {
+  animation: orbits-region-glow 6s ease-in-out infinite;
+}
+
+.orbits-constellation {
+  animation: orbits-constellation-in 480ms ease-out;
+}
+
+.orbits-star-node {
+  animation: orbits-node-float 6.5s ease-in-out infinite;
+}
+
+.orbits-region-cluster {
+  z-index: 1;
+}
+
+.orbits-celestial-mark {
+  position: relative;
+  flex-shrink: 0;
+  width: 3.25rem;
+  height: 3.25rem;
+}
+
+.orbits-celestial-mark__ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--orbit-accent, var(--violet)) 65%, white);
+  transform: translate(-50%, -50%) rotate(var(--orbit-tilt, 0deg));
+  animation: orbits-ring-drift 28s linear infinite;
+}
+
+.orbits-celestial-mark__core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      color-mix(in srgb, #fff8f0 85%, transparent),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      color-mix(in srgb, var(--orbit-accent, var(--violet)) 90%, transparent),
+      color-mix(in srgb, var(--violet) 45%, transparent) 70%
+    );
+  box-shadow:
+    0 0 14px color-mix(in srgb, var(--orbit-accent, var(--violet)) 60%, transparent),
+    0 0 32px color-mix(in srgb, var(--orbit-accent, var(--violet)) 28%, transparent);
+  transform: translate(-50%, -50%);
+}
+
+.orbits-celestial-mark--progress .orbits-celestial-mark__core {
+  animation: orbits-progress-pulse 3.6s ease-in-out infinite;
+}
+
+.orbits-celestial-mark--completed .orbits-celestial-mark__ring {
+  border-color: color-mix(in srgb, var(--gold) 70%, transparent);
+}
+
+.orbits-celestial-mark--completed .orbits-celestial-mark__core {
+  box-shadow:
+    0 0 14px color-mix(in srgb, var(--gold) 55%, transparent),
+    0 0 30px color-mix(in srgb, var(--gold) 22%, transparent);
+}
+
+@media (max-width: 640px) {
+  .orbits-star-map {
+    min-height: min(82vh, 620px);
+    height: min(82vh, 620px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbits-celestial-mark__ring,
+  .orbits-celestial-mark--progress .orbits-celestial-mark__core,
+  .orbits-star-node,
+  .orbits-region-nebula,
+  .orbits-map-drift-layer,
+  .orbits-constellation {
+    animation: none !important;
+  }
+}
