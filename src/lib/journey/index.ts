@@ -13,6 +13,8 @@ export type {
 
 export {
   mapReflectionsToJourneySessions,
+  mapPracticeSessionsToJourneySessions,
+  mergeJourneySessions,
   filterSessionsByPlanet,
   planetAccent,
 } from "./mapSession";

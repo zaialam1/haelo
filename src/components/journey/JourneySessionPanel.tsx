@@ -4,12 +4,15 @@ import {
   useEffect,
   useId,
   useRef,
-  useState,
   type ReactNode,
 } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { ResponseReview } from "@/components/session/ResponseReview";
+import { SessionAnalysisPanel } from "@/components/session/SessionAnalysisPanel";
+import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { planetAccent } from "@/lib/journey/mapSession";
 import type { JourneyNode, JourneySession } from "@/lib/journey/types";
+import type { AnalysisStatus, SessionAnalysis } from "@/lib/sessions/types";
+import type { TranscriptStatus } from "@/lib/sessions/types";
 
 type JourneySessionPanelProps = {
   session: JourneySession | JourneyNode | null;
@@ -22,87 +25,6 @@ function formatPanelDate(iso: string): string {
     month: "long",
     day: "numeric",
   });
-}
-
-function AudioPlayButton({
-  audioUrl,
-  label,
-}: {
-  audioUrl: string;
-  label: string;
-}) {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [playing, setPlaying] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  async function toggle() {
-    const audio = audioRef.current;
-    if (!audio) return;
-    setError(null);
-
-    if (playing) {
-      audio.pause();
-      setPlaying(false);
-      return;
-    }
-
-    try {
-      setLoading(true);
-      if (!audio.src || audio.dataset.path !== audioUrl) {
-        const supabase = createClient();
-        const { data, error: signedError } = await supabase.storage
-          .from("reflections-audio")
-          .createSignedUrl(audioUrl, 3600);
-        if (signedError || !data?.signedUrl) {
-          throw new Error(signedError?.message || "Could not load this recording.");
-        }
-        audio.src = data.signedUrl;
-        audio.dataset.path = audioUrl;
-      }
-      await audio.play();
-      setPlaying(true);
-    } catch (e) {
-      setPlaying(false);
-      setError(e instanceof Error ? e.message : "Could not play this recording.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <div className="mt-3">
-      <audio
-        ref={audioRef}
-        preload="none"
-        onEnded={() => setPlaying(false)}
-        onPause={() => setPlaying(false)}
-        onPlay={() => setPlaying(true)}
-        className="sr-only"
-      />
-      <button
-        type="button"
-        onClick={toggle}
-        disabled={loading}
-        className="inline-flex w-fit items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
-        style={{
-          background: "color-mix(in srgb, var(--violet) 12%, transparent)",
-          color: "var(--foreground)",
-        }}
-      >
-        <span aria-hidden="true">{playing ? "❚❚" : "▶"}</span>
-        {loading ? "Loading…" : playing ? "Pause" : label}
-      </button>
-      {error ? (
-        <p
-          className="mt-2 text-sm"
-          style={{ color: "var(--rose-deep, #D478A0)" }}
-        >
-          {error}
-        </p>
-      ) : null}
-    </div>
-  );
 }
 
 function PanelSection({
@@ -123,6 +45,44 @@ function PanelSection({
       <div className="mt-2">{children}</div>
     </div>
   );
+}
+
+function feelingLabel(value: string | null | undefined): string | null {
+  if (value === "held_back") return "Held back";
+  if (value === "in_between") return "Somewhere in between";
+  if (value === "said_it") return "Said what I meant";
+  return null;
+}
+
+function soundedLabel(value: string | null | undefined): string | null {
+  if (value === "not_really") return "Not really";
+  if (value === "mostly") return "Mostly";
+  if (value === "yes") return "Yes";
+  return null;
+}
+
+function authenticityLabel(value: string | null | undefined): string | null {
+  if (value === "first") return "First";
+  if (value === "second") return "Second";
+  if (value === "mix") return "A mix of both";
+  return null;
+}
+
+function toSessionAnalysis(session: JourneySession): SessionAnalysis | null {
+  if (!session.analysisStatus) return null;
+  const status = session.analysisStatus as AnalysisStatus;
+  if (status !== "ready") {
+    return { sessionId: session.sessionId, status };
+  }
+  return {
+    sessionId: session.sessionId,
+    status: "ready",
+    strength: session.analysisStrength ?? undefined,
+    observation: session.analysisObservation ?? undefined,
+    evidence: session.analysisEvidence ?? undefined,
+    experiment: session.analysisExperiment ?? undefined,
+    comparisonObservation: session.changeObservation ?? undefined,
+  };
 }
 
 export function JourneySessionPanel({
@@ -151,6 +111,10 @@ export function JourneySessionPanel({
   const first = session?.clips[0] ?? null;
   const second = session?.clips[1] ?? null;
   const accent = session ? planetAccent(session.planet) : "var(--violet)";
+  const analysis = session ? toSessionAnalysis(session) : null;
+  const feeling = feelingLabel(session?.feelingReflection);
+  const sounded = soundedLabel(session?.soundedLikeYou);
+  const authenticity = authenticityLabel(session?.authenticityChoice);
 
   return (
     <>
@@ -244,92 +208,94 @@ export function JourneySessionPanel({
             {first ? (
               <PanelSection title="Your response">
                 {first.audioUrl ? (
-                  <AudioPlayButton
-                    key={first.audioUrl}
-                    audioUrl={first.audioUrl}
-                    label="Play recording"
+                  <ResponseReview
+                    storagePath={first.audioUrl}
+                    durationSeconds={first.durationSeconds}
+                    transcript={first.transcript}
+                    transcriptStatus={
+                      (first.transcriptStatus as TranscriptStatus | null) ??
+                      (first.transcript?.trim() ? "ready" : "unavailable")
+                    }
+                    accentColor={accent}
+                    label="First response"
                   />
-                ) : null}
-                {first.transcript?.trim() ? (
-                  <p
-                    className="mt-3 whitespace-pre-wrap text-[0.9375rem] leading-relaxed"
-                    style={{ color: "var(--foreground)" }}
-                  >
-                    {first.transcript.trim()}
-                  </p>
-                ) : !first.audioUrl ? (
+                ) : (
                   <p
                     className="text-[0.9375rem] leading-relaxed"
                     style={{ color: "var(--foreground-muted)" }}
                   >
                     No recording was saved for this response.
                   </p>
-                ) : null}
+                )}
               </PanelSection>
             ) : null}
 
-            {session.userReflection?.trim() ? (
+            {feeling || sounded || session.userReflection?.trim() ? (
               <PanelSection title="Your reflection">
-                <p
-                  className="text-[0.9375rem] leading-relaxed"
-                  style={{ color: "var(--foreground)" }}
-                >
-                  {session.userReflection.trim()}
-                </p>
-              </PanelSection>
-            ) : null}
-
-            {session.attuneObservation?.trim() ||
-            session.voiceNotes.length > 0 ? (
-              <PanelSection title="What Attune noticed">
-                {session.attuneObservation?.trim() ? (
+                {feeling ? (
                   <p
                     className="text-[0.9375rem] leading-relaxed"
                     style={{ color: "var(--foreground)" }}
                   >
-                    {session.attuneObservation.trim()}
+                    How it felt: {feeling}
                   </p>
                 ) : null}
-                {session.voiceNotes.length > 0 ? (
-                  <ul className="mt-2 space-y-1.5">
-                    {session.voiceNotes.map((note) => (
-                      <li
-                        key={note}
-                        className="text-[0.9375rem] leading-relaxed"
-                        style={{ color: "var(--foreground)" }}
-                      >
-                        {note}
-                      </li>
-                    ))}
-                  </ul>
+                {sounded ? (
+                  <p
+                    className="mt-1 text-[0.9375rem] leading-relaxed"
+                    style={{ color: "var(--foreground)" }}
+                  >
+                    Sounded like you: {sounded}
+                  </p>
+                ) : null}
+                {session.userReflection?.trim() ? (
+                  <p
+                    className="mt-2 text-[0.9375rem] leading-relaxed"
+                    style={{ color: "var(--foreground)" }}
+                  >
+                    {session.userReflection.trim()}
+                  </p>
                 ) : null}
               </PanelSection>
             ) : null}
 
+            <PanelSection title="What Haelo noticed">
+              <SessionAnalysisPanel
+                analysis={analysis}
+                analysisStatus={
+                  (session.analysisStatus as AnalysisStatus | null) ?? null
+                }
+                accentColor={accent}
+              />
+              {session.voiceNotes.length > 0 ? (
+                <ul className="mt-3 space-y-1.5">
+                  {session.voiceNotes.map((note) => (
+                    <li
+                      key={note}
+                      className="text-[0.9375rem] leading-relaxed"
+                      style={{ color: "var(--foreground)" }}
+                    >
+                      {note}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </PanelSection>
+
             {second ? (
               <PanelSection title="Try again">
-                {second.promptText !== session.prompt ? (
-                  <p
-                    className="mb-2 text-sm leading-relaxed"
-                    style={{ color: "var(--foreground-muted)" }}
-                  >
-                    &ldquo;{second.promptText}&rdquo;
-                  </p>
-                ) : null}
                 {second.audioUrl ? (
-                  <AudioPlayButton
-                    key={second.audioUrl}
-                    audioUrl={second.audioUrl}
-                    label="Play second recording"
+                  <ResponseReview
+                    storagePath={second.audioUrl}
+                    durationSeconds={second.durationSeconds}
+                    transcript={second.transcript}
+                    transcriptStatus={
+                      (second.transcriptStatus as TranscriptStatus | null) ??
+                      (second.transcript?.trim() ? "ready" : "unavailable")
+                    }
+                    accentColor={accent}
+                    label="Second response"
                   />
-                ) : null}
-                {second.transcript?.trim() ? (
-                  <p
-                    className="mt-3 whitespace-pre-wrap text-[0.9375rem] leading-relaxed"
-                    style={{ color: "var(--foreground)" }}
-                  >
-                    {second.transcript.trim()}
-                  </p>
                 ) : null}
               </PanelSection>
             ) : null}
@@ -343,6 +309,34 @@ export function JourneySessionPanel({
                   {session.changeObservation.trim()}
                 </p>
               </PanelSection>
+            ) : null}
+
+            {authenticity ? (
+              <PanelSection title="Which sounded more like you">
+                <p
+                  className="text-[0.9375rem] leading-relaxed"
+                  style={{ color: "var(--foreground)" }}
+                >
+                  {authenticity}
+                </p>
+              </PanelSection>
+            ) : null}
+
+            {session.reviewHref ? (
+              <div className="mt-8">
+                <TransitionLink
+                  href={session.reviewHref}
+                  variant="fade"
+                  className="inline-flex min-h-11 items-center rounded-full px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+                  style={{
+                    background:
+                      "color-mix(in srgb, var(--violet) 12%, transparent)",
+                    color: "var(--foreground)",
+                  }}
+                >
+                  Open full session review
+                </TransitionLink>
+              </div>
             ) : null}
 
             <div

@@ -18,7 +18,7 @@ export type PlanetPageContent = {
   description: string;
   tryThis: string;
   sessionCta: string;
-  /** Wired to /speak?planet=… */
+  /** Wired to /session/[planet] */
   sessionHref: string;
   /** Empty until the user has practiced here */
   growth: string[];
@@ -71,7 +71,7 @@ export const PLANET_PAGES: Record<VoicePlanetId, PlanetPageContent> = {
     tryThis:
       "What's something you've been thinking about lately but haven't really said out loud?",
     sessionCta: "Start Express Session",
-    sessionHref: "/speak?planet=express",
+    sessionHref: "/session/express",
     growth: [],
     growthEmpty:
       "After a few sessions here, gentle observations about how you express yourself will appear.",
@@ -90,7 +90,7 @@ export const PLANET_PAGES: Record<VoicePlanetId, PlanetPageContent> = {
     tryThis:
       "Someone disagrees with an opinion you care about. Explain what you think without apologizing for having the opinion.",
     sessionCta: "Start Stand Session",
-    sessionHref: "/speak?planet=stand",
+    sessionHref: "/session/stand",
     growth: [],
     growthEmpty:
       "After a few sessions here, gentle observations about how you stand up for yourself will appear.",
@@ -109,7 +109,7 @@ export const PLANET_PAGES: Record<VoicePlanetId, PlanetPageContent> = {
     tryThis:
       "A friend did something that bothered you. What would you want to say to them?",
     sessionCta: "Start Connect Session",
-    sessionHref: "/speak?planet=connect",
+    sessionHref: "/session/connect",
     growth: [],
     growthEmpty:
       "After a few sessions here, gentle observations about how you connect with others will appear.",
@@ -127,7 +127,7 @@ export const PLANET_PAGES: Record<VoicePlanetId, PlanetPageContent> = {
       "Use your voice to explore your ideas, values, interests, and identity.",
     tryThis: "What's something you've changed your mind about recently?",
     sessionCta: "Start Explore Session",
-    sessionHref: "/speak?planet=explore",
+    sessionHref: "/session/explore",
     growth: [],
     growthEmpty:
       "After a few sessions here, gentle observations about what you're discovering will appear.",

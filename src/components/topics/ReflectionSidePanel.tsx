@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
 import type { TimelineNode } from "@/lib/topics/types";
+import { getSessionAudioUrl } from "@/lib/sessions/audio";
 
 type ReflectionSidePanelProps = {
   node: TimelineNode | null;
@@ -66,14 +66,8 @@ export function ReflectionSidePanel({
     try {
       setLoadingAudio(true);
       if (!audio.src || audio.dataset.path !== node.audioUrl) {
-        const supabase = createClient();
-        const { data, error } = await supabase.storage
-          .from("reflections-audio")
-          .createSignedUrl(node.audioUrl, 3600);
-        if (error || !data?.signedUrl) {
-          throw new Error(error?.message || "Could not load this recording.");
-        }
-        audio.src = data.signedUrl;
+        const signedUrl = await getSessionAudioUrl(node.audioUrl);
+        audio.src = signedUrl;
         audio.dataset.path = node.audioUrl;
       }
       await audio.play();

@@ -1,5 +1,10 @@
 import { getVoicePlanetById, type VoicePlanetId } from "@/lib/home/voicePlanets";
 import { isPlanet } from "@/lib/prompts";
+import { mapAnalysisRow, pickAnalysisRow } from "@/lib/sessions/analysisMap";
+import type {
+  SessionAnalysisRow,
+  SessionWithAttempts,
+} from "@/lib/sessions/types";
 import type { ReflectionRow, SessionType } from "@/lib/topics/types";
 import type {
   JourneyClip,
@@ -25,6 +30,7 @@ function clipFromRow(row: ReflectionRow): JourneyClip {
     recordedAt: row.recorded_at,
     audioUrl: row.audio_url,
     transcript: row.transcript,
+    transcriptStatus: row.transcript?.trim() ? "ready" : null,
     durationSeconds: row.duration_seconds,
   };
 }
@@ -40,9 +46,9 @@ function sessionFromClips(
   const first = sorted[0]!;
   const planet = resolvePlanet(first.topic_id);
 
-  const attuneParts: string[] = [];
+  const haeloParts: string[] = [];
   for (const r of sorted) {
-    if (r.stood_out?.trim()) attuneParts.push(r.stood_out.trim());
+    if (r.stood_out?.trim()) haeloParts.push(r.stood_out.trim());
   }
   const voiceNotes = sorted.flatMap((r) => r.voice_notes ?? []);
   const themeLabel =
@@ -63,7 +69,7 @@ function sessionFromClips(
     sessionType: first.session_type as SessionType | null,
     clips: sorted.map(clipFromRow),
     userReflection: null,
-    attuneObservation: attuneParts.length > 0 ? attuneParts.join("\n\n") : null,
+    haeloObservation: haeloParts.length > 0 ? haeloParts.join("\n\n") : null,
     voiceNotes: [...new Set(voiceNotes)],
     themeLabel,
     changeObservation: null,
@@ -103,6 +109,104 @@ export function mapReflectionsToJourneySessions(
   }
 
   return sessions.sort(
+    (a, b) =>
+      new Date(a.recordedAt).getTime() - new Date(b.recordedAt).getTime(),
+  );
+}
+
+/**
+ * Map completed practice sessions (+ attempts) into Journey stars.
+ * One completed session → one constellation node (regardless of attempt count).
+ */
+export function mapPracticeSessionsToJourneySessions(
+  rows: SessionWithAttempts[],
+): JourneySession[] {
+  const sessions: JourneySession[] = [];
+
+  for (const row of rows) {
+    if (row.status !== "completed") continue;
+
+    const planet = resolvePlanet(row.planet);
+    const attempts = [...(row.session_attempts ?? [])].sort(
+      (a, b) => a.attempt_number - b.attempt_number,
+    );
+
+    const analysisRow = pickAnalysisRow(
+      row.session_analyses as
+        | SessionAnalysisRow
+        | SessionAnalysisRow[]
+        | null
+        | undefined,
+    );
+    const analysis = mapAnalysisRow(analysisRow);
+
+    const clips: JourneyClip[] = attempts.map((attempt) => ({
+      id: attempt.id,
+      promptText: row.prompt_text_snapshot,
+      questionId: row.prompt_id,
+      recordedAt: attempt.created_at,
+      audioUrl: attempt.storage_path,
+      transcript: attempt.transcript ?? null,
+      transcriptStatus: attempt.transcript_status ?? null,
+      durationSeconds: attempt.duration_seconds,
+      attemptNumber: attempt.attempt_number,
+    }));
+
+    const recordedAt =
+      row.completed_at ?? attempts[0]?.created_at ?? row.created_at;
+
+    const strengthLine = analysis?.strength
+      ? `${analysis.strength.title}: ${analysis.strength.description}`
+      : null;
+    const observationLine = analysis?.observation
+      ? `${analysis.observation.title}: ${analysis.observation.description}`
+      : null;
+
+    sessions.push({
+      sessionId: row.id,
+      recordedAt,
+      planet,
+      planetLabel: planetLabel(planet),
+      prompt: row.prompt_text_snapshot,
+      promptId: row.prompt_id,
+      sessionType: row.source === "daily" ? "daily" : "main",
+      clips,
+      userReflection: row.user_reflection,
+      feelingReflection: row.feeling_reflection ?? null,
+      soundedLikeYou: row.sounded_like_you ?? null,
+      authenticityChoice: row.authenticity_choice ?? null,
+      analysisStatus: row.analysis_status,
+      haeloObservation: strengthLine || observationLine,
+      analysisStrength: analysis?.strength ?? null,
+      analysisObservation: analysis?.observation ?? null,
+      analysisEvidence: analysis?.evidence ?? null,
+      analysisExperiment: analysis?.experiment ?? null,
+      voiceNotes: [],
+      themeLabel: null,
+      changeObservation: analysis?.comparisonObservation ?? null,
+      reviewHref: isPlanet(row.planet)
+        ? `/session/${row.planet}/${row.id}/review`
+        : null,
+      isMilestone: false,
+    });
+  }
+
+  return sessions.sort(
+    (a, b) =>
+      new Date(a.recordedAt).getTime() - new Date(b.recordedAt).getTime(),
+  );
+}
+
+export function mergeJourneySessions(
+  ...groups: JourneySession[][]
+): JourneySession[] {
+  const byId = new Map<string, JourneySession>();
+  for (const group of groups) {
+    for (const session of group) {
+      byId.set(session.sessionId, session);
+    }
+  }
+  return [...byId.values()].sort(
     (a, b) =>
       new Date(a.recordedAt).getTime() - new Date(b.recordedAt).getTime(),
   );

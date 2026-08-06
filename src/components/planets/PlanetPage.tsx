@@ -3,10 +3,8 @@ import { HomeNav } from "@/components/home/HomeNav";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { getVoicePlanetById } from "@/lib/home/voicePlanets";
 import type { VoicePlanetId } from "@/lib/home/voicePlanets";
-import {
-  getPlanetPageContent,
-  getPlanetProgression,
-} from "@/lib/planets/content";
+import { getVoicePlanetPageData } from "@/lib/planets/data";
+import { createClient } from "@/lib/supabase/server";
 import { PlanetHeroVisual } from "./PlanetHeroVisual";
 
 type PlanetPageProps = {
@@ -24,16 +22,23 @@ function SectionLabel({ children }: { children: string }) {
   );
 }
 
-export function PlanetPage({ planetId }: PlanetPageProps) {
-  const content = getPlanetPageContent(planetId);
+export async function PlanetPage({ planetId }: PlanetPageProps) {
   const planet = getVoicePlanetById(planetId);
-  const progression = getPlanetProgression(planetId);
-  const hasGrowth = content.growth.length > 0;
-  const hasSessions = content.recentSessions.length > 0;
-
   if (!planet) {
     return null;
   }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { content, progression } = await getVoicePlanetPageData(
+    user?.id ?? null,
+    planetId,
+  );
+  const hasGrowth = content.growth.length > 0;
+  const hasSessions = content.recentSessions.length > 0;
 
   return (
     <div

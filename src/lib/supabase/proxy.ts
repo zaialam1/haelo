@@ -46,6 +46,7 @@ export async function updateSession(request: NextRequest) {
     "/home",
     "/settings",
     "/speak",
+    "/session",
     "/prompt",
     "/topics",
     "/my-voice",

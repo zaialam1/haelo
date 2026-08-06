@@ -14,12 +14,14 @@ export type JourneyClip = {
   recordedAt: string;
   audioUrl: string | null;
   transcript: string | null;
+  transcriptStatus?: string | null;
   durationSeconds: number | null;
+  attemptNumber?: number;
 };
 
 /**
- * One completed Attune speaking session → one constellation star.
- * Derived from reflection rows (grouped by session_id when present).
+ * One completed Haelo speaking session → one constellation star.
+ * Derived from practice sessions or reflection rows (grouped by session_id).
  */
 export type JourneySession = {
   sessionId: string;
@@ -31,14 +33,29 @@ export type JourneySession = {
   promptId: string | null;
   sessionType: SessionType | null;
   clips: JourneyClip[];
-  /** User-authored reflection if present (future-ready) */
+  /** User-authored written reflection if present */
   userReflection: string | null;
-  /** Attune analysis / observation if present */
-  attuneObservation: string | null;
+  feelingReflection?: string | null;
+  soundedLikeYou?: string | null;
+  authenticityChoice?: string | null;
+  /** Analysis pipeline status */
+  analysisStatus?: string | null;
+  /** Haelo analysis / observation if present */
+  haeloObservation: string | null;
+  analysisStrength?: { title: string; description: string } | null;
+  analysisObservation?: { title: string; description: string } | null;
+  analysisEvidence?: Array<{
+    text: string;
+    startTime?: number;
+    endTime?: number;
+  }> | null;
+  analysisExperiment?: { title: string; instruction: string } | null;
   voiceNotes: string[];
   themeLabel: string | null;
-  /** Comparison note between attempts (future-ready) */
+  /** Comparison note between attempts */
   changeObservation: string | null;
+  /** Deep-link into session review when available */
+  reviewHref?: string | null;
   /** Future milestone support — unused for now */
   isMilestone?: boolean;
 };

@@ -95,34 +95,40 @@ export function PlanetSurface({
   }
 
   if (id === "connect") {
+    // #region agent log
+    fetch('http://127.0.0.1:7260/ingest/327a9bfd-1a4e-4e3a-9bbf-2eff52fa2f90',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'d29eb1'},body:JSON.stringify({sessionId:'d29eb1',runId:'post-fix',hypothesisId:'H1',location:'PlanetSurface.tsx:connect',message:'Connect surface gradient stops',data:{id,hardcodedStops:['#EAF4FA','#A9C9E0','#6B9BC7','#3F6F96'],expectedVoicePlanetColor:'#6B9BC7'},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     return (
       <svg viewBox="0 0 120 120" className="size-full" aria-hidden="true">
         <defs>
           <radialGradient id={`${gid}-body`} cx="32%" cy="32%" r="68%">
-            <stop offset="0%" stopColor="#F5E0EA" />
-            <stop offset="40%" stopColor="#D4A0C4" />
-            <stop offset="75%" stopColor="#A878B0" />
-            <stop offset="100%" stopColor="#6B5A8F" />
+            <stop offset="0%" stopColor="#EAF4FA" />
+            <stop offset="40%" stopColor="#A9C9E0" />
+            <stop offset="75%" stopColor="#6B9BC7" />
+            <stop offset="100%" stopColor="#3F6F96" />
           </radialGradient>
         </defs>
         <circle cx="60" cy="60" r="56" fill={`url(#${gid}-body)`} />
-        <circle cx="44" cy="52" r="22" fill="#E8A0BF" fillOpacity="0.35" />
-        <circle cx="74" cy="58" r="20" fill="#5B4B8A" fillOpacity="0.22" />
-        <circle cx="58" cy="78" r="16" fill="#F6D365" fillOpacity="0.12" />
+        <circle cx="44" cy="52" r="22" fill="#8EB4D4" fillOpacity="0.4" />
+        <circle cx="74" cy="58" r="20" fill="#5B4B8A" fillOpacity="0.12" />
+        <circle cx="58" cy="78" r="16" fill="#F6D365" fillOpacity="0.1" />
         <circle cx="40" cy="38" r="11" fill="#FFF8F0" fillOpacity="0.4" />
       </svg>
     );
   }
 
   // explore
+  // #region agent log
+  fetch('http://127.0.0.1:7260/ingest/327a9bfd-1a4e-4e3a-9bbf-2eff52fa2f90',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'d29eb1'},body:JSON.stringify({sessionId:'d29eb1',runId:'post-fix',hypothesisId:'H1',location:'PlanetSurface.tsx:explore',message:'Explore surface gradient stops',data:{id,hardcodedStops:['#FFF1E8','#F0C4A8','#E9A98A','#C47E5E'],expectedVoicePlanetColor:'#E9A98A'},timestamp:Date.now()})}).catch(()=>{});
+  // #endregion
   return (
     <svg viewBox="0 0 120 120" className="size-full" aria-hidden="true">
       <defs>
         <radialGradient id={`${gid}-body`} cx="34%" cy="30%" r="68%">
-          <stop offset="0%" stopColor="#F8E9C4" />
-          <stop offset="32%" stopColor="#C4B0D8" />
-          <stop offset="70%" stopColor="#8B7BB5" />
-          <stop offset="100%" stopColor="#5B4B8A" />
+          <stop offset="0%" stopColor="#FFF1E8" />
+          <stop offset="32%" stopColor="#F0C4A8" />
+          <stop offset="70%" stopColor="#E9A98A" />
+          <stop offset="100%" stopColor="#C47E5E" />
         </radialGradient>
       </defs>
       <circle cx="60" cy="60" r="56" fill={`url(#${gid}-body)`} />
@@ -174,7 +180,7 @@ export function PlanetAtmosphere({
           className="pointer-events-none absolute rounded-full"
           style={{
             inset: heroScale ? "-22%" : "-18%",
-            background: `radial-gradient(circle, color-mix(in srgb, var(--gold) 18%, transparent), transparent 70%)`,
+            background: `radial-gradient(circle, color-mix(in srgb, ${color} 28%, transparent), transparent 70%)`,
           }}
           aria-hidden="true"
         />
@@ -183,7 +189,7 @@ export function PlanetAtmosphere({
           style={{
             width: heroScale ? "160%" : "150%",
             height: heroScale ? "44%" : "42%",
-            borderColor: "color-mix(in srgb, var(--gold) 45%, transparent)",
+            borderColor: `color-mix(in srgb, ${color} 55%, var(--gold))`,
           }}
           aria-hidden="true"
         />

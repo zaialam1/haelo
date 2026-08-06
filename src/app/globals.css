@@ -973,33 +973,33 @@ html.dark .journey-session-panel[data-open="true"] {
     var(--universe-map);
 }
 
-/* Connect — soft overlapping mauve haze */
+/* Connect — soft blue connection haze */
 .planet-page[data-atmosphere="soft"] {
   --planet-page-bg:
     radial-gradient(
       ellipse 48% 40% at 38% 16%,
-      color-mix(in srgb, var(--rose) 26%, transparent),
+      color-mix(in srgb, #6b9bc7 28%, transparent),
       transparent 55%
     ),
     radial-gradient(
       ellipse 48% 40% at 68% 22%,
-      color-mix(in srgb, #a878b0 20%, transparent),
+      color-mix(in srgb, #8eb4d4 18%, transparent),
       transparent 55%
     ),
     var(--universe-map);
 }
 
-/* Explore — gold spark discovery field */
+/* Explore — warm peach discovery field */
 .planet-page[data-atmosphere="spark"] {
   --planet-page-bg:
     radial-gradient(
       ellipse 55% 42% at 50% 14%,
-      color-mix(in srgb, var(--gold) 18%, transparent),
+      color-mix(in srgb, #e9a98a 26%, transparent),
       transparent 58%
     ),
     radial-gradient(
       ellipse 45% 38% at 80% 65%,
-      color-mix(in srgb, #9a8bc4 28%, transparent),
+      color-mix(in srgb, var(--gold) 16%, transparent),
       transparent 55%
     ),
     var(--universe-map);

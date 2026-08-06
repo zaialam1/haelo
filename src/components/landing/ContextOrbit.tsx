@@ -15,8 +15,8 @@ export type VoiceContext = {
 const CONTEXTS: VoiceContext[] = [
   { id: "express", label: "Express", x: 22, y: 28, size: 20, color: "var(--rose)" },
   { id: "stand", label: "Stand", x: 78, y: 30, size: 18, color: "var(--violet)" },
-  { id: "connect", label: "Connect", x: 28, y: 72, size: 18, color: "var(--rose)" },
-  { id: "explore", label: "Explore", x: 74, y: 74, size: 17, color: "var(--violet)" },
+  { id: "connect", label: "Connect", x: 28, y: 72, size: 18, color: "#6B9BC7" },
+  { id: "explore", label: "Explore", x: 74, y: 74, size: 17, color: "#E9A98A" },
 ];
 
 type ContextOrbitProps = {

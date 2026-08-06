@@ -21,6 +21,12 @@ export function VoicePlanetOrb({
   const floatDuration = 5 + (floatDelaySec % 1.6);
   const sizeCss = `clamp(5rem, 20vw, ${px}px)`;
 
+  // #region agent log
+  if (planet.id === "connect" || planet.id === "explore") {
+    fetch('http://127.0.0.1:7260/ingest/327a9bfd-1a4e-4e3a-9bbf-2eff52fa2f90',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'d29eb1'},body:JSON.stringify({sessionId:'d29eb1',runId:'post-fix',hypothesisId:'H2',location:'VoicePlanet.tsx:render',message:'Orbit glow color after surface fix',data:{id:planet.id,voicePlanetColor:planet.color},timestamp:Date.now()})}).catch(()=>{});
+  }
+  // #endregion
+
   return (
     <TransitionLink
       href={planet.href}
