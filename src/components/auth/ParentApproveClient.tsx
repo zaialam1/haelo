@@ -20,7 +20,7 @@ function ApproveContent() {
     const ok = approveParentConsentPrototype(token);
     setStatus(ok ? "ok" : "bad");
     if (ok) {
-      const timer = window.setTimeout(() => router.push("/home"), 1200);
+      const timer = window.setTimeout(() => router.push("/onboarding/username"), 1200);
       return () => window.clearTimeout(timer);
     }
   }, [token, router]);

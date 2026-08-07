@@ -45,7 +45,13 @@ export function SessionAnalysisPanel({
   retrying = false,
   failureMessage = null,
 }: SessionAnalysisPanelProps) {
-  const status = analysis?.status ?? analysisStatus;
+  // Prefer the analysis row when it has real content; otherwise fall back to
+  // the denormalized session status so a failed write cannot leave the UI
+  // stuck on "looking…" forever.
+  const status =
+    analysis?.status === "ready" || analysis?.status === "failed"
+      ? analysis.status
+      : (analysisStatus ?? analysis?.status ?? null);
 
   if (status === "pending" || status == null) {
     return (

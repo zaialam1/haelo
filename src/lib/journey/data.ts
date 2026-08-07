@@ -21,7 +21,63 @@ import type { ReflectionRow } from "@/lib/topics/types";
 const REFLECTION_SELECT =
   "id, user_id, topic_id, subtopic_id, prompt_text, recorded_at, audio_url, transcript, duration_seconds, confidence, meaningfulness, growth_signal, stood_out, voice_notes, theme_label, created_at, question_id, session_type, session_id, question_ids, prompt_texts, question_timestamps";
 
-const SESSION_SELECT = `
+const SESSION_ATTEMPTS_SELECT = `
+  session_attempts (
+    id,
+    session_id,
+    attempt_number,
+    storage_path,
+    mime_type,
+    file_size_bytes,
+    duration_seconds,
+    transcript,
+    transcript_status,
+    created_at
+  )
+`;
+
+const SESSION_ANALYSES_SELECT_BASE = `
+  session_analyses (
+    id,
+    session_id,
+    status,
+    strength_title,
+    strength_description,
+    observation_title,
+    observation_description,
+    evidence,
+    experiment_title,
+    experiment_instruction,
+    comparison_observation,
+    created_at,
+    completed_at
+  )
+`;
+
+const SESSION_ANALYSES_SELECT_WITH_METRICS = `
+  session_analyses (
+    id,
+    session_id,
+    status,
+    strength_title,
+    strength_description,
+    observation_title,
+    observation_description,
+    evidence,
+    experiment_title,
+    experiment_instruction,
+    comparison_observation,
+    journey_metrics,
+    journey_metrics_version,
+    journey_metrics_prompt_version,
+    journey_metrics_model,
+    journey_metrics_scored_at,
+    created_at,
+    completed_at
+  )
+`;
+
+const SESSION_SELECT_CORE = `
   id,
   user_id,
   planet,
@@ -40,33 +96,17 @@ const SESSION_SELECT = `
   analysis_status,
   created_at,
   completed_at,
-  session_attempts (
-    id,
-    session_id,
-    attempt_number,
-    storage_path,
-    mime_type,
-    file_size_bytes,
-    duration_seconds,
-    transcript,
-    transcript_status,
-    created_at
-  ),
-  session_analyses (
-    id,
-    session_id,
-    status,
-    strength_title,
-    strength_description,
-    observation_title,
-    observation_description,
-    evidence,
-    experiment_title,
-    experiment_instruction,
-    comparison_observation,
-    created_at,
-    completed_at
-  )
+  ${SESSION_ATTEMPTS_SELECT}
+`;
+
+const SESSION_SELECT = `
+  ${SESSION_SELECT_CORE},
+  ${SESSION_ANALYSES_SELECT_WITH_METRICS}
+`;
+
+const SESSION_SELECT_WITHOUT_JOURNEY_METRICS = `
+  ${SESSION_SELECT_CORE},
+  ${SESSION_ANALYSES_SELECT_BASE}
 `;
 
 export async function getAllReflectionsForUser(
@@ -98,12 +138,34 @@ export async function getCompletedPracticeSessionsForUser(
     .eq("status", "completed")
     .order("completed_at", { ascending: true });
 
-  if (error) {
-    console.error("[journey] sessions fetch failed:", error.message);
-    return [];
+  if (!error) {
+    return (data ?? []) as SessionWithAttempts[];
   }
 
-  return (data ?? []) as SessionWithAttempts[];
+  // Migration 20260806_journey_metrics.sql not applied yet — load without scores.
+  if (/journey_metrics/i.test(error.message)) {
+    console.warn(
+      "[journey] journey_metrics columns missing — loading sessions without Journey scores. Apply migration 20260806_journey_metrics.sql.",
+    );
+    const fallback = await supabase
+      .from("sessions")
+      .select(SESSION_SELECT_WITHOUT_JOURNEY_METRICS)
+      .eq("user_id", userId)
+      .eq("status", "completed")
+      .order("completed_at", { ascending: true });
+
+    if (fallback.error) {
+      console.error(
+        "[journey] sessions fetch failed:",
+        fallback.error.message,
+      );
+      return [];
+    }
+    return (fallback.data ?? []) as SessionWithAttempts[];
+  }
+
+  console.error("[journey] sessions fetch failed:", error.message);
+  return [];
 }
 
 /** Completed Orbit progress rows — used to build master Journey clusters. */

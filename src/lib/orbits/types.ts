@@ -96,6 +96,7 @@ export type UserOrbitProgressRow = {
   summative_analysis_id: string | null;
   orbit_version: number;
   orbit_title_snapshot: string | null;
+  source_recommendation_id?: string | null;
   created_at: string;
   updated_at: string;
 };

@@ -2,12 +2,18 @@
 
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { useOptionalPageTransition } from "@/components/transitions/PageTransitionProvider";
+import { HaeloUsernameField } from "@/components/auth/HaeloUsernameField";
 import { useRouter } from "next/navigation";
-import { useId, useState } from "react";
+import { useCallback, useId, useState } from "react";
+import { signIn } from "@/lib/auth/signin";
 import { signUp } from "@/lib/auth/signup";
+import { createClient } from "@/lib/supabase/client";
+import { validateUsername } from "@/lib/profiles/username";
+import type { UsernameAvailabilityStatus } from "@/lib/profiles/username";
 
 type FieldErrors = {
   firstName?: string;
+  username?: string;
   email?: string;
   password?: string;
   confirmPassword?: string;
@@ -60,6 +66,9 @@ export function SignupForm() {
   const formId = useId();
 
   const [firstName, setFirstName] = useState("");
+  const [username, setUsername] = useState("");
+  const [usernameAvailability, setUsernameAvailability] =
+    useState<UsernameAvailabilityStatus>("idle");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -69,6 +78,13 @@ export function SignupForm() {
   const [submitting, setSubmitting] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
 
+  const onAvailabilityChange = useCallback(
+    (status: UsernameAvailabilityStatus) => {
+      setUsernameAvailability(status);
+    },
+    [],
+  );
+
   const firstNameId = `${formId}-first-name`;
   const emailId = `${formId}-email`;
   const passwordId = `${formId}-password`;
@@ -77,6 +93,23 @@ export function SignupForm() {
   function validate(): FieldErrors {
     const next: FieldErrors = {};
     if (!firstName.trim()) next.firstName = "Enter your first name.";
+    const usernameParsed = validateUsername(username);
+    if (!usernameParsed.ok) next.username = usernameParsed.message;
+    else if (usernameAvailability === "taken")
+      next.username = "That Haelo name is already taken.";
+    else if (usernameAvailability === "reserved")
+      next.username = "That Haelo name isn’t available.";
+    else if (
+      usernameAvailability !== "available" &&
+      usernameAvailability !== "idle"
+    ) {
+      if (usernameAvailability === "checking") {
+        next.username = "Still checking that Haelo name…";
+      } else if (usernameAvailability === "invalid") {
+        next.username =
+          "Use 3–20 letters, numbers, or underscores. Don’t start or end with an underscore.";
+      }
+    }
     if (!email.trim()) next.email = "Enter your email.";
     else if (!EMAIL_RE.test(email.trim())) next.email = "Enter a valid email.";
     if (!password) next.password = "Enter a password.";
@@ -93,23 +126,91 @@ export function SignupForm() {
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
+    const usernameParsed = validateUsername(username);
+    if (!usernameParsed.ok || usernameAvailability !== "available") {
+      setErrors({
+        username:
+          usernameParsed.ok === false
+            ? usernameParsed.message
+            : "Choose an available Haelo name.",
+      });
+      return;
+    }
+
     setSubmitting(true);
     setErrors({});
 
+    async function ensureUsernameClaimed(normalized: string): Promise<boolean> {
+      const supabase = createClient();
+      const { data: claimData } = await supabase.rpc("claim_username", {
+        raw_username: normalized,
+      });
+      const payload = claimData as
+        | { ok?: boolean; error?: string }
+        | null;
+      return Boolean(
+        payload?.ok ||
+          payload?.error === "already_set",
+      );
+    }
+
+    function goNext(usernameClaimed: boolean) {
+      // Avoid server actions right after client auth — cookie race causes
+      // "An unexpected response was received from the server."
+      const href = usernameClaimed
+        ? "/age-verification"
+        : "/onboarding/username";
+      if (transition) {
+        transition.navigate({ href, variant: "fade" });
+      } else {
+        router.push(href);
+      }
+      router.refresh();
+    }
+
     try {
+
       const result = await signUp({
         firstName: firstName.trim(),
+        username: usernameParsed.normalized,
         email: email.trim(),
         password,
       });
 
       if (!result.ok) {
+        if (result.code === "email_taken") {
+          // Auth user often already exists from a previous partial signup attempt.
+          const signedIn = await signIn({
+            email: email.trim(),
+            password,
+          });
+          if (!signedIn.ok) {
+            if (signedIn.code === "email_not_confirmed") {
+              setCheckEmail(true);
+              return;
+            }
+            setErrors({
+              form:
+                "An account with this email already exists. Log in with the same password to continue.",
+            });
+            return;
+          }
+          const claimed = await ensureUsernameClaimed(
+            usernameParsed.normalized,
+          );
+          goNext(claimed);
+          return;
+        }
         if (result.code === "invalid_email") {
           setErrors({ email: result.message });
         } else if (result.code === "weak_password") {
           setErrors({ password: result.message });
-        } else if (result.code === "email_taken") {
-          setErrors({ email: result.message });
+        } else if (
+          result.code === "username_taken" ||
+          result.code === "username_reserved" ||
+          result.code === "username_invalid"
+        ) {
+          setErrors({ username: result.message });
         } else {
           setErrors({ form: result.message });
         }
@@ -121,15 +222,11 @@ export function SignupForm() {
         return;
       }
 
-      if (transition) {
-        transition.navigate({ href: "/age-verification", variant: "fade" });
-      } else {
-        router.push("/age-verification");
-      }
-      router.refresh();
+      goNext(result.usernameClaimed);
     } catch {
       setErrors({
-        form: "Something went wrong. Try again.",
+        form:
+          "Something went wrong. If an account was created, log in with the same password to continue.",
       });
     } finally {
       setSubmitting(false);
@@ -154,7 +251,8 @@ export function SignupForm() {
             <span className="font-semibold text-[var(--foreground)]">
               {email.trim().toLowerCase()}
             </span>
-            . Open it to finish creating your account.
+            . Open it to finish creating your account. Your Haelo name will be
+            saved when you confirm.
           </p>
         </div>
         <TransitionLink
@@ -167,6 +265,9 @@ export function SignupForm() {
       </div>
     );
   }
+
+  const canSubmit =
+    !submitting && usernameAvailability === "available";
 
   return (
     <form className="flex flex-col gap-5" onSubmit={onSubmit} noValidate>
@@ -214,6 +315,28 @@ export function SignupForm() {
           disabled={submitting}
         />
       </Field>
+
+      <div>
+        <HaeloUsernameField
+          value={username}
+          onChange={(value) => {
+            setUsername(value);
+            if (errors.username) {
+              setErrors((prev) => ({ ...prev, username: undefined }));
+            }
+          }}
+          disabled={submitting}
+          onAvailabilityChange={onAvailabilityChange}
+        />
+        {errors.username ? (
+          <p className="mt-1.5 text-sm text-[#9B2C2C]" role="alert">
+            {errors.username}
+          </p>
+        ) : null}
+        <p className="mt-2 text-xs leading-relaxed text-[var(--foreground-muted)]">
+          Your recordings, Journey, and analyses stay private.
+        </p>
+      </div>
 
       <Field id={emailId} label="Email" error={errors.email}>
         <input
@@ -302,7 +425,7 @@ export function SignupForm() {
 
       <button
         type="submit"
-        disabled={submitting}
+        disabled={!canSubmit}
         className="mt-1 inline-flex w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)] shadow-[0_10px_28px_color-mix(in_srgb,var(--violet)_30%,transparent)] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
       >
         {submitting ? "Creating account…" : "Create account"}

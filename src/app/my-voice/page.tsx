@@ -1,17 +1,26 @@
 import type { Metadata } from "next";
-import { UniverseEmptyPage } from "@/components/placeholders/UniverseEmptyPage";
+import { redirect } from "next/navigation";
+import { MyVoiceExperience } from "@/components/home/MyVoiceExperience";
+import { openMyVoiceForUser } from "@/lib/myVoice/ensure";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "My Voice — Haelo",
-  description: "Notice how your voice grows across Express, Stand, Connect, and Explore.",
+  description:
+    "Notice how your voice has been taking shape across Connect, Stand, Explore, and Express.",
 };
 
-export default function MyVoicePage() {
-  return (
-    <UniverseEmptyPage
-      title="My Voice"
-      description="Insights across Express, Stand, Connect, and Explore will gather here once you've practiced a little."
-      hint="There's nothing to analyze yet — and that's okay. Start with any planet that feels right."
-    />
-  );
+export default async function MyVoicePage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const view = await openMyVoiceForUser({ userId: user.id });
+
+  return <MyVoiceExperience initialView={view} />;
 }

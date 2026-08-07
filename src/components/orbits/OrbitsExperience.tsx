@@ -1,6 +1,6 @@
 "use client";
 
-import { useDeferredValue, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { OrbitConstellation } from "@/components/orbits/OrbitConstellation";
 import { OrbitInProgress } from "@/components/orbits/OrbitInProgress";
 import {
@@ -8,21 +8,21 @@ import {
   RegionMapNetwork,
 } from "@/components/orbits/OrbitRegionCluster";
 import { OrbitSkyDecor } from "@/components/orbits/OrbitSkyDecor";
-import {
-  getOrbitStatus,
-  matchesOrbitSearch,
-} from "@/lib/orbits/ui";
+import { getOrbitStatus } from "@/lib/orbits/ui";
 import type {
   OrbitListItem,
   OrbitRegionDefinition,
   OrbitRegionKey,
 } from "@/lib/orbits/types";
+import type { OrbitRecommendation } from "@/lib/recommendations/types";
+import { RecommendedForYou } from "@/components/recommendations/RecommendedForYou";
 
 type OrbitsExperienceProps = {
   regions: readonly OrbitRegionDefinition[];
   items: OrbitListItem[];
   initialRegion?: OrbitRegionKey | null;
   loadError?: string | null;
+  recommendations?: OrbitRecommendation[];
 };
 
 export function OrbitsExperience({
@@ -30,11 +30,9 @@ export function OrbitsExperience({
   items,
   initialRegion = null,
   loadError = null,
+  recommendations = [],
 }: OrbitsExperienceProps) {
   const [region, setRegion] = useState<OrbitRegionKey | null>(initialRegion);
-  const [query, setQuery] = useState("");
-  const [searchOpen, setSearchOpen] = useState(false);
-  const deferredQuery = useDeferredValue(query);
 
   const inProgressItems = useMemo(
     () =>
@@ -57,15 +55,14 @@ export function OrbitsExperience({
     if (!region) return [];
     return items
       .filter((i) => i.definition.regionKey === region)
-      .filter((i) => matchesOrbitSearch(i, deferredQuery, regionTitle))
       .sort(
         (a, b) => a.definition.sortOrder - b.definition.sortOrder,
       );
-  }, [items, region, deferredQuery, regionTitle]);
+  }, [items, region]);
 
   return (
     <div className="flex flex-col gap-5 sm:gap-6">
-      <div className="flex items-start justify-between gap-3 px-4 sm:px-8 lg:px-12">
+      <div className="px-4 sm:px-8 lg:px-12">
         <div className="min-w-0 max-w-lg">
           {region && regionMeta ? (
             <>
@@ -98,46 +95,6 @@ export function OrbitsExperience({
             >
               Choose a region of the sky to begin.
             </p>
-          )}
-        </div>
-
-        <div className="relative shrink-0">
-          {searchOpen ? (
-            <label className="block">
-              <span className="sr-only">Search Orbits</span>
-              <input
-                type="search"
-                value={query}
-                autoFocus
-                onChange={(e) => setQuery(e.target.value)}
-                onBlur={() => {
-                  if (!query.trim()) setSearchOpen(false);
-                }}
-                placeholder="What are you navigating?"
-                className="w-[11.5rem] rounded-full px-3 py-1.5 text-[0.75rem] outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] sm:w-[14rem]"
-                style={{
-                  background:
-                    "color-mix(in srgb, var(--foreground) 4%, transparent)",
-                  border:
-                    "1px solid color-mix(in srgb, var(--violet) 16%, transparent)",
-                  color: "var(--foreground)",
-                }}
-              />
-            </label>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setSearchOpen(true)}
-              className="rounded-full px-3 py-1.5 text-[0.6875rem] font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
-              style={{
-                color: "var(--foreground-muted)",
-                border:
-                  "1px solid color-mix(in srgb, var(--violet) 14%, transparent)",
-              }}
-              aria-label="Search Orbits"
-            >
-              Search
-            </button>
           )}
         </div>
       </div>
@@ -188,11 +145,7 @@ export function OrbitsExperience({
 
         {region ? (
           <div className="absolute inset-0 z-[2]">
-            <OrbitConstellation
-              regionKey={region}
-              items={regionItems}
-              query={deferredQuery}
-            />
+            <OrbitConstellation regionKey={region} items={regionItems} />
           </div>
         ) : null}
 
@@ -228,6 +181,7 @@ export function OrbitsExperience({
 
       <div className="px-4 sm:px-8 lg:px-12">
         <OrbitInProgress items={inProgressItems} />
+        <RecommendedForYou recommendations={recommendations} />
       </div>
     </div>
   );

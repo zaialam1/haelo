@@ -1,0 +1,288 @@
+-- Remove professional verification gating.
+-- All professionals (existing + new) are treated as active immediately.
+
+-- Existing accounts: clear pending/rejected → verified
+update public.professional_profiles
+set
+  verification_status = 'verified',
+  updated_at = now()
+where verification_status is distinct from 'verified';
+
+-- New rows default to verified (column kept for possible future use).
+alter table public.professional_profiles
+  alter column verification_status set default 'verified';
+
+-- Signup creates verified professionals.
+create or replace function public.complete_professional_signup(
+  p_display_name text,
+  p_professional_type text,
+  p_organization_name text default null,
+  p_raw_username text default null
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  uid uuid := auth.uid();
+  normalized text;
+  claim_result jsonb;
+  org text;
+begin
+  if uid is null then
+    return jsonb_build_object('ok', false, 'error', 'unauthenticated');
+  end if;
+
+  if p_display_name is null or length(trim(p_display_name)) < 1 then
+    return jsonb_build_object('ok', false, 'error', 'display_name_required');
+  end if;
+
+  if p_professional_type is null
+     or p_professional_type not in (
+       'school_counselor',
+       'therapist',
+       'psychologist',
+       'educator',
+       'coach_or_mentor',
+       'other'
+     ) then
+    return jsonb_build_object('ok', false, 'error', 'invalid_professional_type');
+  end if;
+
+  insert into public.profiles (id, account_role)
+  values (uid, 'user')
+  on conflict (id) do nothing;
+
+  perform set_config('haelo.bypass_profile_guard', 'on', true);
+
+  update public.profiles
+  set account_role = 'professional', updated_at = now()
+  where id = uid;
+
+  org := nullif(trim(coalesce(p_organization_name, '')), '');
+
+  insert into public.professional_profiles (
+    user_id,
+    display_name,
+    professional_type,
+    organization_name,
+    verification_status
+  )
+  values (
+    uid,
+    trim(p_display_name),
+    p_professional_type,
+    org,
+    'verified'
+  )
+  on conflict (user_id) do update
+  set
+    display_name = excluded.display_name,
+    professional_type = excluded.professional_type,
+    organization_name = excluded.organization_name,
+    verification_status = 'verified',
+    updated_at = now();
+
+  if p_raw_username is not null and length(trim(p_raw_username)) > 0 then
+    claim_result := public.claim_username(p_raw_username);
+    if coalesce((claim_result->>'ok')::boolean, false) is not true
+       and coalesce(claim_result->>'error', '') not in ('already_set') then
+      return jsonb_build_object(
+        'ok', false,
+        'error', coalesce(claim_result->>'error', 'username_failed'),
+        'claim', claim_result
+      );
+    end if;
+    normalized := coalesce(claim_result->>'username', public.normalize_haelo_username(p_raw_username));
+  end if;
+
+  return jsonb_build_object(
+    'ok', true,
+    'username', normalized,
+    'verification_status', 'verified'
+  );
+end;
+$$;
+
+-- Professional helpers: role is enough (no verification gate).
+create or replace function public.is_verified_professional(uid uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select public.is_professional_account(uid);
+$$;
+
+create or replace function public.search_haelo_username(raw_username text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  normalized text;
+  caller_role text;
+  found_id uuid;
+  found_username text;
+begin
+  if auth.uid() is null then
+    return jsonb_build_object('ok', false, 'error', 'unauthenticated');
+  end if;
+
+  select account_role into caller_role
+  from public.profiles
+  where id = auth.uid();
+
+  if caller_role is distinct from 'professional' then
+    return jsonb_build_object('ok', false, 'error', 'forbidden');
+  end if;
+
+  normalized := public.normalize_haelo_username(raw_username);
+  if normalized is null or not public.is_valid_haelo_username(normalized) then
+    return jsonb_build_object('ok', false, 'error', 'not_found');
+  end if;
+
+  select id, username into found_id, found_username
+  from public.profiles
+  where username_normalized = normalized
+    and account_role = 'user'
+  limit 1;
+
+  if found_id is null or found_id = auth.uid() then
+    return jsonb_build_object('ok', false, 'error', 'not_found');
+  end if;
+
+  return jsonb_build_object(
+    'ok', true,
+    'user', jsonb_build_object(
+      'id', found_id,
+      'username', found_username
+    )
+  );
+end;
+$$;
+
+drop policy if exists "Verified professionals can insert connection requests"
+  on public.professional_connections;
+drop policy if exists "Professionals can insert connection requests"
+  on public.professional_connections;
+
+create policy "Professionals can insert connection requests"
+  on public.professional_connections
+  for insert
+  with check (
+    auth.uid() = professional_user_id
+    and public.is_professional_account(auth.uid())
+    and status = 'pending'
+  );
+
+drop policy if exists "Verified professionals can update own connection requests"
+  on public.professional_connections;
+drop policy if exists "Professionals can update own connection requests"
+  on public.professional_connections;
+
+create policy "Professionals can update own connection requests"
+  on public.professional_connections
+  for update
+  using (
+    auth.uid() = professional_user_id
+    and public.is_professional_account(auth.uid())
+  )
+  with check (
+    auth.uid() = professional_user_id
+    and public.is_professional_account(auth.uid())
+  );
+
+create or replace function public.professional_connections_guard()
+returns trigger
+language plpgsql
+as $$
+declare
+  cooldown interval := interval '7 days';
+begin
+  new.updated_at := now();
+
+  if tg_op = 'INSERT' then
+    if not public.is_professional_account(new.professional_user_id) then
+      raise exception 'only professionals can create connection requests';
+    end if;
+    if not exists (
+      select 1 from public.profiles
+      where id = new.user_id and account_role = 'user'
+    ) then
+      raise exception 'connection target must be a Haelo user';
+    end if;
+    new.status := 'pending';
+    new.requested_at := coalesce(new.requested_at, now());
+    new.responded_at := null;
+    new.removed_at := null;
+    return new;
+  end if;
+
+  if auth.uid() = old.user_id then
+    if old.status = 'pending' and new.status in ('accepted', 'declined') then
+      new.responded_at := now();
+      new.removed_at := null;
+      return new;
+    end if;
+    if old.status = 'accepted' and new.status = 'removed' then
+      new.removed_at := now();
+      return new;
+    end if;
+    raise exception 'invalid connection status transition for user';
+  end if;
+
+  if auth.uid() = old.professional_user_id then
+    if not public.is_professional_account(auth.uid()) then
+      raise exception 'only professionals can update connection requests';
+    end if;
+    if old.status in ('declined', 'removed') and new.status = 'pending' then
+      if old.status = 'declined'
+         and old.responded_at is not null
+         and old.responded_at > now() - cooldown then
+        raise exception 'connection request cooldown active';
+      end if;
+      if old.status = 'removed'
+         and old.removed_at is not null
+         and old.removed_at > now() - cooldown then
+        raise exception 'connection request cooldown active';
+      end if;
+      new.requested_at := now();
+      new.responded_at := null;
+      new.removed_at := null;
+      return new;
+    end if;
+    if old.status = 'pending' and new.status = 'removed' then
+      new.removed_at := now();
+      return new;
+    end if;
+    raise exception 'invalid connection status transition for professional';
+  end if;
+
+  raise exception 'not allowed to update this connection';
+end;
+$$;
+
+create or replace function public.can_professional_recommend_to(
+  professional_id uuid,
+  target_user_id uuid
+)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.professional_connections c
+    join public.profiles p on p.id = c.professional_user_id
+    where c.professional_user_id = professional_id
+      and c.user_id = target_user_id
+      and c.status = 'accepted'
+      and p.account_role = 'professional'
+  );
+$$;

@@ -4,6 +4,12 @@ import type {
   SessionAnalysis,
   SessionAnalysisRow,
 } from "@/lib/sessions/types";
+import {
+  isJourneyMetricKey,
+  scoredMetricResult,
+  insufficientMetricResult,
+  type JourneyMetricResult,
+} from "@/lib/journey/metrics";
 
 function parseEvidence(raw: unknown): AnalysisEvidence[] | undefined {
   if (!Array.isArray(raw) || raw.length === 0) return undefined;
@@ -30,6 +36,36 @@ function parseEvidence(raw: unknown): AnalysisEvidence[] | undefined {
     items.push(item);
   }
   return items.length > 0 ? items : undefined;
+}
+
+function parseJourneyMetricsColumn(
+  raw: unknown,
+): JourneyMetricResult[] | undefined {
+  if (!Array.isArray(raw) || raw.length === 0) return undefined;
+  const out: JourneyMetricResult[] = [];
+  for (const entry of raw) {
+    if (!entry || typeof entry !== "object") continue;
+    const obj = entry as Record<string, unknown>;
+    if (!isJourneyMetricKey(obj.metric)) continue;
+    const status =
+      obj.status === "insufficient_data" ? "insufficient_data" : "scored";
+    if (status === "insufficient_data" || obj.score == null) {
+      out.push(insufficientMetricResult(obj.metric));
+      continue;
+    }
+    const scoreNum =
+      typeof obj.score === "number"
+        ? obj.score
+        : typeof obj.score === "string"
+          ? Number(obj.score)
+          : NaN;
+    if (!Number.isFinite(scoreNum)) {
+      out.push(insufficientMetricResult(obj.metric));
+      continue;
+    }
+    out.push(scoredMetricResult(obj.metric, scoreNum));
+  }
+  return out.length > 0 ? out : undefined;
 }
 
 export function mapAnalysisRow(
@@ -74,6 +110,14 @@ export function mapAnalysisRow(
 
   if (row.comparison_observation?.trim()) {
     analysis.comparisonObservation = row.comparison_observation.trim();
+  }
+
+  const journeyMetrics = parseJourneyMetricsColumn(row.journey_metrics);
+  if (journeyMetrics) {
+    analysis.journeyMetrics = journeyMetrics;
+    analysis.journeyMetricsVersion = row.journey_metrics_version;
+    analysis.journeyMetricsModel = row.journey_metrics_model;
+    analysis.journeyMetricsScoredAt = row.journey_metrics_scored_at;
   }
 
   return analysis;

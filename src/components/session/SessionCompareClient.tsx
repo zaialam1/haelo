@@ -74,14 +74,20 @@ export function SessionCompareClient({
   }, [second, flow, router, sessionId]);
 
   useEffect(() => {
-    if (session.analysis_status !== "pending") return;
+    const rowStatus = session.analysis?.status;
+    const sessionStatus = session.analysis_status;
+    const stillWaiting =
+      sessionStatus === "pending" ||
+      (sessionStatus === "ready" && rowStatus !== "ready") ||
+      rowStatus === "pending";
+    if (!stillWaiting) return;
     const id = window.setInterval(() => {
       void fetchSessionDetailClient(sessionId).then((next) => {
         if (next) setSession(next);
       });
     }, 4000);
     return () => window.clearInterval(id);
-  }, [session.analysis_status, sessionId]);
+  }, [session.analysis_status, session.analysis?.status, sessionId]);
 
   async function handleFinish() {
     setBusy(true);

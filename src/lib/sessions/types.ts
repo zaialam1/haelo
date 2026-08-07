@@ -1,3 +1,4 @@
+import type { JourneyMetricResult } from "@/lib/journey/metrics";
 import type { Planet } from "@/lib/prompts";
 
 export type SessionStatus = "in_progress" | "completed";
@@ -73,6 +74,12 @@ export type SessionAnalysisRow = {
   experiment_title: string | null;
   experiment_instruction: string | null;
   comparison_observation: string | null;
+  /** Internal Journey scores — never shown in SessionAnalysisPanel */
+  journey_metrics?: JourneyMetricResult[] | null;
+  journey_metrics_version?: string | null;
+  journey_metrics_prompt_version?: string | null;
+  journey_metrics_model?: string | null;
+  journey_metrics_scored_at?: string | null;
   created_at: string;
   completed_at: string | null;
 };
@@ -95,6 +102,14 @@ export type SessionAnalysis = {
     instruction: string;
   };
   comparisonObservation?: string;
+  /**
+   * Journey visualization metrics. Persisted with analysis but omitted from
+   * SessionAnalysisPanel / post-recording review UI.
+   */
+  journeyMetrics?: JourneyMetricResult[];
+  journeyMetricsVersion?: string | null;
+  journeyMetricsModel?: string | null;
+  journeyMetricsScoredAt?: string | null;
   createdAt?: string;
   completedAt?: string;
 };

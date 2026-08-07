@@ -2,6 +2,8 @@
 
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
+import { ConnectionRequestPanel } from "@/components/connections/ConnectionRequestPanel";
+import { OrbitRecommendationPanel } from "@/components/recommendations/OrbitRecommendationPanel";
 import { getDailyQuestionForDate } from "@/lib/questions/bank";
 import { DAILY_COMPLETED_KEY } from "@/lib/home/universe";
 import { TODAYS_QUESTION } from "@/lib/home/voicePlanets";
@@ -9,8 +11,9 @@ import {
   fetchStreakStats,
   type StreakStats,
 } from "@/lib/home/streakStats";
+import type { AppNotification } from "@/lib/connections/types";
 
-type PanelId = "streak" | "daily";
+type PanelId = "streak" | "daily" | "notifications";
 
 const WEEK_LABELS = ["M", "T", "W", "T", "F", "S", "S"] as const;
 
@@ -25,6 +28,7 @@ function UtilityButton({
   ariaLabel,
   ariaControls,
   ariaExpanded,
+  pulse,
   children,
 }: {
   active: boolean;
@@ -32,6 +36,7 @@ function UtilityButton({
   ariaLabel: string;
   ariaControls: string;
   ariaExpanded: boolean;
+  pulse?: boolean;
   children: ReactNode;
 }) {
   return (
@@ -41,7 +46,8 @@ function UtilityButton({
       aria-label={ariaLabel}
       aria-controls={ariaControls}
       aria-expanded={ariaExpanded}
-      className="home-utility-btn flex size-11 items-center justify-center rounded-full transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] sm:size-12"
+      data-pulse={pulse ? "true" : "false"}
+      className="home-utility-btn relative flex size-11 items-center justify-center rounded-full transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] sm:size-12"
       style={{
         background: active
           ? "color-mix(in srgb, var(--violet) 16%, var(--surface))"
@@ -58,15 +64,31 @@ function UtilityButton({
   );
 }
 
-export function HomeUtilities() {
+export function HomeUtilities({
+  initialNotifications = [],
+}: {
+  initialNotifications?: AppNotification[];
+}) {
   const [panel, setPanel] = useState<PanelId | null>(null);
   const [stats, setStats] = useState<StreakStats | null>(null);
-  const [dailyCompleted, setDailyCompleted] = useState(false);
+  const [dailyCompleted] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return localStorage.getItem(DAILY_COMPLETED_KEY) === todayKey();
+    } catch {
+      return false;
+    }
+  });
+  const [activeNotification, setActiveNotification] =
+    useState<AppNotification | null>(null);
+  const [resolvedIds, setResolvedIds] = useState<string[]>([]);
   const rootRef = useRef<HTMLDivElement>(null);
   const streakPanelId = useId();
   const dailyPanelId = useId();
+  const notifyPanelId = useId();
   const streakTitleId = useId();
   const dailyTitleId = useId();
+  const notifyTitleId = useId();
 
   const bankQuestion = getDailyQuestionForDate();
   const questionText = bankQuestion?.text ?? TODAYS_QUESTION.text;
@@ -74,13 +96,20 @@ export function HomeUtilities() {
   const weekActive =
     stats?.weekActive ?? [false, false, false, false, false, false, false];
 
-  useEffect(() => {
-    try {
-      setDailyCompleted(localStorage.getItem(DAILY_COMPLETED_KEY) === todayKey());
-    } catch {
-      setDailyCompleted(false);
-    }
-  }, []);
+  const visibleNotifications = initialNotifications.filter(
+    (n) => !resolvedIds.includes(n.id),
+  );
+  const connectionRequests = visibleNotifications.filter(
+    (n) => n.type === "connection_request",
+  );
+  const orbitRecommendations = visibleNotifications.filter(
+    (n) =>
+      n.type === "orbit_recommendation" ||
+      n.type === "orbit_recommendation_reminder",
+  );
+  const notifyItems = [...connectionRequests, ...orbitRecommendations];
+  const unreadCount = notifyItems.filter((n) => !n.readAt).length;
+  const notifyCount = notifyItems.length;
 
   useEffect(() => {
     let cancelled = false;
@@ -116,13 +145,17 @@ export function HomeUtilities() {
   useEffect(() => {
     if (!panel) return;
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setPanel(null);
+      if (e.key === "Escape") {
+        setPanel(null);
+        setActiveNotification(null);
+      }
     }
     function onPointer(e: MouseEvent | TouchEvent) {
       const el = rootRef.current;
       if (!el) return;
       if (e.target instanceof Node && !el.contains(e.target)) {
         setPanel(null);
+        setActiveNotification(null);
       }
     }
     window.addEventListener("keydown", onKey);
@@ -136,7 +169,11 @@ export function HomeUtilities() {
   }, [panel]);
 
   function toggle(id: PanelId) {
-    setPanel((prev) => (prev === id ? null : id));
+    setPanel((prev) => {
+      const next = prev === id ? null : id;
+      if (next !== "notifications") setActiveNotification(null);
+      return next;
+    });
   }
 
   const streakCopy =
@@ -205,9 +242,53 @@ export function HomeUtilities() {
             <circle cx="12" cy="16.5" r="0.75" fill="currentColor" stroke="none" />
           </svg>
         </UtilityButton>
+
+        {notifyCount > 0 ? (
+          <UtilityButton
+            active={panel === "notifications"}
+            onClick={() => toggle("notifications")}
+            ariaLabel={
+              notifyCount === 1
+                ? connectionRequests.length === 1
+                  ? "1 new connection request"
+                  : "1 new Orbit recommendation"
+                : `${notifyCount} notifications`
+            }
+            ariaControls={notifyPanelId}
+            ariaExpanded={panel === "notifications"}
+            pulse={unreadCount > 0}
+          >
+            <span className="relative">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M12 3a6 6 0 0 0-6 6c0 7-3 7-3 7h18s-3 0-3-7a6 6 0 0 0-6-6" />
+                <path d="M10 18a2 2 0 0 0 4 0" />
+              </svg>
+              {unreadCount > 0 ? (
+                <span
+                  className="absolute -top-1.5 -right-1.5 size-2 rounded-full"
+                  style={{
+                    background: "var(--gold)",
+                    boxShadow:
+                      "0 0 8px color-mix(in srgb, var(--gold) 60%, transparent)",
+                  }}
+                  aria-hidden="true"
+                />
+              ) : null}
+            </span>
+          </UtilityButton>
+        ) : null}
       </div>
 
-      {/* Desktop: floating popover · Mobile: compact bottom sheet */}
       <div
         id={streakPanelId}
         role="dialog"
@@ -339,6 +420,103 @@ export function HomeUtilities() {
           >
             Answer in 60 seconds →
           </TransitionLink>
+        )}
+      </div>
+
+      <div
+        id={notifyPanelId}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={notifyTitleId}
+        aria-hidden={panel !== "notifications"}
+        className="home-utility-panel"
+        data-open={panel === "notifications" ? "true" : "false"}
+        style={{ width: "min(22rem, calc(100vw - 5.5rem))" }}
+      >
+        {activeNotification ? (
+          activeNotification.type === "connection_request" ? (
+            <ConnectionRequestPanel
+              notification={activeNotification}
+              onClose={() => {
+                setActiveNotification(null);
+                setPanel(null);
+              }}
+              onResolved={() => {
+                if (activeNotification) {
+                  setResolvedIds((prev) => [...prev, activeNotification.id]);
+                }
+                setActiveNotification(null);
+              }}
+            />
+          ) : (
+            <OrbitRecommendationPanel
+              notification={activeNotification}
+              onClose={() => {
+                setActiveNotification(null);
+                setPanel(null);
+              }}
+              onOpened={() => {
+                // Keep in list until they navigate away; pulse stops via read_at refresh.
+              }}
+            />
+          )
+        ) : (
+          <>
+            <div className="flex items-start justify-between gap-3">
+              <p
+                id={notifyTitleId}
+                className="font-[family-name:var(--font-fraunces)] text-lg tracking-tight"
+                style={{
+                  fontVariationSettings:
+                    '"opsz" 72, "SOFT" 40, "WONK" 0, "wght" 550',
+                  color: "var(--foreground)",
+                }}
+              >
+                {notifyCount === 1
+                  ? connectionRequests.length === 1
+                    ? "1 new connection request"
+                    : "1 new Orbit recommendation"
+                  : `${notifyCount} notifications`}
+              </p>
+              <button
+                type="button"
+                onClick={() => setPanel(null)}
+                className="rounded-full px-2 py-0.5 text-lg leading-none transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+                style={{ color: "var(--foreground-muted)" }}
+                aria-label="Close"
+              >
+                ×
+              </button>
+            </div>
+            <ul className="mt-4 space-y-2">
+              {notifyItems.map((n) => (
+                <li key={n.id}>
+                  <button
+                    type="button"
+                    onClick={() => setActiveNotification(n)}
+                    className="w-full rounded-2xl border px-3 py-3 text-left text-sm font-semibold transition-colors hover:bg-[var(--violet-soft)]"
+                    style={{
+                      borderColor: "var(--hairline)",
+                      color: "var(--violet)",
+                    }}
+                  >
+                    {n.type === "connection_request"
+                      ? "View connection request"
+                      : n.type === "orbit_recommendation_reminder"
+                        ? "Orbit reminder"
+                        : "View Orbit recommendation"}
+                    {!n.readAt ? (
+                      <span
+                        className="ml-2 inline-block size-1.5 rounded-full align-middle"
+                        style={{ background: "var(--gold)" }}
+                        aria-label="Unread"
+                      />
+                    ) : null}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </>
         )}
       </div>
     </div>

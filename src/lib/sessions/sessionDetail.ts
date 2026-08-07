@@ -50,11 +50,70 @@ export const SESSION_DETAIL_SELECT = `
     experiment_title,
     experiment_instruction,
     comparison_observation,
+    journey_metrics,
+    journey_metrics_version,
+    journey_metrics_prompt_version,
+    journey_metrics_model,
+    journey_metrics_scored_at,
     created_at,
     completed_at
   )
 `;
 
+/** Fallback when migration 20260806_journey_metrics.sql is not applied. */
+export const SESSION_DETAIL_SELECT_WITHOUT_JOURNEY_METRICS = `
+  id,
+  user_id,
+  planet,
+  prompt_id,
+  prompt_text_snapshot,
+  status,
+  source,
+  orbit_key,
+  orbit_question_key,
+  user_orbit_progress_id,
+  orbit_version,
+  user_reflection,
+  feeling_reflection,
+  sounded_like_you,
+  authenticity_choice,
+  analysis_status,
+  created_at,
+  completed_at,
+  session_attempts (
+    id,
+    session_id,
+    attempt_number,
+    storage_path,
+    mime_type,
+    file_size_bytes,
+    duration_seconds,
+    transcript,
+    transcript_status,
+    created_at
+  ),
+  session_analyses (
+    id,
+    session_id,
+    status,
+    strength_title,
+    strength_description,
+    observation_title,
+    observation_description,
+    evidence,
+    experiment_title,
+    experiment_instruction,
+    comparison_observation,
+    created_at,
+    completed_at
+  )
+`;
+
+export function isMissingJourneyMetricsColumnError(
+  message: string | null | undefined,
+): boolean {
+  return Boolean(message && /journey_metrics/i.test(message));
+}
 export type SessionDetail = SessionRow & {
   session_attempts: SessionAttemptRow[];
   analysis: SessionAnalysis | null;

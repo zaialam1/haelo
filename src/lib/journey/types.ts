@@ -1,4 +1,5 @@
 import type { VoicePlanetId } from "@/lib/home/voicePlanets";
+import type { JourneyMetricResult } from "@/lib/journey/metrics";
 import type { OrbitSummativeAnalysisContent } from "@/lib/orbits/types";
 import type { SessionType } from "@/lib/topics/types";
 import type { SessionSource } from "@/lib/sessions/types";
@@ -100,6 +101,13 @@ export type JourneySession = {
     endTime?: number;
   }> | null;
   analysisExperiment?: { title: string; instruction: string } | null;
+  /**
+   * Internal Journey metric results (1–100). Used for constellation Y.
+   * Never display numeric scores in UI — only qualitative levels.
+   */
+  journeyMetrics?: JourneyMetricResult[] | null;
+  /** Cluster-only derived Voice Confidence (average), when available */
+  clusterVoiceConfidenceScore?: number | null;
   voiceNotes: string[];
   themeLabel: string | null;
   /** Comparison note between attempts */
@@ -116,6 +124,13 @@ export type JourneyNode = JourneySession & {
   y: number;
   /** Visual size scale ~0.7–1.3 */
   size: number;
+  /** True when Y used a real metric score (vs unscored mid-band) */
+  metricPositioned?: boolean;
+  /**
+   * Exact internal score (1–100) used for this node's Y.
+   * Never snap Y to the qualitative 1–5 level; level is display-only.
+   */
+  metricScore?: number | null;
 };
 
 export type JourneyMonthAnchor = {
@@ -135,6 +150,8 @@ export type JourneyViewModel = {
   /** True when showing the isolated development fixture */
   isPreview: boolean;
   beganAt: string | null;
+  /** Active filter that drove Y-axis metric selection */
+  filter?: JourneyPlanetFilter;
 };
 
 /** Map session.source to Journey sourceType. */

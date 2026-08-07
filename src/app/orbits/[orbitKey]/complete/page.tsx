@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { HomeBottomNav } from "@/components/home/HomeBottomNav";
-import { HomeNav } from "@/components/home/HomeNav";
+import { HomeNavWithRole } from "@/components/home/HomeNavWithRole";
 import { OrbitCompleteClient } from "@/components/orbits/OrbitCompleteClient";
 import {
   getOrbitByKey,
@@ -101,7 +101,7 @@ export default async function OrbitCompletePage({ params }: PageProps) {
         aria-hidden="true"
       />
 
-      <HomeNav />
+      <HomeNavWithRole  />
       <main className="relative z-10 w-full pb-28 pt-16 sm:pt-20">
         <div className="mx-auto w-full max-w-4xl px-4 sm:px-8 lg:px-12">
           <OrbitCompleteClient

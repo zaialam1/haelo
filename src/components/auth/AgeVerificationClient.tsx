@@ -9,7 +9,7 @@ export function AgeVerificationClient() {
 
   function confirmThirteenPlus() {
     setAgeGateStatus("cleared_13_plus");
-    router.push("/home");
+    router.push("/onboarding/username");
   }
 
   function continueUnderThirteen() {

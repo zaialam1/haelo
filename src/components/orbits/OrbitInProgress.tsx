@@ -27,7 +27,7 @@ export function OrbitInProgress({ items }: OrbitInProgressProps) {
           className="font-[family-name:var(--font-display)] text-lg font-semibold tracking-tight"
           style={{ color: "var(--foreground)" }}
         >
-          In progress
+          Continue your Orbits
         </h2>
         <p
           className="mt-1 text-[0.8125rem] leading-relaxed"

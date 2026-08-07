@@ -7,16 +7,21 @@ export type SignUpInput = {
   password: string;
   /** Stored as user metadata `first_name` */
   firstName: string;
+  /** Haelo username (without @); claimed after signup when a session exists */
+  username: string;
 };
 
 export type SignUpErrorCode =
   | "invalid_email"
   | "weak_password"
   | "email_taken"
+  | "username_invalid"
+  | "username_taken"
+  | "username_reserved"
   | "unknown";
 
 export type SignUpResult =
-  | { ok: true; needsEmailConfirmation: boolean }
+  | { ok: true; needsEmailConfirmation: boolean; usernameClaimed: boolean }
   | { ok: false; code: SignUpErrorCode; message: string };
 
 export type SignInInput = {

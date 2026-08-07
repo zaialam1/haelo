@@ -25,6 +25,11 @@ import {
   collectObservationEvidence,
   stripUngroundedQuotes,
 } from "@/lib/sessions/quoteGrounding";
+import {
+  hasInsufficientJourneyEvidence,
+  parseJourneyMetrics,
+} from "@/lib/sessions/journeyMetricsParse";
+import type { JourneyMetricResult } from "@/lib/journey/metrics";
 import type { AnalysisEvidence } from "@/lib/sessions/types";
 
 export type AnalysisProviderStatus =
@@ -63,6 +68,10 @@ export type GenerateAnalysisResult = {
   evidence: AnalysisEvidence[];
   experiment: { title: string; instruction: string };
   comparisonObservation?: string;
+  /** Internal Journey scores — not shown in analysis UI */
+  journeyMetrics: JourneyMetricResult[];
+  /** Model id used for this analysis (for journey metric versioning) */
+  model?: string | null;
 };
 
 type RawAnalysisJson = {
@@ -73,6 +82,7 @@ type RawAnalysisJson = {
     | { title?: unknown; instruction?: unknown; description?: unknown }
     | string;
   comparisonObservation?: unknown;
+  journeyMetrics?: unknown;
 };
 
 function requireNonEmptyString(value: unknown, field: string): string {
@@ -117,6 +127,12 @@ function normalizeTitledSection(
   };
 }
 
+export type ParseAnalysisJsonOptions = {
+  planet?: string;
+  forceInsufficientJourneyMetrics?: boolean;
+  model?: string | null;
+};
+
 /**
  * Parse + ground model JSON. Exported for offline tests.
  */
@@ -124,6 +140,7 @@ export function parseAnalysisJson(
   raw: RawAnalysisJson,
   transcript: string,
   includeComparison: boolean,
+  opts?: ParseAnalysisJsonOptions,
 ): GenerateAnalysisResult {
   const strength = normalizeTitledSection(raw.strength, "What came through");
   const observation = normalizeTitledSection(raw.observation, "What I noticed");
@@ -163,6 +180,11 @@ export function parseAnalysisJson(
     transcript,
   );
 
+  const planet = opts?.planet ?? "stand";
+  const journeyMetrics = parseJourneyMetrics(raw.journeyMetrics, planet, {
+    forceInsufficient: opts?.forceInsufficientJourneyMetrics,
+  });
+
   const result: GenerateAnalysisResult = {
     strength: { title: strengthTitle, description: strengthDescription },
     observation: {
@@ -179,6 +201,8 @@ export function parseAnalysisJson(
       title: experimentTitle,
       instruction: experimentInstruction,
     },
+    journeyMetrics,
+    model: opts?.model ?? null,
   };
 
   if (includeComparison) {
@@ -215,6 +239,10 @@ async function generateWithOpenAI(
     process.env.OPENAI_ANALYSIS_MODEL?.trim() || "gpt-4o-mini";
 
   const userPayload = buildAnalysisUserPayload(input);
+  const forceInsufficient = hasInsufficientJourneyEvidence(
+    transcript,
+    input.speechMetrics,
+  );
 
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
@@ -224,7 +252,8 @@ async function generateWithOpenAI(
     },
     body: JSON.stringify({
       model,
-      temperature: 0.4,
+      // Slightly lower than prior 0.4 to improve journey metric consistency
+      temperature: 0.3,
       response_format: { type: "json_object" },
       messages: [
         { role: "system", content: ANALYSIS_SYSTEM_PROMPT },
@@ -258,7 +287,11 @@ async function generateWithOpenAI(
     throw new Error("OpenAI analysis returned invalid JSON.");
   }
 
-  return parseAnalysisJson(parsed, transcript, includeComparison);
+  return parseAnalysisJson(parsed, transcript, includeComparison, {
+    planet: String(input.planet),
+    forceInsufficientJourneyMetrics: forceInsufficient,
+    model,
+  });
 }
 
 /**

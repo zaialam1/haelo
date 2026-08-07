@@ -327,3 +327,55 @@ export async function getVoicePlanetPageData(
     completedCount,
   };
 }
+
+const BASE_UNIVERSE_LEVELS: Record<VoicePlanetId, PlanetEvolutionLevel> = {
+  express: 1,
+  stand: 1,
+  connect: 1,
+  explore: 1,
+};
+
+/**
+ * Evolution levels for the universe map — same experience rules as planet pages
+ * (completed planet / daily / orbit sessions), without the heavier page payload.
+ */
+export async function getUniversePlanetEvolutionLevels(
+  userId: string | null,
+): Promise<Record<VoicePlanetId, PlanetEvolutionLevel>> {
+  if (!userId) {
+    return { ...BASE_UNIVERSE_LEVELS };
+  }
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("sessions")
+    .select("planet, source")
+    .eq("user_id", userId)
+    .eq("status", "completed");
+
+  if (error) {
+    console.error("[home] planet evolution fetch failed:", error.message);
+    return { ...BASE_UNIVERSE_LEVELS };
+  }
+
+  const counts: Record<VoicePlanetId, number> = {
+    express: 0,
+    stand: 0,
+    connect: 0,
+    explore: 0,
+  };
+
+  for (const row of data ?? []) {
+    const planet = row.planet as VoicePlanetId;
+    if (!(planet in counts)) continue;
+    if (!countsTowardPlanetExperience(row.source)) continue;
+    counts[planet] += 1;
+  }
+
+  return {
+    express: evolutionLevelFromSessionCount(counts.express),
+    stand: evolutionLevelFromSessionCount(counts.stand),
+    connect: evolutionLevelFromSessionCount(counts.connect),
+    explore: evolutionLevelFromSessionCount(counts.explore),
+  };
+}

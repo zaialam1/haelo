@@ -143,6 +143,14 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
       const leaveMs = request.variant === "warp" ? 780 : 280;
       await wait(leaveMs);
 
+      // Instant jump — never smooth-scroll under the transition veil.
+      // (html scroll-behavior:smooth otherwise animates scroll and looks broken.)
+      try {
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+      } catch {
+        window.scrollTo(0, 0);
+      }
+
       // #region agent log
       agentLog({
         hypothesisId: "C",

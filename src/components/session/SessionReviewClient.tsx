@@ -105,7 +105,16 @@ export function SessionReviewClient({
   );
 
   useEffect(() => {
-    if (session.analysis_status !== "pending") return;
+    // Keep polling until the analysis *row* is ready/failed, not only the
+    // denormalized session flag (which can advance before the row saves).
+    const rowStatus = session.analysis?.status;
+    const sessionStatus = session.analysis_status;
+    const stillWaiting =
+      sessionStatus === "pending" ||
+      (sessionStatus === "ready" && rowStatus !== "ready") ||
+      rowStatus === "pending";
+
+    if (!stillWaiting) return;
 
     const id = window.setInterval(() => {
       void fetchSessionDetailClient(sessionId).then((next) => {
@@ -114,7 +123,7 @@ export function SessionReviewClient({
     }, 4000);
 
     return () => window.clearInterval(id);
-  }, [session.analysis_status, sessionId]);
+  }, [session.analysis_status, session.analysis?.status, sessionId]);
 
   async function handleRetryAnalysis() {
     if (retryingAnalysis) return;
@@ -459,7 +468,10 @@ export function SessionReviewClient({
               }
               accentColor={accent}
               onRetry={
-                session.analysis_status === "failed" && !retryingAnalysis
+                !retryingAnalysis &&
+                (session.analysis_status === "failed" ||
+                  (session.analysis_status === "ready" &&
+                    session.analysis?.status !== "ready"))
                   ? handleRetryAnalysis
                   : undefined
               }

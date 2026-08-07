@@ -39,7 +39,8 @@ export async function updateSession(request: NextRequest) {
   // Refresh the auth token. Do not insert logic between createServerClient
   // and getClaims — it can cause intermittent logouts.
   const { data } = await supabase.auth.getClaims();
-  const isAuthenticated = Boolean(data?.claims?.sub);
+  const userId = data?.claims?.sub as string | undefined;
+  const isAuthenticated = Boolean(userId);
 
   const path = request.nextUrl.pathname;
   const protectedPrefixes = [
@@ -56,8 +57,12 @@ export async function updateSession(request: NextRequest) {
     "/explore",
     "/practice",
     "/journey",
+    "/orbits",
+    "/onboarding",
     "/age-verification",
     "/auth/update-password",
+    "/professional/home",
+    "/professional/recommend",
   ];
   const isProtected = protectedPrefixes.some(
     (prefix) => path === prefix || path.startsWith(`${prefix}/`),
@@ -65,18 +70,60 @@ export async function updateSession(request: NextRequest) {
 
   if (!isAuthenticated && isProtected) {
     const url = request.nextUrl.clone();
-    url.pathname = "/login";
+    url.pathname = path.startsWith("/professional")
+      ? "/login/professional"
+      : "/login";
     url.searchParams.set("next", path);
     return NextResponse.redirect(url);
   }
 
-  const authPages = ["/login", "/signup", "/forgot-password"];
+  const authPages = [
+    "/login",
+    "/signup",
+    "/forgot-password",
+    "/login/professional",
+    "/signup/professional",
+  ];
   if (isAuthenticated && authPages.includes(path)) {
     const next = request.nextUrl.searchParams.get("next");
     const url = request.nextUrl.clone();
     url.pathname = isSafeNextPath(next) ? next : "/home";
     url.search = "";
     return NextResponse.redirect(url);
+  }
+
+  // One-time username setup before entering the normal app.
+  if (isAuthenticated && userId && isProtected) {
+    const usernameExempt =
+      path === "/onboarding/username" ||
+      path.startsWith("/age-verification") ||
+      path.startsWith("/auth/");
+
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("username_normalized")
+      .eq("id", userId)
+      .maybeSingle();
+
+    // If profiles aren't migrated yet, don't block the rest of Haelo.
+    if (!profileError) {
+      const mustChooseUsername =
+        !profile?.username_normalized;
+
+      if (mustChooseUsername && !usernameExempt) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/onboarding/username";
+        url.search = "";
+        return NextResponse.redirect(url);
+      }
+
+      if (!mustChooseUsername && path === "/onboarding/username") {
+        const url = request.nextUrl.clone();
+        url.pathname = "/home";
+        url.search = "";
+        return NextResponse.redirect(url);
+      }
+    }
   }
 
   return supabaseResponse;

@@ -51,6 +51,10 @@ export const JOURNEY_PREVIEW_SESSIONS: JourneySession[] = [
     ],
     userReflection: null,
     haeloObservation: null,
+    journeyMetrics: [
+      { metric: "voice_confidence", score: 58, level: 3, status: "scored" },
+      { metric: "expressiveness", score: 72, level: 4, status: "scored" },
+    ],
     voiceNotes: [],
     themeLabel: null,
     changeObservation: null,
@@ -91,6 +95,10 @@ export const JOURNEY_PREVIEW_SESSIONS: JourneySession[] = [
     userReflection: "I sounded more sure the second time.",
     haeloObservation:
       "You named a clear preference and then owned a quieter stance without apologizing for it.",
+    journeyMetrics: [
+      { metric: "voice_confidence", score: 74, level: 4, status: "scored" },
+      { metric: "directness", score: 81, level: 5, status: "scored" },
+    ],
     voiceNotes: ["Clearer stance on the second try"],
     themeLabel: null,
     changeObservation:
@@ -120,6 +128,10 @@ export const JOURNEY_PREVIEW_SESSIONS: JourneySession[] = [
     ],
     userReflection: null,
     haeloObservation: null,
+    journeyMetrics: [
+      { metric: "voice_confidence", score: 66, level: 4, status: "scored" },
+      { metric: "listener_clarity", score: 63, level: 4, status: "scored" },
+    ],
     voiceNotes: [],
     themeLabel: null,
     changeObservation: null,
@@ -147,6 +159,10 @@ export const JOURNEY_PREVIEW_SESSIONS: JourneySession[] = [
     ],
     userReflection: null,
     haeloObservation: null,
+    journeyMetrics: [
+      { metric: "voice_confidence", score: 45, level: 3, status: "scored" },
+      { metric: "thought_clarity", score: 70, level: 4, status: "scored" },
+    ],
     voiceNotes: [],
     themeLabel: null,
     changeObservation: null,

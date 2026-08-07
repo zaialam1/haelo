@@ -63,9 +63,14 @@ function ThemeIconButton() {
 type HomeNavProps = {
   /** Pin to the viewport (for scrollable pages like planet detail) */
   pinned?: boolean;
+  /** Show Professional workspace link for professional accounts */
+  showProfessional?: boolean;
 };
 
-export function HomeNav({ pinned = false }: HomeNavProps) {
+export function HomeNav({
+  pinned = false,
+  showProfessional = false,
+}: HomeNavProps) {
   return (
     <header
       className={`pointer-events-none inset-x-0 top-0 z-40 ${pinned ? "fixed" : "absolute"}`}
@@ -87,6 +92,15 @@ export function HomeNav({ pinned = false }: HomeNavProps) {
         </p>
 
         <div className="flex items-center gap-0.5">
+          {showProfessional ? (
+            <TransitionLink
+              href="/professional/home"
+              variant="fade"
+              className="mr-1 rounded-full px-3 py-1.5 text-sm font-semibold text-[var(--violet)] transition-colors hover:bg-[var(--violet-soft)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+            >
+              Professional
+            </TransitionLink>
+          ) : null}
           <ThemeIconButton />
           <TransitionLink
             href="/settings"

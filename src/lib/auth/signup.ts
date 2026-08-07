@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
+import { validateUsername } from "@/lib/profiles/username";
 import type { SignUpInput, SignUpResult } from "./types";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -33,7 +34,7 @@ function mapSignUpError(message: string): SignUpResult {
 
   if (
     lower.includes("invalid email") ||
-    lower.includes("email address") && lower.includes("invalid")
+    (lower.includes("email address") && lower.includes("invalid"))
   ) {
     return {
       ok: false,
@@ -50,18 +51,37 @@ function mapSignUpError(message: string): SignUpResult {
 }
 
 /**
- * Create a Haelo account with Supabase Auth (email + password).
+ * Create a Haelo account with Supabase Auth (email + password + username).
+ * Username is stored in auth metadata and claimed on profiles when a session exists.
  */
 export async function signUp(input: SignUpInput): Promise<SignUpResult> {
   const email = input.email.trim().toLowerCase();
   const firstName = input.firstName.trim();
   const password = input.password;
+  const usernameResult = validateUsername(input.username);
 
   if (!firstName) {
     return {
       ok: false,
       code: "unknown",
       message: "Enter your first name.",
+    };
+  }
+
+  if (!usernameResult.ok) {
+    const code =
+      usernameResult.error === "reserved"
+        ? "username_reserved"
+        : usernameResult.error === "empty" ||
+            usernameResult.error === "too_short" ||
+            usernameResult.error === "too_long" ||
+            usernameResult.error === "invalid_chars"
+          ? "username_invalid"
+          : "username_invalid";
+    return {
+      ok: false,
+      code,
+      message: usernameResult.message,
     };
   }
 
@@ -82,6 +102,35 @@ export async function signUp(input: SignUpInput): Promise<SignUpResult> {
   }
 
   const supabase = createClient();
+
+  // Re-check availability before creating the auth user.
+  const { data: availability } = await supabase.rpc(
+    "check_username_availability",
+    { raw_username: usernameResult.normalized },
+  );
+  if (availability === "taken") {
+    return {
+      ok: false,
+      code: "username_taken",
+      message: "That Haelo name is already taken.",
+    };
+  }
+  if (availability === "reserved") {
+    return {
+      ok: false,
+      code: "username_reserved",
+      message: "That Haelo name isn’t available.",
+    };
+  }
+  if (availability === "invalid") {
+    return {
+      ok: false,
+      code: "username_invalid",
+      message:
+        "Use 3–20 letters, numbers, or underscores. Don’t start or end with an underscore.",
+    };
+  }
+
   const emailRedirectTo =
     typeof window !== "undefined"
       ? `${window.location.origin}/auth/callback?next=/age-verification`
@@ -91,44 +140,40 @@ export async function signUp(input: SignUpInput): Promise<SignUpResult> {
     email,
     password,
     options: {
-      data: { first_name: firstName },
+      data: {
+        first_name: firstName,
+        haelo_username: usernameResult.normalized,
+      },
       emailRedirectTo,
     },
   });
-
-  // #region agent log
-  fetch("http://127.0.0.1:7260/ingest/327a9bfd-1a4e-4e3a-9bbf-2eff52fa2f90", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Debug-Session-Id": "15d12f",
-    },
-    body: JSON.stringify({
-      sessionId: "15d12f",
-      runId: "smtp-check",
-      hypothesisId: "F",
-      location: "signup.ts:afterSignUp",
-      message: "signUp result",
-      data: {
-        ok: !error,
-        errorMessage: error?.message ?? null,
-        errorStatus: error?.status ?? null,
-        hasSession: Boolean(data?.session),
-        hasUser: Boolean(data?.user),
-        needsEmailConfirmation: !error && !data.session,
-        identitiesCount: data?.user?.identities?.length ?? null,
-      },
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {});
-  // #endregion
 
   if (error) {
     return mapSignUpError(error.message);
   }
 
+  let usernameClaimed = false;
+  if (data.session) {
+    const { data: claimData } = await supabase.rpc("claim_username", {
+      raw_username: usernameResult.normalized,
+    });
+    const payload = claimData as
+      | { ok?: boolean; username?: string; error?: string }
+      | null;
+    if (payload?.ok) {
+      usernameClaimed = true;
+    } else if (payload?.error === "taken") {
+      return {
+        ok: false,
+        code: "username_taken",
+        message: "That Haelo name is already taken.",
+      };
+    }
+  }
+
   return {
     ok: true,
     needsEmailConfirmation: !data.session,
+    usernameClaimed,
   };
 }

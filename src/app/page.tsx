@@ -120,6 +120,16 @@ export default function Home() {
                 <PrimaryCta href="/signup">Start exploring</PrimaryCta>
                 <SecondaryCta href="/login">Log in</SecondaryCta>
               </div>
+              <p className="mt-6 text-sm leading-relaxed text-[var(--foreground-muted)]">
+                Using Haelo with students or clients?{" "}
+                <TransitionLink
+                  href="/professional"
+                  variant="fade"
+                  className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+                >
+                  Professional access →
+                </TransitionLink>
+              </p>
             </div>
 
             <ContextOrbit />
@@ -380,6 +390,16 @@ export default function Home() {
             </div>
             <p className="mt-6 text-sm text-white/85">
               Your recordings stay private to you.
+            </p>
+            <p className="mt-4 text-sm text-white/80">
+              Using Haelo with students or clients?{" "}
+              <TransitionLink
+                href="/professional"
+                variant="fade"
+                className="font-semibold text-white underline-offset-2 hover:underline"
+              >
+                Professional access →
+              </TransitionLink>
             </p>
           </div>
         </section>

@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { HomeBottomNav } from "@/components/home/HomeBottomNav";
-import { HomeNav } from "@/components/home/HomeNav";
+import { HomeNavWithRole } from "@/components/home/HomeNavWithRole";
 import { OrbitsExperience } from "@/components/orbits/OrbitsExperience";
 import { ORBIT_REGIONS, isOrbitRegionKey } from "@/lib/orbits/regions";
 import { buildOrbitList } from "@/lib/orbits/progress";
 import type { OrbitRegionKey } from "@/lib/orbits/types";
+import { listRecipientActiveRecommendations } from "@/lib/recommendations";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -23,6 +24,9 @@ export default async function OrbitsPage({ searchParams }: OrbitsPageProps) {
     params.region && isOrbitRegionKey(params.region) ? params.region : null;
 
   let items: Awaited<ReturnType<typeof buildOrbitList>> = [];
+  let recommendations: Awaited<
+    ReturnType<typeof listRecipientActiveRecommendations>
+  > = [];
   let loadError: string | null = null;
 
   try {
@@ -34,6 +38,9 @@ export default async function OrbitsPage({ searchParams }: OrbitsPageProps) {
     items = await buildOrbitList({
       userId: user?.id ?? null,
     });
+    if (user?.id) {
+      recommendations = await listRecipientActiveRecommendations(user.id);
+    }
   } catch (err) {
     console.error("[orbits] browse load failed:", err);
     loadError = "progress_unavailable";
@@ -59,7 +66,7 @@ export default async function OrbitsPage({ searchParams }: OrbitsPageProps) {
         aria-hidden="true"
       />
 
-      <HomeNav />
+      <HomeNavWithRole  />
 
       <main className="relative z-10 w-full pb-28 pt-16 sm:pt-20">
         <header className="mb-5 max-w-xl px-4 sm:mb-6 sm:px-8 lg:px-12">
@@ -95,6 +102,7 @@ export default async function OrbitsPage({ searchParams }: OrbitsPageProps) {
           items={items}
           initialRegion={initialRegion}
           loadError={loadError}
+          recommendations={recommendations}
         />
       </main>
 

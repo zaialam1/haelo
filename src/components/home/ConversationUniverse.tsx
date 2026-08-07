@@ -1,4 +1,6 @@
 import { VOICE_PLANETS } from "@/lib/home/voicePlanets";
+import type { VoicePlanetId } from "@/lib/home/voicePlanets";
+import type { PlanetEvolutionLevel } from "@/lib/planets/evolution";
 import { MyVoiceOrb } from "./MyVoiceOrb";
 import { VoicePlanetOrb } from "./VoicePlanet";
 
@@ -12,7 +14,14 @@ const RINGS = [
   { w: 28, h: 25 },
 ];
 
-export function ConversationUniverse() {
+type ConversationUniverseProps = {
+  /** Per-planet evolution stage (1–5). Defaults to base for every planet. */
+  evolutionLevels?: Record<VoicePlanetId, PlanetEvolutionLevel>;
+};
+
+export function ConversationUniverse({
+  evolutionLevels,
+}: ConversationUniverseProps = {}) {
   return (
     <section
       className="absolute inset-0 overflow-hidden"
@@ -113,6 +122,7 @@ export function ConversationUniverse() {
           <VoicePlanetOrb
             key={planet.id}
             planet={planet}
+            level={evolutionLevels?.[planet.id] ?? 1}
             floatDelaySec={(index * 0.55) % 2.6}
           />
         ))}

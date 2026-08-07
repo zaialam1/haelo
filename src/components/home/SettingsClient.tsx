@@ -10,10 +10,32 @@ import {
 } from "@/lib/auth/account";
 import { deleteAccountAction } from "@/lib/auth/actions";
 import { clearAgeGatePrototype } from "@/lib/age-gate/prototype";
+import { formatUsernameDisplay } from "@/lib/profiles/username";
+import type { AccountRole } from "@/lib/profiles/types";
+import {
+  accountRoleLabel,
+  professionalTypeLabel,
+  type ProfessionalType,
+} from "@/lib/professional/types";
 
-export function SettingsClient() {
+type SettingsProfile = AccountProfile & {
+  username: string | null;
+  accountRole: AccountRole;
+};
+
+export function SettingsClient({
+  username = null,
+  accountRole = "user",
+  professionalType = null,
+  professionalDisplayName = null,
+}: {
+  username?: string | null;
+  accountRole?: AccountRole;
+  professionalType?: ProfessionalType | null;
+  professionalDisplayName?: string | null;
+}) {
   const router = useRouter();
-  const [account, setAccount] = useState<AccountProfile | null>(null);
+  const [account, setAccount] = useState<SettingsProfile | null>(null);
   const [ready, setReady] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -24,14 +46,22 @@ export function SettingsClient() {
     (async () => {
       const profile = await getAccountProfile();
       if (!cancelled) {
-        setAccount(profile);
+        setAccount(
+          profile
+            ? {
+                ...profile,
+                username,
+                accountRole,
+              }
+            : null,
+        );
         setReady(true);
       }
     })();
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [username, accountRole]);
 
   async function logOut() {
     setBusy(true);
@@ -134,6 +164,60 @@ export function SettingsClient() {
                   className="text-xs font-semibold"
                   style={{ color: "var(--foreground-muted)" }}
                 >
+                  Haelo name
+                </dt>
+                <dd className="mt-1 text-[1.0625rem] font-medium">
+                  {account.username
+                    ? formatUsernameDisplay(account.username)
+                    : "—"}
+                </dd>
+              </div>
+              <div>
+                <dt
+                  className="text-xs font-semibold"
+                  style={{ color: "var(--foreground-muted)" }}
+                >
+                  Account type
+                </dt>
+                <dd className="mt-1 text-[1.0625rem] font-medium">
+                  {accountRoleLabel(account.accountRole)}
+                </dd>
+              </div>
+              {account.accountRole === "professional" ? (
+                <>
+                  {professionalDisplayName ? (
+                    <div>
+                      <dt
+                        className="text-xs font-semibold"
+                        style={{ color: "var(--foreground-muted)" }}
+                      >
+                        Professional name
+                      </dt>
+                      <dd className="mt-1 text-[1.0625rem] font-medium">
+                        {professionalDisplayName}
+                      </dd>
+                    </div>
+                  ) : null}
+                  {professionalType ? (
+                    <div>
+                      <dt
+                        className="text-xs font-semibold"
+                        style={{ color: "var(--foreground-muted)" }}
+                      >
+                        Professional role
+                      </dt>
+                      <dd className="mt-1 text-[1.0625rem] font-medium">
+                        {professionalTypeLabel(professionalType)}
+                      </dd>
+                    </div>
+                  ) : null}
+                </>
+              ) : null}
+              <div>
+                <dt
+                  className="text-xs font-semibold"
+                  style={{ color: "var(--foreground-muted)" }}
+                >
                   Email
                 </dt>
                 <dd className="mt-1 text-[1.0625rem] font-medium break-all">
@@ -178,6 +262,47 @@ export function SettingsClient() {
             </p>
           )}
         </section>
+
+        {ready && account ? (
+          <section
+            className="mt-5 rounded-2xl border px-5 py-5"
+            style={{
+              background: "var(--surface)",
+              borderColor: "var(--surface-border)",
+              boxShadow: "var(--shadow-soft)",
+            }}
+          >
+            <p
+              className="text-[0.6875rem] font-semibold tracking-[0.12em] uppercase"
+              style={{ color: "var(--violet)" }}
+            >
+              Connections
+            </p>
+            <p
+              className="mt-2 text-sm leading-relaxed"
+              style={{ color: "var(--foreground-muted)" }}
+            >
+              {account.accountRole === "professional"
+                ? "Search for Haelo users and manage connection requests."
+                : "See who you've chosen to connect with. Connections never share your private Haelo activity."}
+            </p>
+            {account.accountRole === "professional" ? (
+              <Link
+                href="/professional/home"
+                className="mt-4 mr-2 inline-flex rounded-full border px-5 py-2.5 text-sm font-semibold text-[var(--violet)] transition-colors hover:bg-[var(--violet-soft)]"
+                style={{ borderColor: "var(--hairline)" }}
+              >
+                Professional area
+              </Link>
+            ) : null}
+            <Link
+              href="/settings/connections"
+              className="mt-4 inline-flex rounded-full bg-[var(--violet)] px-5 py-2.5 text-sm font-semibold text-[var(--on-violet)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+            >
+              Open Connections
+            </Link>
+          </section>
+        ) : null}
 
         {error ? (
           <p

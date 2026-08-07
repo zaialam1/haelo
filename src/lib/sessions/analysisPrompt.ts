@@ -1,4 +1,9 @@
 import type { SessionAnalysisInput } from "@/lib/sessions/analysisInput";
+import {
+  expectedMetricsForPlanet,
+  JOURNEY_METRIC_MIN_WORDS,
+  planetMetricKey,
+} from "@/lib/journey/metrics";
 
 /**
  * Individual analysis system prompt.
@@ -19,7 +24,7 @@ Tone: calm, warm, reflective, personal, intelligent, concise, specific, non-clin
 PLANET IS THE LENS (not a rigid template):
 Interpret the response through the assigned Haelo planet, but use judgment. An obvious pacing problem on Connect can still be the most useful thing to notice. A Stand response that is direct but missing one sentence of context can still get a context suggestion.
 
-STAND — communicating clearly under pressure to soften, hide, retreat, over-apologize, or avoid stating what you mean.
+STAND — communicating clearly under pressure to soften, hide, retreat, over-apologize, or avoid stating what they mean.
 Prioritize: directness, clarity of position, whether they state what they want/think, hedging, unnecessary apologizing, qualifiers, burying the request/opinion/boundary, confidence of delivery, firm-without-aggressive wording, hesitation around the central statement.
 
 CONNECT — getting a message across so another person can follow and engage.
@@ -60,6 +65,29 @@ NEXT EXPERIMENT RULES:
 - Do not make observation and experiment say the same thing in different words.
 - Prefer communication structure, clarity, balance, wording, or delivery over relationship advice.
 
+INTERNAL JOURNEY METRICS (hidden visualization scores — never mention in strength/observation/experiment text):
+- Also return journeyMetrics: exactly TWO entries — always voice_confidence, plus the planet metric named in journeyScoring.planetMetric.
+- You are assigning an internal visualization score for a communication dimension. This is NOT a psychological assessment and NOT a grade.
+- Score the extent to which the named communication property is demonstrated in THIS recording, using the full evidence from transcript + speechMetrics (+ acousticMetrics only when available).
+- Do NOT raise scores because content is emotionally positive or because you agree with the message.
+- Do NOT lower scores because the user is uncertain when uncertainty is appropriate to the task (especially Explore / thought_clarity).
+- Use the full 1–100 range when justified, but avoid arbitrary extremes. Do NOT cluster everything around 70–90.
+- Calibration (internal only):
+  1–20: very little evidence of the target quality
+  21–40: some evidence, but inconsistent or frequently obscured
+  41–60: clearly present, but mixed
+  61–80: strongly present through much of the response
+  81–100: highly consistent and especially pronounced
+- Metric meanings:
+  voice_confidence — how clearly, directly, and steadily the message was communicated in THIS recording (directness, clarity of central message, hedging, hesitation, retreat from statements, delivery steadiness, pace, whether they state what they mean). NOT personality-confidence.
+  directness (Stand) — clarity of opinion/boundary/request/position/disagreement/need; specificity; whether the point is buried; hedging; unnecessary apologizing; firmness without aggression.
+  listener_clarity (Connect) — how easy the message would be for another person to follow; context, structure, identifiable main point, coherence. NOT empathy.
+  thought_clarity (Explore) — how clearly they articulate what they are thinking through; uncertainty can score highly if clearly explained. Does NOT reward false certainty.
+  expressiveness (Express) — how effectively verbal/vocal expression brings the message, idea, story, or feeling to life; quiet speech can still be highly expressive. NOT mere loudness.
+- If the transcript is too short, transcription failed, or evidence is insufficient (under ~${JOURNEY_METRIC_MIN_WORDS} words), return score: null, level: null, status: "insufficient_data" for BOTH metrics. Do not invent a confident score.
+- Otherwise status: "scored" with integer score 1–100. Include level as 1–5 matching bands 1–20, 21–40, 41–60, 61–80, 81–100 (server may recompute level).
+- Never discuss these scores or levels in the coaching sections. They are for Journey visualization only.
+
 OUTPUT:
 - Respond with a single JSON object matching the schema. No markdown fences.
 - strength, observation, and experiment MUST each be objects with string fields (never plain strings):
@@ -88,6 +116,15 @@ export function planetLensSummary(planet: string): string {
   );
 }
 
+function journeyScoringBlock(planet: string): Record<string, unknown> {
+  const planetMetric = planetMetricKey(planet) ?? "directness";
+  return {
+    requiredMetrics: expectedMetricsForPlanet(planet),
+    planetMetric,
+    note: "Return exactly these metrics in journeyMetrics. Do not invent other metric keys. Do not mention scores in coaching text.",
+  };
+}
+
 /**
  * User payload sent to the LLM. Stable contract for Universe + Orbit.
  */
@@ -112,12 +149,15 @@ export function buildAnalysisUserPayload(input: SessionAnalysisInput): Record<
     speechMetrics: input.speechMetrics,
     acousticMetrics: input.acousticMetrics,
     questionContext: input.questionContext,
+    journeyScoring: journeyScoringBlock(String(input.planet)),
     notes: {
       audioAccess:
         "The model does not receive the audio recording. Use speechMetrics and transcript only unless acousticMetrics.available is true.",
       orbitGuidance: input.questionContext.orbit
         ? "Orbit context is situational framing only. Focus on this response's communication, not resolving the situation."
         : undefined,
+      journeyMetrics:
+        "Hidden Journey visualization scores only. Never reference numeric scores or levels in strength/observation/experiment.",
     },
     schema: {
       strength: { title: "string", description: "string" },
@@ -137,6 +177,14 @@ export function buildAnalysisUserPayload(input: SessionAnalysisInput): Record<
       comparisonObservation: includeComparison
         ? "string (required when priorTranscript is present)"
         : "omit",
+      journeyMetrics: [
+        {
+          metric: "voice_confidence | planet metric from journeyScoring",
+          score: "integer 1–100 | null",
+          level: "1|2|3|4|5 | null",
+          status: "scored | insufficient_data",
+        },
+      ],
     },
   };
 }

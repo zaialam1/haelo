@@ -423,4 +423,44 @@ check("Delivery-oriented experiment can cite speech metrics without inventing au
   );
 });
 
+check("journeyMetrics present even when model omits them", () => {
+  const transcript =
+    "I want them to stop joking about my voice. That is what I mean.";
+  const parsed = parseAnalysisJson(
+    {
+      strength: { title: "Clear", description: "You named the ask." },
+      observation: {
+        title: "Direct",
+        description: 'You said "That is what I mean."',
+      },
+      evidence: [{ text: "That is what I mean." }],
+      experiment: { title: "Keep it", instruction: "Lead with that sentence." },
+    },
+    transcript,
+    false,
+    { planet: "stand" },
+  );
+  assert.equal(parsed.journeyMetrics.length, 2);
+  assert.ok(
+    parsed.journeyMetrics.every((m) => m.status === "insufficient_data"),
+  );
+});
+
+check("payload requires voice_confidence + planet metric", () => {
+  const input = buildSessionAnalysisInput({
+    sessionId: "s4",
+    planet: "connect",
+    promptText: "Explain what happened.",
+    transcript: "I felt left out when the group chat went quiet after I shared.",
+    sourceType: "planet",
+    attemptNumber: 1,
+    durationSeconds: 25,
+  });
+  const payload = buildAnalysisUserPayload(input);
+  assert.deepEqual(
+    (payload.journeyScoring as { requiredMetrics: string[] }).requiredMetrics,
+    ["voice_confidence", "listener_clarity"],
+  );
+});
+
 console.log(`\n${passed} checks passed.`);

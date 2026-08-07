@@ -1,4 +1,9 @@
 import { SESSION_AUDIO_BUCKET } from "@/config/recording";
+import {
+  JOURNEY_METRICS_PROMPT_VERSION,
+  JOURNEY_METRICS_VERSION,
+  type JourneyMetricResult,
+} from "@/lib/journey/metrics";
 import { getOrbitByKey } from "@/lib/orbits/catalog";
 import { buildSessionAnalysisInput } from "@/lib/sessions/analysisInput";
 import {
@@ -100,11 +105,13 @@ async function saveReadyAnalysis(
     evidence: AnalysisEvidence[];
     experiment: { title: string; instruction: string };
     comparisonObservation?: string;
+    journeyMetrics: JourneyMetricResult[];
+    model?: string | null;
   },
 ) {
   const supabase = await createClient();
   const now = new Date().toISOString();
-  const row = {
+  const coachingRow = {
     status: "ready" as const,
     strength_title: payload.strength.title,
     strength_description: payload.strength.description,
@@ -116,29 +123,63 @@ async function saveReadyAnalysis(
     comparison_observation: payload.comparisonObservation ?? null,
     completed_at: now,
   };
+  const journeyFields = {
+    journey_metrics: payload.journeyMetrics,
+    journey_metrics_version: JOURNEY_METRICS_VERSION,
+    journey_metrics_prompt_version: JOURNEY_METRICS_PROMPT_VERSION,
+    journey_metrics_model: payload.model?.trim() || null,
+    journey_metrics_scored_at: now,
+  };
 
-  const { data: existing } = await supabase
+  const { data: existing, error: existingError } = await supabase
     .from("session_analyses")
     .select("id")
     .eq("session_id", sessionId)
     .maybeSingle();
 
-  if (existing) {
-    await supabase
-      .from("session_analyses")
-      .update(row)
-      .eq("session_id", sessionId);
-  } else {
-    await supabase.from("session_analyses").insert({
+  if (existingError) {
+    throw new Error(
+      `Could not load analysis row: ${existingError.message}`,
+    );
+  }
+
+  async function upsert(row: Record<string, unknown>) {
+    if (existing) {
+      return supabase
+        .from("session_analyses")
+        .update(row)
+        .eq("session_id", sessionId);
+    }
+    return supabase.from("session_analyses").insert({
       session_id: sessionId,
       ...row,
     });
   }
 
-  await supabase
+  // Prefer writing Journey metrics. If the migration is not applied yet,
+  // fall back to coaching-only so analysis UI does not get stuck.
+  let { error } = await upsert({ ...coachingRow, ...journeyFields });
+  if (error && /journey_metrics/i.test(error.message)) {
+    console.warn(
+      `[sessions/process] ${sessionId}: journey_metrics columns missing — saving coaching without Journey scores. Apply migration 20260806_journey_metrics.sql.`,
+    );
+    ({ error } = await upsert(coachingRow));
+  }
+
+  if (error) {
+    throw new Error(`Could not save analysis: ${error.message}`);
+  }
+
+  const { error: sessionError } = await supabase
     .from("sessions")
     .update({ analysis_status: "ready" })
     .eq("id", sessionId);
+
+  if (sessionError) {
+    throw new Error(
+      `Analysis saved but session status update failed: ${sessionError.message}`,
+    );
+  }
 }
 
 async function signedUrlForPath(storagePath: string): Promise<string | null> {

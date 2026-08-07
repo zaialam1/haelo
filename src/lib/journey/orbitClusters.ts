@@ -7,6 +7,10 @@ import type {
 } from "@/lib/orbits/types";
 import type { VoicePlanetId } from "@/lib/home/voicePlanets";
 import type { Planet } from "@/lib/prompts";
+import {
+  averageOrbitVoiceConfidence,
+  getScoredMetricValue,
+} from "@/lib/journey/metrics";
 import type {
   JourneyPlanetFilter,
   JourneySession,
@@ -171,6 +175,12 @@ export function buildOrbitClusterSessions(
 
     const summative = resolveSummative(analysesByProgressId.get(progress.id));
 
+    const clusterVoiceConfidenceScore = averageOrbitVoiceConfidence(
+      responses.map((r) =>
+        getScoredMetricValue(r.journeyMetrics, "voice_confidence"),
+      ),
+    );
+
     clusters.push({
       sessionId: `orbit-cluster:${progress.id}`,
       recordedAt: progress.completed_at,
@@ -195,6 +205,7 @@ export function buildOrbitClusterSessions(
       orbitResponses: responses,
       summativeAnalysis: summative.content,
       summativeStatus: summative.status,
+      clusterVoiceConfidenceScore,
       clips: [],
       userReflection: null,
       haeloObservation: null,

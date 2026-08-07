@@ -354,6 +354,48 @@ html.dark .universe-nebula-constellations {
   transform: scale(1.04);
 }
 
+.voice-orb-hint {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition:
+    opacity 280ms ease,
+    max-height 280ms ease,
+    margin 280ms ease;
+  margin-top: 0;
+}
+
+.voice-orb:hover .voice-orb-hint,
+.voice-orb:focus-visible .voice-orb-hint {
+  max-height: 3.5rem;
+  opacity: 1;
+  margin-top: 0.1rem;
+}
+
+@keyframes my-voice-gather {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(var(--gather-angle, 0deg))
+      translateY(-2.6rem) scale(0.92);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(var(--gather-angle, 0deg))
+      translateY(-1.15rem) scale(1);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voice-orb-hint {
+    transition: none;
+  }
+
+  .my-voice-gather-dot {
+    animation: none !important;
+  }
+}
+
 .voice-planet-tagline {
   max-height: 0;
   opacity: 0;
@@ -439,6 +481,30 @@ html.dark .universe-nebula-constellations {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0) scale(1);
+}
+
+@keyframes haelo-notify-glow {
+  0%,
+  100% {
+    box-shadow:
+      var(--shadow-soft),
+      0 0 0 0 color-mix(in srgb, var(--gold) 0%, transparent);
+  }
+  50% {
+    box-shadow:
+      var(--shadow-soft),
+      0 0 18px 2px color-mix(in srgb, var(--gold) 45%, transparent);
+  }
+}
+
+.home-utility-btn[data-pulse="true"] {
+  animation: haelo-notify-glow 2.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-utility-btn[data-pulse="true"] {
+    animation: none;
+  }
 }
 
 @media (max-width: 639px) {
@@ -1223,11 +1289,9 @@ html.dark .planet-session-row:hover {
 @keyframes orbits-constellation-in {
   from {
     opacity: 0;
-    transform: scale(0.96);
   }
   to {
     opacity: 1;
-    transform: scale(1);
   }
 }
 

@@ -25,6 +25,7 @@ function nowIso(): string {
 export async function startOrResumeOrbit(
   userId: string,
   orbitKey: string,
+  opts?: { sourceRecommendationId?: string | null },
 ): Promise<UserOrbitProgressRow> {
   const orbit = getOrbitByKey(orbitKey);
   if (!orbit || !orbit.isActive) {
@@ -48,14 +49,24 @@ export async function startOrResumeOrbit(
       return existing as UserOrbitProgressRow;
     }
 
+    const patch: Record<string, unknown> = {
+      status: existing.status === "not_started" ? "in_progress" : existing.status,
+      started_at: existing.started_at ?? nowIso(),
+      last_activity_at: nowIso(),
+      updated_at: nowIso(),
+    };
+
+    // Link recommendation if progress has none yet.
+    if (
+      opts?.sourceRecommendationId &&
+      !existing.source_recommendation_id
+    ) {
+      patch.source_recommendation_id = opts.sourceRecommendationId;
+    }
+
     const { data: updated, error: updateError } = await supabase
       .from("user_orbit_progress")
-      .update({
-        status: existing.status === "not_started" ? "in_progress" : existing.status,
-        started_at: existing.started_at ?? nowIso(),
-        last_activity_at: nowIso(),
-        updated_at: nowIso(),
-      })
+      .update(patch)
       .eq("id", existing.id)
       .select("*")
       .single();
@@ -77,6 +88,7 @@ export async function startOrResumeOrbit(
       last_activity_at: nowIso(),
       orbit_version: orbit.version || CURRENT_CONTENT_VERSION,
       orbit_title_snapshot: orbit.title,
+      source_recommendation_id: opts?.sourceRecommendationId ?? null,
       updated_at: nowIso(),
     })
     .select("*")
@@ -229,11 +241,22 @@ export async function recordOrbitQuestionCompleted(opts: {
         })
         .eq("id", opts.progressId);
 
+      // Mark any linked / matching recommendations completed (private to user).
+      await supabase.rpc("complete_orbit_recommendation_for_progress", {
+        p_progress_id: opts.progressId,
+      });
+
       return {
         ...(updated as UserOrbitProgressRow),
         summative_analysis_id: analysis.id,
       };
     }
+  }
+
+  if (allRequiredDone) {
+    await supabase.rpc("complete_orbit_recommendation_for_progress", {
+      p_progress_id: opts.progressId,
+    });
   }
 
   return updated as UserOrbitProgressRow;

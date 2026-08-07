@@ -13,10 +13,10 @@ export function MyVoiceOrb({ nested = false }: MyVoiceOrbProps) {
       variant="fade"
       className={
         nested
-          ? "voice-orb group pointer-events-auto relative z-20 flex flex-col items-center gap-2 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--gold)]"
-          : "voice-orb group pointer-events-auto absolute top-1/2 left-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--gold)]"
+          ? "voice-orb group pointer-events-auto relative z-20 flex flex-col items-center gap-1.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--gold)]"
+          : "voice-orb group pointer-events-auto absolute top-1/2 left-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--gold)]"
       }
-      aria-label="My Voice"
+      aria-label="Open My Voice summary"
     >
       <span className="relative flex size-40 items-center justify-center sm:size-48">
         {/* Outer violet aura */}
@@ -67,6 +67,12 @@ export function MyVoiceOrb({ nested = false }: MyVoiceOrbProps) {
         }}
       >
         My Voice
+      </span>
+      <span
+        className="voice-orb-hint max-w-[11rem] text-center text-[0.6875rem] leading-snug sm:max-w-[13rem] sm:text-xs"
+        style={{ color: "var(--foreground-muted)" }}
+      >
+        See how your voice is taking shape
       </span>
     </TransitionLink>
   );

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { HomeBottomNav } from "@/components/home/HomeBottomNav";
-import { HomeNav } from "@/components/home/HomeNav";
+import { HomeNavWithRole } from "@/components/home/HomeNavWithRole";
 import { JourneyConstellation } from "@/components/journey/JourneyConstellation";
 import { JourneyOrbitDetailPanel } from "@/components/journey/JourneyOrbitDetailPanel";
 import { JourneyPlanetFilterBar } from "@/components/journey/JourneyPlanetFilter";
@@ -40,7 +40,10 @@ export function JourneyExperience({
 
   const filteredModel = useMemo(() => {
     const sessions = filterSessionsByPlanet(model.sessions, filter);
-    return buildJourneyViewModel(sessions, { isPreview: model.isPreview });
+    return buildJourneyViewModel(sessions, {
+      isPreview: model.isPreview,
+      filter,
+    });
   }, [model.sessions, model.isPreview, filter]);
 
   const filterLabel =
@@ -99,7 +102,7 @@ export function JourneyExperience({
         aria-hidden="true"
       />
 
-      <HomeNav />
+      <HomeNavWithRole />
 
       <main className="relative z-10 flex min-h-0 flex-1 flex-col pb-[4.5rem] pt-14 sm:pb-20 sm:pt-16">
         <div className="flex shrink-0 flex-col gap-3 px-5 pt-2 sm:px-8 sm:pt-3">
@@ -168,6 +171,7 @@ export function JourneyExperience({
             journeyEmpty={journeyEmpty}
             filterEmpty={filterEmpty}
             filterLabel={filterLabel}
+            filter={filter}
           />
         </div>
 

@@ -96,7 +96,9 @@ export default function AuthCallbackPage() {
         return;
       }
 
-      router.replace(next);
+      const { resolvePostAuthPathAction } = await import("@/lib/auth/postAuth");
+      const destination = await resolvePostAuthPathAction(next, next);
+      router.replace(destination);
       router.refresh();
     }
 

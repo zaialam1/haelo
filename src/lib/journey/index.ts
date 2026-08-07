@@ -38,6 +38,25 @@ export {
   buildJourneyViewModel,
 } from "./layout";
 export {
+  JOURNEY_METRICS_VERSION,
+  JOURNEY_METRIC_LABELS,
+  JOURNEY_METRIC_LEVELS,
+  JOURNEY_AXIS_LABELS,
+  activeMetricForFilter,
+  scoreToLevel,
+  scoreToNormalizedY,
+  levelLabel,
+  findMetricResult,
+  getScoredMetricValue,
+  averageOrbitVoiceConfidence,
+} from "./metrics";
+export type {
+  JourneyMetricKey,
+  JourneyMetricLevel,
+  JourneyMetricResult,
+  JourneyMetricStatus,
+} from "./metrics";
+export {
   JOURNEY_PREVIEW_ENABLED,
   JOURNEY_PREVIEW_SESSIONS,
   shouldUseJourneyPreview,

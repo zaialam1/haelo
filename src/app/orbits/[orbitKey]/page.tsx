@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { HomeBottomNav } from "@/components/home/HomeBottomNav";
-import { HomeNav } from "@/components/home/HomeNav";
+import { HomeNavWithRole } from "@/components/home/HomeNavWithRole";
 import { OrbitDetail } from "@/components/orbits/OrbitDetail";
 import {
   formatOrbitDuration,
@@ -58,7 +58,7 @@ export default async function OrbitDetailPage({ params }: OrbitDetailPageProps) 
         aria-hidden="true"
       />
 
-      <HomeNav />
+      <HomeNavWithRole  />
       <main className="relative z-10 w-full pb-28 pt-16 sm:pt-20">
         <div className="mx-auto w-full max-w-4xl px-4 sm:px-8 lg:px-12">
           <OrbitDetail

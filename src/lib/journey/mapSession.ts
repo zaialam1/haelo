@@ -206,6 +206,7 @@ export function mapPracticeSessionsToJourneySessions(
       analysisObservation: analysis?.observation ?? null,
       analysisEvidence: analysis?.evidence ?? null,
       analysisExperiment: analysis?.experiment ?? null,
+      journeyMetrics: analysis?.journeyMetrics ?? null,
       voiceNotes: [],
       themeLabel: null,
       changeObservation: analysis?.comparisonObservation ?? null,

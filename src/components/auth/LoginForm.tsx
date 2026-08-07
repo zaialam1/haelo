@@ -4,7 +4,7 @@ import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { useOptionalPageTransition } from "@/components/transitions/PageTransitionProvider";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useId, useState } from "react";
-import { safeNextPath } from "@/lib/auth/paths";
+import { resolvePostAuthPathAction } from "@/lib/auth/postAuth";
 import { signIn } from "@/lib/auth/signin";
 
 type FieldErrors = {
@@ -102,7 +102,10 @@ export function LoginForm() {
         return;
       }
 
-      const next = safeNextPath(searchParams.get("next"), "/home");
+      const next = await resolvePostAuthPathAction(
+        searchParams.get("next"),
+        "/home",
+      );
       if (transition) {
         transition.navigate({ href: next, variant: "fade" });
       } else {
@@ -229,6 +232,16 @@ export function LoginForm() {
           className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
           Create an account
+        </TransitionLink>
+      </p>
+
+      <p className="text-center text-sm text-[var(--foreground-muted)]">
+        <TransitionLink
+          href="/login/professional"
+          variant="fade"
+          className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+        >
+          Professional login
         </TransitionLink>
       </p>
     </form>

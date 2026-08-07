@@ -11,9 +11,17 @@ import {
 } from "react";
 import { planetAccent } from "@/lib/journey/mapSession";
 import {
+  activeMetricForFilter,
+  findMetricResult,
+  JOURNEY_AXIS_LABELS,
+  JOURNEY_METRIC_LABELS,
+  levelLabel,
+} from "@/lib/journey/metrics";
+import {
   getJourneyNodeVariant,
   type JourneyMonthAnchor,
   type JourneyNode,
+  type JourneyPlanetFilter,
 } from "@/lib/journey/types";
 
 type JourneyConstellationProps = {
@@ -26,6 +34,8 @@ type JourneyConstellationProps = {
   /** Filtered empty while journey has sessions elsewhere */
   filterEmpty: boolean;
   filterLabel?: string;
+  /** Active planet tab — drives Y-axis labels and tooltip lens */
+  filter?: JourneyPlanetFilter;
 };
 
 const VIEW_H = 420;
@@ -131,6 +141,7 @@ export function JourneyConstellation({
   journeyEmpty,
   filterEmpty,
   filterLabel,
+  filter = "all",
 }: JourneyConstellationProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const drag = useRef<{
@@ -220,6 +231,12 @@ export function JourneyConstellation({
   }, []);
 
   const hovered = nodes.find((n) => n.sessionId === hoveredId) ?? null;
+  const axisLabels = JOURNEY_AXIS_LABELS[filter];
+  // Match scoreToNormalizedY plot band (scored 100 → top, scored 1 → bottom).
+  // Unscored nodes sit below this band.
+  const axisTopY = toY(0.16);
+  const axisBottomY = toY(0.78);
+  const axisX = 18;
 
   function handleNodeKey(
     e: ReactKeyboardEvent<SVGGElement>,
@@ -292,6 +309,39 @@ export function JourneyConstellation({
             strokeWidth="1"
             opacity="0.7"
           />
+
+          {/* Subtle metric Y-axis (non-numeric) */}
+          {!journeyEmpty && !filterEmpty ? (
+            <g aria-hidden="true" className="journey-metric-axis">
+              <line
+                x1={axisX}
+                y1={axisTopY}
+                x2={axisX}
+                y2={axisBottomY}
+                stroke="color-mix(in srgb, var(--violet) 28%, transparent)"
+                strokeWidth="1"
+                opacity="0.55"
+              />
+              <text
+                x={axisX + 10}
+                y={axisTopY + 4}
+                fill="var(--foreground-muted)"
+                fontSize="10"
+                opacity="0.7"
+              >
+                {axisLabels.top}
+              </text>
+              <text
+                x={axisX + 10}
+                y={axisBottomY}
+                fill="var(--foreground-muted)"
+                fontSize="10"
+                opacity="0.7"
+              >
+                {axisLabels.bottom}
+              </text>
+            </g>
+          ) : null}
 
           {!journeyEmpty &&
             !filterEmpty &&
@@ -530,7 +580,15 @@ export function JourneyConstellation({
                       cy={0}
                       r={r + (selected ? 2.5 : 0)}
                       fill={accent}
-                      opacity={selected ? 0.95 : variant === "orbit_cluster" ? 0.82 : 0.72}
+                      opacity={
+                        selected
+                          ? 0.95
+                          : variant === "orbit_cluster"
+                            ? 0.82
+                            : n.metricPositioned === false
+                              ? 0.48
+                              : 0.72
+                      }
                       style={{
                         pointerEvents: "none",
                         filter: `drop-shadow(0 0 ${selected ? 16 : 10}px color-mix(in srgb, ${accent} ${selected ? 70 : 45}%, transparent))`,
@@ -638,6 +696,26 @@ export function JourneyConstellation({
                 <p className="mt-1 text-[0.75rem] leading-snug">
                   &ldquo;{truncate(hovered.prompt, 48)}&rdquo;
                 </p>
+                {(() => {
+                  const metricKey = activeMetricForFilter(filter);
+                  const result = findMetricResult(
+                    hovered.journeyMetrics,
+                    metricKey,
+                  );
+                  const label =
+                    result?.status === "scored"
+                      ? levelLabel(metricKey, result.level)
+                      : null;
+                  if (!label) return null;
+                  return (
+                    <p
+                      className="mt-1.5 text-[0.6875rem] leading-snug"
+                      style={{ color: "var(--foreground-muted)" }}
+                    >
+                      {JOURNEY_METRIC_LABELS[metricKey]} — {label}
+                    </p>
+                  );
+                })()}
               </>
             )}
           </div>

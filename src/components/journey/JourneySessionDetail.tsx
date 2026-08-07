@@ -5,6 +5,13 @@ import { ResponseReview } from "@/components/session/ResponseReview";
 import { SessionAnalysisPanel } from "@/components/session/SessionAnalysisPanel";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { planetAccent } from "@/lib/journey/mapSession";
+import {
+  findMetricResult,
+  JOURNEY_METRIC_LABELS,
+  levelLabel,
+  planetMetricKey,
+  type JourneyMetricKey,
+} from "@/lib/journey/metrics";
 import type { JourneySession } from "@/lib/journey/types";
 import type { AnalysisStatus, SessionAnalysis } from "@/lib/sessions/types";
 import type { TranscriptStatus } from "@/lib/sessions/types";
@@ -103,6 +110,18 @@ export function JourneySessionDetail({
   const feeling = feelingLabel(session.feelingReflection);
   const sounded = soundedLabel(session.soundedLikeYou);
   const authenticity = authenticityLabel(session.authenticityChoice);
+
+  const lensMetricKey: JourneyMetricKey | null =
+    session.planet !== "uncategorized"
+      ? planetMetricKey(session.planet)
+      : null;
+  const lensResult = lensMetricKey
+    ? findMetricResult(session.journeyMetrics, lensMetricKey)
+    : null;
+  const lensLevelLabel =
+    lensMetricKey && lensResult?.status === "scored"
+      ? levelLabel(lensMetricKey, lensResult.level)
+      : null;
 
   return (
     <div className={compact ? "" : "flex flex-1 flex-col"}>
@@ -234,6 +253,26 @@ export function JourneySessionDetail({
               {session.userReflection.trim()}
             </p>
           ) : null}
+        </PanelSection>
+      ) : null}
+
+      {lensMetricKey && lensLevelLabel ? (
+        <PanelSection title="Journey Lens">
+          <p
+            className="text-[0.8125rem] font-medium tracking-wide"
+            style={{ color: "var(--foreground-muted)" }}
+          >
+            {JOURNEY_METRIC_LABELS[lensMetricKey]}
+          </p>
+          <p
+            className="mt-1 font-[family-name:var(--font-fraunces)] text-xl leading-snug"
+            style={{
+              fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 500',
+              color: "var(--foreground)",
+            }}
+          >
+            {lensLevelLabel}
+          </p>
         </PanelSection>
       ) : null}
 

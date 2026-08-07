@@ -1,5 +1,5 @@
 import { HomeBottomNav } from "@/components/home/HomeBottomNav";
-import { HomeNav } from "@/components/home/HomeNav";
+import { HomeNavWithRole } from "@/components/home/HomeNavWithRole";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { getVoicePlanetById } from "@/lib/home/voicePlanets";
 import type { VoicePlanetId } from "@/lib/home/voicePlanets";
@@ -55,7 +55,7 @@ export async function PlanetPage({ planetId }: PlanetPageProps) {
         aria-hidden="true"
       />
 
-      <HomeNav pinned />
+      <HomeNavWithRole pinned  />
 
       <main className="relative z-10 mx-auto w-full max-w-6xl px-5 pb-28 pt-16 sm:px-8 sm:pb-32 sm:pt-20 lg:px-10">
         <TransitionLink

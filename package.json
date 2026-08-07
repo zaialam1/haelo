@@ -11,7 +11,11 @@
     "validate:orbits": "npx tsx scripts/validate-orbits.ts",
     "test:orbit-progression": "npx tsx scripts/test-orbit-progression-isolation.ts",
     "test:session-analysis": "npx tsx scripts/test-session-analysis.ts",
-    "test:journey-orbit": "npx tsx scripts/test-journey-orbit-integration.ts"
+    "test:journey-metrics": "npx tsx scripts/test-journey-metrics.ts",
+    "test:journey-orbit": "npx tsx scripts/test-journey-orbit-integration.ts",
+    "test:username-connections": "node --import tsx scripts/test-username-connections.ts",
+    "test:orbit-recommendations": "npx tsx scripts/test-orbit-recommendations.ts",
+    "test:my-voice": "npx tsx scripts/test-my-voice.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",

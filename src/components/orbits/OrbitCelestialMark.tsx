@@ -53,7 +53,8 @@ export function OrbitCelestialMark({
               height: `${sizePct}%`,
               animationDuration: `${24 + i * 8}s`,
               animationDirection: i % 2 === 0 ? "normal" : "reverse",
-              opacity: 0.85 - i * 0.18,
+              // String literals avoid SSR/client style serialization mismatches
+              opacity: `${(0.85 - i * 0.18).toFixed(2)}`,
             }}
           />
         );
@@ -61,26 +62,29 @@ export function OrbitCelestialMark({
       <span
         className="orbits-celestial-mark__core"
         style={{
-          width: core * seed.coreScale,
-          height: core * seed.coreScale,
+          width: `${(core * seed.coreScale).toFixed(2)}px`,
+          height: `${(core * seed.coreScale).toFixed(2)}px`,
         }}
       />
       {Array.from({ length: seed.starCount }, (_, i) => {
         const angle = (i / seed.starCount) * Math.PI * 2 + seed.tiltDeg * 0.02;
         const r = size === "sm" ? 38 : 42;
-        const x = 50 + Math.cos(angle) * r;
-        const y = 50 + Math.sin(angle) * r;
+        // Fixed precision so SSR HTML matches client hydration
+        const x = (50 + Math.cos(angle) * r).toFixed(2);
+        const y = (50 + Math.sin(angle) * r).toFixed(2);
+        const starPx = i % 2 === 0 ? "2px" : "1.5px";
         return (
           <span
             key={`star-${i}`}
             className="absolute rounded-full"
             style={{
-              width: i % 2 === 0 ? 2 : 1.5,
-              height: i % 2 === 0 ? 2 : 1.5,
+              width: starPx,
+              height: starPx,
               left: `${x}%`,
               top: `${y}%`,
-              background: "color-mix(in srgb, var(--foreground) 55%, transparent)",
-              opacity: 0.55,
+              background:
+                "color-mix(in srgb, var(--foreground) 55%, transparent)",
+              opacity: "0.55",
               transform: "translate(-50%, -50%)",
             }}
           />

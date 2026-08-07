@@ -15,7 +15,6 @@ import type { OrbitListItem, OrbitRegionKey } from "@/lib/orbits/types";
 type OrbitConstellationProps = {
   regionKey: OrbitRegionKey;
   items: OrbitListItem[];
-  query: string;
 };
 
 /**
@@ -25,7 +24,6 @@ type OrbitConstellationProps = {
 export function OrbitConstellation({
   regionKey,
   items,
-  query,
 }: OrbitConstellationProps) {
   const accent = REGION_ACCENT[regionKey];
   const empty = items.length === 0;
@@ -50,9 +48,7 @@ export function OrbitConstellation({
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-[0.8125rem]"
           style={{ color: "var(--foreground)", opacity: 0.7 }}
         >
-          {query.trim()
-            ? "Nothing in this region matches."
-            : "No Orbits here yet."}
+          No Orbits here yet.
         </p>
       ) : (
         <>

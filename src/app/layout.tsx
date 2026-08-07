@@ -41,6 +41,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${fraunces.variable} ${jakarta.variable} h-full antialiased`}
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
       <head>

@@ -33,7 +33,6 @@ export function TransitionLink({
     <Link
       href={href}
       replace={replace}
-      scroll={scroll}
       prefetch={prefetch}
       className={mergedClassName}
       {...rest}
@@ -82,6 +81,9 @@ export function TransitionLink({
           originY,
         });
       }}
+      // When the transition provider owns navigation, it scrolls under the veil.
+      // Keep Next's default scroll when falling back to plain <Link>.
+      scroll={scroll ?? (transition ? false : undefined)}
     />
   );
 }
