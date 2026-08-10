@@ -2,9 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { FirstStarMoment } from "@/components/onboarding/FirstStarMoment";
 import { ResponseReview } from "@/components/session/ResponseReview";
+import { AnalysisFeedback } from "@/components/session/AnalysisFeedback";
 import { SessionAnalysisPanel } from "@/components/session/SessionAnalysisPanel";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
+import { trackEvent } from "@/lib/analytics/track";
+import { markOnboardingMilestoneAction } from "@/lib/preferences/actions";
 import { getVoicePlanetById } from "@/lib/home/voicePlanets";
 import { getPlanetPageContent } from "@/lib/planets/content";
 import type { Planet } from "@/lib/prompts";
@@ -35,6 +39,8 @@ type SessionReviewClientProps = {
   /** Prefer orbitKey over flow — flow contains functions and cannot cross RSC. */
   orbitKey?: string;
   flow?: SessionFlowConfig;
+  /** Completing this session adds the user's first Journey star. */
+  firstStarMoment?: boolean;
 };
 
 export function SessionReviewClient({
@@ -43,6 +49,7 @@ export function SessionReviewClient({
   initialSession,
   orbitKey,
   flow: flowProp,
+  firstStarMoment = false,
 }: SessionReviewClientProps) {
   const router = useRouter();
   const content = getPlanetPageContent(planet);
@@ -59,30 +66,6 @@ export function SessionReviewClient({
         })
       : planetSessionFlow(planet));
 
-  // #region agent log
-  fetch("http://127.0.0.1:7260/ingest/327a9bfd-1a4e-4e3a-9bbf-2eff52fa2f90", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Debug-Session-Id": "965f52",
-    },
-    body: JSON.stringify({
-      sessionId: "965f52",
-      runId: "post-fix",
-      hypothesisId: "B",
-      location: "SessionReviewClient.tsx:init",
-      message: "SessionReviewClient resolved flow on client",
-      data: {
-        flowSource: flow.source,
-        usedOrbitKeyProp: Boolean(orbitKey),
-        usedFlowProp: Boolean(flowProp),
-        reviewHrefType: typeof flow.reviewHref,
-      },
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {});
-  // #endregion
-
   const [session, setSession] = useState(initialSession);
   const [feeling, setFeeling] = useState<FeelingReflection | null>(
     initialSession.feeling_reflection,
@@ -92,11 +75,13 @@ export function SessionReviewClient({
   );
   const [thought, setThought] = useState(initialSession.user_reflection ?? "");
   const [showAnalysis, setShowAnalysis] = useState(false);
+  const [showFirstStar, setShowFirstStar] = useState(false);
   const [busy, setBusy] = useState(false);
   const [retryingAnalysis, setRetryingAnalysis] = useState(false);
   const [analysisFailure, setAnalysisFailure] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const persistTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const analysisViewedMarked = useRef(false);
 
   const attempt = session.session_attempts.find((a) => a.attempt_number === 1);
   const analysisPending = session.analysis_status === "pending";
@@ -203,6 +188,15 @@ export function SessionReviewClient({
     try {
       await persistReflectionNow();
       setShowAnalysis(true);
+      if (!analysisViewedMarked.current) {
+        analysisViewedMarked.current = true;
+        trackEvent("analysis_viewed", { sessionId, planet });
+        if (firstStarMoment) {
+          void markOnboardingMilestoneAction("first_analysis_viewed").catch(
+            () => {},
+          );
+        }
+      }
       const next = await fetchSessionDetailClient(sessionId);
       if (next) setSession(next);
     } catch (e) {
@@ -212,12 +206,18 @@ export function SessionReviewClient({
     }
   }
 
-  async function handleLookLater() {
+  async function finishSession() {
     setError(null);
     setBusy(true);
     try {
       await persistReflectionNow();
       await completeSession(sessionId);
+      trackEvent("session_completed", { sessionId, planet, source: flow.source });
+      if (firstStarMoment) {
+        setShowFirstStar(true);
+        setBusy(false);
+        return;
+      }
       router.push(flow.afterCompleteHref(sessionId));
     } catch (e) {
       setError(
@@ -227,19 +227,12 @@ export function SessionReviewClient({
     }
   }
 
+  async function handleLookLater() {
+    await finishSession();
+  }
+
   async function handleFinish() {
-    setError(null);
-    setBusy(true);
-    try {
-      await persistReflectionNow();
-      await completeSession(sessionId);
-      router.push(flow.afterCompleteHref(sessionId));
-    } catch (e) {
-      setError(
-        e instanceof Error ? e.message : "Could not finish this session.",
-      );
-      setBusy(false);
-    }
+    await finishSession();
   }
 
   function handleTryAgain() {
@@ -486,6 +479,15 @@ export function SessionReviewClient({
               retrying={retryingAnalysis}
               failureMessage={analysisFailure}
             />
+            {!retryingAnalysis &&
+            session.analysis_status === "ready" &&
+            session.analysis?.status === "ready" ? (
+              <AnalysisFeedback
+                sessionId={sessionId}
+                model={session.analysis.journeyMetricsModel ?? null}
+                promptVersion={session.analysis.journeyMetricsVersion ?? null}
+              />
+            ) : null}
           </div>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
@@ -568,6 +570,10 @@ export function SessionReviewClient({
             : `Back to ${content.label}`}
         </TransitionLink>
       </div>
+
+      {showFirstStar ? (
+        <FirstStarMoment continueHref={flow.afterCompleteHref(sessionId)} />
+      ) : null}
     </div>
   );
 }

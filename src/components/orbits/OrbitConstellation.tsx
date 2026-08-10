@@ -15,6 +15,8 @@ import type { OrbitListItem, OrbitRegionKey } from "@/lib/orbits/types";
 type OrbitConstellationProps = {
   regionKey: OrbitRegionKey;
   items: OrbitListItem[];
+  /** When set, non-matching stars dim and matches gently illuminate. */
+  highlightKeys?: ReadonlySet<string> | null;
 };
 
 /**
@@ -24,9 +26,11 @@ type OrbitConstellationProps = {
 export function OrbitConstellation({
   regionKey,
   items,
+  highlightKeys = null,
 }: OrbitConstellationProps) {
   const accent = REGION_ACCENT[regionKey];
   const empty = items.length === 0;
+  const searching = Boolean(highlightKeys && highlightKeys.size > 0);
 
   return (
     <div
@@ -83,6 +87,10 @@ export function OrbitConstellation({
               const orbit = item.definition;
               const status = getOrbitStatus(item);
               const progress = orbitProgressLabel(item);
+              const isMatch = searching
+                ? Boolean(highlightKeys?.has(orbit.orbitKey))
+                : true;
+              const dimmed = searching && !isMatch;
 
               return (
                 <li
@@ -92,14 +100,23 @@ export function OrbitConstellation({
                     left: `${pos.x}%`,
                     top: `${pos.y}%`,
                     transform: "translate(-50%, -50%)",
+                    opacity: dimmed ? 0.28 : 1,
+                    transition: "opacity 280ms ease",
+                    zIndex: isMatch && searching ? 2 : 1,
                   }}
                 >
                   <TransitionLink
                     href={`/orbits/${orbit.orbitKey}`}
                     variant="fade"
-                    className="orbits-star-node group relative flex flex-col items-center gap-1.5 rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--violet)]"
+                    className={`orbits-star-node group relative flex flex-col items-center gap-1.5 rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--violet)]${
+                      isMatch && searching ? " orbits-star-node--search-match" : ""
+                    }`}
                     style={{
                       animationDelay: `${(index % 6) * 0.4}s`,
+                      filter:
+                        isMatch && searching
+                          ? "drop-shadow(0 0 10px color-mix(in srgb, var(--gold) 55%, transparent))"
+                          : undefined,
                     }}
                     aria-label={`${orbit.title}. ${orbit.shortDescription}. ${formatOrbitMeta(orbit)}${
                       status === "completed"
@@ -107,7 +124,7 @@ export function OrbitConstellation({
                         : progress
                           ? ` ${progress}.`
                           : ""
-                    }`}
+                    }${isMatch && searching ? " Search match." : ""}`}
                   >
                     <OrbitCelestialMark
                       orbitKey={orbit.orbitKey}

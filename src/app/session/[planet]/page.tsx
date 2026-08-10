@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { RecordingSession } from "@/components/recording/RecordingSession";
+import { countCompletedSessions } from "@/lib/onboarding/data";
 import { getPlanetPageContent } from "@/lib/planets/content";
 import { getPromptById, isPlanet } from "@/lib/prompts";
 import { resolvePlanetSessionPrompt } from "@/lib/sessions/resolvePrompt";
@@ -91,6 +92,7 @@ export default async function SessionPage({
   }
 
   let promptPayload: { id: string; text: string };
+  let firstSession = false;
   try {
     // Honor the prompt previewed on the planet page when the ID is valid.
     const fromPlanet = promptParam ? getPromptById(promptParam) : undefined;
@@ -99,12 +101,14 @@ export default async function SessionPage({
         id: fromPlanet.id,
         text: fromPlanet.prompt,
       };
+      firstSession = (await countCompletedSessions(user.id)) === 0;
     } else {
       const resolved = await resolvePlanetSessionPrompt(user.id, planet);
       promptPayload = {
         id: resolved.prompt.id,
         text: resolved.prompt.prompt,
       };
+      firstSession = resolved.firstSession;
     }
   } catch (e) {
     console.error("[session] prompt resolve failed:", e);
@@ -155,7 +159,11 @@ export default async function SessionPage({
         aria-hidden="true"
       />
       <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-1 flex-col px-5 py-8 sm:px-10 sm:py-12">
-        <RecordingSession planet={planet} prompt={promptPayload} />
+        <RecordingSession
+          planet={planet}
+          prompt={promptPayload}
+          firstSession={firstSession}
+        />
       </div>
     </main>
   );

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
+import { ReportModal } from "@/components/safety/ReportModal";
 import { markNotificationReadAction } from "@/lib/notifications/actions";
 import { getOrbitByKey } from "@/lib/orbits/catalog";
 import type { AppNotification } from "@/lib/connections/types";
@@ -16,7 +17,11 @@ export function OrbitRecommendationPanel({
   onOpened?: () => void;
 }) {
   const [orbitTitle, setOrbitTitle] = useState<string | null>(null);
+  const [professionalUserId, setProfessionalUserId] = useState<string | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
+  const [reportOpen, setReportOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -37,6 +42,7 @@ export function OrbitRecommendationPanel({
           const json = (await res.json()) as {
             orbitKey?: string;
             orbitTitle?: string;
+            professionalUserId?: string;
           };
           if (!cancelled) {
             setOrbitTitle(
@@ -45,6 +51,7 @@ export function OrbitRecommendationPanel({
                   ? getOrbitByKey(json.orbitKey)?.title ?? null
                   : null),
             );
+            setProfessionalUserId(json.professionalUserId ?? null);
           }
         }
       } catch {
@@ -118,6 +125,15 @@ export function OrbitRecommendationPanel({
         >
           Learn more
         </TransitionLink>
+        {professionalUserId ? (
+          <button
+            type="button"
+            onClick={() => setReportOpen(true)}
+            className="text-center text-xs font-semibold text-[var(--violet)] underline-offset-2 hover:underline"
+          >
+            Report this recommendation
+          </button>
+        ) : null}
         <button
           type="button"
           onClick={onClose}
@@ -126,6 +142,16 @@ export function OrbitRecommendationPanel({
           Close
         </button>
       </div>
+
+      {professionalUserId ? (
+        <ReportModal
+          open={reportOpen}
+          onClose={() => setReportOpen(false)}
+          reportedUserId={professionalUserId}
+          objectType="orbit_recommendation"
+          objectId={notification.referenceId}
+        />
+      ) : null}
     </div>
   );
 }

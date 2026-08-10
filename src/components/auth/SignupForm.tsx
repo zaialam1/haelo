@@ -126,6 +126,10 @@ export function SignupForm() {
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
+    void import("@/lib/analytics/track")
+      .then((m) => m.trackEvent("signup_started", { accountType: "personal" }))
+      .catch(() => {});
+
     const usernameParsed = validateUsername(username);
     if (!usernameParsed.ok || usernameAvailability !== "available") {
       setErrors({
@@ -218,10 +222,26 @@ export function SignupForm() {
       }
 
       if (result.needsEmailConfirmation) {
+        void import("@/lib/analytics/track")
+          .then((m) =>
+            m.trackEvent("signup_completed", {
+              accountType: "personal",
+              needsEmailConfirmation: true,
+            }),
+          )
+          .catch(() => {});
         setCheckEmail(true);
         return;
       }
 
+      void import("@/lib/analytics/track")
+        .then((m) =>
+          m.trackEvent("signup_completed", {
+            accountType: "personal",
+            needsEmailConfirmation: false,
+          }),
+        )
+        .catch(() => {});
       goNext(result.usernameClaimed);
     } catch {
       setErrors({

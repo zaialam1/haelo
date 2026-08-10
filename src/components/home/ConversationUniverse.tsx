@@ -7,6 +7,7 @@ import type {
 import { VOICE_PLANETS } from "@/lib/home/voicePlanets";
 import type { VoicePlanetId } from "@/lib/home/voicePlanets";
 import type { PlanetEvolutionLevel } from "@/lib/planets/evolution";
+import { MyVoiceIntroCue } from "@/components/onboarding/MyVoiceIntroCue";
 import { MyVoiceOrb } from "./MyVoiceOrb";
 import { VoicePlanetOrb } from "./VoicePlanet";
 
@@ -26,6 +27,8 @@ type ConversationUniverseProps = {
   celestialRewards?: UserCelestialReward[];
   weeklyProgress?: WeeklyVoiceProgress | null;
   showWeeklyGoal?: boolean;
+  /** One-time onboarding cue when My Voice first becomes ready. */
+  showMyVoiceCue?: boolean;
 };
 
 export function ConversationUniverse({
@@ -33,6 +36,7 @@ export function ConversationUniverse({
   celestialRewards = [],
   weeklyProgress = null,
   showWeeklyGoal = false,
+  showMyVoiceCue = false,
 }: ConversationUniverseProps = {}) {
   return (
     <section
@@ -144,6 +148,7 @@ export function ConversationUniverse({
 
         <div className="pointer-events-none absolute top-1/2 left-1/2 z-30 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center">
           <MyVoiceOrb nested />
+          {showMyVoiceCue ? <MyVoiceIntroCue /> : null}
         </div>
 
         {VOICE_PLANETS.map((planet, index) => (

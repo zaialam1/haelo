@@ -38,6 +38,8 @@ import type {
 import { weekKeyFromDate } from "@/lib/gamification/week";
 import type { VoicePlanetId } from "@/lib/home/voicePlanets";
 import { getOrbitByKey } from "@/lib/orbits/catalog";
+import { isNotificationCategoryEnabled } from "@/lib/preferences/types";
+import { getPreferencesWith } from "@/lib/preferences/withClient";
 import type { OrbitRegionKey } from "@/lib/orbits/types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
@@ -357,6 +359,11 @@ async function createNotification(
   type: "celestial_discovery" | "milestone_moment",
   referenceId: string | null,
 ) {
+  // Milestones/discoveries are a non-essential category; honor the user's
+  // notification preferences. Reveals still surface in the Universe.
+  const prefs = await getPreferencesWith(supabase, userId);
+  if (!isNotificationCategoryEnabled(prefs, "milestones_discoveries")) return;
+
   const { error } = await supabase.from("notifications").insert({
     user_id: userId,
     type,
@@ -489,7 +496,7 @@ async function processGamificationEventInner(
       if (weeklyJustCompleted) {
         trackGamificationEvent(
           GamificationAnalyticsEvents.WEEKLY_GOAL_COMPLETED,
-          { weekKey: weekly.weekKey },
+          { weekKey: weekly.weekKey, userId },
         );
         const reveal = await queueReveal(supabase, userId, {
           revealKey: `weekly_complete:${weekly.weekKey}`,
@@ -523,6 +530,7 @@ async function processGamificationEventInner(
         trackGamificationEvent(GamificationAnalyticsEvents.PLANET_EVOLVED, {
           planet: change.planet,
           stage: change.stage,
+          userId,
         });
 
         const label =
@@ -570,7 +578,7 @@ async function processGamificationEventInner(
         existingKeys.add(orbitReward.rewardKey);
         trackGamificationEvent(
           GamificationAnalyticsEvents.ORBIT_REWARD_UNLOCKED,
-          { rewardKey: orbitReward.rewardKey, orbitKey: progress.orbit_key },
+          { rewardKey: orbitReward.rewardKey, orbitKey: progress.orbit_key, userId },
         );
         const reveal = await queueReveal(supabase, userId, {
           revealKey: `orbit_reward:${progress.id}`,
@@ -601,7 +609,7 @@ async function processGamificationEventInner(
     if (reveal) reveals.push(reveal);
     trackGamificationEvent(
       GamificationAnalyticsEvents.EXPERIMENT_COMPLETED,
-      { sessionId: event.sessionId },
+      { sessionId: event.sessionId, userId },
     );
   }
 
@@ -667,7 +675,7 @@ async function processGamificationEventInner(
     rewardsUnlocked.push(reward);
     trackGamificationEvent(
       GamificationAnalyticsEvents.CELESTIAL_DISCOVERY_UNLOCKED,
-      { rewardKey: reward.rewardKey },
+      { rewardKey: reward.rewardKey, userId },
     );
 
     const reveal = await queueReveal(supabase, userId, {
@@ -739,6 +747,7 @@ async function processGamificationEventInner(
     milestonesUnlocked.push(mapped);
     trackGamificationEvent(GamificationAnalyticsEvents.MILESTONE_UNLOCKED, {
       milestoneKey: mapped.milestoneKey,
+      userId,
     });
 
     const reveal = await queueReveal(supabase, userId, {

@@ -14,6 +14,8 @@ export type ResolvedSessionPrompt = {
   prompt: HaeloPrompt;
   planetLevel: DisplayLevel;
   completedSessionCount: number;
+  /** True when this is the user's first-ever recording (any planet). */
+  firstSession: boolean;
 };
 
 /**
@@ -64,10 +66,22 @@ export async function resolvePlanetSessionPrompt(
 
   const planetLevel = planetLevelFromSessionCount(exactCount);
 
+  // First-ever recording anywhere → gentle beginner/light prompt.
+  let firstSession = false;
+  if (exactCount === 0) {
+    const { count: totalCompleted } = await supabase
+      .from("sessions")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .eq("status", "completed");
+    firstSession = (totalCompleted ?? 0) === 0;
+  }
+
   const prompt = selectPrompt({
     planet,
     planetLevel,
     recentPromptIds,
+    firstSession,
   });
 
   if (!prompt) {
@@ -80,6 +94,7 @@ export async function resolvePlanetSessionPrompt(
       prompt: fallback,
       planetLevel: 1,
       completedSessionCount: exactCount,
+      firstSession,
     };
   }
 
@@ -87,5 +102,6 @@ export async function resolvePlanetSessionPrompt(
     prompt,
     planetLevel,
     completedSessionCount: exactCount,
+    firstSession,
   };
 }

@@ -58,6 +58,7 @@ export async function markGamificationRevealsViewedAction(
 
   trackGamificationEvent(GamificationAnalyticsEvents.DISCOVERY_VIEWED, {
     count: revealIds.length,
+    userId: user.id,
   });
 }
 
@@ -97,8 +98,13 @@ export async function markMilestoneViewedAction(
 export async function markExperimentIntentAction(
   sessionId: string,
 ): Promise<void> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   trackGamificationEvent(GamificationAnalyticsEvents.EXPERIMENT_STARTED, {
     sessionId,
+    userId: user?.id,
   });
 }
 

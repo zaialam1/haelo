@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+import { AnalyticsBootstrap } from "@/components/analytics/AnalyticsBootstrap";
 import { TransitionRoot } from "@/components/transitions/TransitionRoot";
 import "./globals.css";
 
@@ -51,6 +52,7 @@ export default function RootLayout({
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: themeInitScript }}
         />
+        <AnalyticsBootstrap />
         <TransitionRoot>{children}</TransitionRoot>
       </body>
     </html>

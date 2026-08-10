@@ -11,6 +11,7 @@ import { gatherMyVoiceHistory } from "./evidence";
 import { generateMyVoiceSummaryContent } from "./generate";
 import { getOwnVoiceSummaryRow, upsertOwnVoiceSummary } from "./data";
 import { trackMyVoiceEvent } from "./events";
+import { createMyVoiceUpdatedNotification } from "@/lib/notifications/create";
 import type { MyVoiceViewModel, UserVoiceSummaryRow } from "./types";
 
 function readyView(
@@ -81,13 +82,19 @@ export async function openMyVoiceForUser(opts: {
     try {
       const updated = await regenerateAndPersist(opts.userId, history);
       if (updated) {
+        if (cached?.status === "ready") {
+          // Refresh of an existing summary — surface in the notification center.
+          void createMyVoiceUpdatedNotification(opts.userId).catch(() => {});
+        }
         trackMyVoiceEvent("my_voice_updated", {
           reason: "force",
           sessionCount,
+          userId: opts.userId,
         });
         trackMyVoiceEvent("my_voice_opened", {
           source: "generated",
           sessionCount,
+          userId: opts.userId,
         });
         return readyView(updated, sessionCount);
       }
@@ -109,6 +116,7 @@ export async function openMyVoiceForUser(opts: {
     trackMyVoiceEvent("my_voice_opened", {
       source: "cache",
       sessionCount,
+      userId: opts.userId,
     });
     return readyView(cached, sessionCount);
   }
@@ -118,6 +126,7 @@ export async function openMyVoiceForUser(opts: {
     trackMyVoiceEvent("my_voice_opened", {
       source: "stale_cache",
       sessionCount,
+      userId: opts.userId,
     });
     return readyView(cached, sessionCount, true);
   }
@@ -142,10 +151,14 @@ export async function openMyVoiceForUser(opts: {
           "Your voice summary isn't ready yet. Keep exploring and check back soon.",
       };
     }
-    trackMyVoiceEvent("my_voice_generated", { sessionCount });
+    trackMyVoiceEvent("my_voice_generated", {
+      sessionCount,
+      userId: opts.userId,
+    });
     trackMyVoiceEvent("my_voice_opened", {
       source: "generated",
       sessionCount,
+      userId: opts.userId,
     });
     return readyView(updated, sessionCount);
   } catch (err) {

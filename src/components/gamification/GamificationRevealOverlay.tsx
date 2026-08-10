@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { markGamificationRevealsViewedAction } from "@/lib/gamification/actions";
+import { markOnboardingMilestoneAction } from "@/lib/preferences/actions";
 import type { GamificationReveal } from "@/lib/gamification/types";
 
 type GamificationRevealOverlayProps = {
   reveals: GamificationReveal[];
+  /** First planet evolution: add a one-line explanation of planet growth. */
+  explainPlanetGrowth?: boolean;
 };
 
 /**
@@ -14,15 +17,28 @@ type GamificationRevealOverlayProps = {
  */
 export function GamificationRevealOverlay({
   reveals: initial,
+  explainPlanetGrowth = false,
 }: GamificationRevealOverlayProps) {
   const [queue, setQueue] = useState(() =>
     initial.filter((r) => !r.viewedAt).slice(0, 3),
   );
   const current = queue[0] ?? null;
+  const growthExplained = useRef(false);
 
   useEffect(() => {
     setQueue(initial.filter((r) => !r.viewedAt).slice(0, 3));
   }, [initial]);
+
+  const showGrowthExplanation =
+    explainPlanetGrowth && current?.revealType === "planet_evolution";
+
+  useEffect(() => {
+    if (!showGrowthExplanation || growthExplained.current) return;
+    growthExplained.current = true;
+    void markOnboardingMilestoneAction("planet_growth_explained").catch(
+      () => {},
+    );
+  }, [showGrowthExplanation]);
 
   async function dismiss() {
     if (!current) return;
@@ -88,6 +104,16 @@ export function GamificationRevealOverlay({
             style={{ color: "var(--foreground-muted)" }}
           >
             {current.body}
+          </p>
+        ) : null}
+
+        {showGrowthExplanation ? (
+          <p
+            className="relative mx-auto mt-3 max-w-sm text-[0.9375rem] leading-relaxed"
+            style={{ color: "var(--foreground-muted)" }}
+          >
+            Your planets grow like this as you keep practicing — no scores,
+            just your voice getting more room.
           </p>
         ) : null}
 

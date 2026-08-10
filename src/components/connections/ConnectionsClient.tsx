@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useId, useState, useTransition } from "react";
+import { useEffect, useId, useState, useTransition } from "react";
 import {
   removeConnectionAction,
   searchHaeloUsernameAction,
@@ -9,12 +9,20 @@ import {
 } from "@/lib/connections/actions";
 import {
   accountRoleDisplayLabel,
+  connectionCounterpartId,
   type ConnectionStatus,
   type HaeloConnection,
 } from "@/lib/connections/types";
 import type { AccountRole } from "@/lib/profiles/types";
 import { formatUsernameDisplay } from "@/lib/profiles/username";
+import {
+  blockUserAction,
+  listBlockedAccountsAction,
+  unblockUserAction,
+} from "@/lib/safety/actions";
+import type { BlockedAccount } from "@/lib/safety/types";
 import { ProfessionalModeNav } from "@/components/professional/ProfessionalModeNav";
+import { ReportModal } from "@/components/safety/ReportModal";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 
 function connectionUsernameLabel(username: string | null | undefined) {
@@ -133,7 +141,10 @@ export function ConnectionsClient({
             showFindSomeone
           />
         ) : (
-          <UserConnections initialConnections={initialConnections} />
+          <UserConnections
+            ownUserId={ownUserId}
+            initialConnections={initialConnections}
+          />
         )}
       </main>
     </div>
@@ -141,16 +152,36 @@ export function ConnectionsClient({
 }
 
 function UserConnections({
+  ownUserId,
   initialConnections,
 }: {
+  ownUserId?: string;
   initialConnections: HaeloConnection[];
 }) {
   const router = useRouter();
   const [removedIds, setRemovedIds] = useState<string[]>([]);
   const [confirmId, setConfirmId] = useState<string | null>(null);
+  const [confirmBlockId, setConfirmBlockId] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const [blocks, setBlocks] = useState<BlockedAccount[]>([]);
+  const [reportTarget, setReportTarget] = useState<{
+    userId: string;
+    username: string | null;
+    objectId: string;
+  } | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const list = await listBlockedAccountsAction();
+      if (!cancelled) setBlocks(list);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const connections = initialConnections
     .filter((c) => c.status === "accepted")
@@ -168,6 +199,42 @@ function UserConnections({
     setConfirmId(null);
     setRemovedIds((prev) => [...prev, connectionId]);
     startTransition(() => router.refresh());
+  }
+
+  async function block(connection: HaeloConnection) {
+    if (!ownUserId) return;
+    const targetId = connectionCounterpartId(connection, ownUserId);
+    setBusyId(connection.id);
+    setError(null);
+    const result = await blockUserAction(targetId);
+    setBusyId(null);
+    if (!result.ok) {
+      setError(result.message ?? "Couldn’t block this account.");
+      return;
+    }
+    setConfirmBlockId(null);
+    setRemovedIds((prev) => [...prev, connection.id]);
+    setBlocks((prev) => [
+      {
+        userId: targetId,
+        username: connection.counterpartUsername ?? null,
+        blockedAt: new Date().toISOString(),
+      },
+      ...prev.filter((b) => b.userId !== targetId),
+    ]);
+    startTransition(() => router.refresh());
+  }
+
+  async function unblock(userId: string) {
+    setBusyId(userId);
+    setError(null);
+    const result = await unblockUserAction(userId);
+    setBusyId(null);
+    if (!result.ok) {
+      setError(result.message ?? "Couldn’t unblock this account.");
+      return;
+    }
+    setBlocks((prev) => prev.filter((b) => b.userId !== userId));
   }
 
   return (
@@ -193,6 +260,7 @@ function UserConnections({
           style={{ color: "var(--foreground-muted)" }}
         >
           Your recordings, Journey, transcripts, and analyses remain private.
+          Remove ends the relationship; Block also stops future requests.
         </p>
 
         {connections.length === 0 ? (
@@ -205,73 +273,190 @@ function UserConnections({
           </p>
         ) : (
           <ul className="mt-5 space-y-4">
-            {connections.map((c) => (
+            {connections.map((c) => {
+              const counterpartId = ownUserId
+                ? connectionCounterpartId(c, ownUserId)
+                : null;
+              return (
+                <li
+                  key={c.id}
+                  className="rounded-2xl border px-4 py-4"
+                  style={{ borderColor: "var(--hairline)" }}
+                >
+                  <p
+                    className="font-[family-name:var(--font-fraunces)] text-lg"
+                    style={{
+                      fontVariationSettings:
+                        '"opsz" 72, "SOFT" 40, "WONK" 0, "wght" 550',
+                    }}
+                  >
+                    {connectionUsernameLabel(c.counterpartUsername)}
+                  </p>
+                  <p
+                    className="mt-1 text-xs font-semibold uppercase tracking-[0.1em]"
+                    style={{ color: "var(--violet)" }}
+                  >
+                    {accountRoleDisplayLabel(c.counterpartAccountRole)}
+                  </p>
+                  <p
+                    className="mt-2 text-sm"
+                    style={{ color: "var(--foreground-muted)" }}
+                  >
+                    Can recommend Orbits to you
+                  </p>
+
+                  {confirmId === c.id ? (
+                    <div className="mt-4 space-y-3">
+                      <p className="text-sm" style={{ color: "var(--foreground)" }}>
+                        Remove connection? They will no longer be able to send new
+                        Orbit recommendations. They may request again later.
+                      </p>
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          disabled={busyId === c.id || pending}
+                          onClick={() => void remove(c.id)}
+                          className="flex-1 rounded-full bg-[#9B2C2C] px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-70"
+                        >
+                          {busyId === c.id ? "Removing…" : "Remove"}
+                        </button>
+                        <button
+                          type="button"
+                          disabled={busyId === c.id}
+                          onClick={() => setConfirmId(null)}
+                          className="flex-1 rounded-full border px-4 py-2.5 text-sm font-semibold"
+                          style={{
+                            borderColor: "var(--hairline)",
+                            color: "var(--foreground)",
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : confirmBlockId === c.id && counterpartId ? (
+                    <div className="mt-4 space-y-3">
+                      <p className="text-sm" style={{ color: "var(--foreground)" }}>
+                        Block this account? They won&apos;t be able to connect or
+                        recommend Orbits to you. They won&apos;t be told why.
+                      </p>
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          disabled={busyId === c.id || pending}
+                          onClick={() => void block(c)}
+                          className="flex-1 rounded-full bg-[#9B2C2C] px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-70"
+                        >
+                          {busyId === c.id ? "Blocking…" : "Block"}
+                        </button>
+                        <button
+                          type="button"
+                          disabled={busyId === c.id}
+                          onClick={() => setConfirmBlockId(null)}
+                          className="flex-1 rounded-full border px-4 py-2.5 text-sm font-semibold"
+                          style={{ borderColor: "var(--hairline)" }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setConfirmBlockId(null);
+                          setConfirmId(c.id);
+                        }}
+                        className="text-sm font-semibold text-[#9B2C2C] underline-offset-2 hover:underline"
+                      >
+                        Remove
+                      </button>
+                      {counterpartId ? (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setConfirmId(null);
+                              setConfirmBlockId(c.id);
+                            }}
+                            className="text-sm font-semibold text-[#9B2C2C] underline-offset-2 hover:underline"
+                          >
+                            Block
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setReportTarget({
+                                userId: counterpartId,
+                                username: c.counterpartUsername ?? null,
+                                objectId: c.id,
+                              })
+                            }
+                            className="text-sm font-semibold text-[var(--violet)] underline-offset-2 hover:underline"
+                          >
+                            Report
+                          </button>
+                        </>
+                      ) : null}
+                    </div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
+
+      <section
+        className="rounded-2xl border px-5 py-5"
+        style={{
+          background: "var(--surface)",
+          borderColor: "var(--surface-border)",
+          boxShadow: "var(--shadow-soft)",
+        }}
+      >
+        <h2
+          className="font-[family-name:var(--font-fraunces)] text-lg"
+          style={{
+            fontVariationSettings: '"opsz" 72, "SOFT" 40, "WONK" 0, "wght" 550',
+          }}
+        >
+          Blocked accounts
+        </h2>
+        <p
+          className="mt-2 text-sm leading-relaxed"
+          style={{ color: "var(--foreground-muted)" }}
+        >
+          Blocked accounts can&apos;t send connection requests or recommend
+          Orbits to you.
+        </p>
+        {blocks.length === 0 ? (
+          <p
+            className="mt-4 text-sm"
+            style={{ color: "var(--foreground-muted)" }}
+          >
+            No blocked accounts.
+          </p>
+        ) : (
+          <ul className="mt-4 space-y-3">
+            {blocks.map((b) => (
               <li
-                key={c.id}
-                className="rounded-2xl border px-4 py-4"
+                key={b.userId}
+                className="flex items-center justify-between gap-3 rounded-xl border px-3 py-3"
                 style={{ borderColor: "var(--hairline)" }}
               >
-                <p
-                  className="font-[family-name:var(--font-fraunces)] text-lg"
-                  style={{
-                    fontVariationSettings:
-                      '"opsz" 72, "SOFT" 40, "WONK" 0, "wght" 550',
-                  }}
+                <span className="text-sm font-medium">
+                  {connectionUsernameLabel(b.username)}
+                </span>
+                <button
+                  type="button"
+                  disabled={busyId === b.userId}
+                  onClick={() => void unblock(b.userId)}
+                  className="text-xs font-semibold text-[var(--violet)] underline-offset-2 hover:underline disabled:opacity-70"
                 >
-                  {connectionUsernameLabel(c.counterpartUsername)}
-                </p>
-                <p
-                  className="mt-1 text-xs font-semibold uppercase tracking-[0.1em]"
-                  style={{ color: "var(--violet)" }}
-                >
-                  {accountRoleDisplayLabel(c.counterpartAccountRole)}
-                </p>
-                <p
-                  className="mt-2 text-sm"
-                  style={{ color: "var(--foreground-muted)" }}
-                >
-                  Can recommend Orbits to you
-                </p>
-
-                {confirmId === c.id ? (
-                  <div className="mt-4 space-y-3">
-                    <p className="text-sm" style={{ color: "var(--foreground)" }}>
-                      Remove connection? They will no longer be able to send new
-                      Orbit recommendations to your Haelo account. Your existing
-                      Haelo activity will not be shared.
-                    </p>
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        disabled={busyId === c.id || pending}
-                        onClick={() => void remove(c.id)}
-                        className="flex-1 rounded-full bg-[#9B2C2C] px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-70"
-                      >
-                        {busyId === c.id ? "Removing…" : "Remove"}
-                      </button>
-                      <button
-                        type="button"
-                        disabled={busyId === c.id}
-                        onClick={() => setConfirmId(null)}
-                        className="flex-1 rounded-full border px-4 py-2.5 text-sm font-semibold"
-                        style={{
-                          borderColor: "var(--hairline)",
-                          color: "var(--foreground)",
-                        }}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setConfirmId(c.id)}
-                    className="mt-3 text-sm font-semibold text-[#9B2C2C] underline-offset-2 hover:underline"
-                  >
-                    Remove connection
-                  </button>
-                )}
+                  {busyId === b.userId ? "Unblocking…" : "Unblock"}
+                </button>
               </li>
             ))}
           </ul>
@@ -283,6 +468,19 @@ function UserConnections({
           {error}
         </p>
       ) : null}
+
+      <ReportModal
+        open={Boolean(reportTarget)}
+        onClose={() => setReportTarget(null)}
+        reportedUserId={reportTarget?.userId ?? ""}
+        reportedUsername={
+          reportTarget?.username
+            ? formatUsernameDisplay(reportTarget.username)
+            : null
+        }
+        objectType="account"
+        objectId={reportTarget?.objectId ?? null}
+      />
     </div>
   );
 }
@@ -601,6 +799,7 @@ function ProfessionalConnections({
         onConfirmRemove={setConfirmRemoveId}
         onRemove={(id) => void remove(id)}
         allowRemove
+        allowSafety
       />
       <ConnectionGroup
         title="Pending"
@@ -609,7 +808,81 @@ function ProfessionalConnections({
         ownUserId={ownUserId}
         showDirection
       />
+      <ProfessionalBlockedList />
     </div>
+  );
+}
+
+function ProfessionalBlockedList() {
+  const [blocks, setBlocks] = useState<BlockedAccount[]>([]);
+  const [busyId, setBusyId] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const list = await listBlockedAccountsAction();
+      if (!cancelled) setBlocks(list);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  async function unblock(userId: string) {
+    setBusyId(userId);
+    const result = await unblockUserAction(userId);
+    setBusyId(null);
+    if (result.ok) {
+      setBlocks((prev) => prev.filter((b) => b.userId !== userId));
+    }
+  }
+
+  return (
+    <section
+      className="rounded-2xl border px-5 py-5"
+      style={{
+        background: "color-mix(in srgb, var(--surface) 75%, transparent)",
+        borderColor:
+          "color-mix(in srgb, var(--professional-silver, var(--violet)) 28%, var(--hairline))",
+        boxShadow: "var(--shadow-soft)",
+      }}
+    >
+      <h2
+        className="font-[family-name:var(--font-fraunces)] text-lg"
+        style={{
+          fontVariationSettings: '"opsz" 72, "SOFT" 40, "WONK" 0, "wght" 550',
+        }}
+      >
+        Blocked accounts
+      </h2>
+      {blocks.length === 0 ? (
+        <p className="mt-3 text-sm" style={{ color: "var(--foreground-muted)" }}>
+          No blocked accounts.
+        </p>
+      ) : (
+        <ul className="mt-4 space-y-3">
+          {blocks.map((b) => (
+            <li
+              key={b.userId}
+              className="flex items-center justify-between gap-3 rounded-xl border px-3 py-3"
+              style={{ borderColor: "var(--hairline)" }}
+            >
+              <span className="text-sm font-medium">
+                {connectionUsernameLabel(b.username)}
+              </span>
+              <button
+                type="button"
+                disabled={busyId === b.userId}
+                onClick={() => void unblock(b.userId)}
+                className="text-xs font-semibold text-[var(--violet)] underline-offset-2 hover:underline"
+              >
+                Unblock
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }
 
@@ -620,6 +893,7 @@ function ConnectionGroup({
   ownUserId,
   showDirection = false,
   allowRemove = false,
+  allowSafety = false,
   confirmRemoveId = null,
   busyId = null,
   onConfirmRemove,
@@ -631,11 +905,21 @@ function ConnectionGroup({
   ownUserId?: string;
   showDirection?: boolean;
   allowRemove?: boolean;
+  allowSafety?: boolean;
   confirmRemoveId?: string | null;
   busyId?: string | null;
   onConfirmRemove?: (id: string | null) => void;
   onRemove?: (id: string) => void;
 }) {
+  const router = useRouter();
+  const [confirmBlockId, setConfirmBlockId] = useState<string | null>(null);
+  const [localBusy, setLocalBusy] = useState<string | null>(null);
+  const [reportTarget, setReportTarget] = useState<{
+    userId: string;
+    username: string | null;
+    objectId: string;
+  } | null>(null);
+
   return (
     <section
       className="rounded-2xl border px-5 py-5"
@@ -663,6 +947,9 @@ function ConnectionGroup({
           {items.map((c) => {
             const incoming =
               showDirection && ownUserId && c.recipientUserId === ownUserId;
+            const counterpartId = ownUserId
+              ? connectionCounterpartId(c, ownUserId)
+              : null;
             return (
               <li
                 key={c.id}
@@ -713,14 +1000,74 @@ function ConnectionGroup({
                         </button>
                       </div>
                     </div>
+                  ) : confirmBlockId === c.id && counterpartId ? (
+                    <div className="mt-3 space-y-2">
+                      <p className="text-sm text-[var(--foreground-muted)]">
+                        Block this account? They won&apos;t be told why.
+                      </p>
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          disabled={localBusy === c.id}
+                          onClick={() => {
+                            void (async () => {
+                              setLocalBusy(c.id);
+                              const result = await blockUserAction(counterpartId);
+                              setLocalBusy(null);
+                              if (result.ok) {
+                                setConfirmBlockId(null);
+                                router.refresh();
+                              }
+                            })();
+                          }}
+                          className="rounded-full bg-[#9B2C2C] px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-70"
+                        >
+                          {localBusy === c.id ? "Blocking…" : "Block"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setConfirmBlockId(null)}
+                          className="rounded-full border px-3 py-1.5 text-xs font-semibold"
+                          style={{ borderColor: "var(--hairline)" }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
                   ) : (
-                    <button
-                      type="button"
-                      onClick={() => onConfirmRemove(c.id)}
-                      className="mt-2 text-xs font-semibold text-[#9B2C2C] underline-offset-2 hover:underline"
-                    >
-                      Remove
-                    </button>
+                    <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
+                      <button
+                        type="button"
+                        onClick={() => onConfirmRemove(c.id)}
+                        className="text-xs font-semibold text-[#9B2C2C] underline-offset-2 hover:underline"
+                      >
+                        Remove
+                      </button>
+                      {allowSafety && counterpartId ? (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => setConfirmBlockId(c.id)}
+                            className="text-xs font-semibold text-[#9B2C2C] underline-offset-2 hover:underline"
+                          >
+                            Block
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setReportTarget({
+                                userId: counterpartId,
+                                username: c.counterpartUsername ?? null,
+                                objectId: c.id,
+                              })
+                            }
+                            className="text-xs font-semibold text-[var(--violet)] underline-offset-2 hover:underline"
+                          >
+                            Report
+                          </button>
+                        </>
+                      ) : null}
+                    </div>
                   )
                 ) : null}
               </li>
@@ -728,6 +1075,19 @@ function ConnectionGroup({
           })}
         </ul>
       )}
+
+      <ReportModal
+        open={Boolean(reportTarget)}
+        onClose={() => setReportTarget(null)}
+        reportedUserId={reportTarget?.userId ?? ""}
+        reportedUsername={
+          reportTarget?.username
+            ? formatUsernameDisplay(reportTarget.username)
+            : null
+        }
+        objectType="account"
+        objectId={reportTarget?.objectId ?? null}
+      />
     </section>
   );
 }

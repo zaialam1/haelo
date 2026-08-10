@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { SessionReviewClient } from "@/components/session/SessionReviewClient";
+import { shouldShowFirstStarMoment } from "@/lib/onboarding/data";
 import {
   loadOwnedSession,
   SessionNotFound,
@@ -39,12 +40,15 @@ export default async function SessionReviewPage({ params }: PageProps) {
     redirect(`/session/${planet}/${sessionId}/compare`);
   }
 
+  const firstStarMoment = await shouldShowFirstStarMoment();
+
   return (
     <SessionShell planet={planet}>
       <SessionReviewClient
         planet={planet}
         sessionId={sessionId}
         initialSession={session}
+        firstStarMoment={firstStarMoment}
       />
     </SessionShell>
   );

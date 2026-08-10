@@ -501,8 +501,14 @@ html.dark .universe-nebula-constellations {
   animation: haelo-notify-glow 2.8s ease-in-out infinite;
 }
 
+/* One-time gentle pulse for the My Voice onboarding cue (not infinite). */
+.myvoice-intro-pulse {
+  animation: haelo-notify-glow 2.8s ease-in-out 2;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .home-utility-btn[data-pulse="true"] {
+  .home-utility-btn[data-pulse="true"],
+  .myvoice-intro-pulse {
     animation: none;
   }
 }

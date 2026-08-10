@@ -1,6 +1,9 @@
 /**
- * My Voice analytics event names — no-op until a provider is wired.
+ * My Voice analytics event names — forwarded to the shared analytics layer.
+ * Silent no-op when no provider key is configured.
  */
+
+import { trackEvent } from "@/lib/analytics/track";
 
 export const MY_VOICE_EVENTS = {
   opened: "my_voice_opened",
@@ -13,10 +16,8 @@ export type MyVoiceEventName =
   (typeof MY_VOICE_EVENTS)[keyof typeof MY_VOICE_EVENTS];
 
 export function trackMyVoiceEvent(
-  // Reserved for a future analytics provider.
   name: MyVoiceEventName,
   properties?: Record<string, unknown>,
 ): void {
-  void name;
-  void properties;
+  trackEvent(name, properties);
 }

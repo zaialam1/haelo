@@ -42,6 +42,8 @@ type RecordingSessionProps = {
   flow?: SessionFlowConfig;
   /** Optional progress / constellation chrome above the prompt. */
   headerSlot?: ReactNode;
+  /** First-ever recording: show one low-pressure guidance line. */
+  firstSession?: boolean;
 };
 
 function formatTime(seconds: number): string {
@@ -56,6 +58,7 @@ export function RecordingSession({
   explanation,
   flow: flowProp,
   headerSlot,
+  firstSession = false,
 }: RecordingSessionProps) {
   const content = getPlanetPageContent(planet);
   const voicePlanet = getVoicePlanetById(planet);
@@ -73,6 +76,47 @@ export function RecordingSession({
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const savingLockRef = useRef(false);
+  const firstSessionMarked = useRef(false);
+
+  const sessionStartedMarked = useRef(false);
+  const recordingStartedMarked = useRef(false);
+
+  useEffect(() => {
+    if (sessionStartedMarked.current) return;
+    sessionStartedMarked.current = true;
+    void import("@/lib/analytics/track")
+      .then((m) =>
+        m.trackEvent("session_started", {
+          planet,
+          source: flow.source,
+          firstSession,
+        }),
+      )
+      .catch(() => {});
+  }, [planet, flow.source, firstSession]);
+
+  useEffect(() => {
+    if (!firstSession || firstSessionMarked.current) return;
+    firstSessionMarked.current = true;
+    void import("@/lib/preferences/actions")
+      .then((m) => m.markOnboardingMilestoneAction("first_session_started"))
+      .catch(() => {});
+  }, [firstSession]);
+
+  useEffect(() => {
+    if (recorder.status !== "recording" || recordingStartedMarked.current) {
+      return;
+    }
+    recordingStartedMarked.current = true;
+    void import("@/lib/analytics/track")
+      .then((m) =>
+        m.trackEvent("recording_started", {
+          planet,
+          source: flow.source,
+        }),
+      )
+      .catch(() => {});
+  }, [recorder.status, planet, flow.source]);
 
   const hasUnsavedRecording = Boolean(recorder.blob) && !saving;
 
@@ -126,6 +170,15 @@ export function RecordingSession({
         userOrbitProgressId: flow.orbit?.userOrbitProgressId,
         orbitVersion: flow.orbit?.orbitVersion,
       });
+      void import("@/lib/analytics/track")
+        .then((m) =>
+          m.trackEvent("recording_completed", {
+            planet,
+            source: flow.source,
+            durationSeconds: Math.round(recorder.elapsedSeconds),
+          }),
+        )
+        .catch(() => {});
       kickoffSessionProcessing(result.sessionId);
       router.push(flow.reviewHref(result.sessionId));
     } catch (e) {
@@ -220,6 +273,15 @@ export function RecordingSession({
               {explanation}
             </p>
           </div>
+        ) : null}
+
+        {firstSession ? (
+          <p
+            className="mt-5 max-w-lg text-[0.9375rem] leading-relaxed"
+            style={{ color: "var(--violet)" }}
+          >
+            Say whatever comes to mind. There isn&rsquo;t a right answer.
+          </p>
         ) : null}
 
         {(phase === "ready" || phase === "error") && (

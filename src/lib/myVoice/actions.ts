@@ -46,5 +46,9 @@ export async function retryMyVoiceAction(): Promise<OpenMyVoiceResult> {
 }
 
 export async function trackMyVoiceJourneyClickAction(): Promise<void> {
-  trackMyVoiceEvent("my_voice_journey_clicked");
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  trackMyVoiceEvent("my_voice_journey_clicked", { userId: user?.id });
 }

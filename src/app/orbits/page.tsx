@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
+import { PageView } from "@/components/analytics/PageView";
 import { HomeBottomNav } from "@/components/home/HomeBottomNav";
 import { HomeNavWithRole } from "@/components/home/HomeNavWithRole";
+import { IntroMoment } from "@/components/onboarding/IntroMoment";
 import { OrbitsExperience } from "@/components/orbits/OrbitsExperience";
+import { getOnboardingSnapshot } from "@/lib/onboarding/data";
 import { ORBIT_REGIONS, isOrbitRegionKey } from "@/lib/orbits/regions";
 import { buildOrbitList } from "@/lib/orbits/progress";
 import type { OrbitRegionKey } from "@/lib/orbits/types";
+import { hasSeenMilestone } from "@/lib/preferences/types";
 import { listRecipientActiveRecommendations } from "@/lib/recommendations";
 import { createClient } from "@/lib/supabase/server";
 
@@ -28,6 +32,7 @@ export default async function OrbitsPage({ searchParams }: OrbitsPageProps) {
     ReturnType<typeof listRecipientActiveRecommendations>
   > = [];
   let loadError: string | null = null;
+  let showIntro = false;
 
   try {
     const supabase = await createClient();
@@ -40,6 +45,11 @@ export default async function OrbitsPage({ searchParams }: OrbitsPageProps) {
     });
     if (user?.id) {
       recommendations = await listRecipientActiveRecommendations(user.id);
+      const onboarding = await getOnboardingSnapshot(user.id);
+      showIntro = !hasSeenMilestone(
+        onboarding.preferences,
+        "orbits_discovered",
+      );
     }
   } catch (err) {
     console.error("[orbits] browse load failed:", err);
@@ -53,6 +63,7 @@ export default async function OrbitsPage({ searchParams }: OrbitsPageProps) {
 
   return (
     <div className="orbits-page relative min-h-dvh w-full overflow-x-hidden">
+      <PageView event="orbits_opened" />
       <div
         className="universe-nebula-stars pointer-events-none absolute inset-0 z-0 opacity-40"
         aria-hidden="true"
@@ -96,6 +107,16 @@ export default async function OrbitsPage({ searchParams }: OrbitsPageProps) {
             time.
           </p>
         </header>
+
+        {showIntro ? (
+          <div className="max-w-xl px-4 sm:px-8 lg:px-12">
+            <IntroMoment
+              milestone="orbits_discovered"
+              title="Orbits are guided reflections for something specific."
+              body="A conversation you're dreading, a decision you're circling — pick one and work through it a few minutes at a time."
+            />
+          </div>
+        ) : null}
 
         <OrbitsExperience
           regions={ORBIT_REGIONS}

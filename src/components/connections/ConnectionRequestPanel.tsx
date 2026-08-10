@@ -10,6 +10,8 @@ import { markNotificationReadAction } from "@/lib/notifications/actions";
 import { formatUsernameDisplay } from "@/lib/profiles/username";
 import type { AppNotification } from "@/lib/connections/types";
 import type { AccountRole } from "@/lib/profiles/types";
+import { ReportModal } from "@/components/safety/ReportModal";
+import { blockUserAction } from "@/lib/safety/actions";
 
 type Props = {
   notification: AppNotification;
@@ -34,10 +36,12 @@ export function ConnectionRequestPanel({
   const [requesterUsername, setRequesterUsername] = useState<string | null>(
     null,
   );
+  const [requesterUserId, setRequesterUserId] = useState<string | null>(null);
   const [requesterRole, setRequesterRole] = useState<AccountRole>("user");
   const [connectionId, setConnectionId] = useState<string | null>(
     notification.referenceId,
   );
+  const [reportOpen, setReportOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -58,6 +62,7 @@ export function ConnectionRequestPanel({
       }
       setConnectionId(result.connection.id);
       setRequesterUsername(result.connection.requesterUsername);
+      setRequesterUserId(result.connection.requesterUserId);
       setRequesterRole(result.connection.requesterAccountRole);
       void markNotificationReadAction(notification.id);
     })();
@@ -234,9 +239,56 @@ export function ConnectionRequestPanel({
             >
               Decline
             </button>
+            {requesterUserId ? (
+              <div className="mt-1 flex flex-wrap justify-center gap-x-4 gap-y-1">
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={() => {
+                    void (async () => {
+                      setBusy(true);
+                      const result = await blockUserAction(requesterUserId);
+                      setBusy(false);
+                      if (!result.ok) {
+                        setError(result.message ?? "Couldn’t block.");
+                        return;
+                      }
+                      setDone("declined");
+                      onResolved();
+                      startTransition(() => router.refresh());
+                    })();
+                  }}
+                  className="text-xs font-semibold text-[#9B2C2C] underline-offset-2 hover:underline"
+                >
+                  Block
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setReportOpen(true)}
+                  className="text-xs font-semibold text-[var(--violet)] underline-offset-2 hover:underline"
+                >
+                  Report
+                </button>
+              </div>
+            ) : null}
           </div>
         </>
       )}
+
+      {requesterUserId ? (
+        <ReportModal
+          open={reportOpen}
+          onClose={() => setReportOpen(false)}
+          reportedUserId={requesterUserId}
+          reportedUsername={
+            requesterUsername
+              ? formatUsernameDisplay(requesterUsername)
+              : null
+          }
+          objectType="connection_request"
+          objectId={connectionId}
+        />
+      ) : null}
     </div>
   );
 }

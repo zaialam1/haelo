@@ -16,6 +16,13 @@ export { validateOrbitContent } from "./validation";
 export { defineOrbit, DEFAULT_ESTIMATED_MINUTES, CURRENT_CONTENT_VERSION } from "./defineOrbit";
 export { ORBIT_EVENTS, trackOrbitEvent } from "./events";
 export {
+  searchOrbits,
+  fallbackOrbitSearch,
+  parseOrbitSearchResponseForTest,
+  type OrbitSearchMatch,
+  type OrbitSearchResult,
+} from "./search";
+export {
   startOrResumeOrbit,
   getUserOrbitProgress,
   listUserOrbitProgress,

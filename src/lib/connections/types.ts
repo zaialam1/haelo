@@ -11,7 +11,8 @@ export type NotificationType =
   | "orbit_recommendation"
   | "orbit_recommendation_reminder"
   | "celestial_discovery"
-  | "milestone_moment";
+  | "milestone_moment"
+  | "my_voice_updated";
 
 /** Mutual relationship between two Haelo accounts (either may be professional). */
 export type HaeloConnection = {

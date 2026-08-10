@@ -1,7 +1,10 @@
 /**
- * Orbit analytics event names — ready for when product analytics exists.
- * Haelo does not currently ship an analytics provider; keep names centralized.
+ * Orbit analytics event names — forwarded to the shared analytics layer.
+ * Silent no-op when no provider key is configured.
  */
+
+import { trackEvent } from "@/lib/analytics/track";
+
 export const ORBIT_EVENTS = {
   viewed: "orbit_viewed",
   started: "orbit_started",
@@ -16,10 +19,9 @@ export const ORBIT_EVENTS = {
 
 export type OrbitEventName = (typeof ORBIT_EVENTS)[keyof typeof ORBIT_EVENTS];
 
-/** No-op until an analytics provider is wired. */
 export function trackOrbitEvent(
-  _name: OrbitEventName,
-  _properties?: Record<string, unknown>,
+  name: OrbitEventName,
+  properties?: Record<string, unknown>,
 ): void {
-  // Intentionally empty — see ORBIT_EVENTS for the intended contract.
+  trackEvent(name, properties);
 }

@@ -1,7 +1,9 @@
 /**
- * Analytics stubs — same pattern as Orbit / My Voice events.
- * No third-party vendor; names ready for a future provider.
+ * Gamification analytics — forwards to the shared product analytics layer.
+ * Silent no-op when no provider key is configured.
  */
+
+import { trackEvent } from "@/lib/analytics/track";
 
 export const GamificationAnalyticsEvents = {
   PLANET_EVOLVED: "planet_evolved",
@@ -18,8 +20,8 @@ export type GamificationAnalyticsEvent =
   (typeof GamificationAnalyticsEvents)[keyof typeof GamificationAnalyticsEvents];
 
 export function trackGamificationEvent(
-  _event: GamificationAnalyticsEvent,
-  _payload?: Record<string, unknown>,
+  event: GamificationAnalyticsEvent,
+  payload?: Record<string, unknown>,
 ): void {
-  // Provider wiring intentionally deferred.
+  trackEvent(event, payload);
 }

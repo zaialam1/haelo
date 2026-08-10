@@ -26,5 +26,6 @@ export async function GET(_request: Request, { params }: Params) {
     orbitKey: detail.orbitKey,
     orbitTitle: orbit?.title ?? null,
     status: detail.status,
+    professionalUserId: detail.professionalUserId,
   });
 }

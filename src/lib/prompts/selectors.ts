@@ -21,6 +21,8 @@ export type SelectPromptOptions = {
   recentPromptIds?: Iterable<string>;
   recentSkills?: Iterable<PromptSkill | string>;
   preferredDepth?: DepthPreference;
+  /** First-ever reflection: prefer a low-pressure beginner + light prompt. */
+  firstSession?: boolean;
   /** Optional RNG in [0, 1). Defaults to Math.random. */
   random?: () => number;
 };
@@ -150,6 +152,17 @@ export function selectPrompt(
     planet: options.planet,
     planetLevel: options.planetLevel,
   });
+
+  if (options.firstSession) {
+    // First-ever recording: keep it low-pressure. Soft preference with
+    // graceful fallbacks so a sparse bank never blocks a session.
+    const beginnerLight = pool.filter(
+      (p) => p.challenge === "beginner" && p.depth === "light",
+    );
+    const beginner = pool.filter((p) => p.challenge === "beginner");
+    if (beginnerLight.length > 0) pool = beginnerLight;
+    else if (beginner.length > 0) pool = beginner;
+  }
 
   pool = filterByDepthPreference(pool, options.preferredDepth ?? "normal");
   pool = excludeRecent(pool, options.recentPromptIds);
