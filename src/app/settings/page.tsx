@@ -21,6 +21,7 @@ export default async function SettingsPage() {
       accountRole={profile?.accountRole ?? "user"}
       professionalType={professional?.professionalType ?? null}
       professionalDisplayName={professional?.displayName ?? null}
+      verificationStatus={professional?.verificationStatus ?? null}
     />
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
+import { ProfessionalModeSwitch } from "@/components/professional/ProfessionalModeSwitch";
 import { toggleTheme } from "@/lib/theme";
 
 function ThemeIconButton() {
@@ -63,27 +64,38 @@ function ThemeIconButton() {
 type HomeNavProps = {
   /** Pin to the viewport (for scrollable pages like planet detail) */
   pinned?: boolean;
-  /** Show Professional workspace link for professional accounts */
+  /** @deprecated Prefer showModeSwitch */
   showProfessional?: boolean;
+  /** Show Personal | Professional mode switch */
+  showModeSwitch?: boolean;
+  professionalUsername?: string | null;
+  professionalVerified?: boolean;
+  professionalPending?: boolean;
 };
 
 export function HomeNav({
   pinned = false,
   showProfessional = false,
+  showModeSwitch = false,
+  professionalUsername = null,
+  professionalVerified = false,
+  professionalPending = false,
 }: HomeNavProps) {
+  const showSwitch = showModeSwitch || showProfessional;
+
   return (
     <header
       className={`pointer-events-none inset-x-0 top-0 z-40 ${pinned ? "fixed" : "absolute"}`}
     >
       <div
-        className="pointer-events-auto relative mx-auto flex h-14 w-full items-center justify-between px-4 sm:h-16 sm:px-6"
+        className="pointer-events-auto relative mx-auto flex h-14 w-full items-center justify-between gap-2 px-3 sm:h-16 sm:px-6"
         style={{
           background:
             "linear-gradient(to bottom, color-mix(in srgb, var(--background) 88%, transparent), transparent)",
         }}
       >
         <p
-          className="font-[family-name:var(--font-fraunces)] text-xl tracking-tight text-[var(--violet)] sm:text-2xl"
+          className="shrink-0 font-[family-name:var(--font-fraunces)] text-xl tracking-tight text-[var(--violet)] sm:text-2xl"
           style={{
             fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
           }}
@@ -91,15 +103,34 @@ export function HomeNav({
           Haelo
         </p>
 
-        <div className="flex items-center gap-0.5">
-          {showProfessional ? (
-            <TransitionLink
-              href="/professional/home"
-              variant="fade"
-              className="mr-1 rounded-full px-3 py-1.5 text-sm font-semibold text-[var(--violet)] transition-colors hover:bg-[var(--violet-soft)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+        {showSwitch ? (
+          <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 sm:block">
+            <ProfessionalModeSwitch />
+          </div>
+        ) : null}
+
+        <div className="flex min-w-0 items-center gap-0.5">
+          {showSwitch ? (
+            <div className="mr-1 sm:hidden">
+              <ProfessionalModeSwitch compact />
+            </div>
+          ) : null}
+          {showSwitch && professionalUsername ? (
+            <span
+              className="mr-1 hidden max-w-[7.5rem] truncate text-[0.6875rem] font-semibold text-[var(--foreground-muted)] lg:inline"
+              title={
+                professionalPending
+                  ? "Professional · Pending"
+                  : professionalVerified
+                    ? "Verified Professional"
+                    : "Professional"
+              }
             >
-              Professional
-            </TransitionLink>
+              {professionalUsername}
+              <span className="ml-1 text-[var(--violet)]" aria-hidden="true">
+                ✦
+              </span>
+            </span>
           ) : null}
           <ThemeIconButton />
           <TransitionLink

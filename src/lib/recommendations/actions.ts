@@ -16,8 +16,10 @@ import {
 function revalidateRecommendationPaths(orbitKey?: string) {
   revalidatePath("/home");
   revalidatePath("/orbits");
+  revalidatePath("/professional");
   revalidatePath("/professional/home");
   revalidatePath("/professional/recommend");
+  revalidatePath("/professional/connections");
   revalidatePath("/settings/connections");
   if (orbitKey) {
     revalidatePath(`/orbits/${orbitKey}`);

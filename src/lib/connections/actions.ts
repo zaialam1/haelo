@@ -2,12 +2,15 @@
 
 import { revalidatePath } from "next/cache";
 import { getOwnProfile } from "@/lib/profiles/data";
+import type { AccountRole } from "@/lib/profiles/types";
 import { validateUsername } from "@/lib/profiles/username";
+import { getOwnProfessionalProfile } from "@/lib/professional/data";
 import { createClient } from "@/lib/supabase/server";
-import { getConnectionWithUser } from "./data";
+import { getConnectionBetweenUsers } from "./data";
+import { mapConnectionRow, type ConnectionRow } from "./types";
 import type {
   ConnectionStatus,
-  ProfessionalConnection,
+  HaeloConnection,
   UsernameSearchHit,
 } from "./types";
 
@@ -15,6 +18,17 @@ function revalidateConnectionPaths() {
   revalidatePath("/home");
   revalidatePath("/settings");
   revalidatePath("/settings/connections");
+  revalidatePath("/professional");
+  revalidatePath("/professional/connections");
+  revalidatePath("/professional/recommend");
+  revalidatePath("/professional/home");
+}
+
+const CONNECTION_SELECT =
+  "id, requester_user_id, recipient_user_id, status, requested_at, responded_at, removed_at, created_at, updated_at";
+
+function rowToConnection(data: ConnectionRow): HaeloConnection {
+  return mapConnectionRow(data);
 }
 
 export type SearchUsernameResult =
@@ -29,30 +43,52 @@ export type SearchUsernameResult =
         | "forbidden"
         | "not_found"
         | "unauthenticated"
-        | "invalid";
+        | "invalid"
+        | "pending_verification";
       message: string;
     };
 
 export type ConnectionActionResult =
-  | { ok: true; connection: ProfessionalConnection }
+  | { ok: true; connection: HaeloConnection }
   | { ok: false; message: string };
 
-export async function searchHaeloUsernameAction(
-  rawUsername: string,
-): Promise<SearchUsernameResult> {
+async function requireVerifiedProfessional() {
   const profile = await getOwnProfile();
   if (!profile) {
     return {
-      ok: false,
-      error: "unauthenticated",
+      ok: false as const,
+      error: "unauthenticated" as const,
       message: "You need to be signed in.",
     };
   }
   if (profile.accountRole !== "professional") {
     return {
-      ok: false,
-      error: "forbidden",
+      ok: false as const,
+      error: "forbidden" as const,
       message: "Only Haelo professionals can search for connections.",
+    };
+  }
+  const professional = await getOwnProfessionalProfile(profile.id);
+  if (!professional || professional.verificationStatus !== "verified") {
+    return {
+      ok: false as const,
+      error: "pending_verification" as const,
+      message:
+        "Professional access is pending. You can explore Professional Mode, but connecting isn’t available yet.",
+    };
+  }
+  return { ok: true as const, profile };
+}
+
+export async function searchHaeloUsernameAction(
+  rawUsername: string,
+): Promise<SearchUsernameResult> {
+  const gate = await requireVerifiedProfessional();
+  if (!gate.ok) {
+    return {
+      ok: false,
+      error: gate.error,
+      message: gate.message,
     };
   }
 
@@ -81,7 +117,11 @@ export async function searchHaeloUsernameAction(
   const payload = data as {
     ok?: boolean;
     error?: string;
-    user?: { id: string; username: string };
+    user?: {
+      id: string;
+      username: string;
+      account_role?: AccountRole;
+    };
   } | null;
 
   if (!payload?.ok || !payload.user) {
@@ -89,7 +129,7 @@ export async function searchHaeloUsernameAction(
       return {
         ok: false,
         error: "forbidden",
-        message: "Only Haelo professionals can search for connections.",
+        message: "Only verified Haelo professionals can search for connections.",
       };
     }
     return {
@@ -99,12 +139,19 @@ export async function searchHaeloUsernameAction(
     };
   }
 
-  const existing = await getConnectionWithUser(profile.id, payload.user.id);
+  const existing = await getConnectionBetweenUsers(
+    gate.profile.id,
+    payload.user.id,
+  );
+  const accountRole: AccountRole =
+    payload.user.account_role === "professional" ? "professional" : "user";
+
   return {
     ok: true,
     user: {
       id: payload.user.id,
       username: payload.user.username,
+      accountRole,
     },
     connectionStatus: existing?.status ?? null,
   };
@@ -113,41 +160,30 @@ export async function searchHaeloUsernameAction(
 export async function sendConnectionRequestAction(
   targetUserId: string,
 ): Promise<ConnectionActionResult> {
-  const profile = await getOwnProfile();
-  if (!profile) {
-    return { ok: false, message: "You need to be signed in." };
+  const gate = await requireVerifiedProfessional();
+  if (!gate.ok) {
+    return { ok: false, message: gate.message };
   }
-  if (profile.accountRole !== "professional") {
-    return { ok: false, message: "Only professionals can send connection requests." };
-  }
-  if (!targetUserId || targetUserId === profile.id) {
+  if (!targetUserId || targetUserId === gate.profile.id) {
     return { ok: false, message: "We couldn’t find that Haelo name." };
   }
 
   const supabase = await createClient();
-  const existing = await getConnectionWithUser(profile.id, targetUserId);
+  const existing = await getConnectionBetweenUsers(
+    gate.profile.id,
+    targetUserId,
+  );
 
-  if (existing?.status === "pending") {
-    return {
-      ok: true,
-      connection: existing,
-    };
-  }
-  if (existing?.status === "accepted") {
-    return {
-      ok: true,
-      connection: existing,
-    };
+  if (existing?.status === "pending" || existing?.status === "accepted") {
+    return { ok: true, connection: existing };
   }
 
   if (existing && (existing.status === "declined" || existing.status === "removed")) {
     const { data, error } = await supabase
-      .from("professional_connections")
+      .from("connections")
       .update({ status: "pending" })
       .eq("id", existing.id)
-      .select(
-        "id, professional_user_id, user_id, status, requested_at, responded_at, removed_at, created_at, updated_at",
-      )
+      .select(CONNECTION_SELECT)
       .single();
 
     if (error || !data) {
@@ -162,37 +198,25 @@ export async function sendConnectionRequestAction(
     }
 
     revalidateConnectionPaths();
-    return {
-      ok: true,
-      connection: {
-        id: data.id,
-        professionalUserId: data.professional_user_id,
-        userId: data.user_id,
-        status: data.status,
-        requestedAt: data.requested_at,
-        respondedAt: data.responded_at,
-        removedAt: data.removed_at,
-        createdAt: data.created_at,
-        updatedAt: data.updated_at,
-      },
-    };
+    return { ok: true, connection: rowToConnection(data as ConnectionRow) };
   }
 
   const { data, error } = await supabase
-    .from("professional_connections")
+    .from("connections")
     .insert({
-      professional_user_id: profile.id,
-      user_id: targetUserId,
+      requester_user_id: gate.profile.id,
+      recipient_user_id: targetUserId,
       status: "pending",
     })
-    .select(
-      "id, professional_user_id, user_id, status, requested_at, responded_at, removed_at, created_at, updated_at",
-    )
+    .select(CONNECTION_SELECT)
     .single();
 
   if (error || !data) {
     if (error?.code === "23505") {
-      const again = await getConnectionWithUser(profile.id, targetUserId);
+      const again = await getConnectionBetweenUsers(
+        gate.profile.id,
+        targetUserId,
+      );
       if (again) return { ok: true, connection: again };
     }
     return {
@@ -202,20 +226,7 @@ export async function sendConnectionRequestAction(
   }
 
   revalidateConnectionPaths();
-  return {
-    ok: true,
-    connection: {
-      id: data.id,
-      professionalUserId: data.professional_user_id,
-      userId: data.user_id,
-      status: data.status,
-      requestedAt: data.requested_at,
-      respondedAt: data.responded_at,
-      removedAt: data.removed_at,
-      createdAt: data.created_at,
-      updatedAt: data.updated_at,
-    },
-  };
+  return { ok: true, connection: rowToConnection(data as ConnectionRow) };
 }
 
 export async function respondToConnectionRequestAction(
@@ -229,14 +240,12 @@ export async function respondToConnectionRequestAction(
 
   const supabase = await createClient();
   const { data, error } = await supabase
-    .from("professional_connections")
+    .from("connections")
     .update({ status: decision })
     .eq("id", connectionId)
-    .eq("user_id", profile.id)
+    .eq("recipient_user_id", profile.id)
     .eq("status", "pending")
-    .select(
-      "id, professional_user_id, user_id, status, requested_at, responded_at, removed_at, created_at, updated_at",
-    )
+    .select(CONNECTION_SELECT)
     .maybeSingle();
 
   if (error || !data) {
@@ -244,20 +253,7 @@ export async function respondToConnectionRequestAction(
   }
 
   revalidateConnectionPaths();
-  return {
-    ok: true,
-    connection: {
-      id: data.id,
-      professionalUserId: data.professional_user_id,
-      userId: data.user_id,
-      status: data.status,
-      requestedAt: data.requested_at,
-      respondedAt: data.responded_at,
-      removedAt: data.removed_at,
-      createdAt: data.created_at,
-      updatedAt: data.updated_at,
-    },
-  };
+  return { ok: true, connection: rowToConnection(data as ConnectionRow) };
 }
 
 export async function removeConnectionAction(
@@ -269,15 +265,31 @@ export async function removeConnectionAction(
   }
 
   const supabase = await createClient();
+  const { data: existing } = await supabase
+    .from("connections")
+    .select(CONNECTION_SELECT)
+    .eq("id", connectionId)
+    .eq("status", "accepted")
+    .maybeSingle();
+
+  if (!existing) {
+    return { ok: false, message: "Couldn’t remove this connection." };
+  }
+
+  const row = existing as ConnectionRow;
+  const isParticipant =
+    row.requester_user_id === profile.id ||
+    row.recipient_user_id === profile.id;
+  if (!isParticipant) {
+    return { ok: false, message: "Couldn’t remove this connection." };
+  }
+
   const { data, error } = await supabase
-    .from("professional_connections")
+    .from("connections")
     .update({ status: "removed" })
     .eq("id", connectionId)
-    .eq("user_id", profile.id)
     .eq("status", "accepted")
-    .select(
-      "id, professional_user_id, user_id, status, requested_at, responded_at, removed_at, created_at, updated_at",
-    )
+    .select(CONNECTION_SELECT)
     .maybeSingle();
 
   if (error || !data) {
@@ -285,20 +297,7 @@ export async function removeConnectionAction(
   }
 
   revalidateConnectionPaths();
-  return {
-    ok: true,
-    connection: {
-      id: data.id,
-      professionalUserId: data.professional_user_id,
-      userId: data.user_id,
-      status: data.status,
-      requestedAt: data.requested_at,
-      respondedAt: data.responded_at,
-      removedAt: data.removed_at,
-      createdAt: data.created_at,
-      updatedAt: data.updated_at,
-    },
-  };
+  return { ok: true, connection: rowToConnection(data as ConnectionRow) };
 }
 
 export type PendingConnectionDetails =
@@ -307,9 +306,14 @@ export type PendingConnectionDetails =
       connection: {
         id: string;
         status: ConnectionStatus;
-        professionalUserId: string;
-        professionalUsername: string | null;
+        requesterUserId: string;
+        requesterUsername: string | null;
+        requesterAccountRole: AccountRole;
         requestedAt: string;
+        /** @deprecated */
+        professionalUserId: string;
+        /** @deprecated */
+        professionalUsername: string | null;
       };
     }
   | { ok: false; message: string };
@@ -331,8 +335,11 @@ export async function getPendingConnectionRequestAction(
     connection?: {
       id: string;
       status: ConnectionStatus;
-      professional_user_id: string;
-      professional_username: string | null;
+      requester_user_id?: string;
+      requester_username?: string | null;
+      requester_account_role?: AccountRole;
+      professional_user_id?: string;
+      professional_username?: string | null;
       requested_at: string;
     };
   };
@@ -341,14 +348,25 @@ export async function getPendingConnectionRequestAction(
     return { ok: false, message: "Connection request not found." };
   }
 
+  const c = payload.connection;
+  const requesterUserId =
+    c.requester_user_id ?? c.professional_user_id ?? "";
+  const requesterUsername =
+    c.requester_username ?? c.professional_username ?? null;
+  const requesterAccountRole: AccountRole =
+    c.requester_account_role === "professional" ? "professional" : "user";
+
   return {
     ok: true,
     connection: {
-      id: payload.connection.id,
-      status: payload.connection.status,
-      professionalUserId: payload.connection.professional_user_id,
-      professionalUsername: payload.connection.professional_username,
-      requestedAt: payload.connection.requested_at,
+      id: c.id,
+      status: c.status,
+      requesterUserId,
+      requesterUsername,
+      requesterAccountRole,
+      requestedAt: c.requested_at,
+      professionalUserId: requesterUserId,
+      professionalUsername: requesterUsername,
     },
   };
 }

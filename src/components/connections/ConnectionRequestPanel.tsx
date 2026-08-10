@@ -9,17 +9,21 @@ import {
 import { markNotificationReadAction } from "@/lib/notifications/actions";
 import { formatUsernameDisplay } from "@/lib/profiles/username";
 import type { AppNotification } from "@/lib/connections/types";
+import type { AccountRole } from "@/lib/profiles/types";
 
 type Props = {
   notification: AppNotification;
   onClose: () => void;
   onResolved: () => void;
+  /** When recipient is also a professional */
+  recipientIsProfessional?: boolean;
 };
 
 export function ConnectionRequestPanel({
   notification,
   onClose,
   onResolved,
+  recipientIsProfessional = false,
 }: Props) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -27,9 +31,10 @@ export function ConnectionRequestPanel({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState<"accepted" | "declined" | null>(null);
-  const [professionalUsername, setProfessionalUsername] = useState<
-    string | null
-  >(null);
+  const [requesterUsername, setRequesterUsername] = useState<string | null>(
+    null,
+  );
+  const [requesterRole, setRequesterRole] = useState<AccountRole>("user");
   const [connectionId, setConnectionId] = useState<string | null>(
     notification.referenceId,
   );
@@ -52,7 +57,8 @@ export function ConnectionRequestPanel({
         return;
       }
       setConnectionId(result.connection.id);
-      setProfessionalUsername(result.connection.professionalUsername);
+      setRequesterUsername(result.connection.requesterUsername);
+      setRequesterRole(result.connection.requesterAccountRole);
       void markNotificationReadAction(notification.id);
     })();
     return () => {
@@ -83,6 +89,10 @@ export function ConnectionRequestPanel({
     startTransition(() => router.refresh());
   }
 
+  const requesterIsProfessional = requesterRole === "professional";
+  const mutualRecommend =
+    recipientIsProfessional && requesterIsProfessional;
+
   return (
     <div className="space-y-4">
       <div className="flex items-start justify-between gap-3">
@@ -100,7 +110,9 @@ export function ConnectionRequestPanel({
             className="mt-1 text-sm"
             style={{ color: "var(--foreground-muted)" }}
           >
-            A Haelo professional wants to connect with you.
+            {requesterUsername
+              ? `${formatUsernameDisplay(requesterUsername)} wants to connect with you on Haelo.`
+              : "Someone wants to connect with you on Haelo."}
           </p>
         </div>
         <button
@@ -131,16 +143,26 @@ export function ConnectionRequestPanel({
         </p>
       ) : (
         <>
-          {professionalUsername ? (
-            <p
-              className="font-[family-name:var(--font-fraunces)] text-xl"
-              style={{
-                fontVariationSettings:
-                  '"opsz" 72, "SOFT" 40, "WONK" 0, "wght" 550',
-              }}
-            >
-              {formatUsernameDisplay(professionalUsername)}
-            </p>
+          {requesterUsername ? (
+            <div>
+              <p
+                className="font-[family-name:var(--font-fraunces)] text-xl"
+                style={{
+                  fontVariationSettings:
+                    '"opsz" 72, "SOFT" 40, "WONK" 0, "wght" 550',
+                }}
+              >
+                {formatUsernameDisplay(requesterUsername)}
+              </p>
+              {requesterIsProfessional ? (
+                <p
+                  className="mt-1 text-xs font-semibold uppercase tracking-[0.1em]"
+                  style={{ color: "var(--violet)" }}
+                >
+                  Professional
+                </p>
+              ) : null}
+            </div>
           ) : null}
 
           <div
@@ -148,8 +170,23 @@ export function ConnectionRequestPanel({
             style={{ borderColor: "var(--hairline)" }}
           >
             <p className="text-sm font-semibold text-[var(--foreground)]">
-              Connecting lets this person recommend Orbits to you.
+              Connecting lets them:
             </p>
+            <ul
+              className="mt-2 space-y-1 text-sm leading-relaxed"
+              style={{ color: "var(--foreground-muted)" }}
+            >
+              <li>recommend Orbits to you</li>
+            </ul>
+            {mutualRecommend ? (
+              <p
+                className="mt-3 text-sm leading-relaxed"
+                style={{ color: "var(--foreground-muted)" }}
+              >
+                Because you&rsquo;re both professionals, you&rsquo;ll also be able
+                to recommend Orbits to each other once connected.
+              </p>
+            ) : null}
             <p
               className="mt-3 text-xs font-semibold uppercase tracking-[0.1em]"
               style={{ color: "var(--violet)" }}
@@ -166,6 +203,7 @@ export function ConnectionRequestPanel({
               <li>your Journey</li>
               <li>your Journey levels/scores</li>
               <li>your Orbit responses</li>
+              <li>your My Voice</li>
             </ul>
           </div>
 

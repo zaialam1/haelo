@@ -7,9 +7,13 @@ import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "Connections — Haelo",
-  description: "Manage Haelo connections with trusted professionals.",
+  description: "Manage Haelo connections.",
 };
 
+/**
+ * Personal accounts manage accepted connections here.
+ * Professionals are redirected to Professional Mode → Connections.
+ */
 export default async function ConnectionsPage() {
   const supabase = await createClient();
   const {
@@ -25,13 +29,19 @@ export default async function ConnectionsPage() {
     redirect("/login?next=/settings/connections");
   }
 
+  if (profile.accountRole === "professional") {
+    redirect("/professional/connections");
+  }
+
   const connections = await listMyConnections();
 
   return (
     <ConnectionsClient
       accountRole={profile.accountRole}
       ownUsername={profile.username}
+      ownUserId={profile.id}
       initialConnections={connections}
+      variant="settings"
     />
   );
 }

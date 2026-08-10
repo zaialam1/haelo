@@ -26,6 +26,7 @@ export const SESSION_DETAIL_SELECT = `
   analysis_status,
   created_at,
   completed_at,
+  experiment_tried_at,
   session_attempts (
     id,
     session_id,
@@ -80,6 +81,7 @@ export const SESSION_DETAIL_SELECT_WITHOUT_JOURNEY_METRICS = `
   analysis_status,
   created_at,
   completed_at,
+  experiment_tried_at,
   session_attempts (
     id,
     session_id,

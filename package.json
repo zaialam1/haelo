@@ -15,7 +15,8 @@
     "test:journey-orbit": "npx tsx scripts/test-journey-orbit-integration.ts",
     "test:username-connections": "node --import tsx scripts/test-username-connections.ts",
     "test:orbit-recommendations": "npx tsx scripts/test-orbit-recommendations.ts",
-    "test:my-voice": "npx tsx scripts/test-my-voice.ts"
+    "test:my-voice": "npx tsx scripts/test-my-voice.ts",
+    "test:gamification": "npx tsx scripts/test-gamification.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",

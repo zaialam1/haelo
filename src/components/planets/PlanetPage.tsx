@@ -33,12 +33,15 @@ export async function PlanetPage({ planetId }: PlanetPageProps) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { content, evolutionLevel } = await getVoicePlanetPageData(
+  const { content, evolutionLevel, completedCount } = await getVoicePlanetPageData(
     user?.id ?? null,
     planetId,
   );
   const hasGrowth = content.growth.length > 0;
   const hasSessions = content.recentSessions.length > 0;
+
+  const { planetEvolutionTeaser } = await import("@/lib/gamification/planetGrowth");
+  const teaser = planetEvolutionTeaser(planetId, completedCount);
 
   return (
     <div
@@ -111,6 +114,16 @@ export async function PlanetPage({ planetId }: PlanetPageProps) {
             >
               {content.description}
             </p>
+
+            {teaser.hint ? (
+              <p
+                className="mt-4 max-w-md text-[0.8125rem] leading-relaxed sm:text-sm"
+                style={{ color: "color-mix(in srgb, var(--gold) 70%, var(--foreground-muted))" }}
+                aria-live="polite"
+              >
+                {teaser.hint}
+              </p>
+            ) : null}
           </header>
 
           <section

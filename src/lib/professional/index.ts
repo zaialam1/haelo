@@ -19,3 +19,13 @@ export {
   requireVerifiedProfessional,
 } from "./guards";
 export { completeProfessionalSignupAction } from "./actions";
+export {
+  type HaeloAppMode,
+  HAELO_MODE_STORAGE_KEY,
+  readStoredAppMode,
+  writeStoredAppMode,
+  clearStoredAppMode,
+  isProfessionalPath,
+  personalHomePath,
+  professionalHomePath,
+} from "./mode";

@@ -1,20 +1,28 @@
 import { getProfessionalContext } from "./data";
 
 export type ProfessionalGate =
-  | { ok: true }
-  | { ok: false; reason: "unauthenticated" | "not_professional" };
+  | { ok: true; verified: boolean }
+  | {
+      ok: false;
+      reason: "unauthenticated" | "not_professional" | "not_verified";
+    };
 
 /**
- * Gate for /professional/home and professional tools — any professional account.
+ * Gate for Professional Mode — any professional account (pending or verified).
  */
 export async function requireProfessionalAccount(): Promise<ProfessionalGate> {
   const ctx = await getProfessionalContext();
   if (!ctx) return { ok: false, reason: "unauthenticated" };
   if (!ctx.isProfessional) return { ok: false, reason: "not_professional" };
-  return { ok: true };
+  return { ok: true, verified: ctx.isVerified };
 }
 
-/** Alias kept for callers that previously checked verification. */
+/**
+ * Gate for search / connect / recommend actions — verified professionals only.
+ */
 export async function requireVerifiedProfessional(): Promise<ProfessionalGate> {
-  return requireProfessionalAccount();
+  const gate = await requireProfessionalAccount();
+  if (!gate.ok) return gate;
+  if (!gate.verified) return { ok: false, reason: "not_verified" };
+  return gate;
 }

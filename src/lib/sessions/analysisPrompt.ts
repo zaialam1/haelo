@@ -175,7 +175,7 @@ export function buildAnalysisUserPayload(input: SessionAnalysisInput): Record<
       ],
       experiment: { title: "string", instruction: "string" },
       comparisonObservation: includeComparison
-        ? "string (required when priorTranscript is present)"
+        ? "string (required when priorTranscript is present). Compare what changed between the first and second response relative to communication — especially if the user was applying a specific experiment. 1–2 short sentences on what changed; optionally one concise sentence on keep-or-adjust. Do NOT automatically claim improvement. Do not invent changes that are not in the transcripts."
         : "omit",
       journeyMetrics: [
         {

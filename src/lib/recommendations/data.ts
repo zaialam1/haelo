@@ -5,6 +5,7 @@ import {
   type OrbitRecommendationDetail,
   type OrbitRecommendationRow,
 } from "./types";
+import { connectionCounterpartId, type HaeloConnection } from "@/lib/connections/types";
 
 /** Active recommendations for Orbits homepage (new + viewed only). */
 export async function listRecipientActiveRecommendations(
@@ -57,14 +58,24 @@ export async function listProfessionalSentRecommendations(
   const { data: connections } = await supabase.rpc("list_my_connections");
   const usernameByUserId = new Map<string, string | null>();
   for (const c of (connections ?? []) as Array<{
-    user_id?: string;
+    requester_user_id?: string;
+    recipient_user_id?: string;
     professional_user_id?: string;
+    user_id?: string;
     counterpart_username?: string | null;
   }>) {
-    const counterpartId =
-      c.user_id === professionalUserId
-        ? c.professional_user_id
-        : c.user_id;
+    const mapped: HaeloConnection = {
+      id: "",
+      requesterUserId: c.requester_user_id ?? c.professional_user_id ?? "",
+      recipientUserId: c.recipient_user_id ?? c.user_id ?? "",
+      status: "accepted",
+      requestedAt: "",
+      respondedAt: null,
+      removedAt: null,
+      createdAt: "",
+      updatedAt: "",
+    };
+    const counterpartId = connectionCounterpartId(mapped, professionalUserId);
     if (counterpartId) {
       usernameByUserId.set(counterpartId, c.counterpart_username ?? null);
     }
@@ -130,20 +141,26 @@ export async function listAcceptedConnectionsForRecommend(): Promise<
 
   const rows = data as Array<{
     id: string;
-    professional_user_id: string;
-    user_id: string;
+    requester_user_id?: string;
+    recipient_user_id?: string;
+    professional_user_id?: string;
+    user_id?: string;
     status: string;
     counterpart_username?: string | null;
   }>;
 
   return rows
-    .filter(
-      (r) =>
-        r.status === "accepted" && r.professional_user_id === user.id,
-    )
-    .map((r) => ({
-      userId: r.user_id,
-      username: r.counterpart_username ?? null,
-      connectionId: r.id,
-    }));
+    .filter((r) => r.status === "accepted")
+    .map((r) => {
+      const requester = r.requester_user_id ?? r.professional_user_id ?? "";
+      const recipient = r.recipient_user_id ?? r.user_id ?? "";
+      const counterpartId =
+        requester === user.id ? recipient : requester;
+      return {
+        userId: counterpartId,
+        username: r.counterpart_username ?? null,
+        connectionId: r.id,
+      };
+    })
+    .filter((r) => Boolean(r.userId) && r.userId !== user.id);
 }

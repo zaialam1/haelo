@@ -18,6 +18,10 @@ import {
   orbitSessionFlowFromSession,
   type SessionFlowConfig,
 } from "@/lib/sessions/sessionFlow";
+import {
+  markExperimentIntentAction,
+  markExperimentTriedAction,
+} from "@/lib/gamification/actions";
 
 type SessionRetryClientProps = {
   planet: Planet;
@@ -25,6 +29,8 @@ type SessionRetryClientProps = {
   initialSession: SessionDetail;
   orbitKey?: string;
   flow?: SessionFlowConfig;
+  /** True when user arrived via Try the Experiment CTA */
+  experimentIntent?: boolean;
 };
 
 type Phase =
@@ -48,6 +54,7 @@ export function SessionRetryClient({
   initialSession,
   orbitKey,
   flow: flowProp,
+  experimentIntent = false,
 }: SessionRetryClientProps) {
   const router = useRouter();
   const content = getPlanetPageContent(planet);
@@ -66,9 +73,16 @@ export function SessionRetryClient({
       : planetSessionFlow(planet));
 
   const experiment = initialSession.analysis?.experiment;
+  const isExperiment = experimentIntent && Boolean(experiment);
   const existingSecond = initialSession.session_attempts.find(
     (a) => a.attempt_number === 2,
   );
+
+  useEffect(() => {
+    if (isExperiment) {
+      void markExperimentIntentAction(sessionId);
+    }
+  }, [isExperiment, sessionId]);
 
   const recorder = useAudioRecorder({
     maxSeconds: DEFAULT_MAX_RECORDING_SECONDS,
@@ -113,6 +127,9 @@ export function SessionRetryClient({
         attemptNumber: 2,
         transcript: recorder.transcript,
       });
+      if (isExperiment) {
+        await markExperimentTriedAction(sessionId);
+      }
       kickoffSessionProcessing(sessionId);
       router.push(flow.compareHref(sessionId));
     } catch (e) {
@@ -139,7 +156,7 @@ export function SessionRetryClient({
             fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
           }}
         >
-          Try Again
+          {isExperiment ? "Try the Experiment" : "Try Again"}
         </h1>
       </header>
 
@@ -148,7 +165,11 @@ export function SessionRetryClient({
           className="text-[0.6875rem] font-semibold tracking-[0.1em] uppercase"
           style={{ color: "var(--foreground-muted)" }}
         >
-          {experiment ? "Your experiment" : "This time"}
+          {isExperiment
+            ? "Try this"
+            : experiment
+              ? "Your experiment"
+              : "This time"}
         </p>
         {experiment ? (
           <>
@@ -159,14 +180,18 @@ export function SessionRetryClient({
                   '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 500',
               }}
             >
-              {experiment.title}
+              {isExperiment
+                ? `Try this: ${experiment.instruction}`
+                : experiment.title}
             </p>
-            <p
-              className="mt-2 max-w-xl text-[0.9375rem] leading-relaxed"
-              style={{ color: "var(--foreground-muted)" }}
-            >
-              {experiment.instruction}
-            </p>
+            {!isExperiment ? (
+              <p
+                className="mt-2 max-w-xl text-[0.9375rem] leading-relaxed"
+                style={{ color: "var(--foreground-muted)" }}
+              >
+                {experiment.instruction}
+              </p>
+            ) : null}
           </>
         ) : (
           <p

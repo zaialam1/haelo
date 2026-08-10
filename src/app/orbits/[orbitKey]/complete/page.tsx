@@ -12,6 +12,9 @@ import { listOrbitProgressSessions } from "@/lib/orbits/runtime";
 import { getOrbitSummativeAnalysisForProgress } from "@/lib/orbits/synthesize";
 import type { OrbitSummativeAnalysisContent } from "@/lib/orbits/types";
 import { createClient } from "@/lib/supabase/server";
+import { GamificationRevealOverlay } from "@/components/gamification/GamificationRevealOverlay";
+import { getPendingGamificationReveals } from "@/lib/gamification/data";
+import { processGamificationEvent } from "@/lib/gamification/process";
 
 type PageProps = {
   params: Promise<{ orbitKey: string }>;
@@ -86,6 +89,22 @@ export default async function OrbitCompletePage({ params }: PageProps) {
     analysisStatus = "pending";
   }
 
+  // Ensure orbit completion reward is unlocked (idempotent).
+  await processGamificationEvent(supabase, user.id, {
+    type: "orbit_completed",
+    orbitProgressId: progress.id,
+  });
+
+  const orbitReveals = (
+    await getPendingGamificationReveals(user.id, {
+      priority: "immediate",
+      limit: 2,
+    })
+  ).filter(
+    (r) =>
+      r.revealType === "orbit_reward" || r.revealType === "celestial_discovery",
+  );
+
   return (
     <div className="orbits-page relative min-h-dvh w-full overflow-x-hidden">
       <div
@@ -115,6 +134,9 @@ export default async function OrbitCompletePage({ params }: PageProps) {
         </div>
       </main>
       <HomeBottomNav />
+      {orbitReveals.length > 0 ? (
+        <GamificationRevealOverlay reveals={orbitReveals} />
+      ) : null}
     </div>
   );
 }

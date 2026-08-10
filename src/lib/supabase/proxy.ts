@@ -62,6 +62,7 @@ export async function updateSession(request: NextRequest) {
     "/age-verification",
     "/auth/update-password",
     "/professional/home",
+    "/professional/connections",
     "/professional/recommend",
   ];
   const isProtected = protectedPrefixes.some(

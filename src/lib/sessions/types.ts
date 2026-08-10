@@ -41,6 +41,8 @@ export type SessionRow = {
   analysis_status: AnalysisStatus | null;
   created_at: string;
   completed_at: string | null;
+  /** Set when attempt 2 was saved via Try the Experiment */
+  experiment_tried_at?: string | null;
 };
 
 export type SessionAttemptRow = {

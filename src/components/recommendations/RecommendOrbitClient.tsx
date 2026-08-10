@@ -86,7 +86,7 @@ export function RecommendOrbitClient({
           Orbit to them here.
         </p>
         <TransitionLink
-          href="/settings/connections"
+          href="/professional/connections"
           variant="fade"
           className="inline-flex rounded-full bg-[var(--violet)] px-5 py-3 text-sm font-semibold text-[var(--on-violet)]"
         >
@@ -125,7 +125,7 @@ export function RecommendOrbitClient({
             Recommend another
           </button>
           <TransitionLink
-            href="/professional/home"
+            href="/professional"
             variant="fade"
             className="inline-flex justify-center rounded-full border px-5 py-3 text-sm font-semibold text-[var(--violet)]"
             style={{ borderColor: "var(--hairline)" }}

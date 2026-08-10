@@ -1,3 +1,9 @@
+import { CelestialDecorations } from "@/components/gamification/CelestialDecorations";
+import { WeeklyConstellationGoal } from "@/components/gamification/WeeklyConstellationGoal";
+import type {
+  UserCelestialReward,
+  WeeklyVoiceProgress,
+} from "@/lib/gamification/types";
 import { VOICE_PLANETS } from "@/lib/home/voicePlanets";
 import type { VoicePlanetId } from "@/lib/home/voicePlanets";
 import type { PlanetEvolutionLevel } from "@/lib/planets/evolution";
@@ -17,10 +23,16 @@ const RINGS = [
 type ConversationUniverseProps = {
   /** Per-planet evolution stage (1–5). Defaults to base for every planet. */
   evolutionLevels?: Record<VoicePlanetId, PlanetEvolutionLevel>;
+  celestialRewards?: UserCelestialReward[];
+  weeklyProgress?: WeeklyVoiceProgress | null;
+  showWeeklyGoal?: boolean;
 };
 
 export function ConversationUniverse({
   evolutionLevels,
+  celestialRewards = [],
+  weeklyProgress = null,
+  showWeeklyGoal = false,
 }: ConversationUniverseProps = {}) {
   return (
     <section
@@ -41,6 +53,22 @@ export function ConversationUniverse({
         className="universe-nebula-haze pointer-events-none absolute inset-0"
         aria-hidden="true"
       />
+
+      <CelestialDecorations rewards={celestialRewards} />
+
+      {showWeeklyGoal ? (
+        <div className="pointer-events-none absolute inset-x-0 bottom-[5.5rem] z-20 flex justify-center sm:bottom-[6.25rem]">
+          <div
+            className="rounded-full px-3 py-1.5"
+            style={{
+              background: "color-mix(in srgb, var(--surface) 55%, transparent)",
+              border: "1px solid color-mix(in srgb, var(--gold) 22%, transparent)",
+            }}
+          >
+            <WeeklyConstellationGoal progress={weeklyProgress} compact />
+          </div>
+        </div>
+      ) : null}
 
       {/* Delicate constellation lines */}
       <svg

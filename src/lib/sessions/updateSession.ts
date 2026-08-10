@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
+import { processGamificationEvent } from "@/lib/gamification/process";
 import type {
   AuthenticityChoice,
   SessionReflectionUpdate,
@@ -69,6 +70,9 @@ export async function updateAuthenticityChoice(
  *
  * When the session is Orbit-sourced, advances user_orbit_progress.
  * Does NOT touch normal planet progression indexes.
+ *
+ * After completion, runs the centralized gamification event pipeline
+ * (weekly goal, planet evolution moments, discoveries, milestones).
  */
 export async function completeSession(sessionId: string): Promise<void> {
   const { supabase, user } = await requireUser();
@@ -87,7 +91,9 @@ export async function completeSession(sessionId: string): Promise<void> {
     throw new Error(fetchError?.message || "Could not find this session.");
   }
 
-  if (session.status !== "completed") {
+  const wasAlreadyCompleted = session.status === "completed";
+
+  if (!wasAlreadyCompleted) {
     const { error } = await supabase
       .from("sessions")
       .update({
@@ -102,17 +108,38 @@ export async function completeSession(sessionId: string): Promise<void> {
     }
   }
 
+  let orbitJustCompleted = false;
+  let orbitProgressId: string | null = null;
+
   if (
     session.source === "orbit" &&
     session.user_orbit_progress_id &&
     session.orbit_question_key
   ) {
-    await advanceOrbitProgressAfterQuestion({
+    const orbitResult = await advanceOrbitProgressAfterQuestion({
       supabase,
       userId: user.id,
       progressId: session.user_orbit_progress_id,
       orbitQuestionKey: session.orbit_question_key,
     });
+    orbitJustCompleted = orbitResult?.justCompleted ?? false;
+    orbitProgressId = session.user_orbit_progress_id;
+  }
+
+  // Gamification is idempotent — safe even if session was already completed.
+  try {
+    await processGamificationEvent(supabase, user.id, {
+      type: "session_completed",
+      sessionId,
+    });
+    if (orbitJustCompleted && orbitProgressId) {
+      await processGamificationEvent(supabase, user.id, {
+        type: "orbit_completed",
+        orbitProgressId,
+      });
+    }
+  } catch (e) {
+    console.error("[gamification] post-complete hook failed:", e);
   }
 }
 
@@ -121,7 +148,7 @@ async function advanceOrbitProgressAfterQuestion(opts: {
   userId: string;
   progressId: string;
   orbitQuestionKey: string;
-}): Promise<void> {
+}): Promise<{ justCompleted: boolean } | void> {
   const { getOrbitByKey, getOrbitQuestionByKey } = await import(
     "@/lib/orbits/catalog"
   );
@@ -204,4 +231,6 @@ async function advanceOrbitProgressAfterQuestion(opts: {
         .eq("id", opts.progressId);
     }
   }
+
+  return { justCompleted: Boolean(allRequiredDone) };
 }

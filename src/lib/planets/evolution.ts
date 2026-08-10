@@ -1,5 +1,5 @@
+import { PLANET_STAGE_THRESHOLDS } from "@/lib/gamification/config";
 import type { VoicePlanetId } from "@/lib/home/voicePlanets";
-import { planetLevelFromSessionCount } from "@/lib/prompts";
 import type { DisplayLevel } from "@/lib/prompts";
 
 /** Visual evolution stage for a planet (1 = base → 5 = fully evolved). */
@@ -49,14 +49,12 @@ export type PlanetEvolutionProfile = {
   stages: Record<PlanetEvolutionLevel, PlanetEvolutionStage>;
 };
 
-/** Same thresholds as prompt unlock — keep visuals and curriculum aligned. */
-export const EVOLUTION_SESSION_THRESHOLDS: Record<PlanetEvolutionLevel, number> = {
-  1: 0,
-  2: 3,
-  3: 8,
-  4: 15,
-  5: 25,
-};
+/**
+ * Visual experience thresholds — owned by gamification config.
+ * Separate counter from prompt unlock (PLANET_LEVEL_THRESHOLDS).
+ */
+export const EVOLUTION_SESSION_THRESHOLDS: Record<PlanetEvolutionLevel, number> =
+  PLANET_STAGE_THRESHOLDS;
 
 function stage(
   level: PlanetEvolutionLevel,
@@ -317,11 +315,19 @@ export function getPlanetEvolutionStage(
   return PLANET_EVOLUTION[planetId].stages[level];
 }
 
-/** Map completed sessions on a planet → evolution level. */
+/** Map planet visual-experience sessions → evolution level. */
 export function evolutionLevelFromSessionCount(
   completedSessions: number,
 ): PlanetEvolutionLevel {
-  return planetLevelFromSessionCount(completedSessions);
+  const count = Math.max(0, completedSessions);
+  let level: PlanetEvolutionLevel = 1;
+  for (const candidate of [5, 4, 3, 2, 1] as const) {
+    if (count >= EVOLUTION_SESSION_THRESHOLDS[candidate]) {
+      level = candidate;
+      break;
+    }
+  }
+  return level;
 }
 
 /**

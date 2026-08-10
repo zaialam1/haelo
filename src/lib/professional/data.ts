@@ -50,12 +50,14 @@ export async function getProfessionalContext(): Promise<ProfessionalContext | nu
     ? await getOwnProfessionalProfile(profile.id)
     : null;
 
+  const isVerified =
+    isProfessional && professional?.verificationStatus === "verified";
+
   return {
     profile,
     professional,
     isProfessional,
-    // Verification gating removed — professionals are active immediately.
-    isVerified: isProfessional,
+    isVerified,
     verificationStatus: professional?.verificationStatus ?? null,
   };
 }

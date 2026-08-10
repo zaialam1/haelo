@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { ConnectionRequestPanel } from "@/components/connections/ConnectionRequestPanel";
 import { OrbitRecommendationPanel } from "@/components/recommendations/OrbitRecommendationPanel";
@@ -12,6 +19,8 @@ import {
   type StreakStats,
 } from "@/lib/home/streakStats";
 import type { AppNotification } from "@/lib/connections/types";
+import type { WeeklyVoiceProgress } from "@/lib/gamification/types";
+import { WeeklyConstellationGoal } from "@/components/gamification/WeeklyConstellationGoal";
 
 type PanelId = "streak" | "daily" | "notifications";
 
@@ -20,6 +29,25 @@ const WEEK_LABELS = ["M", "T", "W", "T", "F", "S", "S"] as const;
 function todayKey() {
   const d = new Date();
   return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+}
+
+function subscribeDailyCompleted(onStoreChange: () => void) {
+  if (typeof window === "undefined") return () => {};
+  const onStorage = (event: StorageEvent) => {
+    if (event.key === DAILY_COMPLETED_KEY || event.key === null) {
+      onStoreChange();
+    }
+  };
+  window.addEventListener("storage", onStorage);
+  return () => window.removeEventListener("storage", onStorage);
+}
+
+function readDailyCompleted(): boolean {
+  try {
+    return localStorage.getItem(DAILY_COMPLETED_KEY) === todayKey();
+  } catch {
+    return false;
+  }
 }
 
 function UtilityButton({
@@ -66,19 +94,24 @@ function UtilityButton({
 
 export function HomeUtilities({
   initialNotifications = [],
+  recipientIsProfessional = false,
+  dailyQuestionText,
+  weeklyProgress = null,
 }: {
   initialNotifications?: AppNotification[];
+  recipientIsProfessional?: boolean;
+  /** Server-computed daily question — avoids SSR/client date timezone mismatch */
+  dailyQuestionText?: string;
+  /** Weekly voice goal — secondary to Universe constellation, shown in streak panel */
+  weeklyProgress?: WeeklyVoiceProgress | null;
 }) {
   const [panel, setPanel] = useState<PanelId | null>(null);
   const [stats, setStats] = useState<StreakStats | null>(null);
-  const [dailyCompleted] = useState(() => {
-    if (typeof window === "undefined") return false;
-    try {
-      return localStorage.getItem(DAILY_COMPLETED_KEY) === todayKey();
-    } catch {
-      return false;
-    }
-  });
+  const dailyCompleted = useSyncExternalStore(
+    subscribeDailyCompleted,
+    readDailyCompleted,
+    () => false,
+  );
   const [activeNotification, setActiveNotification] =
     useState<AppNotification | null>(null);
   const [resolvedIds, setResolvedIds] = useState<string[]>([]);
@@ -90,8 +123,10 @@ export function HomeUtilities({
   const dailyTitleId = useId();
   const notifyTitleId = useId();
 
-  const bankQuestion = getDailyQuestionForDate();
-  const questionText = bankQuestion?.text ?? TODAYS_QUESTION.text;
+  const questionText =
+    dailyQuestionText ??
+    getDailyQuestionForDate().text ??
+    TODAYS_QUESTION.text;
   const streakDays = stats?.streakDays ?? 0;
   const weekActive =
     stats?.weekActive ?? [false, false, false, false, false, false, false];
@@ -107,7 +142,15 @@ export function HomeUtilities({
       n.type === "orbit_recommendation" ||
       n.type === "orbit_recommendation_reminder",
   );
-  const notifyItems = [...connectionRequests, ...orbitRecommendations];
+  const growthNotices = visibleNotifications.filter(
+    (n) =>
+      n.type === "celestial_discovery" || n.type === "milestone_moment",
+  );
+  const notifyItems = [
+    ...connectionRequests,
+    ...orbitRecommendations,
+    ...growthNotices,
+  ];
   const unreadCount = notifyItems.filter((n) => !n.readAt).length;
   const notifyCount = notifyItems.length;
 
@@ -298,6 +341,11 @@ export function HomeUtilities({
         className="home-utility-panel"
         data-open={panel === "streak" ? "true" : "false"}
       >
+        {weeklyProgress ? (
+          <div className="mb-5 border-b pb-5" style={{ borderColor: "var(--hairline)" }}>
+            <WeeklyConstellationGoal progress={weeklyProgress} />
+          </div>
+        ) : null}
         <div className="flex items-start justify-between gap-3">
           <div>
             <p
@@ -437,6 +485,7 @@ export function HomeUtilities({
           activeNotification.type === "connection_request" ? (
             <ConnectionRequestPanel
               notification={activeNotification}
+              recipientIsProfessional={recipientIsProfessional}
               onClose={() => {
                 setActiveNotification(null);
                 setPanel(null);
@@ -448,6 +497,64 @@ export function HomeUtilities({
                 setActiveNotification(null);
               }}
             />
+          ) : activeNotification.type === "celestial_discovery" ||
+            activeNotification.type === "milestone_moment" ? (
+            <div>
+              <div className="flex items-start justify-between gap-3">
+                <p
+                  className="font-[family-name:var(--font-fraunces)] text-lg tracking-tight"
+                  style={{
+                    fontVariationSettings:
+                      '"opsz" 72, "SOFT" 40, "WONK" 0, "wght" 550',
+                    color: "var(--foreground)",
+                  }}
+                >
+                  {activeNotification.type === "celestial_discovery"
+                    ? "Celestial discovery"
+                    : "Something shifted"}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setResolvedIds((prev) => [...prev, activeNotification.id]);
+                    setActiveNotification(null);
+                    setPanel(null);
+                  }}
+                  className="rounded-full px-2 py-0.5 text-lg leading-none"
+                  style={{ color: "var(--foreground-muted)" }}
+                  aria-label="Close"
+                >
+                  ×
+                </button>
+              </div>
+              <p
+                className="mt-3 text-sm leading-relaxed"
+                style={{ color: "var(--foreground-muted)" }}
+              >
+                {activeNotification.type === "celestial_discovery"
+                  ? "Something new appeared in your Universe."
+                  : "A quiet change showed up in your practice."}
+              </p>
+              <TransitionLink
+                href={
+                  activeNotification.type === "milestone_moment"
+                    ? "/journey"
+                    : "/home"
+                }
+                variant="fade"
+                className="mt-5 inline-flex text-sm font-semibold"
+                style={{ color: "var(--violet)" }}
+                onClick={() => {
+                  setResolvedIds((prev) => [...prev, activeNotification.id]);
+                  setActiveNotification(null);
+                  setPanel(null);
+                }}
+              >
+                {activeNotification.type === "milestone_moment"
+                  ? "See it in Journey →"
+                  : "Open Universe →"}
+              </TransitionLink>
+            </div>
           ) : (
             <OrbitRecommendationPanel
               notification={activeNotification}
@@ -504,7 +611,11 @@ export function HomeUtilities({
                       ? "View connection request"
                       : n.type === "orbit_recommendation_reminder"
                         ? "Orbit reminder"
-                        : "View Orbit recommendation"}
+                        : n.type === "celestial_discovery"
+                          ? "Celestial discovery"
+                          : n.type === "milestone_moment"
+                            ? "Something shifted"
+                            : "View Orbit recommendation"}
                     {!n.readAt ? (
                       <span
                         className="ml-2 inline-block size-1.5 rounded-full align-middle"

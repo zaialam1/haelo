@@ -246,6 +246,14 @@ export function SessionReviewClient({
     router.push(flow.retryHref(sessionId));
   }
 
+  function handleTryExperiment() {
+    const href = flow.retryHref(sessionId);
+    const sep = href.includes("?") ? "&" : "?";
+    router.push(`${href}${sep}intent=experiment`);
+  }
+
+  const hasExperiment = Boolean(session.analysis?.experiment);
+
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <header>
@@ -429,14 +437,14 @@ export function SessionReviewClient({
             <button
               type="button"
               disabled={busy}
-              onClick={handleTryAgain}
+              onClick={hasExperiment ? handleTryExperiment : handleTryAgain}
               className="inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3.5 text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
               style={{
                 background: "var(--gold)",
                 color: "var(--on-warm)",
               }}
             >
-              Try Again
+              {hasExperiment ? "Try the Experiment" : "Try Again"}
             </button>
           ) : null}
           <button
@@ -482,18 +490,36 @@ export function SessionReviewClient({
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             {!hasSecondAttempt ? (
-              <button
-                type="button"
-                disabled={busy}
-                onClick={handleTryAgain}
-                className="inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3.5 text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
-                style={{
-                  background: "var(--gold)",
-                  color: "var(--on-warm)",
-                }}
-              >
-                Try Again
-              </button>
+              <>
+                {hasExperiment ? (
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={handleTryExperiment}
+                    className="inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3.5 text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+                    style={{
+                      background: "var(--gold)",
+                      color: "var(--on-warm)",
+                    }}
+                  >
+                    Try the Experiment
+                  </button>
+                ) : null}
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={handleTryAgain}
+                  className="inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3.5 text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+                  style={{
+                    background: hasExperiment
+                      ? "color-mix(in srgb, var(--violet) 10%, transparent)"
+                      : "var(--gold)",
+                    color: hasExperiment ? "var(--foreground)" : "var(--on-warm)",
+                  }}
+                >
+                  {hasExperiment ? "Record again" : "Try Again"}
+                </button>
+              </>
             ) : (
               <button
                 type="button"

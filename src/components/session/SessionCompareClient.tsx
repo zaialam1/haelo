@@ -66,6 +66,9 @@ export function SessionCompareClient({
   const hasComparison =
     session.analysis?.status === "ready" &&
     Boolean(session.analysis.comparisonObservation);
+  const isExperiment = Boolean(session.experiment_tried_at);
+  const experimentInstruction =
+    session.analysis?.experiment?.instruction ?? null;
 
   useEffect(() => {
     if (!second) {
@@ -125,7 +128,7 @@ export function SessionCompareClient({
             fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
           }}
         >
-          Hear the Difference
+          {isExperiment ? "What changed" : "Hear the Difference"}
         </h1>
         <p
           className="mt-4 max-w-2xl text-[0.9375rem] leading-relaxed"
@@ -133,6 +136,14 @@ export function SessionCompareClient({
         >
           &ldquo;{session.prompt_text_snapshot}&rdquo;
         </p>
+        {isExperiment && experimentInstruction ? (
+          <p
+            className="mt-3 max-w-2xl text-sm leading-relaxed"
+            style={{ color: "color-mix(in srgb, var(--gold) 75%, var(--foreground-muted))" }}
+          >
+            Experiment: {experimentInstruction}
+          </p>
+        ) : null}
       </header>
 
       <div className="mt-10 grid gap-10 lg:grid-cols-2">
@@ -162,6 +173,14 @@ export function SessionCompareClient({
           >
             Second response
           </p>
+          {isExperiment ? (
+            <p
+              className="mt-1 text-[0.75rem]"
+              style={{ color: "var(--foreground-muted)" }}
+            >
+              Experiment attempt
+            </p>
+          ) : null}
           <div className="mt-4">
             <ResponseReview
               storagePath={second.storage_path}

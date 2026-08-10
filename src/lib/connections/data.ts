@@ -1,15 +1,17 @@
 import { createClient } from "@/lib/supabase/server";
+import type { AccountRole } from "@/lib/profiles/types";
 import {
   mapConnectionRow,
-  type ProfessionalConnection,
-  type ProfessionalConnectionRow,
+  type ConnectionRow,
+  type HaeloConnection,
 } from "./types";
 
-type ConnectionListItem = ProfessionalConnectionRow & {
+type ConnectionListItem = ConnectionRow & {
   counterpart_username?: string | null;
+  counterpart_account_role?: AccountRole | null;
 };
 
-export async function listMyConnections(): Promise<ProfessionalConnection[]> {
+export async function listMyConnections(): Promise<HaeloConnection[]> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -23,39 +25,50 @@ export async function listMyConnections(): Promise<ProfessionalConnection[]> {
   return rows.map((row) => ({
     ...mapConnectionRow(row),
     counterpartUsername: row.counterpart_username ?? null,
+    counterpartAccountRole: row.counterpart_account_role ?? null,
   }));
 }
 
 export async function getConnectionById(
   id: string,
-): Promise<ProfessionalConnection | null> {
+): Promise<HaeloConnection | null> {
   const supabase = await createClient();
   const { data, error } = await supabase
-    .from("professional_connections")
+    .from("connections")
     .select(
-      "id, professional_user_id, user_id, status, requested_at, responded_at, removed_at, created_at, updated_at",
+      "id, requester_user_id, recipient_user_id, status, requested_at, responded_at, removed_at, created_at, updated_at",
     )
     .eq("id", id)
     .maybeSingle();
 
   if (error || !data) return null;
-  return mapConnectionRow(data as ProfessionalConnectionRow);
+  return mapConnectionRow(data as ConnectionRow);
 }
 
-export async function getConnectionWithUser(
-  professionalUserId: string,
-  userId: string,
-): Promise<ProfessionalConnection | null> {
+/** Find a connection between two users in either direction. */
+export async function getConnectionBetweenUsers(
+  userA: string,
+  userB: string,
+): Promise<HaeloConnection | null> {
   const supabase = await createClient();
   const { data, error } = await supabase
-    .from("professional_connections")
+    .from("connections")
     .select(
-      "id, professional_user_id, user_id, status, requested_at, responded_at, removed_at, created_at, updated_at",
+      "id, requester_user_id, recipient_user_id, status, requested_at, responded_at, removed_at, created_at, updated_at",
     )
-    .eq("professional_user_id", professionalUserId)
-    .eq("user_id", userId)
+    .or(
+      `and(requester_user_id.eq.${userA},recipient_user_id.eq.${userB}),and(requester_user_id.eq.${userB},recipient_user_id.eq.${userA})`,
+    )
     .maybeSingle();
 
   if (error || !data) return null;
-  return mapConnectionRow(data as ProfessionalConnectionRow);
+  return mapConnectionRow(data as ConnectionRow);
+}
+
+/** @deprecated Prefer getConnectionBetweenUsers */
+export async function getConnectionWithUser(
+  professionalUserId: string,
+  userId: string,
+): Promise<HaeloConnection | null> {
+  return getConnectionBetweenUsers(professionalUserId, userId);
 }

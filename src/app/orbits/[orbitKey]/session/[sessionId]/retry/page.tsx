@@ -8,14 +8,25 @@ import { createClient } from "@/lib/supabase/server";
 
 type PageProps = {
   params: Promise<{ orbitKey: string; sessionId: string }>;
+  searchParams: Promise<{ intent?: string }>;
 };
 
-export async function generateMetadata(): Promise<Metadata> {
-  return { title: "Try Again — Haelo" };
+export async function generateMetadata({
+  searchParams,
+}: PageProps): Promise<Metadata> {
+  const { intent } = await searchParams;
+  return {
+    title:
+      intent === "experiment" ? "Try the Experiment — Haelo" : "Try Again — Haelo",
+  };
 }
 
-export default async function OrbitSessionRetryPage({ params }: PageProps) {
+export default async function OrbitSessionRetryPage({
+  params,
+  searchParams,
+}: PageProps) {
   const { orbitKey, sessionId } = await params;
+  const { intent } = await searchParams;
   const orbit = getOrbitByKey(orbitKey);
   if (!orbit || !orbit.isActive) notFound();
 
@@ -50,6 +61,7 @@ export default async function OrbitSessionRetryPage({ params }: PageProps) {
         sessionId={sessionId}
         initialSession={session}
         orbitKey={orbitKey}
+        experimentIntent={intent === "experiment"}
       />
     </OrbitSessionShell>
   );

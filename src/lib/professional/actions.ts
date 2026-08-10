@@ -78,7 +78,9 @@ export async function completeProfessionalSignupAction(
 
   revalidatePath("/home");
   revalidatePath("/settings");
+  revalidatePath("/professional");
   revalidatePath("/professional/home");
+  revalidatePath("/professional/connections");
   revalidatePath("/settings/connections");
 
   return {

@@ -9,14 +9,25 @@ import {
 
 type PageProps = {
   params: Promise<{ planet: string; sessionId: string }>;
+  searchParams: Promise<{ intent?: string }>;
 };
 
-export async function generateMetadata(): Promise<Metadata> {
-  return { title: "Try Again — Haelo" };
+export async function generateMetadata({
+  searchParams,
+}: PageProps): Promise<Metadata> {
+  const { intent } = await searchParams;
+  return {
+    title:
+      intent === "experiment" ? "Try the Experiment — Haelo" : "Try Again — Haelo",
+  };
 }
 
-export default async function SessionRetryPage({ params }: PageProps) {
+export default async function SessionRetryPage({
+  params,
+  searchParams,
+}: PageProps) {
   const { planet: planetParam, sessionId } = await params;
+  const { intent } = await searchParams;
   const loaded = await loadOwnedSession(planetParam, sessionId);
 
   if (!loaded.ok) {
@@ -39,6 +50,7 @@ export default async function SessionRetryPage({ params }: PageProps) {
         planet={planet}
         sessionId={sessionId}
         initialSession={session}
+        experimentIntent={intent === "experiment"}
       />
     </SessionShell>
   );

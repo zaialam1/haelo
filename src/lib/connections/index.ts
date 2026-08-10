@@ -1,16 +1,25 @@
 export type {
   ConnectionStatus,
   NotificationType,
+  HaeloConnection,
   ProfessionalConnection,
   AppNotification,
   UsernameSearchHit,
 } from "./types";
 export {
+  mapConnectionRow,
+  mapNotificationRow,
+  connectionCounterpartId,
+  accountRoleDisplayLabel,
+} from "./types";
+export {
   listMyConnections,
   getConnectionById,
+  getConnectionBetweenUsers,
   getConnectionWithUser,
 } from "./data";
 export {
+  canSendOrbitRecommendation,
   canProfessionalRecommendTo,
   listAcceptedConnectedUserIds,
 } from "./authorize";

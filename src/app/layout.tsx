@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
 import { TransitionRoot } from "@/components/transitions/TransitionRoot";
 import "./globals.css";
@@ -44,10 +45,12 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-      </head>
       <body className="min-h-full flex flex-col font-sans">
+        <Script
+          id="haelo-theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: themeInitScript }}
+        />
         <TransitionRoot>{children}</TransitionRoot>
       </body>
     </html>
