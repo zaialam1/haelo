@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AgeGateShell } from "@/components/auth/AgeGateShell";
-import { saveParentEmailPrototype } from "@/lib/age-gate/prototype";
+import { requestParentalConsentAction } from "@/lib/age-gate/actions";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -14,7 +14,7 @@ export function ParentEmailClient() {
   const [error, setError] = useState<string | undefined>();
   const [submitting, setSubmitting] = useState(false);
 
-  function onSubmit(event: React.FormEvent) {
+  async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
     const trimmed = email.trim();
     if (!trimmed) {
@@ -28,11 +28,20 @@ export function ParentEmailClient() {
 
     setSubmitting(true);
     setError(undefined);
-    // Prototype only — no email is sent.
-    const token = saveParentEmailPrototype(trimmed);
-    router.push(
-      `/age-verification/pending?token=${encodeURIComponent(token)}`,
-    );
+
+    try {
+      const result = await requestParentalConsentAction(trimmed);
+      if (!result.ok) {
+        setError(result.message);
+        setSubmitting(false);
+        return;
+      }
+      router.push("/age-verification/pending");
+      router.refresh();
+    } catch {
+      setError("Couldn’t send the permission request. Try again.");
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -56,9 +65,8 @@ export function ParentEmailClient() {
         className="mt-4 text-[1.0625rem] leading-relaxed"
         style={{ color: "var(--foreground-muted)" }}
       >
-        Enter the email of a parent or guardian. In the full product, they would
-        receive a message with an approval link. For now, this step is a
-        prototype — no email is sent yet.
+        Enter the email of a parent or guardian. We&rsquo;ll send them a short
+        message with a link to approve your Haelo access.
       </p>
 
       <form className="mt-8 flex flex-col gap-4" onSubmit={onSubmit} noValidate>
@@ -95,7 +103,7 @@ export function ParentEmailClient() {
           disabled={submitting}
           className="inline-flex w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)] transition-opacity hover:opacity-90 disabled:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
-          {submitting ? "Continuing…" : "Send permission request"}
+          {submitting ? "Sending…" : "Send permission request"}
         </button>
       </form>
 

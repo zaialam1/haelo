@@ -9,7 +9,6 @@ import {
   type AccountProfile,
 } from "@/lib/auth/account";
 import { deleteAccountAction } from "@/lib/auth/actions";
-import { clearAgeGatePrototype } from "@/lib/age-gate/prototype";
 import { submitProductFeedbackAction } from "@/lib/feedback/actions";
 import { setNotificationPrefAction } from "@/lib/preferences/actions";
 import {
@@ -166,7 +165,6 @@ export function SettingsClient({
     try {
       clearStoredAppMode();
       await signOut();
-      clearAgeGatePrototype();
       router.push("/");
       router.refresh();
     } catch {
@@ -185,7 +183,6 @@ export function SettingsClient({
         setBusy(false);
         return;
       }
-      clearAgeGatePrototype();
       router.push("/");
       router.refresh();
     } catch {

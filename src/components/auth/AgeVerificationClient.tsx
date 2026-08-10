@@ -1,15 +1,31 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { setAgeGateStatus } from "@/lib/age-gate/prototype";
+import { useState } from "react";
 import { AgeGateShell } from "@/components/auth/AgeGateShell";
+import { clearAgeGate13PlusAction } from "@/lib/age-gate/actions";
 
 export function AgeVerificationClient() {
   const router = useRouter();
+  const [error, setError] = useState<string | undefined>();
+  const [submitting, setSubmitting] = useState(false);
 
-  function confirmThirteenPlus() {
-    setAgeGateStatus("cleared_13_plus");
-    router.push("/onboarding/username");
+  async function confirmThirteenPlus() {
+    setSubmitting(true);
+    setError(undefined);
+    try {
+      const result = await clearAgeGate13PlusAction();
+      if (!result.ok) {
+        setError(result.message);
+        setSubmitting(false);
+        return;
+      }
+      router.push("/onboarding/username");
+      router.refresh();
+    } catch {
+      setError("Couldn’t save age verification. Try again.");
+      setSubmitting(false);
+    }
   }
 
   function continueUnderThirteen() {
@@ -46,18 +62,26 @@ export function AgeVerificationClient() {
         <button
           type="button"
           onClick={confirmThirteenPlus}
-          className="inline-flex w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)] shadow-[0_10px_28px_color-mix(in_srgb,var(--violet)_28%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+          disabled={submitting}
+          className="inline-flex w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)] shadow-[0_10px_28px_color-mix(in_srgb,var(--violet)_28%,transparent)] transition-opacity hover:opacity-90 disabled:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
-          Yes, I am 13 or older
+          {submitting ? "Saving…" : "Yes, I am 13 or older"}
         </button>
         <button
           type="button"
           onClick={continueUnderThirteen}
-          className="inline-flex w-full items-center justify-center rounded-full border-2 border-[var(--violet)] bg-[color-mix(in_srgb,var(--rose)_18%,var(--background))] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--violet)] transition-colors hover:bg-[color-mix(in_srgb,var(--rose)_30%,var(--background))] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+          disabled={submitting}
+          className="inline-flex w-full items-center justify-center rounded-full border-2 border-[var(--violet)] bg-[color-mix(in_srgb,var(--rose)_18%,var(--background))] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--violet)] transition-colors hover:bg-[color-mix(in_srgb,var(--rose)_30%,var(--background))] disabled:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
           No, I am under 13
         </button>
       </div>
+
+      {error ? (
+        <p className="mt-4 text-sm text-[#9B2C2C]" role="alert">
+          {error}
+        </p>
+      ) : null}
 
       <p
         className="mt-8 text-sm leading-relaxed"

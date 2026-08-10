@@ -1,28 +1,53 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { AgeGateShell } from "@/components/auth/AgeGateShell";
-import { approveParentConsentPrototype } from "@/lib/age-gate/prototype";
+import { approveParentalConsentAction } from "@/lib/age-gate/actions";
 
 function ApproveContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const [status, setStatus] = useState<"working" | "ok" | "bad">("working");
+  const [message, setMessage] = useState<string | undefined>();
+  const [isChildSession, setIsChildSession] = useState(false);
 
   useEffect(() => {
     if (!token) {
       setStatus("bad");
+      setMessage("This approval link isn’t valid.");
       return;
     }
-    const ok = approveParentConsentPrototype(token);
-    setStatus(ok ? "ok" : "bad");
-    if (ok) {
-      const timer = window.setTimeout(() => router.push("/onboarding/username"), 1200);
-      return () => window.clearTimeout(timer);
+
+    let cancelled = false;
+    let redirectTimer: number | undefined;
+
+    async function run() {
+      const result = await approveParentalConsentAction(token!);
+      if (cancelled) return;
+
+      if (!result.ok) {
+        setStatus("bad");
+        setMessage(result.message);
+        return;
+      }
+
+      setStatus("ok");
+      setIsChildSession(result.isChildSession);
+      if (result.isChildSession && result.nextPath) {
+        redirectTimer = window.setTimeout(() => {
+          router.push(result.nextPath!);
+          router.refresh();
+        }, 1200);
+      }
     }
+
+    void run();
+    return () => {
+      cancelled = true;
+      if (redirectTimer !== undefined) window.clearTimeout(redirectTimer);
+    };
   }, [token, router]);
 
   return (
@@ -45,7 +70,9 @@ function ApproveContent() {
             className="mt-4 text-[1.0625rem] leading-relaxed"
             style={{ color: "var(--foreground-muted)" }}
           >
-            Prototype approval succeeded. Taking you to Haelo…
+            {isChildSession
+              ? "You’re all set. Taking you to Haelo…"
+              : "Thanks — you can close this page. Your child can continue in Haelo."}
           </p>
         </>
       ) : null}
@@ -64,15 +91,9 @@ function ApproveContent() {
             className="mt-4 text-[1.0625rem] leading-relaxed"
             style={{ color: "var(--foreground-muted)" }}
           >
-            In this prototype, approval only works with the link from the waiting
-            step in the same browser session.
+            {message ??
+              "Ask your child to send a new permission request from Haelo."}
           </p>
-          <Link
-            href="/age-verification/parent"
-            className="mt-8 inline-flex rounded-full bg-[var(--violet)] px-5 py-3 text-sm font-semibold text-[var(--on-violet)]"
-          >
-            Start parent permission again
-          </Link>
         </>
       ) : null}
     </AgeGateShell>

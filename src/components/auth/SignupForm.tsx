@@ -158,12 +158,11 @@ export function SignupForm() {
       );
     }
 
-    function goNext(usernameClaimed: boolean) {
+    function goNext() {
       // Avoid server actions right after client auth — cookie race causes
       // "An unexpected response was received from the server."
-      const href = usernameClaimed
-        ? "/age-verification"
-        : "/onboarding/username";
+      // Age gate always comes before username onboarding for personal accounts.
+      const href = "/age-verification";
       if (transition) {
         transition.navigate({ href, variant: "fade" });
       } else {
@@ -199,10 +198,10 @@ export function SignupForm() {
             });
             return;
           }
-          const claimed = await ensureUsernameClaimed(
+          await ensureUsernameClaimed(
             usernameParsed.normalized,
           );
-          goNext(claimed);
+          goNext();
           return;
         }
         if (result.code === "invalid_email") {
@@ -242,7 +241,7 @@ export function SignupForm() {
           }),
         )
         .catch(() => {});
-      goNext(result.usernameClaimed);
+      goNext();
     } catch {
       setErrors({
         form:

@@ -1,19 +1,96 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useEffectEvent } from "react";
 import { AgeGateShell } from "@/components/auth/AgeGateShell";
-import { getParentEmailPrototype } from "@/lib/age-gate/prototype";
+import {
+  getAgeGateSnapshotAction,
+  requestParentalConsentAction,
+} from "@/lib/age-gate/actions";
 
-function PendingContent() {
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
-  const parentEmail = getParentEmailPrototype();
+export function ParentPendingClient() {
+  const router = useRouter();
+  const [parentEmail, setParentEmail] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [resending, setResending] = useState(false);
+  const [message, setMessage] = useState<string | undefined>();
+  const [error, setError] = useState<string | undefined>();
 
-  const approveHref = token
-    ? `/age-verification/approve?token=${encodeURIComponent(token)}`
-    : "/age-verification/parent";
+  const onSnapshot = useEffectEvent(
+    (snapshot: Awaited<ReturnType<typeof getAgeGateSnapshotAction>>) => {
+      if (!snapshot.ok) {
+        setError(snapshot.message);
+        setLoading(false);
+        return;
+      }
+
+      if (snapshot.cleared) {
+        router.push("/onboarding/username");
+        router.refresh();
+        return;
+      }
+
+      if (snapshot.status !== "awaiting_parent") {
+        router.push("/age-verification");
+        router.refresh();
+        return;
+      }
+
+      setParentEmail(snapshot.pendingParentEmail);
+      setLoading(false);
+    },
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      const snapshot = await getAgeGateSnapshotAction();
+      if (!cancelled) onSnapshot(snapshot);
+    }
+
+    void load();
+
+    const interval = window.setInterval(() => {
+      void load();
+    }, 5000);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+    };
+  }, []);
+
+  async function resend() {
+    if (!parentEmail) {
+      router.push("/age-verification/parent");
+      return;
+    }
+    setResending(true);
+    setError(undefined);
+    setMessage(undefined);
+    try {
+      const result = await requestParentalConsentAction(parentEmail);
+      if (!result.ok) {
+        setError(result.message);
+      } else {
+        setMessage(`We sent another email to ${result.parentEmail}.`);
+      }
+    } catch {
+      setError("Couldn’t resend the email. Try again.");
+    } finally {
+      setResending(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <AgeGateShell eyebrow="Waiting">
+        <p style={{ color: "var(--foreground-muted)" }}>Loading…</p>
+      </AgeGateShell>
+    );
+  }
 
   return (
     <AgeGateShell eyebrow="Waiting">
@@ -21,7 +98,7 @@ function PendingContent() {
         className="text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
         style={{ color: "var(--violet)" }}
       >
-        Prototype
+        Almost there
       </p>
       <h1
         className="mt-3 font-[family-name:var(--font-fraunces)] text-[2rem] leading-tight sm:text-[2.25rem]"
@@ -38,46 +115,39 @@ function PendingContent() {
       >
         {parentEmail ? (
           <>
-            In a finished product, we would email{" "}
+            We emailed{" "}
             <span className="font-semibold text-[var(--foreground)]">
               {parentEmail}
             </span>{" "}
-            with an approval link. That email is <strong>not</strong> sent yet —
-            there is no email service connected.
+            an approval link. This page will continue once they approve.
           </>
         ) : (
           <>
-            In a finished product, a parent or guardian would get an approval
-            email. That email is <strong>not</strong> sent yet.
+            We sent a parent or guardian an approval link. This page will
+            continue once they approve.
           </>
         )}
       </p>
 
-      <div
-        className="mt-8 rounded-3xl border-2 p-5"
-        style={{
-          borderColor: "color-mix(in srgb, var(--gold) 50%, transparent)",
-          backgroundColor:
-            "color-mix(in srgb, var(--gold) 22%, var(--background))",
-        }}
+      {message ? (
+        <p className="mt-4 text-sm font-medium text-[var(--foreground)]">
+          {message}
+        </p>
+      ) : null}
+      {error ? (
+        <p className="mt-4 text-sm text-[#9B2C2C]" role="alert">
+          {error}
+        </p>
+      ) : null}
+
+      <button
+        type="button"
+        onClick={resend}
+        disabled={resending}
+        className="mt-8 inline-flex w-full items-center justify-center rounded-full border-2 border-[var(--violet)] bg-[color-mix(in_srgb,var(--rose)_18%,var(--background))] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--violet)] transition-colors hover:bg-[color-mix(in_srgb,var(--rose)_30%,var(--background))] disabled:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
       >
-        <p className="text-sm font-semibold text-[var(--foreground)]">
-          Demo only
-        </p>
-        <p
-          className="mt-2 text-sm leading-relaxed"
-          style={{ color: "var(--foreground-muted)" }}
-        >
-          Use this button to pretend a parent clicked the approval link in their
-          email.
-        </p>
-        <Link
-          href={approveHref}
-          className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-[var(--violet)] px-5 py-3 text-sm font-semibold text-[var(--on-violet)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
-        >
-          Simulate parent approval
-        </Link>
-      </div>
+        {resending ? "Sending…" : "Resend email"}
+      </button>
 
       <Link
         href="/age-verification/parent"
@@ -86,19 +156,5 @@ function PendingContent() {
         ← Change email
       </Link>
     </AgeGateShell>
-  );
-}
-
-export function ParentPendingClient() {
-  return (
-    <Suspense
-      fallback={
-        <AgeGateShell eyebrow="Waiting">
-          <p style={{ color: "var(--foreground-muted)" }}>Loading…</p>
-        </AgeGateShell>
-      }
-    >
-      <PendingContent />
-    </Suspense>
   );
 }

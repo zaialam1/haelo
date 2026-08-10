@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { isAgeGateCleared } from "@/lib/age-gate/types";
 
 function isSafeNextPath(path: string | null): path is string {
   return Boolean(path && path.startsWith("/") && !path.startsWith("//"));
@@ -43,6 +44,8 @@ export async function updateSession(request: NextRequest) {
   const isAuthenticated = Boolean(userId);
 
   const path = request.nextUrl.pathname;
+  const isAgeApprovePath = path === "/age-verification/approve";
+
   const protectedPrefixes = [
     "/home",
     "/settings",
@@ -65,9 +68,11 @@ export async function updateSession(request: NextRequest) {
     "/professional/connections",
     "/professional/recommend",
   ];
-  const isProtected = protectedPrefixes.some(
-    (prefix) => path === prefix || path.startsWith(`${prefix}/`),
-  );
+  const isProtected =
+    !isAgeApprovePath &&
+    protectedPrefixes.some(
+      (prefix) => path === prefix || path.startsWith(`${prefix}/`),
+    );
 
   if (!isAuthenticated && isProtected) {
     const url = request.nextUrl.clone();
@@ -93,8 +98,10 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // One-time username setup before entering the normal app.
-  if (isAuthenticated && userId && isProtected) {
+  // Personal accounts: age gate, then one-time username setup.
+  if (isAuthenticated && userId && (isProtected || path.startsWith("/age-verification"))) {
+    const ageExempt =
+      path.startsWith("/age-verification") || path.startsWith("/auth/");
     const usernameExempt =
       path === "/onboarding/username" ||
       path.startsWith("/age-verification") ||
@@ -102,27 +109,63 @@ export async function updateSession(request: NextRequest) {
 
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
-      .select("username_normalized")
+      .select("username_normalized, age_gate_status, account_role")
       .eq("id", userId)
       .maybeSingle();
 
     // If profiles aren't migrated yet, don't block the rest of Haelo.
-    if (!profileError) {
-      const mustChooseUsername =
-        !profile?.username_normalized;
+    if (!profileError && profile) {
+      const isPersonal = profile.account_role === "user";
+      const ageStatus = profile.age_gate_status ?? "unverified";
+      const ageCleared = isAgeGateCleared(ageStatus);
 
-      if (mustChooseUsername && !usernameExempt) {
+      if (isPersonal && !ageCleared && !ageExempt && isProtected) {
         const url = request.nextUrl.clone();
-        url.pathname = "/onboarding/username";
+        url.pathname =
+          ageStatus === "awaiting_parent"
+            ? "/age-verification/pending"
+            : "/age-verification";
         url.search = "";
         return NextResponse.redirect(url);
       }
 
-      if (!mustChooseUsername && path === "/onboarding/username") {
+      if (
+        isPersonal &&
+        ageCleared &&
+        path.startsWith("/age-verification") &&
+        !isAgeApprovePath
+      ) {
         const url = request.nextUrl.clone();
-        url.pathname = "/home";
+        url.pathname = profile.username_normalized
+          ? "/home"
+          : "/onboarding/username";
         url.search = "";
         return NextResponse.redirect(url);
+      }
+
+      if (isPersonal && ageStatus === "awaiting_parent" && path === "/age-verification") {
+        const url = request.nextUrl.clone();
+        url.pathname = "/age-verification/pending";
+        url.search = "";
+        return NextResponse.redirect(url);
+      }
+
+      if (isProtected) {
+        const mustChooseUsername = !profile.username_normalized;
+
+        if (mustChooseUsername && !usernameExempt) {
+          const url = request.nextUrl.clone();
+          url.pathname = "/onboarding/username";
+          url.search = "";
+          return NextResponse.redirect(url);
+        }
+
+        if (!mustChooseUsername && path === "/onboarding/username") {
+          const url = request.nextUrl.clone();
+          url.pathname = "/home";
+          url.search = "";
+          return NextResponse.redirect(url);
+        }
       }
     }
   }
