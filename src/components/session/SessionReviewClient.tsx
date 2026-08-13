@@ -6,7 +6,7 @@ import { FirstStarMoment } from "@/components/onboarding/FirstStarMoment";
 import { ResponseReview } from "@/components/session/ResponseReview";
 import { AnalysisFeedback } from "@/components/session/AnalysisFeedback";
 import { SessionAnalysisPanel } from "@/components/session/SessionAnalysisPanel";
-import { TransitionLink } from "@/components/transitions/TransitionLink";
+import { useOptionalPageTransition } from "@/components/transitions/PageTransitionProvider";
 import { trackEvent } from "@/lib/analytics/track";
 import { markOnboardingMilestoneAction } from "@/lib/preferences/actions";
 import { getVoicePlanetById } from "@/lib/home/voicePlanets";
@@ -52,6 +52,7 @@ export function SessionReviewClient({
   firstStarMoment = false,
 }: SessionReviewClientProps) {
   const router = useRouter();
+  const transition = useOptionalPageTransition();
   const content = getPlanetPageContent(planet);
   const accent = getVoicePlanetById(planet)?.color ?? "var(--violet)";
   const flow =
@@ -206,25 +207,47 @@ export function SessionReviewClient({
     }
   }
 
-  async function finishSession() {
+  function navigateTo(href: string) {
+    if (transition) {
+      transition.navigate({ href, variant: "fade" });
+      return;
+    }
+    router.push(href);
+  }
+
+  async function finishSession(nextHref?: string) {
     setError(null);
     setBusy(true);
     try {
       await persistReflectionNow();
       await completeSession(sessionId);
       trackEvent("session_completed", { sessionId, planet, source: flow.source });
-      if (firstStarMoment) {
+      if (firstStarMoment && !nextHref) {
         setShowFirstStar(true);
         setBusy(false);
         return;
       }
-      router.push(flow.afterCompleteHref(sessionId));
+      navigateTo(nextHref ?? flow.afterCompleteHref(sessionId));
     } catch (e) {
       setError(
         e instanceof Error ? e.message : "Could not finish this session.",
       );
       setBusy(false);
     }
+  }
+
+  /**
+   * Leaving after viewing analysis still counts as completing the session.
+   * Retry is optional — one recording + analysis is enough for a Journey star.
+   */
+  async function handleExit() {
+    if (busy) return;
+    if (!showAnalysis) {
+      navigateTo(flow.exitHref);
+      return;
+    }
+    const leaveHref = flow.source === "orbit" ? flow.exitHref : "/home";
+    await finishSession(leaveHref);
   }
 
   async function handleLookLater() {
@@ -559,16 +582,19 @@ export function SessionReviewClient({
       ) : null}
 
       <div className="mt-auto pt-12">
-        <TransitionLink
-          href={flow.exitHref}
-          variant="fade"
-          className="text-sm font-medium transition-opacity hover:opacity-70"
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => void handleExit()}
+          className="text-sm font-medium transition-opacity hover:opacity-70 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           style={{ color: "var(--foreground-muted)" }}
         >
           {flow.source === "orbit"
             ? "Back to Orbit"
-            : `Back to ${content.label}`}
-        </TransitionLink>
+            : showAnalysis
+              ? "Back to Universe"
+              : `Back to ${content.label}`}
+        </button>
       </div>
 
       {showFirstStar ? (
