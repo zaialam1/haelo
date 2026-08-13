@@ -2,6 +2,10 @@
  * Generate My Voice synthesis via the shared OpenAI analysis boundary.
  */
 
+import {
+  getOpenAIAnalysisModel,
+  getOpenAIApiKey,
+} from "@/lib/openai";
 import { getAnalysisProviderStatus } from "@/lib/sessions/analysisProvider";
 import { parseMyVoiceSummaryJson } from "./parse";
 import { buildMyVoiceUserPrompt, MY_VOICE_SYSTEM_PROMPT } from "./prompt";
@@ -24,8 +28,11 @@ export async function generateMyVoiceSummaryContent(
     throw new Error("My Voice synthesis currently requires OPENAI_API_KEY.");
   }
 
-  const apiKey = process.env.OPENAI_API_KEY!.trim();
-  const model = process.env.OPENAI_ANALYSIS_MODEL?.trim() || "gpt-4o-mini";
+  const apiKey = getOpenAIApiKey();
+  if (!apiKey) {
+    throw new Error("OPENAI_API_KEY is not set.");
+  }
+  const model = getOpenAIAnalysisModel();
 
   // Strip any accidental numeric leakage helpers — trends already qualitative.
   const safeInput = {

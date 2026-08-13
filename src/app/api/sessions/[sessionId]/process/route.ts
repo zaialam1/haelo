@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { toClientSafeErrorMessage } from "@/lib/openai";
 import { processSessionAnalysis } from "@/lib/sessions/processAnalysis";
 import { createClient } from "@/lib/supabase/server";
 
@@ -37,8 +38,10 @@ export async function POST(_request: Request, context: RouteContext) {
     }
     return NextResponse.json(result);
   } catch (e) {
-    const message =
-      e instanceof Error ? e.message : "Could not process this session.";
+    const message = toClientSafeErrorMessage(
+      e,
+      "Could not process this session.",
+    );
     console.error(`[sessions/process] ${sessionId} threw:`, message);
     return NextResponse.json({ error: message }, { status: 500 });
   }

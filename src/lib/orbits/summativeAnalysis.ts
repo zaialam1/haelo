@@ -3,6 +3,10 @@
  * Reuses the same OpenAI provider boundary as individual session analysis.
  */
 
+import {
+  getOpenAIAnalysisModel,
+  getOpenAIApiKey,
+} from "@/lib/openai";
 import type { OrbitDefinition } from "@/lib/orbits/types";
 import type { OrbitSummativeAnalysisContent } from "@/lib/orbits/types";
 import { PLANET_LABEL } from "@/lib/orbits/ui";
@@ -102,8 +106,11 @@ export async function generateOrbitSummativeAnalysis(opts: {
     );
   }
 
-  const apiKey = process.env.OPENAI_API_KEY!.trim();
-  const model = process.env.OPENAI_ANALYSIS_MODEL?.trim() || "gpt-4o-mini";
+  const apiKey = getOpenAIApiKey();
+  if (!apiKey) {
+    throw new Error("OPENAI_API_KEY is not set.");
+  }
+  const model = getOpenAIAnalysisModel();
 
   const reflectionBlocks = opts.reflections
     .map((r) => {

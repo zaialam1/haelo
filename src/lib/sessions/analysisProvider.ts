@@ -13,6 +13,10 @@
  */
 
 import {
+  getOpenAIAnalysisModel,
+  getOpenAIApiKey,
+} from "@/lib/openai";
+import {
   buildSessionAnalysisInput,
   type BuildSessionAnalysisInputArgs,
   type SessionAnalysisInput,
@@ -38,15 +42,16 @@ export type AnalysisProviderStatus =
 
 export function getAnalysisProviderStatus(): AnalysisProviderStatus {
   const openaiRaw = process.env.OPENAI_API_KEY;
+  const openaiKey = getOpenAIApiKey();
   const anthropicRaw = process.env.ANTHROPIC_API_KEY;
-  if (openaiRaw !== undefined && !openaiRaw.trim()) {
+  if (openaiRaw !== undefined && !openaiKey) {
     return {
       available: false,
       reason:
-        "OPENAI_API_KEY is present in the environment but empty. Paste your key into .env.local (no quotes), save the file, and restart npm run dev.",
+        "OPENAI_API_KEY is present in the environment but empty. Paste your key into .env.local (no quotes, no comments on the same line), save the file, and restart npm run dev.",
     };
   }
-  if (openaiRaw?.trim()) {
+  if (openaiKey) {
     return { available: true, provider: "openai" };
   }
   if (anthropicRaw?.trim()) {
@@ -222,7 +227,7 @@ export function parseAnalysisJson(
 async function generateWithOpenAI(
   input: SessionAnalysisInput,
 ): Promise<GenerateAnalysisResult> {
-  const apiKey = process.env.OPENAI_API_KEY?.trim();
+  const apiKey = getOpenAIApiKey();
   if (!apiKey) {
     throw new Error("OPENAI_API_KEY is not set.");
   }
@@ -235,8 +240,7 @@ async function generateWithOpenAI(
   }
 
   const includeComparison = Boolean(input.priorTranscript?.trim());
-  const model =
-    process.env.OPENAI_ANALYSIS_MODEL?.trim() || "gpt-4o-mini";
+  const model = getOpenAIAnalysisModel();
 
   const userPayload = buildAnalysisUserPayload(input);
   const forceInsufficient = hasInsufficientJourneyEvidence(

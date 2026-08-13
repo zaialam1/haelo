@@ -10,12 +10,17 @@
  * - OPENAI_TRANSCRIPTION_MODEL (default whisper-1)
  */
 
+import {
+  getOpenAIApiKey,
+  getOpenAITranscriptionModel,
+} from "@/lib/openai";
+
 export type TranscriptionProviderStatus =
   | { available: false; reason: string }
   | { available: true; provider: string };
 
 export function getTranscriptionProviderStatus(): TranscriptionProviderStatus {
-  if (process.env.OPENAI_API_KEY?.trim()) {
+  if (getOpenAIApiKey()) {
     return { available: true, provider: "openai-whisper" };
   }
   if (process.env.DEEPGRAM_API_KEY?.trim()) {
@@ -66,7 +71,7 @@ function audioFilename(storagePath: string, mimeType: string): string {
 async function transcribeWithOpenAIWhisper(
   input: TranscribeAudioInput,
 ): Promise<TranscribeAudioResult> {
-  const apiKey = process.env.OPENAI_API_KEY?.trim();
+  const apiKey = getOpenAIApiKey();
   if (!apiKey) {
     throw new Error("OPENAI_API_KEY is not set.");
   }
@@ -88,8 +93,7 @@ async function transcribeWithOpenAIWhisper(
   }
 
   const filename = audioFilename(input.storagePath, input.mimeType);
-  const model =
-    process.env.OPENAI_TRANSCRIPTION_MODEL?.trim() || "whisper-1";
+  const model = getOpenAITranscriptionModel();
 
   const form = new FormData();
   form.append(

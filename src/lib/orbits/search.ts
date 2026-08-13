@@ -6,6 +6,10 @@
  * or advice. Raw query text is never persisted.
  */
 
+import {
+  getOpenAIAnalysisModel,
+  getOpenAIApiKey,
+} from "@/lib/openai";
 import { getActiveOrbits, getOrbitByKey } from "@/lib/orbits/catalog";
 import { getOrbitRegion } from "@/lib/orbits/regions";
 import { getAnalysisProviderStatus } from "@/lib/sessions/analysisProvider";
@@ -104,11 +108,10 @@ function parseAiMatches(raw: unknown): OrbitSearchMatch[] {
 }
 
 async function rankWithOpenAI(query: string): Promise<OrbitSearchMatch[]> {
-  const apiKey = process.env.OPENAI_API_KEY?.trim();
+  const apiKey = getOpenAIApiKey();
   if (!apiKey) throw new Error("OPENAI_API_KEY is not set.");
 
-  const model =
-    process.env.OPENAI_ANALYSIS_MODEL?.trim() || "gpt-4o-mini";
+  const model = getOpenAIAnalysisModel();
   const catalog = compactCatalog();
 
   const response = await fetch("https://api.openai.com/v1/chat/completions", {

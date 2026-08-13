@@ -4,6 +4,7 @@ import {
   JOURNEY_METRICS_VERSION,
   type JourneyMetricResult,
 } from "@/lib/journey/metrics";
+import { toClientSafeErrorMessage } from "@/lib/openai";
 import { getOrbitByKey } from "@/lib/orbits/catalog";
 import { buildSessionAnalysisInput } from "@/lib/sessions/analysisInput";
 import {
@@ -341,8 +342,10 @@ export async function processSessionAnalysis(
     return {
       transcriptStatus: firstTranscript ? "ready" : "unavailable",
       analysisStatus: "failed",
-      message:
-        e instanceof Error ? e.message : "Analysis could not be completed.",
+      message: toClientSafeErrorMessage(
+        e,
+        "Analysis could not be completed.",
+      ),
     };
   }
 }
