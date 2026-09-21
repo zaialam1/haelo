@@ -48,7 +48,11 @@ export default async function SessionCompletePage({ params }: PageProps) {
 
   return (
     <SessionShell planet={planet}>
-      <SessionCompleteClient planet={planet} alreadyInJourney />
+      <SessionCompleteClient
+        planet={planet}
+        alreadyInJourney
+        promptText={session.prompt_text_snapshot}
+      />
     </SessionShell>
   );
 }

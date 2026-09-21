@@ -14,6 +14,7 @@ export type ResponseReviewProps = {
   accentColor?: string;
   label?: string;
   className?: string;
+  mimeType?: string | null;
 };
 
 type ReviewTab = "recording" | "transcript";
@@ -30,6 +31,7 @@ export function ResponseReview({
   accentColor = "var(--violet)",
   label = "Your response",
   className,
+  mimeType,
 }: ResponseReviewProps) {
   const [tab, setTab] = useState<ReviewTab>("recording");
 
@@ -83,6 +85,7 @@ export function ResponseReview({
             label={label}
             accentColor={accentColor}
             durationHintSeconds={durationSeconds}
+            mimeType={mimeType}
           />
         ) : (
           <TranscriptViewer

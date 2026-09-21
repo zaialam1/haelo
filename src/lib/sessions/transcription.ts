@@ -14,6 +14,7 @@ import {
   getOpenAIApiKey,
   getOpenAITranscriptionModel,
 } from "@/lib/openai";
+import { baseAudioMimeType } from "@/lib/sessions/audioMime";
 
 export type TranscriptionProviderStatus =
   | { available: false; reason: string }
@@ -94,11 +95,12 @@ async function transcribeWithOpenAIWhisper(
 
   const filename = audioFilename(input.storagePath, input.mimeType);
   const model = getOpenAITranscriptionModel();
+  const fileType = baseAudioMimeType(input.mimeType);
 
   const form = new FormData();
   form.append(
     "file",
-    new Blob([audioBytes], { type: input.mimeType || "application/octet-stream" }),
+    new Blob([audioBytes], { type: fileType }),
     filename,
   );
   form.append("model", model);

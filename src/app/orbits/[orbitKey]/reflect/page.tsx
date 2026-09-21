@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { OrbitReflectionClient } from "@/components/orbits/OrbitReflectionClient";
 import { OrbitSessionShell } from "@/components/orbits/OrbitSessionShell";
+import { getOnboardingSnapshot } from "@/lib/onboarding/data";
 import { getOrbitByKey } from "@/lib/orbits/catalog";
 import { getUserOrbitProgress } from "@/lib/orbits/progress";
 import { resolveNextOrbitReflection } from "@/lib/orbits/runtime";
+import { hasSeenMilestone } from "@/lib/preferences/types";
 import { createClient } from "@/lib/supabase/server";
 
 type PageProps = {
@@ -89,6 +91,12 @@ export default async function OrbitReflectPage({ params }: PageProps) {
   }).catch(() => {});
   // #endregion
 
+  const onboarding = await getOnboardingSnapshot(user.id);
+  const showIntro = !hasSeenMilestone(
+    onboarding.preferences,
+    "recording_introduced",
+  );
+
   return (
     <OrbitSessionShell planet={question.planet}>
       <OrbitReflectionClient
@@ -96,6 +104,7 @@ export default async function OrbitReflectPage({ params }: PageProps) {
         question={question}
         progress={liveProgress}
         completedCount={completedCount}
+        showIntro={showIntro}
       />
     </OrbitSessionShell>
   );

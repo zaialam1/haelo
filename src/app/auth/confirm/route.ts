@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const type = searchParams.get("type") as EmailOtpType | null;
   const next = safeNextPath(
     searchParams.get("next"),
-    type === "recovery" ? "/auth/update-password" : "/age-verification",
+    type === "recovery" ? "/auth/update-password" : "/home",
   );
 
   // #region agent log

@@ -22,6 +22,7 @@ import {
 } from "@/lib/safety/actions";
 import type { BlockedAccount } from "@/lib/safety/types";
 import { ProfessionalModeNav } from "@/components/professional/ProfessionalModeNav";
+import { IntroMoment } from "@/components/onboarding/IntroMoment";
 import { ReportModal } from "@/components/safety/ReportModal";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 
@@ -38,6 +39,7 @@ type Props = {
   variant?: "professional" | "settings";
   verified?: boolean;
   pendingVerification?: boolean;
+  showIntro?: boolean;
 };
 
 export function ConnectionsClient({
@@ -48,6 +50,7 @@ export function ConnectionsClient({
   variant = "settings",
   verified = true,
   pendingVerification = false,
+  showIntro = false,
 }: Props) {
   const isProfessional = accountRole === "professional";
   const isProfessionalVariant = variant === "professional";
@@ -130,6 +133,18 @@ export function ConnectionsClient({
               {formatUsernameDisplay(ownUsername)}
             </span>
           </p>
+        ) : null}
+
+        {showIntro ? (
+          <IntroMoment
+            milestone="connections_discovered"
+            title="Connections are optional."
+            body={
+              isProfessional
+                ? "Find someone by their Haelo name, then recommend an Orbit when it might help. They stay in control of their practice."
+                : "You can connect with people you trust. Sharing stays private unless you choose otherwise — you can always disconnect."
+            }
+          />
         ) : null}
 
         {isProfessional ? (

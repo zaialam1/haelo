@@ -15,11 +15,13 @@ export function OrbitReflectionClient({
   question,
   progress,
   completedCount,
+  showIntro = false,
 }: {
   orbit: OrbitDefinition;
   question: OrbitQuestionDefinition;
   progress: UserOrbitProgressRow;
   completedCount: number;
+  showIntro?: boolean;
 }) {
   const flow = orbitSessionFlow({
     orbitKey: orbit.orbitKey,
@@ -62,6 +64,7 @@ export function OrbitReflectionClient({
       prompt={{ id: question.questionKey, text: question.prompt }}
       explanation={question.explanation}
       flow={flow}
+      showIntro={showIntro}
       headerSlot={
         <div>
           <p

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { ConnectionsClient } from "@/components/connections/ConnectionsClient";
 import { listMyConnections } from "@/lib/connections/data";
+import { getOnboardingSnapshot } from "@/lib/onboarding/data";
+import { hasSeenMilestone } from "@/lib/preferences/types";
 import { ensureOwnProfile } from "@/lib/profiles/data";
 import { createClient } from "@/lib/supabase/server";
 
@@ -33,7 +35,14 @@ export default async function ConnectionsPage() {
     redirect("/professional/connections");
   }
 
-  const connections = await listMyConnections();
+  const [connections, onboarding] = await Promise.all([
+    listMyConnections(),
+    getOnboardingSnapshot(user.id),
+  ]);
+  const showIntro = !hasSeenMilestone(
+    onboarding.preferences,
+    "connections_discovered",
+  );
 
   return (
     <ConnectionsClient
@@ -42,6 +51,7 @@ export default async function ConnectionsPage() {
       ownUserId={profile.id}
       initialConnections={connections}
       variant="settings"
+      showIntro={showIntro}
     />
   );
 }

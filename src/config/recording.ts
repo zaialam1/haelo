@@ -7,6 +7,12 @@ export const SESSION_AUDIO_BUCKET = "reflections-audio";
 /** Signed URL lifetime for playback (seconds). */
 export const SESSION_AUDIO_SIGNED_URL_SECONDS = 3600;
 
+/**
+ * Reject header-only WebM files (a few hundred bytes) that still pass size > 0.
+ * A real ~0.5s Opus clip is typically well above this.
+ */
+export const MIN_RECORDING_BYTES = 1024;
+
 /** Preferred MediaRecorder MIME types, best first. */
 export const PREFERRED_AUDIO_MIME_TYPES = [
   "audio/webm;codecs=opus",

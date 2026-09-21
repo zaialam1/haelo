@@ -161,8 +161,9 @@ export function SignupForm() {
     function goNext() {
       // Avoid server actions right after client auth — cookie race causes
       // "An unexpected response was received from the server."
-      // Age gate always comes before username onboarding for personal accounts.
-      const href = "/age-verification";
+      // Username is claimed during signup; proxy sends incomplete profiles
+      // to /onboarding/username if needed.
+      const href = "/home";
       if (transition) {
         transition.navigate({ href, variant: "fade" });
       } else {

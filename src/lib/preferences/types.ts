@@ -14,7 +14,12 @@ export type OnboardingMilestone =
   | "journey_discovered"
   | "orbits_discovered"
   | "planet_growth_explained"
-  | "my_voice_introduced";
+  | "my_voice_introduced"
+  | "planet_discovered"
+  | "recording_introduced"
+  | "my_voice_opened"
+  | "connections_discovered"
+  | "professional_discovered";
 
 export const ONBOARDING_MILESTONES: readonly OnboardingMilestone[] = [
   "universe_seen",
@@ -25,6 +30,11 @@ export const ONBOARDING_MILESTONES: readonly OnboardingMilestone[] = [
   "orbits_discovered",
   "planet_growth_explained",
   "my_voice_introduced",
+  "planet_discovered",
+  "recording_introduced",
+  "my_voice_opened",
+  "connections_discovered",
+  "professional_discovered",
 ];
 
 export type NotificationCategory =

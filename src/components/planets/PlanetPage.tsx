@@ -1,9 +1,12 @@
 import { HomeBottomNav } from "@/components/home/HomeBottomNav";
 import { HomeNavWithRole } from "@/components/home/HomeNavWithRole";
+import { IntroMoment } from "@/components/onboarding/IntroMoment";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { getVoicePlanetById } from "@/lib/home/voicePlanets";
 import type { VoicePlanetId } from "@/lib/home/voicePlanets";
+import { getOnboardingSnapshot } from "@/lib/onboarding/data";
 import { getVoicePlanetPageData } from "@/lib/planets/data";
+import { hasSeenMilestone } from "@/lib/preferences/types";
 import { createClient } from "@/lib/supabase/server";
 import { PlanetHeroVisual } from "./PlanetHeroVisual";
 
@@ -33,12 +36,17 @@ export async function PlanetPage({ planetId }: PlanetPageProps) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { content, evolutionLevel, completedCount } = await getVoicePlanetPageData(
-    user?.id ?? null,
-    planetId,
-  );
+  const [{ content, evolutionLevel, completedCount }, onboarding] =
+    await Promise.all([
+      getVoicePlanetPageData(user?.id ?? null, planetId),
+      user ? getOnboardingSnapshot(user.id) : Promise.resolve(null),
+    ]);
   const hasGrowth = content.growth.length > 0;
   const hasSessions = content.recentSessions.length > 0;
+  const showIntro = Boolean(
+    onboarding &&
+      !hasSeenMilestone(onboarding.preferences, "planet_discovered"),
+  );
 
   const { planetEvolutionTeaser } = await import("@/lib/gamification/planetGrowth");
   const teaser = planetEvolutionTeaser(planetId, completedCount);
@@ -82,6 +90,14 @@ export async function PlanetPage({ planetId }: PlanetPageProps) {
           </svg>
           Back to Universe
         </TransitionLink>
+
+        {showIntro ? (
+          <IntroMoment
+            milestone="planet_discovered"
+            title={`Welcome to ${content.label}.`}
+            body="Each planet is a different kind of practice. Read the prompt below, then tap the button when you’re ready to speak — just a few minutes, no scores."
+          />
+        ) : null}
 
         {/* Hero + practice — side by side on desktop */}
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-14 xl:gap-20">

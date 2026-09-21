@@ -2,8 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { RecordingSession } from "@/components/recording/RecordingSession";
-import { countCompletedSessions } from "@/lib/onboarding/data";
+import {
+  countCompletedSessions,
+  getOnboardingSnapshot,
+} from "@/lib/onboarding/data";
 import { getPlanetPageContent } from "@/lib/planets/content";
+import { hasSeenMilestone } from "@/lib/preferences/types";
 import { getPromptById, isPlanet } from "@/lib/prompts";
 import { resolvePlanetSessionPrompt } from "@/lib/sessions/resolvePrompt";
 import { createClient } from "@/lib/supabase/server";
@@ -93,9 +97,15 @@ export default async function SessionPage({
 
   let promptPayload: { id: string; text: string };
   let firstSession = false;
+  let showIntro = false;
   try {
     // Honor the prompt previewed on the planet page when the ID is valid.
     const fromPlanet = promptParam ? getPromptById(promptParam) : undefined;
+    const onboarding = await getOnboardingSnapshot(user.id);
+    showIntro = !hasSeenMilestone(
+      onboarding.preferences,
+      "recording_introduced",
+    );
     if (fromPlanet && fromPlanet.planet === planet) {
       promptPayload = {
         id: fromPlanet.id,
@@ -163,6 +173,7 @@ export default async function SessionPage({
           planet={planet}
           prompt={promptPayload}
           firstSession={firstSession}
+          showIntro={showIntro}
         />
       </div>
     </main>

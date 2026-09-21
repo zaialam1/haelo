@@ -10,6 +10,7 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { getSessionAudioUrl } from "@/lib/sessions/audio";
+import { baseAudioMimeType } from "@/lib/sessions/audioMime";
 
 export type SessionAudioPlayerProps = {
   /** Private storage path — signed on demand. Omit when using src. */
@@ -21,6 +22,8 @@ export type SessionAudioPlayerProps = {
   className?: string;
   /** Known duration from DB; refined when metadata loads. */
   durationHintSeconds?: number | null;
+  /** Container MIME (no codecs) so Chrome can decode the file. */
+  mimeType?: string | null;
 };
 
 function formatTime(seconds: number): string {
@@ -44,6 +47,7 @@ export function SessionAudioPlayer({
   accentColor = "var(--violet)",
   className,
   durationHintSeconds,
+  mimeType,
 }: SessionAudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -99,12 +103,13 @@ export function SessionAudioPlayer({
     };
   }, [storagePath, src]);
 
+  const playbackType = baseAudioMimeType(mimeType);
+
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !resolvedSrc) return;
-    audio.src = resolvedSrc;
     audio.load();
-  }, [resolvedSrc]);
+  }, [resolvedSrc, playbackType]);
 
   const syncDurationFromAudio = useCallback(() => {
     const audio = audioRef.current;
@@ -246,7 +251,10 @@ export function SessionAudioPlayer({
         preload="auto"
         onLoadedMetadata={syncDurationFromAudio}
         onDurationChange={syncDurationFromAudio}
-        onCanPlay={syncDurationFromAudio}
+        onCanPlay={() => {
+          setError(null);
+          syncDurationFromAudio();
+        }}
         onTimeUpdate={(e) => {
           if (!draggingRef.current) {
             setCurrentTime(e.currentTarget.currentTime);
@@ -265,7 +273,11 @@ export function SessionAudioPlayer({
         }}
         className="sr-only"
         aria-labelledby={labelId}
-      />
+      >
+        {resolvedSrc ? (
+          <source src={resolvedSrc} type={playbackType} />
+        ) : null}
+      </audio>
 
       <p id={labelId} className="sr-only">
         {label}
@@ -275,7 +287,7 @@ export function SessionAudioPlayer({
         <button
           type="button"
           onClick={() => void togglePlay()}
-          disabled={loading || !resolvedSrc || Boolean(error)}
+          disabled={loading || !resolvedSrc}
           aria-label={playing ? `Pause ${label}` : `Play ${label}`}
           className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-4 text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           style={{

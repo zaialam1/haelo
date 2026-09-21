@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { PlanetTags } from "@/components/orbits/PlanetTags";
+import { ShareAchievementButton } from "@/components/session/ShareAchievementButton";
 import {
   retryOrbitSynthesisAction,
   runOrbitSynthesisAction,
@@ -197,6 +198,11 @@ export function OrbitCompleteClient({
           View in Journey
         </TransitionLink>
       </div>
+
+      <ShareAchievementButton
+        className="mt-8"
+        achievementLabel={orbitTitle}
+      />
     </article>
   );
 }

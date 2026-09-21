@@ -214,7 +214,11 @@ async function ensureAttemptTranscript(
     });
     await markAttemptTranscript(attempt.id, "ready", result.text);
     return result.text;
-  } catch {
+  } catch (e) {
+    console.error(
+      "[sessions/process] transcription failed:",
+      e instanceof Error ? e.message : e,
+    );
     await markAttemptTranscript(attempt.id, "failed", null);
     return null;
   }

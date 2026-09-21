@@ -162,6 +162,7 @@ export function SessionCompareClient({
               transcriptStatus={first.transcript_status}
               accentColor={accent}
               label="First response"
+              mimeType={first.mime_type}
             />
           </div>
         </section>
@@ -189,6 +190,7 @@ export function SessionCompareClient({
               transcriptStatus={second.transcript_status}
               accentColor={accent}
               label="Second response"
+              mimeType={second.mime_type}
             />
           </div>
         </section>

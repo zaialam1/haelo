@@ -200,7 +200,11 @@ export function SpeakSession({
     }
     if (!streamRef.current) {
       streamRef.current = await navigator.mediaDevices.getUserMedia({
-        audio: true,
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        },
       });
     }
     const recorder = new MediaRecorder(streamRef.current);
@@ -212,6 +216,15 @@ export function SpeakSession({
     return recorder;
   }
 
+  function startMediaRecorder(recorder: MediaRecorder) {
+    const mime = recorder.mimeType || "";
+    if (mime.toLowerCase().includes("webm") || mime.toLowerCase().includes("ogg")) {
+      recorder.start();
+    } else {
+      recorder.start(1000);
+    }
+  }
+
   async function beginRecording() {
     setError(null);
     try {
@@ -221,7 +234,7 @@ export function SpeakSession({
           { questionId: current.id, startSeconds: 0 },
         ];
         chunksRef.current = [];
-        recorder.start(250);
+        startMediaRecorder(recorder);
         startSpeechRecognition();
         startTimer();
         setPhase("recording");
@@ -229,7 +242,7 @@ export function SpeakSession({
       }
 
       chunksRef.current = [];
-      recorder.start(250);
+      startMediaRecorder(recorder);
       startSpeechRecognition();
       startTimer();
       setPhase("recording");
@@ -279,10 +292,17 @@ export function SpeakSession({
       }
       recorder.onstop = () => {
         const blob = new Blob(chunksRef.current, {
-          type: recorder.mimeType || "audio/webm",
+          type: (recorder.mimeType || "audio/webm").split(";")[0].trim(),
         });
         resolve(blob);
       };
+      try {
+        if (typeof recorder.requestData === "function" && recorder.state === "recording") {
+          recorder.requestData();
+        }
+      } catch {
+        /* ignore */
+      }
       recorder.stop();
     });
   }
@@ -307,7 +327,7 @@ export function SpeakSession({
       throw new Error("No audio was captured. Try recording again.");
     }
 
-    const contentType = opts.blob.type || "audio/webm";
+    const contentType = (opts.blob.type || "audio/webm").split(";")[0].trim();
     const ext = extensionForMime(contentType);
     const clipId =
       typeof crypto !== "undefined" && crypto.randomUUID

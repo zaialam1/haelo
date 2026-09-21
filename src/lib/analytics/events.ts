@@ -19,6 +19,7 @@ export type AnalyticsEventName =
   | "recording_started"
   | "recording_completed"
   | "session_completed"
+  | "session_share_clicked"
   | "analysis_viewed"
   | "experiment_started"
   | "experiment_completed"

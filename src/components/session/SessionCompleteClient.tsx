@@ -1,6 +1,7 @@
 "use client";
 
 import { TransitionLink } from "@/components/transitions/TransitionLink";
+import { ShareAchievementButton } from "@/components/session/ShareAchievementButton";
 import { getVoicePlanetById } from "@/lib/home/voicePlanets";
 import { getPlanetPageContent } from "@/lib/planets/content";
 import type { Planet } from "@/lib/prompts";
@@ -8,11 +9,13 @@ import type { Planet } from "@/lib/prompts";
 type SessionCompleteClientProps = {
   planet: Planet;
   alreadyInJourney: boolean;
+  promptText?: string | null;
 };
 
 export function SessionCompleteClient({
   planet,
   alreadyInJourney,
+  promptText,
 }: SessionCompleteClientProps) {
   const content = getPlanetPageContent(planet);
   const accent = getVoicePlanetById(planet)?.color ?? "var(--violet)";
@@ -61,7 +64,13 @@ export function SessionCompleteClient({
         </span>
       </div>
 
-      <div className="mt-10 flex flex-wrap gap-3">
+      <ShareAchievementButton
+        className="mt-10"
+        achievementLabel={content.label}
+        promptText={promptText}
+      />
+
+      <div className="mt-8 flex flex-wrap gap-3">
         <TransitionLink
           href={`/${planet}`}
           variant="fade"

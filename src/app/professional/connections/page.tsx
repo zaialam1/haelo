@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { HomeNav } from "@/components/home/HomeNav";
 import { ConnectionsClient } from "@/components/connections/ConnectionsClient";
 import { listMyConnections } from "@/lib/connections/data";
+import { getOnboardingSnapshot } from "@/lib/onboarding/data";
+import { hasSeenMilestone } from "@/lib/preferences/types";
 import { getProfessionalContext } from "@/lib/professional";
 import { formatUsernameDisplay } from "@/lib/profiles/username";
 
@@ -20,7 +22,14 @@ export default async function ProfessionalConnectionsPage() {
     redirect("/home");
   }
 
-  const connections = await listMyConnections();
+  const [connections, onboarding] = await Promise.all([
+    listMyConnections(),
+    getOnboardingSnapshot(ctx.profile.id),
+  ]);
+  const showIntro = !hasSeenMilestone(
+    onboarding.preferences,
+    "connections_discovered",
+  );
   const usernameDisplay = ctx.profile.username
     ? formatUsernameDisplay(ctx.profile.username)
     : null;
@@ -43,6 +52,7 @@ export default async function ProfessionalConnectionsPage() {
           variant="professional"
           verified={ctx.isVerified}
           pendingVerification={pending}
+          showIntro={showIntro}
         />
       </div>
     </div>

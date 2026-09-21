@@ -3,7 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { DEFAULT_MAX_RECORDING_SECONDS } from "@/config/recording";
 import {
+  baseAudioMimeType,
   isMediaRecorderSupported,
+  isUsableRecordingBlob,
   pickSupportedMimeType,
 } from "@/lib/sessions/audio";
 import {
@@ -85,6 +87,39 @@ function mapGetUserMediaError(err: unknown): RecorderError {
     message:
       "Something went wrong starting the microphone. Please try again.",
   };
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
+}
+
+/**
+ * After OS/Chrome mic permission, the track can look live while still muted
+ * and producing no samples. Starting MediaRecorder then writes a header-only
+ * WebM that will not play or transcribe.
+ */
+async function waitForMicReady(stream: MediaStream): Promise<void> {
+  const track = stream.getAudioTracks()[0];
+  if (!track) return;
+  track.enabled = true;
+
+  if (track.muted || track.readyState !== "live") {
+    await Promise.race([
+      new Promise<void>((resolve) => {
+        const finish = () => {
+          track.removeEventListener("unmute", finish);
+          resolve();
+        };
+        track.addEventListener("unmute", finish);
+        if (!track.muted && track.readyState === "live") finish();
+      }),
+      sleep(1500),
+    ]);
+  }
+
+  await sleep(400);
 }
 
 export function useAudioRecorder(
@@ -259,7 +294,13 @@ export function useAudioRecorder(
       mediaRecorderRef.current = null;
       clearTimers();
 
-      if (!recorded || recorded.size === 0) {
+      const containerType = baseAudioMimeType(type);
+      const playable =
+        recorded.type === containerType
+          ? recorded
+          : new Blob([recorded], { type: containerType });
+
+      if (!isUsableRecordingBlob(playable)) {
         setBlob(null);
         setMimeType(null);
         revokeObjectUrl();
@@ -273,11 +314,11 @@ export function useAudioRecorder(
       }
 
       revokeObjectUrl();
-      const url = URL.createObjectURL(recorded);
+      const url = URL.createObjectURL(playable);
       objectUrlRef.current = url;
       setObjectUrl(url);
-      setBlob(recorded);
-      setMimeType(type);
+      setBlob(playable);
+      setMimeType(containerType);
       setStatus("recorded");
     },
     [
@@ -299,14 +340,20 @@ export function useAudioRecorder(
     setCountdownValue(null);
 
     recorder.onstop = () => {
-      const type = recorder.mimeType || chunksRef.current[0]?.type || "audio/webm";
-      const recorded = new Blob(chunksRef.current, { type });
+      const type =
+        recorder.mimeType || chunksRef.current[0]?.type || "audio/webm";
+      const recorded = new Blob(chunksRef.current, {
+        type: baseAudioMimeType(type),
+      });
       chunksRef.current = [];
       stoppingRef.current = false;
       finishWithBlob(recorded, type);
     };
 
     try {
+      if (typeof recorder.requestData === "function" && recorder.state === "recording") {
+        recorder.requestData();
+      }
       recorder.stop();
     } catch {
       stoppingRef.current = false;
@@ -319,7 +366,87 @@ export function useAudioRecorder(
     }
   }, [clearTimers, finishWithBlob, stopTracks]);
 
-  const beginCapture = useCallback(async () => {
+  const startRecorderFromOpenStream = useCallback(() => {
+    const stream = streamRef.current;
+    if (!stream) {
+      setError({
+        kind: "unknown",
+        message:
+          "Something went wrong starting the microphone. Please try again.",
+      });
+      setStatus("error");
+      return;
+    }
+
+    const preferred = pickSupportedMimeType();
+    const recorder =
+      preferred === null
+        ? null
+        : preferred
+          ? new MediaRecorder(stream, { mimeType: preferred })
+          : new MediaRecorder(stream);
+
+    if (!recorder) {
+      stopTracks();
+      setError({
+        kind: "unsupported",
+        message:
+          "This browser doesn’t support audio recording. Try Chrome, Safari, Edge, or Firefox on a recent version.",
+      });
+      setStatus("error");
+      return;
+    }
+
+    chunksRef.current = [];
+    recorder.ondataavailable = (e) => {
+      if (e.data.size > 0) chunksRef.current.push(e.data);
+    };
+    recorder.onerror = () => {
+      cleanupRecorder();
+      setError({
+        kind: "unknown",
+        message: "Recording failed unexpectedly. Please try again.",
+      });
+      setStatus("error");
+    };
+
+    mediaRecorderRef.current = recorder;
+    const mime = recorder.mimeType || preferred || "";
+    // Timeslice WebM is often unplayable. Safari/mp4 still needs a timeslice
+    // or stop() can flush an empty blob.
+    if (mime.toLowerCase().includes("webm") || mime.toLowerCase().includes("ogg")) {
+      recorder.start();
+    } else {
+      recorder.start(1000);
+    }
+    startedAtRef.current = Date.now();
+    setStatus("recording");
+    setElapsedSeconds(0);
+    startSpeechRecognition();
+
+    timerRef.current = window.setInterval(() => {
+      const elapsed = Math.floor((Date.now() - startedAtRef.current) / 1000);
+      setElapsedSeconds(elapsed);
+      if (elapsed >= maxSecondsRef.current) {
+        stopRecordingInternal();
+      }
+    }, 200);
+  }, [cleanupRecorder, startSpeechRecognition, stopRecordingInternal, stopTracks]);
+
+  const startRecording = useCallback(async () => {
+    startGenerationRef.current += 1;
+    const generation = startGenerationRef.current;
+    cleanupRecorder();
+    revokeObjectUrl();
+    setBlob(null);
+    setMimeType(null);
+    setElapsedSeconds(0);
+    setTranscript("");
+    finalTranscriptRef.current = "";
+    interimTranscriptRef.current = "";
+    setError(null);
+    setCountdownValue(null);
+
     if (!isMediaRecorderSupported()) {
       setError({
         kind: "unsupported",
@@ -330,134 +457,74 @@ export function useAudioRecorder(
       return;
     }
 
-    const generation = startGenerationRef.current;
     setStatus("requesting_permission");
-    setError(null);
-    setElapsedSeconds(0);
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        },
+      });
       if (generation !== startGenerationRef.current) {
         stream.getTracks().forEach((t) => t.stop());
         return;
       }
       streamRef.current = stream;
-
-      const preferred = pickSupportedMimeType();
-      const recorder =
-        preferred === null
-          ? null
-          : preferred
-            ? new MediaRecorder(stream, { mimeType: preferred })
-            : new MediaRecorder(stream);
-
-      if (!recorder) {
+      await waitForMicReady(stream);
+      if (generation !== startGenerationRef.current) {
         stopTracks();
-        setError({
-          kind: "unsupported",
-          message:
-            "This browser doesn’t support audio recording. Try Chrome, Safari, Edge, or Firefox on a recent version.",
-        });
-        setStatus("error");
         return;
       }
 
-      chunksRef.current = [];
-      recorder.ondataavailable = (e) => {
-        if (e.data.size > 0) chunksRef.current.push(e.data);
-      };
-      recorder.onerror = () => {
-        cleanupRecorder();
-        setError({
-          kind: "unknown",
-          message: "Recording failed unexpectedly. Please try again.",
-        });
-        setStatus("error");
-      };
+      if (countdownSeconds <= 0) {
+        startRecorderFromOpenStream();
+        return;
+      }
 
-      mediaRecorderRef.current = recorder;
-      recorder.start(250);
-      startedAtRef.current = Date.now();
-      setStatus("recording");
-      setElapsedSeconds(0);
-      startSpeechRecognition();
+      setStatus("countdown");
+      let remaining = countdownSeconds;
+      setCountdownValue(remaining);
 
-      timerRef.current = window.setInterval(() => {
-        const elapsed = Math.floor(
-          (Date.now() - startedAtRef.current) / 1000,
-        );
-        setElapsedSeconds(elapsed);
-        if (elapsed >= maxSecondsRef.current) {
-          stopRecordingInternal();
+      countdownTimerRef.current = window.setInterval(() => {
+        remaining -= 1;
+        if (remaining <= 0) {
+          if (countdownTimerRef.current != null) {
+            window.clearInterval(countdownTimerRef.current);
+            countdownTimerRef.current = null;
+          }
+          setCountdownValue(null);
+          if (generation !== startGenerationRef.current) return;
+          startRecorderFromOpenStream();
+          return;
         }
-      }, 200);
+        setCountdownValue(remaining);
+      }, 1000);
     } catch (err) {
       if (generation !== startGenerationRef.current) return;
       stopTracks();
-      const mapped = mapGetUserMediaError(err);
-      setError(mapped);
+      setError(mapGetUserMediaError(err));
       setStatus("error");
     }
   }, [
     cleanupRecorder,
-    startSpeechRecognition,
-    stopRecordingInternal,
-    stopTracks,
-  ]);
-
-  const startRecording = useCallback(async () => {
-    startGenerationRef.current += 1;
-    clearTimers();
-    stopSpeechRecognition();
-    revokeObjectUrl();
-    setBlob(null);
-    setMimeType(null);
-    setElapsedSeconds(0);
-    setTranscript("");
-    finalTranscriptRef.current = "";
-    interimTranscriptRef.current = "";
-    setError(null);
-
-    if (countdownSeconds <= 0) {
-      await beginCapture();
-      return;
-    }
-
-    setStatus("countdown");
-    let remaining = countdownSeconds;
-    setCountdownValue(remaining);
-
-    countdownTimerRef.current = window.setInterval(() => {
-      remaining -= 1;
-      if (remaining <= 0) {
-        if (countdownTimerRef.current != null) {
-          window.clearInterval(countdownTimerRef.current);
-          countdownTimerRef.current = null;
-        }
-        setCountdownValue(null);
-        void beginCapture();
-        return;
-      }
-      setCountdownValue(remaining);
-    }, 1000);
-  }, [
-    beginCapture,
-    clearTimers,
     countdownSeconds,
     revokeObjectUrl,
-    stopSpeechRecognition,
+    startRecorderFromOpenStream,
   ]);
 
   const stopRecording = useCallback(() => {
-    if (status === "countdown") {
+    if (status === "countdown" || status === "requesting_permission") {
       startGenerationRef.current += 1;
       clearTimers();
+      stopTracks();
       setCountdownValue(null);
       setStatus("idle");
       return;
     }
     stopRecordingInternal();
-  }, [clearTimers, status, stopRecordingInternal]);
+  }, [clearTimers, status, stopRecordingInternal, stopTracks]);
 
   const retake = useCallback(() => {
     startGenerationRef.current += 1;

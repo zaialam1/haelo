@@ -264,6 +264,7 @@ export function SessionRetryClient({
             }
             accentColor={accent}
             label="Second response"
+            mimeType={recorder.mimeType}
           />
         </div>
       ) : null}

@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { IntroMoment } from "@/components/onboarding/IntroMoment";
 import { SpeakSession } from "@/components/speak/SpeakSession";
+import { getOnboardingSnapshot } from "@/lib/onboarding/data";
+import { hasSeenMilestone } from "@/lib/preferences/types";
 import { resolveSpeakSession } from "@/lib/questions/sessions";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "Start Speaking — Haelo",
@@ -62,6 +66,19 @@ export default async function SpeakPage({ searchParams }: SpeakPageProps) {
     );
   }
 
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let showIntro = false;
+  if (user) {
+    const onboarding = await getOnboardingSnapshot(user.id);
+    showIntro = !hasSeenMilestone(
+      onboarding.preferences,
+      "recording_introduced",
+    );
+  }
+
   return (
     <main
       className="flex min-h-dvh w-full flex-col"
@@ -71,6 +88,13 @@ export default async function SpeakPage({ searchParams }: SpeakPageProps) {
       }}
     >
       <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-5 py-8 sm:px-10 sm:py-12">
+        {showIntro ? (
+          <IntroMoment
+            milestone="recording_introduced"
+            title="How a session works"
+            body="You’ll get a short prompt, then record your voice. When you stop, Haelo reflects back what it noticed — private to you, never graded."
+          />
+        ) : null}
         <SpeakSession
           mode={resolved.mode}
           questions={resolved.questions}

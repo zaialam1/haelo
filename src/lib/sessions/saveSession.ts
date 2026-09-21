@@ -1,6 +1,10 @@
 import { SESSION_AUDIO_BUCKET } from "@/config/recording";
 import { createClient } from "@/lib/supabase/client";
 import { extensionForMime } from "@/lib/sessions/audio";
+import {
+  baseAudioMimeType,
+  isUsableRecordingBlob,
+} from "@/lib/sessions/audioMime";
 import type {
   SaveSessionInput,
   SaveSessionResult,
@@ -27,7 +31,7 @@ async function uploadAttemptAudio(opts: {
   const { error: uploadError } = await supabase.storage
     .from(SESSION_AUDIO_BUCKET)
     .upload(storagePath, opts.blob, {
-      contentType: opts.mimeType,
+      contentType: baseAudioMimeType(opts.mimeType),
       upsert: false,
     });
 
@@ -67,12 +71,14 @@ export async function saveSessionAttempt(
     throw new Error("Sign in to save your session.");
   }
 
-  if (!input.blob || input.blob.size === 0) {
+  if (!isUsableRecordingBlob(input.blob)) {
     throw new Error("No audio was captured. Try recording again.");
   }
 
   const attemptNumber = input.attemptNumber ?? 1;
-  const mimeType = input.mimeType || input.blob.type || "audio/webm";
+  const mimeType = baseAudioMimeType(
+    input.mimeType || input.blob.type || "audio/webm",
+  );
   const attemptId = newId();
   let sessionId = input.sessionId;
   let createdNewSession = false;
@@ -187,6 +193,7 @@ export function kickoffSessionProcessing(sessionId: string): void {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({}),
+    keepalive: true,
   }).catch(() => {
     // Processing continues independently; UI polls session status.
   });

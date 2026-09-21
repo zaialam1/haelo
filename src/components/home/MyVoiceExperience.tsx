@@ -2,6 +2,7 @@
 
 import { HomeBottomNav } from "@/components/home/HomeBottomNav";
 import { HomeNav } from "@/components/home/HomeNav";
+import { IntroMoment } from "@/components/onboarding/IntroMoment";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { VOICE_PLANETS } from "@/lib/home/voicePlanets";
 import {
@@ -342,9 +343,13 @@ function ErrorState({
 
 type MyVoiceExperienceProps = {
   initialView: MyVoiceViewModel;
+  showIntro?: boolean;
 };
 
-export function MyVoiceExperience({ initialView }: MyVoiceExperienceProps) {
+export function MyVoiceExperience({
+  initialView,
+  showIntro = false,
+}: MyVoiceExperienceProps) {
   const [view, setView] = useState<MyVoiceViewModel>(initialView);
   const [pending, startTransition] = useTransition();
 
@@ -427,6 +432,16 @@ export function MyVoiceExperience({ initialView }: MyVoiceExperienceProps) {
         >
           My Voice
         </h1>
+
+        {showIntro ? (
+          <div className="mt-6">
+            <IntroMoment
+              milestone="my_voice_opened"
+              title="This is My Voice."
+              body="After enough reflections, Haelo gently notices patterns across your planets — not a score, just a mirror of how you’ve been speaking."
+            />
+          </div>
+        ) : null}
 
         <div className="mt-8 sm:mt-10">
           {view.phase === "generating" ? (

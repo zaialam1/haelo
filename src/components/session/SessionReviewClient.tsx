@@ -322,6 +322,7 @@ export function SessionReviewClient({
               transcriptStatus={attempt.transcript_status}
               accentColor={accent}
               label="First response"
+              mimeType={attempt.mime_type}
             />
           ) : (
             <p style={{ color: "var(--foreground-muted)" }}>

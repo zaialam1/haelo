@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { ParentEmailClient } from "@/components/auth/ParentEmailClient";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Parent permission — Haelo",
+  title: "Continue — Haelo",
 };
 
+/** Parent email consent is retired with the age gate. */
 export default function ParentEmailPage() {
-  return <ParentEmailClient />;
+  redirect("/home");
 }

@@ -1,6 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { isAgeGateCleared } from "@/lib/age-gate/types";
 
 function isSafeNextPath(path: string | null): path is string {
   return Boolean(path && path.startsWith("/") && !path.startsWith("//"));
@@ -62,7 +61,6 @@ export async function updateSession(request: NextRequest) {
     "/journey",
     "/orbits",
     "/onboarding",
-    "/age-verification",
     "/auth/update-password",
     "/professional/home",
     "/professional/connections",
@@ -98,74 +96,45 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Personal accounts: age gate, then one-time username setup.
-  if (isAuthenticated && userId && (isProtected || path.startsWith("/age-verification"))) {
-    const ageExempt =
-      path.startsWith("/age-verification") || path.startsWith("/auth/");
+  // Legacy age-verification URLs no longer gate access — send people onward.
+  if (
+    isAuthenticated &&
+    path.startsWith("/age-verification") &&
+    !isAgeApprovePath
+  ) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/home";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
+
+  // One-time username setup for authenticated users.
+  if (isAuthenticated && userId && isProtected) {
     const usernameExempt =
-      path === "/onboarding/username" ||
-      path.startsWith("/age-verification") ||
-      path.startsWith("/auth/");
+      path === "/onboarding/username" || path.startsWith("/auth/");
 
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
-      .select("username_normalized, age_gate_status, account_role")
+      .select("username_normalized")
       .eq("id", userId)
       .maybeSingle();
 
     // If profiles aren't migrated yet, don't block the rest of Haelo.
     if (!profileError && profile) {
-      const isPersonal = profile.account_role === "user";
-      const ageStatus = profile.age_gate_status ?? "unverified";
-      const ageCleared = isAgeGateCleared(ageStatus);
+      const mustChooseUsername = !profile.username_normalized;
 
-      if (isPersonal && !ageCleared && !ageExempt && isProtected) {
+      if (mustChooseUsername && !usernameExempt) {
         const url = request.nextUrl.clone();
-        url.pathname =
-          ageStatus === "awaiting_parent"
-            ? "/age-verification/pending"
-            : "/age-verification";
+        url.pathname = "/onboarding/username";
         url.search = "";
         return NextResponse.redirect(url);
       }
 
-      if (
-        isPersonal &&
-        ageCleared &&
-        path.startsWith("/age-verification") &&
-        !isAgeApprovePath
-      ) {
+      if (!mustChooseUsername && path === "/onboarding/username") {
         const url = request.nextUrl.clone();
-        url.pathname = profile.username_normalized
-          ? "/home"
-          : "/onboarding/username";
+        url.pathname = "/home";
         url.search = "";
         return NextResponse.redirect(url);
-      }
-
-      if (isPersonal && ageStatus === "awaiting_parent" && path === "/age-verification") {
-        const url = request.nextUrl.clone();
-        url.pathname = "/age-verification/pending";
-        url.search = "";
-        return NextResponse.redirect(url);
-      }
-
-      if (isProtected) {
-        const mustChooseUsername = !profile.username_normalized;
-
-        if (mustChooseUsername && !usernameExempt) {
-          const url = request.nextUrl.clone();
-          url.pathname = "/onboarding/username";
-          url.search = "";
-          return NextResponse.redirect(url);
-        }
-
-        if (!mustChooseUsername && path === "/onboarding/username") {
-          const url = request.nextUrl.clone();
-          url.pathname = "/home";
-          url.search = "";
-          return NextResponse.redirect(url);
-        }
       }
     }
   }

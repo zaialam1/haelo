@@ -1,6 +1,7 @@
 "use client";
 
 import { TransitionLink } from "@/components/transitions/TransitionLink";
+import { IntroMoment } from "@/components/onboarding/IntroMoment";
 import { ProfessionalIdentityMark } from "@/components/professional/ProfessionalIdentityMark";
 import { ProfessionalModeNav } from "@/components/professional/ProfessionalModeNav";
 
@@ -12,6 +13,7 @@ type Props = {
   connectedCount: number;
   pendingIncomingCount: number;
   recentRecommendationCount: number;
+  showIntro?: boolean;
 };
 
 export function ProfessionalHomeExperience({
@@ -22,6 +24,7 @@ export function ProfessionalHomeExperience({
   connectedCount,
   pendingIncomingCount,
   recentRecommendationCount,
+  showIntro = false,
 }: Props) {
   const isEmpty =
     connectedCount === 0 &&
@@ -68,6 +71,15 @@ export function ProfessionalHomeExperience({
           <p className="professional-home__lede">
             Help someone find the right place to practice their voice.
           </p>
+          {showIntro ? (
+            <div className="mt-5 text-left">
+              <IntroMoment
+                milestone="professional_discovered"
+                title="This is Professional Mode."
+                body="Connect with people on Haelo, then recommend an Orbit when a situation fits. Their practice stays theirs — you just point the way."
+              />
+            </div>
+          ) : null}
           {(usernameDisplay || displayName) && (
             <div className="professional-home__identity">
               <ProfessionalIdentityMark

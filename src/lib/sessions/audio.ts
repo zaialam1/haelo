@@ -5,6 +5,11 @@ import {
 } from "@/config/recording";
 import { createClient } from "@/lib/supabase/client";
 
+export {
+  baseAudioMimeType,
+  isUsableRecordingBlob,
+} from "@/lib/sessions/audioMime";
+
 export function pickSupportedMimeType(): string | null {
   if (typeof MediaRecorder === "undefined") return null;
   if (typeof MediaRecorder.isTypeSupported !== "function") {

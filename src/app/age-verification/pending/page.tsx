@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { ParentPendingClient } from "@/components/auth/ParentPendingClient";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Waiting for approval — Haelo",
+  title: "Continue — Haelo",
 };
 
+/** Parental consent wait screen is retired with the age gate. */
 export default function ParentPendingPage() {
-  return <ParentPendingClient />;
+  redirect("/home");
 }

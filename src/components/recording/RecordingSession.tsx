@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { ResponseReview } from "@/components/session/ResponseReview";
+import { IntroMoment } from "@/components/onboarding/IntroMoment";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { useOptionalPageTransition } from "@/components/transitions/PageTransitionProvider";
 import { DEFAULT_MAX_RECORDING_SECONDS } from "@/config/recording";
@@ -44,6 +45,8 @@ type RecordingSessionProps = {
   headerSlot?: ReactNode;
   /** First-ever recording: show one low-pressure guidance line. */
   firstSession?: boolean;
+  /** One-time intro banner for new users on their first recording screen. */
+  showIntro?: boolean;
 };
 
 function formatTime(seconds: number): string {
@@ -59,6 +62,7 @@ export function RecordingSession({
   flow: flowProp,
   headerSlot,
   firstSession = false,
+  showIntro = false,
 }: RecordingSessionProps) {
   const content = getPlanetPageContent(planet);
   const voicePlanet = getVoicePlanetById(planet);
@@ -240,6 +244,16 @@ export function RecordingSession({
         </button>
       </div>
 
+      {showIntro ? (
+        <div className="mt-5">
+          <IntroMoment
+            milestone="recording_introduced"
+            title="How a session works"
+            body="You’ll get a short prompt, then record your voice. When you stop, Haelo reflects back what it noticed — private to you, never graded."
+          />
+        </div>
+      ) : null}
+
       {headerSlot ? <div className="mt-6">{headerSlot}</div> : null}
 
       <div className="flex flex-1 flex-col justify-center py-8 sm:py-12">
@@ -371,6 +385,7 @@ export function RecordingSession({
                 }
                 accentColor={accent}
                 label="Your response"
+                mimeType={recorder.mimeType}
               />
             </div>
             <p

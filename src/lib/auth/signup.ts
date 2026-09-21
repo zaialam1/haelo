@@ -133,7 +133,7 @@ export async function signUp(input: SignUpInput): Promise<SignUpResult> {
 
   const emailRedirectTo =
     typeof window !== "undefined"
-      ? `${window.location.origin}/auth/callback?next=/age-verification`
+      ? `${window.location.origin}/auth/callback?next=/home`
       : undefined;
 
   const { data, error } = await supabase.auth.signUp({

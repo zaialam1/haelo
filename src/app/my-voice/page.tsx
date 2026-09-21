@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { MyVoiceExperience } from "@/components/home/MyVoiceExperience";
 import { openMyVoiceForUser } from "@/lib/myVoice/ensure";
+import { getOnboardingSnapshot } from "@/lib/onboarding/data";
+import { hasSeenMilestone } from "@/lib/preferences/types";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -20,7 +22,14 @@ export default async function MyVoicePage() {
     redirect("/login");
   }
 
-  const view = await openMyVoiceForUser({ userId: user.id });
+  const [view, onboarding] = await Promise.all([
+    openMyVoiceForUser({ userId: user.id }),
+    getOnboardingSnapshot(user.id),
+  ]);
+  const showIntro = !hasSeenMilestone(
+    onboarding.preferences,
+    "my_voice_opened",
+  );
 
-  return <MyVoiceExperience initialView={view} />;
+  return <MyVoiceExperience initialView={view} showIntro={showIntro} />;
 }

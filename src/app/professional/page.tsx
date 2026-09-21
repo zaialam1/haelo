@@ -3,6 +3,8 @@ import { HomeNav } from "@/components/home/HomeNav";
 import { ProfessionalMarketing } from "@/components/professional/ProfessionalMarketing";
 import { ProfessionalHomeExperience } from "@/components/professional/ProfessionalHomeExperience";
 import { listMyConnections } from "@/lib/connections/data";
+import { getOnboardingSnapshot } from "@/lib/onboarding/data";
+import { hasSeenMilestone } from "@/lib/preferences/types";
 import { getProfessionalContext } from "@/lib/professional";
 import { listProfessionalSentRecommendations } from "@/lib/recommendations";
 import { formatUsernameDisplay } from "@/lib/profiles/username";
@@ -55,9 +57,10 @@ export default async function ProfessionalPage() {
     );
   }
 
-  const [connections, sent] = await Promise.all([
+  const [connections, sent, onboarding] = await Promise.all([
     listMyConnections(),
     listProfessionalSentRecommendations(ctx.profile.id),
+    getOnboardingSnapshot(ctx.profile.id),
   ]);
 
   const connectedCount = connections.filter((c) => c.status === "accepted").length;
@@ -68,6 +71,10 @@ export default async function ProfessionalPage() {
   const usernameDisplay = ctx.profile.username
     ? formatUsernameDisplay(ctx.profile.username)
     : null;
+  const showIntro = !hasSeenMilestone(
+    onboarding.preferences,
+    "professional_discovered",
+  );
 
   return (
     <div
@@ -88,6 +95,7 @@ export default async function ProfessionalPage() {
         connectedCount={connectedCount}
         pendingIncomingCount={pendingIncomingCount}
         recentRecommendationCount={sent.length}
+        showIntro={showIntro}
       />
     </div>
   );

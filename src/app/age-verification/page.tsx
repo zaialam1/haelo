@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { AgeVerificationClient } from "@/components/auth/AgeVerificationClient";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Age verification — Haelo",
-  description: "Confirm whether you are 13 or older to continue with Haelo.",
+  title: "Continue — Haelo",
+  description: "Continue into Haelo.",
 };
 
+/** Age verification is no longer required — send people into the app. */
 export default function AgeVerificationPage() {
-  return <AgeVerificationClient />;
+  redirect("/home");
 }

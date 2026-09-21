@@ -20,7 +20,7 @@ export default function AuthCallbackPage() {
     async function run() {
       const params = new URLSearchParams(window.location.search);
       const code = params.get("code");
-      const next = safeNextPath(params.get("next"), "/age-verification");
+      const next = safeNextPath(params.get("next"), "/home");
       const cookieNames = document.cookie
         ? document.cookie.split(";").map((part) => part.trim().split("=")[0])
         : [];
