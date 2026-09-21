@@ -2,46 +2,26 @@ import { getCosmeticByKey } from "@/lib/cosmetics/catalog";
 import type { SlotAssignment } from "@/lib/cosmetics/types";
 import { CosmeticSprite } from "@/components/cosmetics/CosmeticSprite";
 
-const HERO_SLOT_STYLE: Record<
+const HERO_SLOTS: Record<
   string,
-  { className: string; sizePct: number; z: number }
+  { left: string; top: string; sizePct: number; z: number }
 > = {
-  ring: {
-    className: "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
-    sizePct: 160,
-    z: 0,
-  },
-  moon: {
-    className: "absolute right-[-2%] top-[0%]",
-    sizePct: 28,
-    z: 2,
-  },
-  creature: {
-    className: "absolute right-[-4%] bottom-[10%]",
-    sizePct: 32,
-    z: 2,
-  },
-  ground: {
-    className: "absolute bottom-[-4%] left-1/2 -translate-x-1/2",
-    sizePct: 34,
-    z: 2,
-  },
-  sky: {
-    className: "absolute left-[0%] top-[-4%]",
-    sizePct: 40,
-    z: 0,
-  },
+  ring: { left: "50%", top: "50%", sizePct: 162, z: 0 },
+  moon: { left: "90%", top: "8%", sizePct: 28, z: 2 },
+  creature: { left: "94%", top: "74%", sizePct: 32, z: 2 },
+  ground: { left: "50%", top: "98%", sizePct: 34, z: 2 },
+  sky: { left: "10%", top: "2%", sizePct: 38, z: 0 },
 };
 
 function stackOffset(index: number): { x: number; y: number; scale: number } {
   if (index === 0) return { x: 0, y: 0, scale: 1 };
-  const angle = ((index - 1) * 47) % 360;
+  const angle = ((index - 1) * 52) % 360;
   const rad = (angle * Math.PI) / 180;
-  const dist = 14 + index * 8;
+  const dist = 12 + index * 7;
   return {
     x: Math.cos(rad) * dist,
     y: Math.sin(rad) * dist,
-    scale: Math.max(0.72, 1 - index * 0.08),
+    scale: Math.max(0.75, 1 - index * 0.07),
   };
 }
 
@@ -50,7 +30,6 @@ type CosmeticsPlanetOverlayProps = {
   className?: string;
 };
 
-/** Zoomed planet-page overlays — supports many items per slot. */
 export function CosmeticsPlanetOverlay({
   assignments,
   className,
@@ -71,8 +50,8 @@ export function CosmeticsPlanetOverlay({
       aria-hidden="true"
     >
       {[...bySlot.entries()].flatMap(([slotKey, list]) => {
-        const style = HERO_SLOT_STYLE[slotKey];
-        if (!style) return [];
+        const layout = HERO_SLOTS[slotKey];
+        if (!layout) return [];
 
         return list.map((assignment, index) => {
           const item = getCosmeticByKey(assignment.cosmeticKey!);
@@ -80,35 +59,27 @@ export function CosmeticsPlanetOverlay({
           const offset = stackOffset(index);
           const sizePct =
             slotKey === "ring"
-              ? style.sizePct + index * 20
-              : style.sizePct * offset.scale;
+              ? layout.sizePct + index * 18
+              : layout.sizePct * offset.scale;
 
           return (
             <span
               key={assignment.id}
-              className={style.className}
+              className="absolute"
               style={{
-                zIndex: style.z + index,
-                ...(slotKey === "ring"
-                  ? { transform: "translate(-50%, -50%)" }
-                  : index > 0
-                    ? { transform: `translate(${offset.x}px, ${offset.y}px)` }
-                    : {}),
+                left: layout.left,
+                top: layout.top,
+                width: `${sizePct}%`,
+                height: `${sizePct}%`,
+                zIndex: layout.z + index,
+                transform: `translate(-50%, -50%) translate(${offset.x}px, ${offset.y}px)`,
               }}
             >
-              <span
-                className="block"
-                style={{
-                  width: `${sizePct}%`,
-                  height: `${sizePct}%`,
-                }}
-              >
-                <CosmeticSprite
-                  visual={item.visual}
-                  size={Math.round(2.2 * sizePct)}
-                  className="h-full w-full"
-                />
-              </span>
+              <CosmeticSprite
+                visual={item.visual}
+                size={96}
+                className="h-full w-full"
+              />
             </span>
           );
         });

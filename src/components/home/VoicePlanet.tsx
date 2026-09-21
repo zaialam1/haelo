@@ -55,11 +55,8 @@ export function VoicePlanetOrb({
           animation: `planet-float ${floatDuration}s ease-in-out ${floatDelaySec}s infinite`,
         }}
       >
-        <span className="relative" style={{ width: sizeCss, height: sizeCss }}>
-          <CosmeticsOrbDecorations
-            assignments={cosmeticAssignments}
-            planetSizeCss={sizeCss}
-          />
+        <span className="relative overflow-visible" style={{ width: sizeCss, height: sizeCss }}>
+          <CosmeticsOrbDecorations assignments={cosmeticAssignments} />
           <EvolvedPlanet
             planetId={planet.id}
             level={level}
