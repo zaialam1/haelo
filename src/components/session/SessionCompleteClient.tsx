@@ -2,6 +2,7 @@
 
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { ShareAchievementButton } from "@/components/session/ShareAchievementButton";
+import { StardustChip } from "@/components/cosmetics/StardustChip";
 import { getVoicePlanetById } from "@/lib/home/voicePlanets";
 import { getPlanetPageContent } from "@/lib/planets/content";
 import type { Planet } from "@/lib/prompts";
@@ -10,12 +11,16 @@ type SessionCompleteClientProps = {
   planet: Planet;
   alreadyInJourney: boolean;
   promptText?: string | null;
+  stardustEarned?: number;
+  stardustBalance?: number;
 };
 
 export function SessionCompleteClient({
   planet,
   alreadyInJourney,
   promptText,
+  stardustEarned = 0,
+  stardustBalance = 0,
 }: SessionCompleteClientProps) {
   const content = getPlanetPageContent(planet);
   const accent = getVoicePlanetById(planet)?.color ?? "var(--violet)";
@@ -45,10 +50,30 @@ export function SessionCompleteClient({
           : "Your recording is saved. When this session is marked complete, it will appear as a star in Journey."}
       </p>
 
-      <div
-        className="mt-10 flex items-center gap-3"
-        aria-hidden="true"
-      >
+      {stardustEarned > 0 ? (
+        <div
+          className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl px-4 py-3"
+          style={{
+            background: "color-mix(in srgb, var(--gold) 18%, var(--surface))",
+            border: "1px solid color-mix(in srgb, var(--gold) 40%, transparent)",
+          }}
+        >
+          <p className="text-sm font-semibold">
+            +{stardustEarned} Stardust earned
+          </p>
+          <StardustChip balance={stardustBalance} compact />
+          <TransitionLink
+            href="/store"
+            variant="fade"
+            className="text-sm font-semibold underline-offset-2 hover:underline"
+            style={{ color: "var(--violet)" }}
+          >
+            Visit store
+          </TransitionLink>
+        </div>
+      ) : null}
+
+      <div className="mt-10 flex items-center gap-3" aria-hidden="true">
         <span
           className="inline-block size-4 rounded-full"
           style={{

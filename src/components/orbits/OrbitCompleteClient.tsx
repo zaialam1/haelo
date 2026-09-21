@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { PlanetTags } from "@/components/orbits/PlanetTags";
 import { ShareAchievementButton } from "@/components/session/ShareAchievementButton";
+import { StardustChip } from "@/components/cosmetics/StardustChip";
 import {
   retryOrbitSynthesisAction,
   runOrbitSynthesisAction,
@@ -18,6 +19,8 @@ export function OrbitCompleteClient({
   analysis,
   analysisStatus,
   failureMessage,
+  stardustEarned = 0,
+  stardustBalance = 0,
 }: {
   orbitKey: string;
   orbitTitle: string;
@@ -25,6 +28,8 @@ export function OrbitCompleteClient({
   analysis: OrbitSummativeAnalysisContent | null;
   analysisStatus: "pending" | "ready" | "failed" | "missing";
   failureMessage?: string | null;
+  stardustEarned?: number;
+  stardustBalance?: number;
 }) {
   const [pending, startTransition] = useTransition();
   const [localStatus, setLocalStatus] = useState(analysisStatus);
@@ -88,6 +93,29 @@ export function OrbitCompleteClient({
       >
         Here&apos;s what came into focus.
       </p>
+
+      {stardustEarned > 0 ? (
+        <div
+          className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl px-4 py-3"
+          style={{
+            background: "color-mix(in srgb, var(--gold) 18%, var(--surface))",
+            border: "1px solid color-mix(in srgb, var(--gold) 40%, transparent)",
+          }}
+        >
+          <p className="text-sm font-semibold">
+            +{stardustEarned} Stardust from this Orbit
+          </p>
+          <StardustChip balance={stardustBalance} compact />
+          <TransitionLink
+            href="/store"
+            variant="fade"
+            className="text-sm font-semibold underline-offset-2 hover:underline"
+            style={{ color: "var(--violet)" }}
+          >
+            Visit store
+          </TransitionLink>
+        </div>
+      ) : null}
 
       {showPending ? (
         <p

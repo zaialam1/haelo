@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { revalidatePath } from "next/cache";
 import { SessionCompleteClient } from "@/components/session/SessionCompleteClient";
 import {
+  loadStardustBalance,
+  loadStardustEarnedForSession,
+} from "@/lib/cosmetics/data";
+import {
   loadOwnedSession,
   SessionNotFound,
   SessionShell,
@@ -46,12 +50,19 @@ export default async function SessionCompletePage({ params }: PageProps) {
     revalidatePath("/home");
   }
 
+  const [stardustEarned, stardustBalance] = await Promise.all([
+    loadStardustEarnedForSession(userId, sessionId),
+    loadStardustBalance(userId),
+  ]);
+
   return (
     <SessionShell planet={planet}>
       <SessionCompleteClient
         planet={planet}
         alreadyInJourney
         promptText={session.prompt_text_snapshot}
+        stardustEarned={stardustEarned}
+        stardustBalance={stardustBalance}
       />
     </SessionShell>
   );

@@ -61,6 +61,8 @@ export async function updateSession(request: NextRequest) {
     "/journey",
     "/orbits",
     "/onboarding",
+    "/store",
+    "/decorate",
     "/auth/update-password",
     "/professional/home",
     "/professional/connections",

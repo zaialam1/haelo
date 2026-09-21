@@ -1,15 +1,19 @@
 import { CelestialDecorations } from "@/components/gamification/CelestialDecorations";
+import { CosmeticsUniverseLayer } from "@/components/cosmetics/CosmeticsUniverseLayer";
 import { WeeklyConstellationGoal } from "@/components/gamification/WeeklyConstellationGoal";
 import type {
   UserCelestialReward,
   WeeklyVoiceProgress,
 } from "@/lib/gamification/types";
+import type { SlotAssignment } from "@/lib/cosmetics/types";
 import { VOICE_PLANETS } from "@/lib/home/voicePlanets";
 import type { VoicePlanetId } from "@/lib/home/voicePlanets";
 import type { PlanetEvolutionLevel } from "@/lib/planets/evolution";
 import { MyVoiceIntroCue } from "@/components/onboarding/MyVoiceIntroCue";
 import { MyVoiceOrb } from "./MyVoiceOrb";
 import { VoicePlanetOrb } from "./VoicePlanet";
+import { TransitionLink } from "@/components/transitions/TransitionLink";
+import { StardustChip } from "@/components/cosmetics/StardustChip";
 
 /** Soft white orbital paths — matching the reference nebula look */
 const RINGS = [
@@ -29,6 +33,8 @@ type ConversationUniverseProps = {
   showWeeklyGoal?: boolean;
   /** One-time onboarding cue when My Voice first becomes ready. */
   showMyVoiceCue?: boolean;
+  cosmeticAssignments?: SlotAssignment[];
+  stardustBalance?: number;
 };
 
 export function ConversationUniverse({
@@ -37,6 +43,8 @@ export function ConversationUniverse({
   weeklyProgress = null,
   showWeeklyGoal = false,
   showMyVoiceCue = false,
+  cosmeticAssignments = [],
+  stardustBalance = 0,
 }: ConversationUniverseProps = {}) {
   return (
     <section
@@ -59,6 +67,37 @@ export function ConversationUniverse({
       />
 
       <CelestialDecorations rewards={celestialRewards} />
+      <CosmeticsUniverseLayer assignments={cosmeticAssignments} />
+
+      <div className="pointer-events-auto absolute right-4 top-[4.75rem] z-30 flex flex-col items-end gap-2 sm:right-6 sm:top-[5.25rem]">
+        <StardustChip balance={stardustBalance} compact />
+        <div className="flex gap-2">
+          <TransitionLink
+            href="/store"
+            variant="fade"
+            className="rounded-full px-3 py-1.5 text-[0.75rem] font-semibold"
+            style={{
+              background: "color-mix(in srgb, var(--surface) 70%, transparent)",
+              color: "var(--foreground)",
+              border:
+                "1px solid color-mix(in srgb, var(--violet) 20%, transparent)",
+            }}
+          >
+            Store
+          </TransitionLink>
+          <TransitionLink
+            href="/decorate"
+            variant="fade"
+            className="rounded-full px-3 py-1.5 text-[0.75rem] font-semibold"
+            style={{
+              background: "color-mix(in srgb, var(--gold) 35%, var(--surface))",
+              color: "var(--foreground)",
+            }}
+          >
+            Decorate
+          </TransitionLink>
+        </div>
+      </div>
 
       {showWeeklyGoal ? (
         <div className="pointer-events-none absolute inset-x-0 bottom-[5.5rem] z-20 flex justify-center sm:bottom-[6.25rem]">

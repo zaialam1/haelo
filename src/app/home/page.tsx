@@ -15,6 +15,10 @@ import {
   getPendingGamificationReveals,
   getUserCelestialRewards,
 } from "@/lib/gamification/data";
+import {
+  loadStardustBalance,
+  loadUniverseDecorationAssignments,
+} from "@/lib/cosmetics/data";
 import { MY_VOICE_MIN_SESSIONS_FOR_SYNTHESIS } from "@/lib/myVoice/thresholds";
 import { computeNextAction } from "@/lib/home/nextAction";
 import { listOwnNotifications } from "@/lib/notifications/data";
@@ -48,6 +52,8 @@ export default async function HomePage() {
     pendingReveals,
     reflectionCount,
     onboarding,
+    stardustBalance,
+    cosmeticAssignments,
   ] = await Promise.all([
     getUniversePlanetEvolutionLevels(userId),
     user ? listOwnNotifications() : Promise.resolve([]),
@@ -57,6 +63,8 @@ export default async function HomePage() {
     getPendingGamificationReveals(userId, { priority: "any", limit: 4 }),
     countEligibleReflections(userId),
     userId ? getOnboardingSnapshot(userId) : Promise.resolve(null),
+    loadStardustBalance(userId),
+    loadUniverseDecorationAssignments(userId),
   ]);
 
   const dailyQuestionText =
@@ -108,6 +116,8 @@ export default async function HomePage() {
         weeklyProgress={weeklyProgress}
         showWeeklyGoal={showWeeklyGoal}
         showMyVoiceCue={showMyVoiceCue}
+        cosmeticAssignments={cosmeticAssignments}
+        stardustBalance={stardustBalance}
       />
       {nextAction ? <ContinueCue action={nextAction} /> : null}
       <HomeNavWithRole />

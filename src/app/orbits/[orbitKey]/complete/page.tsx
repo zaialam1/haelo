@@ -90,10 +90,14 @@ export default async function OrbitCompletePage({ params }: PageProps) {
   }
 
   // Ensure orbit completion reward is unlocked (idempotent).
-  await processGamificationEvent(supabase, user.id, {
+  const gamification = await processGamificationEvent(supabase, user.id, {
     type: "orbit_completed",
     orbitProgressId: progress.id,
   });
+
+  const { loadStardustBalance } = await import("@/lib/cosmetics/data");
+  const stardustBalance = await loadStardustBalance(user.id);
+  const stardustEarned = gamification.stardustGranted;
 
   const orbitReveals = (
     await getPendingGamificationReveals(user.id, {
@@ -130,6 +134,8 @@ export default async function OrbitCompletePage({ params }: PageProps) {
             analysis={analysis}
             analysisStatus={analysisStatus}
             failureMessage={failureMessage}
+            stardustEarned={stardustEarned}
+            stardustBalance={stardustBalance}
           />
         </div>
       </main>

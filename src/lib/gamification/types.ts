@@ -133,6 +133,8 @@ export type ProcessGamificationResult = {
   rewardsUnlocked: UserCelestialReward[];
   milestonesUnlocked: UserMilestone[];
   reveals: GamificationReveal[];
+  /** Total Stardust newly credited during this process call */
+  stardustGranted: number;
 };
 
 export type EligibleSessionLite = {

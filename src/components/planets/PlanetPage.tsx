@@ -9,6 +9,7 @@ import { getVoicePlanetPageData } from "@/lib/planets/data";
 import { hasSeenMilestone } from "@/lib/preferences/types";
 import { createClient } from "@/lib/supabase/server";
 import { PlanetHeroVisual } from "./PlanetHeroVisual";
+import { loadPlanetSlotAssignments } from "@/lib/cosmetics/data";
 
 type PlanetPageProps = {
   planetId: VoicePlanetId;
@@ -36,10 +37,11 @@ export async function PlanetPage({ planetId }: PlanetPageProps) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [{ content, evolutionLevel, completedCount }, onboarding] =
+  const [{ content, evolutionLevel, completedCount }, onboarding, cosmetics] =
     await Promise.all([
       getVoicePlanetPageData(user?.id ?? null, planetId),
       user ? getOnboardingSnapshot(user.id) : Promise.resolve(null),
+      loadPlanetSlotAssignments(user?.id ?? null, planetId),
     ]);
   const hasGrowth = content.growth.length > 0;
   const hasSessions = content.recentSessions.length > 0;
@@ -102,7 +104,11 @@ export async function PlanetPage({ planetId }: PlanetPageProps) {
         {/* Hero + practice — side by side on desktop */}
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-14 xl:gap-20">
           <header className="flex flex-col items-center text-center lg:items-start lg:text-left">
-            <PlanetHeroVisual planet={planet} level={evolutionLevel} />
+            <PlanetHeroVisual
+              planet={planet}
+              level={evolutionLevel}
+              cosmeticAssignments={cosmetics}
+            />
 
             <h1
               className="mt-7 font-[family-name:var(--font-fraunces)] text-3xl tracking-tight sm:mt-8 sm:text-4xl lg:mt-9 lg:text-5xl"

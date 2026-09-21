@@ -35,13 +35,22 @@ import type {
   UserMilestone,
   WeeklyVoiceProgress,
 } from "@/lib/gamification/types";
-import { weekKeyFromDate } from "@/lib/gamification/week";
+import { formatLocalDateKey, weekKeyFromDate } from "@/lib/gamification/week";
 import type { VoicePlanetId } from "@/lib/home/voicePlanets";
 import { getOrbitByKey } from "@/lib/orbits/catalog";
 import { isNotificationCategoryEnabled } from "@/lib/preferences/types";
 import { getPreferencesWith } from "@/lib/preferences/withClient";
 import type { OrbitRegionKey } from "@/lib/orbits/types";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import {
+  STARDUST_FIRST_OF_DAY_BONUS,
+  STARDUST_ORBIT_COMPLETE,
+  STARDUST_PLANET_EVOLUTION,
+  STARDUST_SESSION,
+  STARDUST_WEEKLY_GOAL,
+} from "@/lib/cosmetics/config";
+import { creditStardust } from "@/lib/cosmetics/wallet";
+import { trackEvent } from "@/lib/analytics";
 
 function eventKey(event: GamificationEvent): string {
   switch (event.type) {
@@ -393,6 +402,7 @@ export async function processGamificationEvent(
     rewardsUnlocked: [],
     milestonesUnlocked: [],
     reveals: [],
+    stardustGranted: 0,
   };
 
   try {
@@ -450,6 +460,22 @@ async function processGamificationEventInner(
     [];
   let weekly: WeeklyVoiceProgress | null = null;
   let weeklyJustCompleted = false;
+  let stardustGranted = 0;
+
+  async function grantStardust(
+    amount: number,
+    reason: string,
+    refKey: string,
+  ): Promise<void> {
+    const result = await creditStardust(supabase, amount, reason, refKey);
+    if (result.ok && result.credited > 0) {
+      stardustGranted += result.credited;
+      trackEvent("stardust_earned", {
+        amount: result.credited,
+        reason,
+      });
+    }
+  }
 
   // --- Weekly goal (session completions only) ---
   if (event.type === "session_completed") {
@@ -513,6 +539,12 @@ async function processGamificationEventInner(
           type: "weekly_goal_completed",
           weekKey: weekly.weekKey,
         });
+
+        await grantStardust(
+          STARDUST_WEEKLY_GOAL,
+          "weekly_goal",
+          `weekly:${weekly.weekKey}`,
+        );
       }
 
       // Planet stage changes
@@ -544,7 +576,29 @@ async function processGamificationEventInner(
           payload: change,
         });
         if (reveal) reveals.push(reveal);
+
+        await grantStardust(
+          STARDUST_PLANET_EVOLUTION,
+          "planet_evolution",
+          `planet_evolution:${change.planet}:${change.stage}`,
+        );
       }
+
+      // Stardust for the eligible session itself
+      await grantStardust(
+        STARDUST_SESSION,
+        "session_completed",
+        `session:${typed.id}:base`,
+      );
+
+      const dayKey = formatLocalDateKey(
+        typed.completed_at ? new Date(typed.completed_at) : new Date(),
+      );
+      await grantStardust(
+        STARDUST_FIRST_OF_DAY_BONUS,
+        "first_of_day",
+        `day_bonus:${dayKey}`,
+      );
     }
   }
 
@@ -593,6 +647,12 @@ async function processGamificationEventInner(
         });
         if (reveal) reveals.push(reveal);
       }
+
+      await grantStardust(
+        STARDUST_ORBIT_COMPLETE,
+        "orbit_completed",
+        `orbit:${progress.id}`,
+      );
     }
   }
 
@@ -777,6 +837,7 @@ async function processGamificationEventInner(
     rewardsUnlocked,
     milestonesUnlocked,
     reveals,
+    stardustGranted,
   };
 }
 

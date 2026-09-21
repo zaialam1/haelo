@@ -20,6 +20,7 @@ const emptyResult: ProcessGamificationResult = {
   rewardsUnlocked: [],
   milestonesUnlocked: [],
   reveals: [],
+  stardustGranted: 0,
 };
 
 export async function runGamificationEventAction(
