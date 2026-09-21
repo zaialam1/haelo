@@ -19,22 +19,21 @@ export function PlanetHeroVisual({
   level,
   cosmeticAssignments = [],
 }: PlanetHeroVisualProps) {
+  const sizeCss = "clamp(12rem, 38vw, 20rem)";
+
   return (
-    <div className="relative mx-auto w-fit lg:mx-0">
+    <div
+      className="planet-hero-visual relative mx-auto overflow-visible lg:mx-0"
+      style={{ width: sizeCss, height: sizeCss }}
+    >
+      <CosmeticsPlanetOverlay assignments={cosmeticAssignments} />
       <EvolvedPlanet
         planetId={planet.id}
         level={level}
         variant="hero"
         gradientPrefix="hero"
-        className="planet-hero-visual"
-        style={{
-          width: "clamp(12rem, 38vw, 20rem)",
-          height: "clamp(12rem, 38vw, 20rem)",
-        }}
-      />
-      <CosmeticsPlanetOverlay
-        assignments={cosmeticAssignments}
-        className="overflow-visible"
+        className="relative z-[1]"
+        style={{ width: "100%", height: "100%" }}
       />
     </div>
   );

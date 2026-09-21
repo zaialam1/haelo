@@ -67,7 +67,6 @@ export function ConversationUniverse({
       />
 
       <CelestialDecorations rewards={celestialRewards} />
-      <CosmeticsUniverseLayer assignments={cosmeticAssignments} />
 
       <div className="pointer-events-auto absolute right-4 top-[4.75rem] z-30 flex flex-col items-end gap-2 sm:right-6 sm:top-[5.25rem]">
         <StardustChip balance={stardustBalance} compact />
@@ -167,7 +166,10 @@ export function ConversationUniverse({
         </g>
       </svg>
 
+      {/* Planet stage — decorations share this coordinate space with orbs */}
       <div className="absolute inset-x-0 top-14 bottom-20 sm:top-16 sm:bottom-24">
+        <CosmeticsUniverseLayer assignments={cosmeticAssignments} />
+
         {RINGS.map((ring, i) => (
           <div
             key={ring.w}
@@ -196,6 +198,9 @@ export function ConversationUniverse({
             planet={planet}
             level={evolutionLevels?.[planet.id] ?? 1}
             floatDelaySec={(index * 0.55) % 2.6}
+            cosmeticAssignments={cosmeticAssignments.filter(
+              (a) => a.planet === planet.id && a.cosmeticKey,
+            )}
           />
         ))}
       </div>

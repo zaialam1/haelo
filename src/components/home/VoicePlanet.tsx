@@ -2,6 +2,8 @@
 
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { EvolvedPlanet } from "@/components/planets/EvolvedPlanet";
+import { CosmeticsOrbDecorations } from "@/components/cosmetics/CosmeticsOrbDecorations";
+import type { SlotAssignment } from "@/lib/cosmetics/types";
 import type { VoicePlanet } from "@/lib/home/voicePlanets";
 import { voicePlanetSizePx } from "@/lib/home/voicePlanets";
 import type { PlanetEvolutionLevel } from "@/lib/planets/evolution";
@@ -15,6 +17,8 @@ type VoicePlanetOrbProps = {
   absolute?: boolean;
   /** Replaces the tagline under the label. */
   subtitle?: string;
+  /** Equipped cosmetics for this planet */
+  cosmeticAssignments?: SlotAssignment[];
 };
 
 export function VoicePlanetOrb({
@@ -23,6 +27,7 @@ export function VoicePlanetOrb({
   floatDelaySec = 0,
   absolute = true,
   subtitle,
+  cosmeticAssignments = [],
 }: VoicePlanetOrbProps) {
   const px = voicePlanetSizePx(planet.size);
   const floatDuration = 5 + (floatDelaySec % 1.6);
@@ -50,14 +55,20 @@ export function VoicePlanetOrb({
           animation: `planet-float ${floatDuration}s ease-in-out ${floatDelaySec}s infinite`,
         }}
       >
-        <EvolvedPlanet
-          planetId={planet.id}
-          level={level}
-          variant={absolute ? "map" : "gallery"}
-          gradientPrefix={`map-${planet.id}-L${level}`}
-          style={{ width: sizeCss, height: sizeCss }}
-          className="transition-transform duration-300 group-hover:scale-[1.05] group-focus-visible:scale-[1.05]"
-        />
+        <span className="relative" style={{ width: sizeCss, height: sizeCss }}>
+          <CosmeticsOrbDecorations
+            assignments={cosmeticAssignments}
+            planetSizeCss={sizeCss}
+          />
+          <EvolvedPlanet
+            planetId={planet.id}
+            level={level}
+            variant={absolute ? "map" : "gallery"}
+            gradientPrefix={`map-${planet.id}-L${level}`}
+            style={{ width: "100%", height: "100%" }}
+            className="relative z-[1] transition-transform duration-300 group-hover:scale-[1.05] group-focus-visible:scale-[1.05]"
+          />
+        </span>
 
         <span
           className="text-center text-[0.625rem] font-semibold uppercase tracking-[0.12em] sm:text-xs"
