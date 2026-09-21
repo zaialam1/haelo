@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 
-const DEFAULT_SHARE_URL = "https://haelo.vercel.app";
+const DEFAULT_SHARE_URL = "https://haelo-six.vercel.app";
 
 export type ShareAchievementButtonProps = {
   /** Short label for what was completed, e.g. a planet name or Orbit title */
