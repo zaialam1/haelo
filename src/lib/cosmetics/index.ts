@@ -3,6 +3,8 @@ export { stardustConfig } from "./config";
 export {
   getCosmeticsStateAction,
   purchaseCosmeticAction,
+  placeCosmeticAction,
+  removeCosmeticPlacementAction,
   assignCosmeticSlotAction,
   clearCosmeticSlotAction,
 } from "./actions";

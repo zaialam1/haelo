@@ -3,8 +3,8 @@ import type { SlotAssignment } from "@/lib/cosmetics/types";
 import { CosmeticSprite } from "@/components/cosmetics/CosmeticSprite";
 
 /**
- * Decorations anchored to a planet orb's disc (not the label column).
- * Renders inside a `relative` wrapper around EvolvedPlanet.
+ * Decorations anchored to a planet orb's disc.
+ * Multiple items in the same slot fan out slightly so they don’t stack.
  */
 const ORB_SLOTS: Record<
   string,
@@ -37,9 +37,21 @@ const ORB_SLOTS: Record<
   },
 };
 
+/** Pixel offsets for the 2nd, 3rd, … item sharing a slot */
+function stackOffset(index: number): { x: number; y: number; scale: number } {
+  if (index === 0) return { x: 0, y: 0, scale: 1 };
+  const angle = ((index - 1) * 47) % 360;
+  const rad = (angle * Math.PI) / 180;
+  const dist = 10 + index * 6;
+  return {
+    x: Math.cos(rad) * dist,
+    y: Math.sin(rad) * dist,
+    scale: Math.max(0.72, 1 - index * 0.08),
+  };
+}
+
 type CosmeticsOrbDecorationsProps = {
   assignments: SlotAssignment[];
-  /** CSS size of the planet disc, used to scale sprites */
   planetSizeCss: string;
 };
 
@@ -50,36 +62,63 @@ export function CosmeticsOrbDecorations({
   const active = assignments.filter((a) => a.cosmeticKey);
   if (active.length === 0) return null;
 
+  const bySlot = new Map<string, SlotAssignment[]>();
+  for (const a of active) {
+    const list = bySlot.get(a.slotKey) ?? [];
+    list.push(a);
+    bySlot.set(a.slotKey, list);
+  }
+
   return (
     <>
-      {active.map((assignment) => {
-        const item = getCosmeticByKey(assignment.cosmeticKey!);
-        const layout = ORB_SLOTS[assignment.slotKey];
-        if (!item || !layout) return null;
+      {[...bySlot.entries()].flatMap(([slotKey, list]) => {
+        const layout = ORB_SLOTS[slotKey];
+        if (!layout) return [];
 
-        return (
-          <span
-            key={assignment.id}
-            className={`pointer-events-none ${layout.className}`}
-            style={{ zIndex: layout.z }}
-            aria-hidden="true"
-          >
-            {/* Scale sprite relative to planet disc via CSS width */}
+        return list.map((assignment, index) => {
+          const item = getCosmeticByKey(assignment.cosmeticKey!);
+          if (!item) return null;
+          const offset = stackOffset(index);
+          // Rings grow slightly when stacked so each band stays visible
+          const sizePct =
+            slotKey === "ring"
+              ? layout.sizePct + index * 18
+              : layout.sizePct * offset.scale;
+
+          return (
             <span
-              className="block"
+              key={assignment.id}
+              className={`pointer-events-none ${layout.className}`}
               style={{
-                width: `calc(${planetSizeCss} * ${layout.sizePct / 100})`,
-                height: `calc(${planetSizeCss} * ${layout.sizePct / 100})`,
+                zIndex: layout.z + index,
+                ...(slotKey === "ring"
+                  ? { transform: "translate(-50%, -50%)" }
+                  : slotKey === "ground"
+                    ? {
+                        transform: `translate(calc(-50% + ${offset.x}px), ${offset.y}px)`,
+                      }
+                    : index > 0
+                      ? { transform: `translate(${offset.x}px, ${offset.y}px)` }
+                      : {}),
               }}
+              aria-hidden="true"
             >
-              <CosmeticSprite
-                visual={item.visual}
-                size={Math.round(120 * (layout.sizePct / 100))}
-                className="h-full w-full"
-              />
+              <span
+                className="block"
+                style={{
+                  width: `calc(${planetSizeCss} * ${sizePct / 100})`,
+                  height: `calc(${planetSizeCss} * ${sizePct / 100})`,
+                }}
+              >
+                <CosmeticSprite
+                  visual={item.visual}
+                  size={Math.round(120 * (sizePct / 100))}
+                  className="h-full w-full"
+                />
+              </span>
             </span>
-          </span>
-        );
+          );
+        });
       })}
     </>
   );
