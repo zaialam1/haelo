@@ -153,7 +153,7 @@ export function StoreClient({ initialState }: StoreClientProps) {
                       "color-mix(in srgb, var(--gold) 16%, var(--background))",
                   }}
                 >
-                  <CosmeticSprite visual={item.visual} size={36} />
+                  <CosmeticSprite visual={item.visual} size={44} />
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
