@@ -217,7 +217,7 @@ export function SessionCompareClient({
               style={{ color: "var(--foreground-muted)" }}
               aria-live="polite"
             >
-              Haelo is looking at your responses…
+              Halo is looking at your responses…
             </p>
           ) : (
             <p

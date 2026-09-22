@@ -28,7 +28,7 @@ export function AuthShell({ children, brand }: AuthShellProps) {
               fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
             }}
           >
-            Haelo
+            Halo
           </TransitionLink>
           <TransitionLink
             href="/"

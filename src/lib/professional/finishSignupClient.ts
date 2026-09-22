@@ -83,11 +83,11 @@ export async function finishProfessionalSignupClient(
     const code = payload?.error ?? "unknown";
     const message =
       code === "username_taken" || code === "taken"
-        ? "That Haelo name is already taken."
+        ? "That Halo name is already taken."
         : code === "reserved"
-          ? "That Haelo name isn’t available."
+          ? "That Halo name isn’t available."
           : code === "invalid" || code === "username_invalid"
-            ? "Choose a valid Haelo name."
+            ? "Choose a valid Halo name."
             : code === "unauthenticated"
               ? "You’re signed up, but we couldn’t confirm your session. Try Professional login."
               : "Couldn’t finish professional signup. Try Professional login to complete setup.";

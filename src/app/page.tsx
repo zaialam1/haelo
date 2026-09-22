@@ -96,7 +96,7 @@ export default function Home() {
                     "color-mix(in srgb, var(--gold) 45%, var(--rose) 25%, var(--background))",
                 }}
               >
-                Haelo
+                Halo
               </p>
               <h1
                 className="mt-5 max-w-xl font-[family-name:var(--font-fraunces)] text-[2.35rem] leading-[1.12] text-[var(--foreground)] sm:text-[3.15rem]"
@@ -121,7 +121,7 @@ export default function Home() {
                 <SecondaryCta href="/login">Log in</SecondaryCta>
               </div>
               <p className="mt-6 text-sm leading-relaxed text-[var(--foreground-muted)]">
-                Using Haelo with students or clients?{" "}
+                Using Halo with students or clients?{" "}
                 <TransitionLink
                   href="/professional"
                   variant="fade"
@@ -171,7 +171,7 @@ export default function Home() {
             >
               Sometimes you need to say what you feel. Sometimes you need to
               stand behind an opinion. Sometimes you need to connect with
-              someone else — or figure out what you actually think. Haelo gives
+              someone else — or figure out what you actually think. Halo gives
               you a calm place to practice each of those.
             </p>
           </div>
@@ -392,7 +392,7 @@ export default function Home() {
               Your recordings stay private to you.
             </p>
             <p className="mt-4 text-sm text-white/80">
-              Using Haelo with students or clients?{" "}
+              Using Halo with students or clients?{" "}
               <TransitionLink
                 href="/professional"
                 variant="fade"
@@ -418,7 +418,7 @@ export default function Home() {
           style={{ color: "var(--foreground-muted)" }}
         >
           <p className="font-[family-name:var(--font-fraunces)] text-[var(--violet)]">
-            Haelo
+            Halo
           </p>
           <p>A private place to practice your voice.</p>
         </div>

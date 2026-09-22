@@ -9,8 +9,8 @@ import { getProfessionalContext } from "@/lib/professional";
 import { formatUsernameDisplay } from "@/lib/profiles/username";
 
 export const metadata: Metadata = {
-  title: "Connections — Professional — Haelo",
-  description: "Connect with people on Haelo before recommending an Orbit.",
+  title: "Connections — Professional — Halo",
+  description: "Connect with people on Halo before recommending an Orbit.",
 };
 
 export default async function ProfessionalConnectionsPage() {

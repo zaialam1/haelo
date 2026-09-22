@@ -4,14 +4,14 @@ import { useRouter } from "next/navigation";
 import { useEffect, useId, useState, useTransition } from "react";
 import {
   removeConnectionAction,
-  searchHaeloUsernameAction,
+  searchHaloUsernameAction,
   sendConnectionRequestAction,
 } from "@/lib/connections/actions";
 import {
   accountRoleDisplayLabel,
   connectionCounterpartId,
   type ConnectionStatus,
-  type HaeloConnection,
+  type HaloConnection,
 } from "@/lib/connections/types";
 import type { AccountRole } from "@/lib/profiles/types";
 import { formatUsernameDisplay } from "@/lib/profiles/username";
@@ -35,7 +35,7 @@ type Props = {
   accountRole: AccountRole;
   ownUsername: string | null;
   ownUserId?: string;
-  initialConnections: HaeloConnection[];
+  initialConnections: HaloConnection[];
   variant?: "professional" | "settings";
   verified?: boolean;
   pendingVerification?: boolean;
@@ -117,7 +117,7 @@ export function ConnectionsClient({
                 Connections
               </h1>
               <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[var(--foreground-muted)]">
-                Connect with people on Haelo before recommending an Orbit.
+                Connect with people on Halo before recommending an Orbit.
               </p>
             </header>
           </>
@@ -128,7 +128,7 @@ export function ConnectionsClient({
             className="mb-6 text-sm"
             style={{ color: "var(--foreground-muted)" }}
           >
-            Your Haelo name is{" "}
+            Your Halo name is{" "}
             <span className="font-semibold text-[var(--violet)]">
               {formatUsernameDisplay(ownUsername)}
             </span>
@@ -141,7 +141,7 @@ export function ConnectionsClient({
             title="Connections are optional."
             body={
               isProfessional
-                ? "Find someone by their Haelo name, then recommend an Orbit when it might help. They stay in control of their practice."
+                ? "Find someone by their Halo name, then recommend an Orbit when it might help. They stay in control of their practice."
                 : "You can connect with people you trust. Sharing stays private unless you choose otherwise — you can always disconnect."
             }
           />
@@ -171,7 +171,7 @@ function UserConnections({
   initialConnections,
 }: {
   ownUserId?: string;
-  initialConnections: HaeloConnection[];
+  initialConnections: HaloConnection[];
 }) {
   const router = useRouter();
   const [removedIds, setRemovedIds] = useState<string[]>([]);
@@ -216,7 +216,7 @@ function UserConnections({
     startTransition(() => router.refresh());
   }
 
-  async function block(connection: HaeloConnection) {
+  async function block(connection: HaloConnection) {
     if (!ownUserId) return;
     const targetId = connectionCounterpartId(connection, ownUserId);
     setBusyId(connection.id);
@@ -522,7 +522,7 @@ function ProfessionalConnections({
   showFindSomeone,
 }: {
   ownUserId?: string;
-  initialConnections: HaeloConnection[];
+  initialConnections: HaloConnection[];
   verified: boolean;
   pendingVerification: boolean;
   showFindSomeone: boolean;
@@ -565,7 +565,7 @@ function ProfessionalConnections({
     setConfirmSend(false);
     setActionError(null);
 
-    const result = await searchHaeloUsernameAction(query);
+    const result = await searchHaloUsernameAction(query);
     setSearching(false);
 
     if (!result.ok) {
@@ -665,13 +665,13 @@ function ProfessionalConnections({
             className="mt-2 text-sm leading-relaxed"
             style={{ color: "var(--foreground-muted)" }}
           >
-            Search by their exact Haelo username. Personal and Professional
+            Search by their exact Halo username. Personal and Professional
             accounts can both appear.
           </p>
 
           <form className="mt-5 flex flex-col gap-3" onSubmit={onSearch}>
             <label htmlFor={searchId} className="sr-only">
-              Haelo username
+              Halo username
             </label>
             <div
               className="flex items-center rounded-2xl border-2 bg-[var(--background)]"
@@ -759,8 +759,8 @@ function ProfessionalConnections({
                       style={{ color: "var(--foreground-muted)" }}
                     >
                       {hit.accountRole === "professional"
-                        ? "If they accept, you’ll both be able to recommend Orbits to each other. Private Haelo activity stays private on both sides."
-                        : "If they accept, you’ll be able to recommend Haelo experiences to them. Their recordings, Journey, transcripts, and analyses remain private."}
+                        ? "If they accept, you’ll both be able to recommend Orbits to each other. Private Halo activity stays private on both sides."
+                        : "If they accept, you’ll be able to recommend Halo experiences to them. Their recordings, Journey, transcripts, and analyses remain private."}
                     </p>
                     <div className="flex gap-2">
                       <button
@@ -915,7 +915,7 @@ function ConnectionGroup({
   onRemove,
 }: {
   title: string;
-  items: HaeloConnection[];
+  items: HaloConnection[];
   empty: string;
   ownUserId?: string;
   showDirection?: boolean;

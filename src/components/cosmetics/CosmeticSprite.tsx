@@ -7,7 +7,7 @@ type CosmeticSpriteProps = {
 };
 
 /**
- * Soft, luminous Universe decorations — Haelo palette, gentle gradients.
+ * Soft, luminous Universe decorations — Halo palette, gentle gradients.
  */
 export function CosmeticSprite({
   visual,

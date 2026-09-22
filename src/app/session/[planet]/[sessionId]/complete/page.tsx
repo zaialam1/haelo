@@ -17,7 +17,7 @@ type PageProps = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  return { title: "Session Complete — Haelo" };
+  return { title: "Session Complete — Halo" };
 }
 
 export default async function SessionCompletePage({ params }: PageProps) {

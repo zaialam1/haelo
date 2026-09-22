@@ -13,7 +13,7 @@ import { listRecipientActiveRecommendations } from "@/lib/recommendations";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Orbits — Haelo",
+  title: "Orbits — Halo",
   description:
     "Choose an Orbit to work through a real situation one reflection at a time.",
 };
@@ -95,7 +95,7 @@ export default async function OrbitsPage({ searchParams }: OrbitsPageProps) {
             className="mt-2.5 text-[0.9375rem] leading-relaxed"
             style={{ color: "var(--foreground-muted)" }}
           >
-            Sometimes you come to Haelo to grow.
+            Sometimes you come to Halo to grow.
             <br className="hidden sm:block" />{" "}
             Sometimes you come because something is happening right now.
           </p>

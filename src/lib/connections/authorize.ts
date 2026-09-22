@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 /**
  * Whether sender may send an Orbit recommendation to recipient.
  * Requires: verified professional sender, accepted mutual connection,
- * sender ≠ recipient. Does NOT grant access to private Haelo data.
+ * sender ≠ recipient. Does NOT grant access to private Halo data.
  */
 export async function canSendOrbitRecommendation(
   senderId: string,

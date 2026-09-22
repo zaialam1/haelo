@@ -249,7 +249,7 @@ export function RecordingSession({
           <IntroMoment
             milestone="recording_introduced"
             title="How a session works"
-            body="You’ll get a short prompt, then record your voice. When you stop, Haelo reflects back what it noticed — private to you, never graded."
+            body="You’ll get a short prompt, then record your voice. When you stop, Halo reflects back what it noticed — private to you, never graded."
           />
         </div>
       ) : null}

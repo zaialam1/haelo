@@ -4,8 +4,8 @@ import { AuthShell } from "@/components/auth/AuthShell";
 import { LoginForm } from "@/components/auth/LoginForm";
 
 export const metadata: Metadata = {
-  title: "Log in — Haelo",
-  description: "Log in to Haelo to continue exploring your voice.",
+  title: "Log in — Halo",
+  description: "Log in to Halo to continue exploring your voice.",
 };
 
 export default function LoginPage() {

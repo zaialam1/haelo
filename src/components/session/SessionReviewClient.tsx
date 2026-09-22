@@ -338,7 +338,7 @@ export function SessionReviewClient({
           style={{ color: "var(--foreground-muted)" }}
           aria-live="polite"
         >
-          Haelo is looking at your response…
+          Halo is looking at your response…
         </p>
       ) : null}
 
@@ -483,7 +483,7 @@ export function SessionReviewClient({
             className="text-[0.6875rem] font-semibold tracking-[0.1em] uppercase"
             style={{ color: accent }}
           >
-            Haelo analysis
+            Halo analysis
           </p>
           <div className="mt-4">
             <SessionAnalysisPanel

@@ -294,7 +294,7 @@ export function SettingsClient({
                   className="text-xs font-semibold"
                   style={{ color: "var(--foreground-muted)" }}
                 >
-                  Haelo name
+                  Halo name
                 </dt>
                 <dd className="mt-1 text-[1.0625rem] font-medium">
                   {account.username
@@ -419,7 +419,7 @@ export function SettingsClient({
                 className="mt-3 text-sm leading-relaxed"
                 style={{ color: "var(--foreground-muted)" }}
               >
-                Your recordings are stored privately in your Haelo account so
+                Your recordings are stored privately in your Halo account so
                 you can replay them and revisit your analysis. They are never
                 shared with connections automatically.
               </p>
@@ -461,7 +461,7 @@ export function SettingsClient({
                         aria-checked={enabled}
                         disabled={prefPending}
                         onClick={() => togglePref(category, !enabled)}
-                        className="haelo-btn relative mt-0.5 h-7 w-12 shrink-0 rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+                        className="halo-btn relative mt-0.5 h-7 w-12 shrink-0 rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
                         style={{
                           background: enabled
                             ? "var(--violet)"
@@ -536,7 +536,7 @@ export function SettingsClient({
                 className="text-sm leading-relaxed"
                 style={{ color: "var(--foreground-muted)" }}
               >
-                When Haelo analyzes a reflection, it receives your transcript
+                When Halo analyzes a reflection, it receives your transcript
                 and a few delivery signals (like pace). It never receives your
                 raw audio file for analysis, and it never shares that analysis
                 with connections.
@@ -704,7 +704,7 @@ export function SettingsClient({
                 className="text-sm leading-relaxed"
                 style={{ color: "var(--foreground-muted)" }}
               >
-                Haelo is a private space to practice your voice. Record short
+                Halo is a private space to practice your voice. Record short
                 reflections, see how they land, watch your Universe grow, and
                 use Orbits when something specific is on your mind.
               </p>
@@ -742,7 +742,7 @@ export function SettingsClient({
                     type="button"
                     disabled={busy || feedback.trim().length < 1}
                     onClick={sendFeedback}
-                    className="haelo-btn mt-3 rounded-full bg-[var(--violet)] px-5 py-2.5 text-sm font-semibold text-[var(--on-violet)] disabled:opacity-60"
+                    className="halo-btn mt-3 rounded-full bg-[var(--violet)] px-5 py-2.5 text-sm font-semibold text-[var(--on-violet)] disabled:opacity-60"
                   >
                     Send feedback
                   </button>

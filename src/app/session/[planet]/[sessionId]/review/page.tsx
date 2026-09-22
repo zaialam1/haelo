@@ -17,7 +17,7 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { planet } = await params;
   return {
-    title: "Session Review — Haelo",
+    title: "Session Review — Halo",
     description: `Review your ${planet} practice session.`,
   };
 }

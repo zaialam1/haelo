@@ -176,7 +176,7 @@ export function OrbitsExperience({
             />
             <button
               type="submit"
-              className="haelo-btn shrink-0 rounded-2xl px-4 py-2.5 text-[0.8125rem] font-semibold"
+              className="halo-btn shrink-0 rounded-2xl px-4 py-2.5 text-[0.8125rem] font-semibold"
               style={{
                 background: "var(--violet)",
                 color: "var(--on-violet)",
@@ -188,7 +188,7 @@ export function OrbitsExperience({
             {matches !== null || noMatch ? (
               <button
                 type="button"
-                className="haelo-btn shrink-0 rounded-2xl px-3 py-2.5 text-[0.75rem] font-semibold"
+                className="halo-btn shrink-0 rounded-2xl px-3 py-2.5 text-[0.75rem] font-semibold"
                 style={{
                   background: "transparent",
                   color: "var(--foreground-muted)",

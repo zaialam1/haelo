@@ -199,7 +199,7 @@ export function SessionRetryClient({
             style={{ color: "var(--foreground-muted)" }}
           >
             Answer the same prompt again. Focus on one thing you want to try
-            differently — Haelo coaching will appear here once analysis is
+            differently — Halo coaching will appear here once analysis is
             connected.
           </p>
         )}

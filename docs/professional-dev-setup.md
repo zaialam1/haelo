@@ -14,7 +14,7 @@ There is **no verification pending step** in the product right now.
 Prefer creating via `/signup/professional`. If you must convert a test personal account:
 
 ```sql
-select set_config('haelo.bypass_profile_guard', 'on', true);
+select set_config('halo.bypass_profile_guard', 'on', true);
 
 update public.profiles
 set account_role = 'professional'
@@ -32,7 +32,7 @@ set verification_status = 'verified';
 ## Demote / reset (dev)
 
 ```sql
-select set_config('haelo.bypass_profile_guard', 'on', true);
+select set_config('halo.bypass_profile_guard', 'on', true);
 
 update public.profiles
 set account_role = 'user'

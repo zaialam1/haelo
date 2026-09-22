@@ -7,7 +7,7 @@ import { loadCosmeticsStateForUser } from "@/lib/cosmetics/data";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Decorate — Haelo",
+  title: "Decorate — Halo",
   description: "Place owned decorations onto slots in your private Universe.",
 };
 

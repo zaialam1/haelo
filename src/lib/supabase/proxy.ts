@@ -121,7 +121,7 @@ export async function updateSession(request: NextRequest) {
       .eq("id", userId)
       .maybeSingle();
 
-    // If profiles aren't migrated yet, don't block the rest of Haelo.
+    // If profiles aren't migrated yet, don't block the rest of Halo.
     if (!profileError && profile) {
       const mustChooseUsername = !profile.username_normalized;
 

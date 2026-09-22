@@ -1,7 +1,7 @@
 /**
  * Question bank accessors for Speak / Daily / Focus.
  *
- * Daily + main Speak sessions use the Haelo planet curriculum
+ * Daily + main Speak sessions use the Halo planet curriculum
  * (`src/lib/prompts`). Focus on legacy topic pages still uses the
  * deprecated topic banks below until planet pages replace them.
  */
@@ -13,7 +13,7 @@ import {
   selectMainSessionPrompts,
   selectReplacementPrompt,
   todayKey as promptTodayKey,
-  type HaeloPrompt,
+  type HaloPrompt,
   type Planet,
 } from "@/lib/prompts";
 import { CONFIDENCE_QUESTIONS } from "@/lib/questions/topics/confidence";
@@ -47,8 +47,8 @@ export const ALL_QUESTIONS: BankQuestion[] = Object.values(BY_TOPIC).flat();
 
 const LEGACY_BY_ID = new Map(ALL_QUESTIONS.map((q) => [q.id, q]));
 
-/** Adapt Haelo curriculum prompts to the existing Speak/Daily shape. */
-export function toBankQuestion(prompt: HaeloPrompt): BankQuestion {
+/** Adapt Halo curriculum prompts to the existing Speak/Daily shape. */
+export function toBankQuestion(prompt: HaloPrompt): BankQuestion {
   return {
     id: prompt.id,
     topicId: prompt.planet,
@@ -188,7 +188,7 @@ export function todayKey(date: Date = new Date()): string {
 
 /**
  * Same daily question for all users on a given calendar day.
- * Uses the Haelo planet curriculum with daily-friendly filters.
+ * Uses the Halo planet curriculum with daily-friendly filters.
  */
 export function getDailyQuestionForDate(
   date: Date = new Date(),

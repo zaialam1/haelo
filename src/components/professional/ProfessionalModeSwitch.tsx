@@ -6,7 +6,7 @@ import {
   personalHomePath,
   professionalHomePath,
   writeStoredAppMode,
-  type HaeloAppMode,
+  type HaloAppMode,
 } from "@/lib/professional/mode";
 
 type Props = {
@@ -21,11 +21,11 @@ type Props = {
 export function ProfessionalModeSwitch({ compact = false }: Props) {
   const pathname = usePathname();
   const router = useRouter();
-  const mode: HaeloAppMode = isProfessionalPath(pathname)
+  const mode: HaloAppMode = isProfessionalPath(pathname)
     ? "professional"
     : "personal";
 
-  function switchTo(next: HaeloAppMode) {
+  function switchTo(next: HaloAppMode) {
     if (next === mode) return;
     writeStoredAppMode(next);
 
@@ -46,36 +46,36 @@ export function ProfessionalModeSwitch({ compact = false }: Props) {
       return;
     }
 
-    document.documentElement.classList.add("haelo-mode-transition");
-    document.documentElement.dataset.haeloMode = next;
+    document.documentElement.classList.add("halo-mode-transition");
+    document.documentElement.dataset.haloMode = next;
     window.setTimeout(() => {
       navigate();
       window.setTimeout(() => {
-        document.documentElement.classList.remove("haelo-mode-transition");
+        document.documentElement.classList.remove("halo-mode-transition");
       }, 400);
     }, 180);
   }
 
   return (
     <div
-      className={`haelo-mode-switch ${compact ? "haelo-mode-switch--compact" : ""}`}
+      className={`halo-mode-switch ${compact ? "halo-mode-switch--compact" : ""}`}
       role="group"
-      aria-label="Haelo mode"
+      aria-label="Halo mode"
     >
       <button
         type="button"
-        className="haelo-mode-switch__option"
+        className="halo-mode-switch__option"
         aria-pressed={mode === "personal"}
         onClick={() => switchTo("personal")}
       >
         Personal
       </button>
-      <span className="haelo-mode-switch__mark" aria-hidden="true">
+      <span className="halo-mode-switch__mark" aria-hidden="true">
         ✦
       </span>
       <button
         type="button"
-        className="haelo-mode-switch__option"
+        className="halo-mode-switch__option"
         aria-pressed={mode === "professional"}
         onClick={() => switchTo("professional")}
       >

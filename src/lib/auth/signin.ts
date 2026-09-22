@@ -4,7 +4,7 @@ import type { SignInInput, SignInResult } from "./types";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
- * Sign in to an existing Haelo account with Supabase Auth.
+ * Sign in to an existing Halo account with Supabase Auth.
  */
 export async function signIn(input: SignInInput): Promise<SignInResult> {
   const email = input.email.trim().toLowerCase();

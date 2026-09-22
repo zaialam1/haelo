@@ -3,8 +3,8 @@ import { AuthShell } from "@/components/auth/AuthShell";
 import { UpdatePasswordForm } from "@/components/auth/UpdatePasswordForm";
 
 export const metadata: Metadata = {
-  title: "Update password — Haelo",
-  description: "Choose a new password for your Haelo account.",
+  title: "Update password — Halo",
+  description: "Choose a new password for your Halo account.",
 };
 
 export default function UpdatePasswordPage() {

@@ -52,9 +52,9 @@ function sessionFromClips(
   const first = sorted[0]!;
   const planet = resolvePlanet(first.topic_id);
 
-  const haeloParts: string[] = [];
+  const haloParts: string[] = [];
   for (const r of sorted) {
-    if (r.stood_out?.trim()) haeloParts.push(r.stood_out.trim());
+    if (r.stood_out?.trim()) haloParts.push(r.stood_out.trim());
   }
   const voiceNotes = sorted.flatMap((r) => r.voice_notes ?? []);
   const themeLabel =
@@ -75,7 +75,7 @@ function sessionFromClips(
     sessionType: first.session_type as SessionType | null,
     clips: sorted.map(clipFromRow),
     userReflection: null,
-    haeloObservation: haeloParts.length > 0 ? haeloParts.join("\n\n") : null,
+    haloObservation: haloParts.length > 0 ? haloParts.join("\n\n") : null,
     voiceNotes: [...new Set(voiceNotes)],
     themeLabel,
     changeObservation: null,
@@ -201,7 +201,7 @@ export function mapPracticeSessionsToJourneySessions(
       soundedLikeYou: row.sounded_like_you ?? null,
       authenticityChoice: row.authenticity_choice ?? null,
       analysisStatus: row.analysis_status,
-      haeloObservation: strengthLine || observationLine,
+      haloObservation: strengthLine || observationLine,
       analysisStrength: analysis?.strength ?? null,
       analysisObservation: analysis?.observation ?? null,
       analysisEvidence: analysis?.evidence ?? null,

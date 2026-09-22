@@ -159,7 +159,7 @@ export function JourneySessionDetail({
                 <TransitionLink
                   href={`/orbits/${session.orbitKey}`}
                   variant="fade"
-                  className="haelo-btn underline-offset-2 hover:opacity-80 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+                  className="halo-btn underline-offset-2 hover:opacity-80 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
                   style={{ color: "var(--foreground-muted)" }}
                 >
                   Orbit · {session.orbitTitle}
@@ -276,7 +276,7 @@ export function JourneySessionDetail({
         </PanelSection>
       ) : null}
 
-      <PanelSection title="What Haelo noticed">
+      <PanelSection title="What Halo noticed">
         <SessionAnalysisPanel
           analysis={analysis}
           analysisStatus={
@@ -344,7 +344,7 @@ export function JourneySessionDetail({
           <TransitionLink
             href={session.reviewHref}
             variant="fade"
-            className="journey-btn haelo-btn inline-flex min-h-11 items-center rounded-full px-4 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+            className="journey-btn halo-btn inline-flex min-h-11 items-center rounded-full px-4 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
             style={{
               background: "color-mix(in srgb, var(--violet) 12%, transparent)",
               color: "var(--foreground)",

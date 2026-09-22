@@ -20,8 +20,8 @@ export {
 } from "./guards";
 export { completeProfessionalSignupAction } from "./actions";
 export {
-  type HaeloAppMode,
-  HAELO_MODE_STORAGE_KEY,
+  type HaloAppMode,
+  HALO_MODE_STORAGE_KEY,
   readStoredAppMode,
   writeStoredAppMode,
   clearStoredAppMode,

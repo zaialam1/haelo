@@ -71,8 +71,8 @@ function ApproveContent() {
             style={{ color: "var(--foreground-muted)" }}
           >
             {isChildSession
-              ? "You’re all set. Taking you to Haelo…"
-              : "Thanks — you can close this page. Your child can continue in Haelo."}
+              ? "You’re all set. Taking you to Halo…"
+              : "Thanks — you can close this page. Your child can continue in Halo."}
           </p>
         </>
       ) : null}
@@ -92,7 +92,7 @@ function ApproveContent() {
             style={{ color: "var(--foreground-muted)" }}
           >
             {message ??
-              "Ask your child to send a new permission request from Haelo."}
+              "Ask your child to send a new permission request from Halo."}
           </p>
         </>
       ) : null}

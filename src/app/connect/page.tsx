@@ -4,7 +4,7 @@ import { PlanetPage } from "@/components/planets/PlanetPage";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Connect — Haelo",
+  title: "Connect — Halo",
   description:
     "Build confidence communicating with other people. Practice being open, clear, and understood.",
 };

@@ -17,15 +17,15 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Haelo — Notice the different versions of your voice",
+  title: "Halo — Notice the different versions of your voice",
   description:
-    "Haelo helps you notice how your voice changes across school, friends, family, passion, and challenge — and how it evolves over time.",
+    "Halo helps you notice how your voice changes across school, friends, family, passion, and challenge — and how it evolves over time.",
 };
 
 const themeInitScript = `
 (function () {
   try {
-    var stored = localStorage.getItem("haelo-theme");
+    var stored = localStorage.getItem("halo-theme");
     var dark = stored === "dark";
     if (!stored) dark = false;
     if (dark) document.documentElement.classList.add("dark");
@@ -48,7 +48,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans">
         <Script
-          id="haelo-theme-init"
+          id="halo-theme-init"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: themeInitScript }}
         />

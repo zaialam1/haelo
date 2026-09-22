@@ -22,7 +22,7 @@ export function SiteHeader() {
             fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
           }}
         >
-          Haelo
+          Halo
         </TransitionLink>
 
         <nav className="flex items-center gap-2 sm:gap-3" aria-label="Account">

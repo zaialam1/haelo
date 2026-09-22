@@ -76,7 +76,7 @@ export function ProfessionalHomeExperience({
               <IntroMoment
                 milestone="professional_discovered"
                 title="This is Professional Mode."
-                body="Connect with people on Haelo, then recommend an Orbit when a situation fits. Their practice stays theirs — you just point the way."
+                body="Connect with people on Halo, then recommend an Orbit when a situation fits. Their practice stays theirs — you just point the way."
               />
             </div>
           ) : null}
@@ -135,7 +135,7 @@ export function ProfessionalHomeExperience({
             <span className="professional-node__label">Connections</span>
             <span className="professional-node__hint">
               {connectedCount === 0
-                ? "People you've connected with on Haelo"
+                ? "People you've connected with on Halo"
                 : `${connectedCount} connected`}
             </span>
             {pendingIncomingCount > 0 ? (
@@ -151,7 +151,7 @@ export function ProfessionalHomeExperience({
           <section className="professional-home__empty">
             <h2>Your professional constellation starts here.</h2>
             <p>
-              Connect with someone on Haelo, then you&rsquo;ll be able to recommend
+              Connect with someone on Halo, then you&rsquo;ll be able to recommend
               an Orbit when the right moment comes.
             </p>
             <div className="professional-home__empty-actions">

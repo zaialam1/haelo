@@ -167,7 +167,7 @@ export const SHOOTING_STAR_PROMPTS: ShootingStarPrompt[] = [
  */
 export const INITIAL_STREAK_DAYS = 1;
 
-export const DAILY_COMPLETED_KEY = "haelo-daily-completed";
+export const DAILY_COMPLETED_KEY = "halo-daily-completed";
 
 export function getTopicById(id: string): TopicPlanet | undefined {
   return TOPICS.find((t) => t.id === id);

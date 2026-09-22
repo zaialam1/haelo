@@ -123,7 +123,7 @@ export function OrbitCompleteClient({
           style={{ color: "var(--foreground-muted)" }}
           aria-live="polite"
         >
-          Completing your Orbit… Haelo is gathering what became clearer across
+          Completing your Orbit… Halo is gathering what became clearer across
           your six reflections.
         </p>
       ) : null}

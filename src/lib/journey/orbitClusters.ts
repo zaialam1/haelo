@@ -208,7 +208,7 @@ export function buildOrbitClusterSessions(
       clusterVoiceConfidenceScore,
       clips: [],
       userReflection: null,
-      haeloObservation: null,
+      haloObservation: null,
       voiceNotes: [],
       themeLabel: null,
       changeObservation: null,

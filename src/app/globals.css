@@ -149,7 +149,7 @@ button,
 input[type="button"],
 input[type="submit"],
 input[type="reset"],
-.haelo-btn {
+.halo-btn {
   transition:
     color 280ms ease,
     background-color 280ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -483,7 +483,7 @@ html.dark .universe-nebula-constellations {
   transform: translateY(0) scale(1);
 }
 
-@keyframes haelo-notify-glow {
+@keyframes halo-notify-glow {
   0%,
   100% {
     box-shadow:
@@ -498,12 +498,12 @@ html.dark .universe-nebula-constellations {
 }
 
 .home-utility-btn[data-pulse="true"] {
-  animation: haelo-notify-glow 2.8s ease-in-out infinite;
+  animation: halo-notify-glow 2.8s ease-in-out infinite;
 }
 
 /* One-time gentle pulse for the My Voice onboarding cue (not infinite). */
 .myvoice-intro-pulse {
-  animation: haelo-notify-glow 2.8s ease-in-out 2;
+  animation: halo-notify-glow 2.8s ease-in-out 2;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -903,7 +903,7 @@ html.dark .journey-orbit-panel[data-open="true"] {
 
 /* ——— Page transitions (route changes) ——— */
 
-.haelo-page-transition {
+.halo-page-transition {
   pointer-events: none;
   position: fixed;
   inset: 0;
@@ -912,41 +912,41 @@ html.dark .journey-orbit-panel[data-open="true"] {
   visibility: hidden;
 }
 
-.haelo-page-transition.is-active {
+.halo-page-transition.is-active {
   visibility: visible;
   opacity: 1;
 }
 
-.haelo-page-transition.is-leaving {
+.halo-page-transition.is-leaving {
   pointer-events: auto;
 }
 
-.haelo-fade-veil {
+.halo-fade-veil {
   position: absolute;
   inset: 0;
   background: var(--background);
   opacity: 0;
 }
 
-.haelo-page-transition--fade.is-leaving .haelo-fade-veil {
-  animation: haelo-fade-out 280ms ease forwards;
+.halo-page-transition--fade.is-leaving .halo-fade-veil {
+  animation: halo-fade-out 280ms ease forwards;
 }
 
-.haelo-page-transition--fade.is-entering .haelo-fade-veil {
-  animation: haelo-fade-in 320ms ease forwards;
+.halo-page-transition--fade.is-entering .halo-fade-veil {
+  animation: halo-fade-in 320ms ease forwards;
 }
 
-@keyframes haelo-fade-out {
+@keyframes halo-fade-out {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-@keyframes haelo-fade-in {
+@keyframes halo-fade-in {
   from { opacity: 1; }
   to { opacity: 0; }
 }
 
-.haelo-warp-burst {
+.halo-warp-burst {
   position: absolute;
   left: var(--warp-x, 50%);
   top: var(--warp-y, 50%);
@@ -964,7 +964,7 @@ html.dark .journey-orbit-panel[data-open="true"] {
   filter: blur(0px);
 }
 
-.haelo-warp-veil {
+.halo-warp-veil {
   position: absolute;
   inset: 0;
   background: radial-gradient(
@@ -976,7 +976,7 @@ html.dark .journey-orbit-panel[data-open="true"] {
   opacity: 0;
 }
 
-.haelo-warp-core {
+.halo-warp-core {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -991,7 +991,7 @@ html.dark .journey-orbit-panel[data-open="true"] {
   opacity: 0;
 }
 
-.haelo-warp-streaks {
+.halo-warp-streaks {
   position: absolute;
   inset: 0;
   opacity: 0;
@@ -1011,39 +1011,39 @@ html.dark .journey-orbit-panel[data-open="true"] {
   mix-blend-mode: screen;
 }
 
-.haelo-page-transition--warp.is-leaving .haelo-warp-burst {
-  animation: haelo-warp-burst-out 780ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+.halo-page-transition--warp.is-leaving .halo-warp-burst {
+  animation: halo-warp-burst-out 780ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.haelo-page-transition--warp.is-leaving .haelo-warp-veil {
-  animation: haelo-warp-veil-out 780ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+.halo-page-transition--warp.is-leaving .halo-warp-veil {
+  animation: halo-warp-veil-out 780ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.haelo-page-transition--warp.is-leaving .haelo-warp-streaks {
-  animation: haelo-warp-streaks-out 780ms ease-out forwards;
+.halo-page-transition--warp.is-leaving .halo-warp-streaks {
+  animation: halo-warp-streaks-out 780ms ease-out forwards;
 }
 
-.haelo-page-transition--warp.is-leaving .haelo-warp-core {
-  animation: haelo-warp-core-out 780ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+.halo-page-transition--warp.is-leaving .halo-warp-core {
+  animation: halo-warp-core-out 780ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.haelo-page-transition--warp.is-entering .haelo-warp-veil {
-  animation: haelo-warp-veil-in 720ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+.halo-page-transition--warp.is-entering .halo-warp-veil {
+  animation: halo-warp-veil-in 720ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.haelo-page-transition--warp.is-entering .haelo-warp-streaks {
-  animation: haelo-warp-streaks-in 720ms ease-out forwards;
+.halo-page-transition--warp.is-entering .halo-warp-streaks {
+  animation: halo-warp-streaks-in 720ms ease-out forwards;
 }
 
-.haelo-page-transition--warp.is-entering .haelo-warp-core {
-  animation: haelo-warp-core-in 720ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+.halo-page-transition--warp.is-entering .halo-warp-core {
+  animation: halo-warp-core-in 720ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.haelo-page-transition--warp.is-entering .haelo-warp-burst {
+.halo-page-transition--warp.is-entering .halo-warp-burst {
   opacity: 0;
 }
 
-@keyframes haelo-warp-burst-out {
+@keyframes halo-warp-burst-out {
   0% {
     opacity: 1;
     transform: translate(-50%, -50%) scale(0.35);
@@ -1061,13 +1061,13 @@ html.dark .journey-orbit-panel[data-open="true"] {
   }
 }
 
-@keyframes haelo-warp-veil-out {
+@keyframes halo-warp-veil-out {
   0% { opacity: 0; }
   35% { opacity: 0.55; }
   100% { opacity: 1; }
 }
 
-@keyframes haelo-warp-streaks-out {
+@keyframes halo-warp-streaks-out {
   0% {
     opacity: 0;
     transform: scale(1.2);
@@ -1079,7 +1079,7 @@ html.dark .journey-orbit-panel[data-open="true"] {
   }
 }
 
-@keyframes haelo-warp-core-out {
+@keyframes halo-warp-core-out {
   0% {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0);
@@ -1094,12 +1094,12 @@ html.dark .journey-orbit-panel[data-open="true"] {
   }
 }
 
-@keyframes haelo-warp-veil-in {
+@keyframes halo-warp-veil-in {
   0% { opacity: 1; }
   100% { opacity: 0; }
 }
 
-@keyframes haelo-warp-streaks-in {
+@keyframes halo-warp-streaks-in {
   0% {
     opacity: 0.7;
     transform: scale(2.1);
@@ -1110,7 +1110,7 @@ html.dark .journey-orbit-panel[data-open="true"] {
   }
 }
 
-@keyframes haelo-warp-core-in {
+@keyframes halo-warp-core-in {
   0% {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1.2);
@@ -1126,15 +1126,15 @@ html.dark .journey-orbit-panel[data-open="true"] {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .haelo-page-transition--fade.is-leaving .haelo-fade-veil,
-  .haelo-page-transition--fade.is-entering .haelo-fade-veil,
-  .haelo-page-transition--warp.is-leaving .haelo-warp-burst,
-  .haelo-page-transition--warp.is-leaving .haelo-warp-veil,
-  .haelo-page-transition--warp.is-leaving .haelo-warp-streaks,
-  .haelo-page-transition--warp.is-leaving .haelo-warp-core,
-  .haelo-page-transition--warp.is-entering .haelo-warp-veil,
-  .haelo-page-transition--warp.is-entering .haelo-warp-streaks,
-  .haelo-page-transition--warp.is-entering .haelo-warp-core {
+  .halo-page-transition--fade.is-leaving .halo-fade-veil,
+  .halo-page-transition--fade.is-entering .halo-fade-veil,
+  .halo-page-transition--warp.is-leaving .halo-warp-burst,
+  .halo-page-transition--warp.is-leaving .halo-warp-veil,
+  .halo-page-transition--warp.is-leaving .halo-warp-streaks,
+  .halo-page-transition--warp.is-leaving .halo-warp-core,
+  .halo-page-transition--warp.is-entering .halo-warp-veil,
+  .halo-page-transition--warp.is-entering .halo-warp-streaks,
+  .halo-page-transition--warp.is-entering .halo-warp-core {
     animation-duration: 0.01ms !important;
   }
 }
@@ -1556,7 +1556,7 @@ html.dark {
 }
 
 /* Mode switch */
-.haelo-mode-switch {
+.halo-mode-switch {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -1568,12 +1568,12 @@ html.dark {
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--professional-accent) 12%, transparent);
 }
 
-.haelo-mode-switch--compact {
+.halo-mode-switch--compact {
   gap: 0.15rem;
   padding: 0.12rem;
 }
 
-.haelo-mode-switch__option {
+.halo-mode-switch__option {
   border: 0;
   background: transparent;
   cursor: pointer;
@@ -1586,23 +1586,23 @@ html.dark {
   transition: color 250ms ease, background-color 250ms ease, box-shadow 250ms ease;
 }
 
-.haelo-mode-switch--compact .haelo-mode-switch__option {
+.halo-mode-switch--compact .halo-mode-switch__option {
   padding: 0.32rem 0.55rem;
   font-size: 0.6875rem;
 }
 
-.haelo-mode-switch__option[aria-pressed="true"] {
+.halo-mode-switch__option[aria-pressed="true"] {
   color: var(--violet);
   background: color-mix(in srgb, var(--professional-accent) 22%, var(--surface));
   box-shadow: 0 0 18px color-mix(in srgb, var(--professional-silver) 35%, transparent);
 }
 
-.haelo-mode-switch__option:focus-visible {
+.halo-mode-switch__option:focus-visible {
   outline: 2px solid var(--violet);
   outline-offset: 2px;
 }
 
-.haelo-mode-switch__mark {
+.halo-mode-switch__mark {
   font-size: 0.65rem;
   color: color-mix(in srgb, var(--professional-silver) 80%, var(--violet));
   opacity: 0.85;
@@ -1610,7 +1610,7 @@ html.dark {
 }
 
 /* Mode transition flash */
-html.haelo-mode-transition::before {
+html.halo-mode-transition::before {
   content: "";
   pointer-events: none;
   position: fixed;
@@ -1621,10 +1621,10 @@ html.haelo-mode-transition::before {
     color-mix(in srgb, var(--professional-silver) 28%, transparent),
     transparent 55%
   );
-  animation: haelo-mode-sweep 420ms ease-out forwards;
+  animation: halo-mode-sweep 420ms ease-out forwards;
 }
 
-html[data-haelo-mode="personal"].haelo-mode-transition::before {
+html[data-halo-mode="personal"].halo-mode-transition::before {
   background: radial-gradient(
     circle at 50% 40%,
     color-mix(in srgb, var(--rose) 22%, transparent),
@@ -1632,7 +1632,7 @@ html[data-haelo-mode="personal"].haelo-mode-transition::before {
   );
 }
 
-@keyframes haelo-mode-sweep {
+@keyframes halo-mode-sweep {
   0% {
     opacity: 0;
     transform: scale(0.92);
@@ -1647,7 +1647,7 @@ html[data-haelo-mode="personal"].haelo-mode-transition::before {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html.haelo-mode-transition::before {
+  html.halo-mode-transition::before {
     animation: none;
     opacity: 0;
   }

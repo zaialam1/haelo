@@ -4,7 +4,7 @@ import { ORBIT_REGIONS } from "../src/lib/orbits/regions";
 
 const result = validateOrbitContent(ALL_ORBITS);
 
-console.log("Haelo Orbit content validation");
+console.log("Halo Orbit content validation");
 console.log("------------------------------");
 console.log(
   `Regions: ${result.counts.regions} | Orbits: ${result.counts.orbits} | Questions: ${result.counts.questions}`,

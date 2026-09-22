@@ -4,7 +4,7 @@ import { UniverseEmptyPage } from "@/components/placeholders/UniverseEmptyPage";
 import { isPlanet } from "@/lib/prompts";
 
 export const metadata: Metadata = {
-  title: "Practice — Haelo",
+  title: "Practice — Halo",
   description: "Choose a planet and start a guided voice session.",
 };
 

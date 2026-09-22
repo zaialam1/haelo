@@ -5,7 +5,7 @@ import {
   type OrbitRecommendationDetail,
   type OrbitRecommendationRow,
 } from "./types";
-import { connectionCounterpartId, type HaeloConnection } from "@/lib/connections/types";
+import { connectionCounterpartId, type HaloConnection } from "@/lib/connections/types";
 
 /** Active recommendations for Orbits homepage (new + viewed only). */
 export async function listRecipientActiveRecommendations(
@@ -64,7 +64,7 @@ export async function listProfessionalSentRecommendations(
     user_id?: string;
     counterpart_username?: string | null;
   }>) {
-    const mapped: HaeloConnection = {
+    const mapped: HaloConnection = {
       id: "",
       requesterUserId: c.requester_user_id ?? c.professional_user_id ?? "",
       recipientUserId: c.recipient_user_id ?? c.user_id ?? "",

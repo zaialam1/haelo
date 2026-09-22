@@ -1,6 +1,6 @@
-# Haelo / VoiceMirror
+# Halo / VoiceMirror
 
-Next.js app for Haelo — voice growth for teens.
+Next.js app for Halo — voice growth for teens.
 
 ## Getting Started
 
@@ -32,4 +32,4 @@ Reminder cron setup:
 ## Learn More
 
 - [Next.js Documentation](https://nextjs.org/docs)
-- [Haelo design system](DESIGN.md)
+- [Halo design system](DESIGN.md)

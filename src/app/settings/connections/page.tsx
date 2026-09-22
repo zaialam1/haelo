@@ -8,8 +8,8 @@ import { ensureOwnProfile } from "@/lib/profiles/data";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Connections — Haelo",
-  description: "Manage Haelo connections.",
+  title: "Connections — Halo",
+  description: "Manage Halo connections.",
 };
 
 /**

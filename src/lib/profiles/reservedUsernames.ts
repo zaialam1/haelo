@@ -1,10 +1,11 @@
 /**
- * Centralized reserved Haelo usernames.
+ * Centralized reserved Halo usernames.
  * Keep in sync with public.is_reserved_username() in migrations.
  */
 export const RESERVED_USERNAMES = [
   "admin",
   "administrator",
+  "halo",
   "haelo",
   "support",
   "help",

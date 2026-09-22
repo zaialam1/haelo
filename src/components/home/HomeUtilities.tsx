@@ -268,7 +268,7 @@ export function HomeUtilities({
           pulse={unreadCount > 0}
         >
           <span className="relative">
-            {/* Celestial spark — Haelo's notification star */}
+            {/* Celestial spark — Halo's notification star */}
             <svg
               width="18"
               height="18"

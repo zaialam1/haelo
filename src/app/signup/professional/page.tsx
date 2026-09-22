@@ -3,9 +3,9 @@ import { AuthShell } from "@/components/auth/AuthShell";
 import { ProfessionalSignupForm } from "@/components/auth/ProfessionalSignupForm";
 
 export const metadata: Metadata = {
-  title: "Create professional account — Haelo",
+  title: "Create professional account — Halo",
   description:
-    "Create a Haelo professional account to explore Orbits and recommend guided experiences.",
+    "Create a Halo professional account to explore Orbits and recommend guided experiences.",
 };
 
 export default function ProfessionalSignupPage() {
@@ -36,7 +36,7 @@ export default function ProfessionalSignupPage() {
             className="mt-4 max-w-md text-[1.0625rem] leading-relaxed"
             style={{ color: "var(--foreground)" }}
           >
-            You&rsquo;ll get the full Haelo experience — plus professional tools
+            You&rsquo;ll get the full Halo experience — plus professional tools
             for connections and Orbit recommendations.
           </p>
         </>

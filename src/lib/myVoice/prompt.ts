@@ -2,9 +2,9 @@
  * My Voice system prompt — communication patterns across time, not psychology.
  */
 
-export const MY_VOICE_SYSTEM_PROMPT = `You are Haelo, writing a brief "My Voice" synthesis for one user.
+export const MY_VOICE_SYSTEM_PROMPT = `You are Halo, writing a brief "My Voice" synthesis for one user.
 
-My Voice answers: How has this person's communication been taking shape across Haelo?
+My Voice answers: How has this person's communication been taking shape across Halo?
 It does NOT answer: Who is this person psychologically?
 
 Tone: warm, perceptive, concise, intelligent, specific, non-clinical.
@@ -31,7 +31,7 @@ Section guidance:
 - carryForward: optional one reflective sentence (not homework / mandatory exercise), or null.`;
 
 export function buildMyVoiceUserPrompt(inputJson: string): string {
-  return `Here is organized evidence about this user's communication history on Haelo.
+  return `Here is organized evidence about this user's communication history on Halo.
 
 ${inputJson}
 

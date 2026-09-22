@@ -1,8 +1,8 @@
-# Haelo Design System
+# Halo Design System
 
 ## Brand Personality
 
-Haelo should feel:
+Halo should feel:
 
 - Calm
 - Reflective
@@ -196,7 +196,7 @@ Do not use overly decorative fonts.
 
 ## VoiceMap
 
-The VoiceMap is the central visual identity of Haelo.
+The VoiceMap is the central visual identity of Halo.
 
 Deep Violet should be the dominant VoiceMap color.
 

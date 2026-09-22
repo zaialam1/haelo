@@ -27,7 +27,7 @@ export function TransitionLink({
   ...rest
 }: TransitionLinkProps) {
   const transition = useOptionalPageTransition();
-  const mergedClassName = ["haelo-btn", className].filter(Boolean).join(" ");
+  const mergedClassName = ["halo-btn", className].filter(Boolean).join(" ");
 
   return (
     <Link

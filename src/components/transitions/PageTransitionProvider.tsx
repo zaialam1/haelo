@@ -270,8 +270,8 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
       {children}
       <div
         className={[
-          "haelo-page-transition",
-          `haelo-page-transition--${variant}`,
+          "halo-page-transition",
+          `halo-page-transition--${variant}`,
           leaving ? "is-leaving" : "",
           entering ? "is-entering" : "",
           active ? "is-active" : "",
@@ -287,13 +287,13 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
       >
         {variant === "warp" && (
           <>
-            <div className="haelo-warp-burst" />
-            <div className="haelo-warp-veil" />
-            <div className="haelo-warp-streaks" />
-            <div className="haelo-warp-core" />
+            <div className="halo-warp-burst" />
+            <div className="halo-warp-veil" />
+            <div className="halo-warp-streaks" />
+            <div className="halo-warp-core" />
           </>
         )}
-        {variant === "fade" && <div className="haelo-fade-veil" />}
+        {variant === "fade" && <div className="halo-fade-veil" />}
       </div>
     </PageTransitionContext.Provider>
   );

@@ -1,6 +1,6 @@
 /**
  * Celestial reward catalog — permanent Universe decorations.
- * Stylistically consistent with Haelo; no cartoon loot.
+ * Stylistically consistent with Halo; no cartoon loot.
  */
 
 import type {

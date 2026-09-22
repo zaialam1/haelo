@@ -36,7 +36,7 @@ export type JourneyClip = {
 };
 
 /**
- * One completed Haelo speaking session → one constellation star,
+ * One completed Halo speaking session → one constellation star,
  * OR one completed Orbit → one master-Journey cluster node.
  *
  * Derived from practice sessions / reflections (no duplicate Journey table).
@@ -91,8 +91,8 @@ export type JourneySession = {
   authenticityChoice?: string | null;
   /** Analysis pipeline status */
   analysisStatus?: string | null;
-  /** Haelo analysis / observation if present */
-  haeloObservation: string | null;
+  /** Halo analysis / observation if present */
+  haloObservation: string | null;
   analysisStrength?: { title: string; description: string } | null;
   analysisObservation?: { title: string; description: string } | null;
   analysisEvidence?: Array<{

@@ -3,7 +3,7 @@ import {
   planetLevelFromSessionCount,
   selectPrompt,
   type DisplayLevel,
-  type HaeloPrompt,
+  type HaloPrompt,
   type Planet,
 } from "@/lib/prompts";
 import { PLANET_PROGRESSION_SOURCES } from "@/lib/sessions/sourcePolicy";
@@ -11,7 +11,7 @@ import { PLANET_PROGRESSION_SOURCES } from "@/lib/sessions/sourcePolicy";
 const RECENT_PROMPT_LIMIT = 40;
 
 export type ResolvedSessionPrompt = {
-  prompt: HaeloPrompt;
+  prompt: HaloPrompt;
   planetLevel: DisplayLevel;
   completedSessionCount: number;
   /** True when this is the user's first-ever recording (any planet). */

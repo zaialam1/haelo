@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ParentApproveClient } from "@/components/auth/ParentApproveClient";
 
 export const metadata: Metadata = {
-  title: "Approve Haelo access — Haelo",
+  title: "Approve Halo access — Halo",
 };
 
 export default function ParentApprovePage() {

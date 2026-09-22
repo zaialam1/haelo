@@ -1,6 +1,6 @@
 import type { VoicePlanetId } from "@/lib/home/voicePlanets";
 
-/** Haelo voice planet — Express / Stand / Connect / Explore */
+/** Halo voice planet — Express / Stand / Connect / Explore */
 export type Planet = VoicePlanetId;
 
 export type PromptDepth = "light" | "personal" | "deep";
@@ -85,7 +85,7 @@ export type PromptCategory =
   | ConnectCategory
   | ExploreCategory;
 
-export type HaeloPrompt = {
+export type HaloPrompt = {
   id: string;
   planet: Planet;
   category: PromptCategory;

@@ -40,7 +40,7 @@ type CompactOrbitMeta = {
   regionKey: OrbitRegionKey;
 };
 
-const SEARCH_SYSTEM_PROMPT = `You help teens find relevant guided reflection Orbits in Haelo.
+const SEARCH_SYSTEM_PROMPT = `You help teens find relevant guided reflection Orbits in Halo.
 
 Your only job is to classify which Orbits (if any) fit the user's situation description.
 Return at most 3 strong matches. Prefer quality over quantity.

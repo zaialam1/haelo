@@ -7,7 +7,7 @@ import { hasSeenMilestone } from "@/lib/preferences/types";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "My Voice — Haelo",
+  title: "My Voice — Halo",
   description:
     "Notice how your voice has been taking shape across Connect, Stand, Explore, and Express.",
 };

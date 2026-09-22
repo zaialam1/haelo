@@ -14,8 +14,8 @@ export type NotificationType =
   | "milestone_moment"
   | "my_voice_updated";
 
-/** Mutual relationship between two Haelo accounts (either may be professional). */
-export type HaeloConnection = {
+/** Mutual relationship between two Halo accounts (either may be professional). */
+export type HaloConnection = {
   id: string;
   requesterUserId: string;
   recipientUserId: string;
@@ -30,8 +30,8 @@ export type HaeloConnection = {
   counterpartAccountRole?: AccountRole | null;
 };
 
-/** @deprecated Prefer HaeloConnection — kept as alias during refactor. */
-export type ProfessionalConnection = HaeloConnection;
+/** @deprecated Prefer HaloConnection — kept as alias during refactor. */
+export type ProfessionalConnection = HaloConnection;
 
 export type ConnectionRow = {
   id: string;
@@ -75,7 +75,7 @@ export type UsernameSearchHit = {
   accountRole: AccountRole;
 };
 
-export function mapConnectionRow(row: ConnectionRow): HaeloConnection {
+export function mapConnectionRow(row: ConnectionRow): HaloConnection {
   const requester =
     row.requester_user_id ?? row.professional_user_id ?? "";
   const recipient = row.recipient_user_id ?? row.user_id ?? "";
@@ -105,7 +105,7 @@ export function mapNotificationRow(row: NotificationRow): AppNotification {
 
 /** Counterpart user id relative to `viewerId`. */
 export function connectionCounterpartId(
-  connection: HaeloConnection,
+  connection: HaloConnection,
   viewerId: string,
 ): string {
   return connection.requesterUserId === viewerId

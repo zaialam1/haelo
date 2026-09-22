@@ -1,7 +1,7 @@
 import { ALL_PROMPTS, PROMPTS_BY_PLANET } from "./catalog";
 import type {
   DisplayLevel,
-  HaeloPrompt,
+  HaloPrompt,
   Planet,
   PromptChallenge,
   PromptDepth,
@@ -43,7 +43,7 @@ function isDisplayLevel(value: number): value is DisplayLevel {
 }
 
 export function validatePromptBank(
-  prompts: readonly HaeloPrompt[] = ALL_PROMPTS,
+  prompts: readonly HaloPrompt[] = ALL_PROMPTS,
 ): PromptValidationResult {
   const issues: PromptValidationIssue[] = [];
   const counts = {

@@ -60,7 +60,7 @@ export function SessionAnalysisPanel({
         style={{ color: "var(--foreground-muted)" }}
         aria-live="polite"
       >
-        Haelo is looking at your response…
+        Halo is looking at your response…
       </p>
     );
   }

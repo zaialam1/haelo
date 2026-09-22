@@ -66,7 +66,7 @@ export function ParentEmailClient() {
         style={{ color: "var(--foreground-muted)" }}
       >
         Enter the email of a parent or guardian. We&rsquo;ll send them a short
-        message with a link to approve your Haelo access.
+        message with a link to approve your Halo access.
       </p>
 
       <form className="mt-8 flex flex-col gap-4" onSubmit={onSubmit} noValidate>

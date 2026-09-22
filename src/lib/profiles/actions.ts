@@ -50,25 +50,25 @@ function mapClaimError(
       return {
         ok: false,
         error: "reserved",
-        message: "That Haelo name isn’t available.",
+        message: "That Halo name isn’t available.",
       };
     case "taken":
       return {
         ok: false,
         error: "taken",
-        message: "That Haelo name is already taken.",
+        message: "That Halo name is already taken.",
       };
     case "already_set":
       return {
         ok: false,
         error: "already_set",
-        message: "You already chose a Haelo name.",
+        message: "You already chose a Halo name.",
       };
     default:
       return {
         ok: false,
         error: "unknown",
-        message: "Couldn’t save your Haelo name. Try again.",
+        message: "Couldn’t save your Halo name. Try again.",
       };
   }
 }
@@ -108,7 +108,7 @@ export async function checkUsernameAvailabilityAction(
 }
 
 /**
- * If auth metadata has haelo_username and profile has none, claim it.
+ * If auth metadata has halo_username and profile has none, claim it.
  * Used after email confirmation / login for accounts created before claim ran.
  */
 export async function claimPendingUsernameFromMetadataAction(): Promise<ClaimUsernameResult | { ok: true; username: string | null; skipped: true }> {
@@ -131,8 +131,8 @@ export async function claimPendingUsernameFromMetadataAction(): Promise<ClaimUse
   }
 
   const pending =
-    typeof user.user_metadata?.haelo_username === "string"
-      ? user.user_metadata.haelo_username
+    typeof user.user_metadata?.halo_username === "string"
+      ? user.user_metadata.halo_username
       : "";
 
   if (!pending) {

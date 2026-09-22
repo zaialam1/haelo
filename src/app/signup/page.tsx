@@ -3,8 +3,8 @@ import { AuthShell } from "@/components/auth/AuthShell";
 import { SignupForm } from "@/components/auth/SignupForm";
 
 export const metadata: Metadata = {
-  title: "Create account — Haelo",
-  description: "Create your Haelo account to start noticing how your voice changes across your life.",
+  title: "Create account — Halo",
+  description: "Create your Halo account to start noticing how your voice changes across your life.",
 };
 
 export default function SignupPage() {

@@ -116,8 +116,8 @@ export function ConnectionRequestPanel({
             style={{ color: "var(--foreground-muted)" }}
           >
             {requesterUsername
-              ? `${formatUsernameDisplay(requesterUsername)} wants to connect with you on Haelo.`
-              : "Someone wants to connect with you on Haelo."}
+              ? `${formatUsernameDisplay(requesterUsername)} wants to connect with you on Halo.`
+              : "Someone wants to connect with you on Halo."}
           </p>
         </div>
         <button

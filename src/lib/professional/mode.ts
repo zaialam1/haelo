@@ -1,13 +1,13 @@
 /** Session-scoped Personal | Professional mode for professional accounts. */
 
-export type HaeloAppMode = "personal" | "professional";
+export type HaloAppMode = "personal" | "professional";
 
-export const HAELO_MODE_STORAGE_KEY = "haelo-app-mode";
+export const HALO_MODE_STORAGE_KEY = "halo-app-mode";
 
-export function readStoredAppMode(): HaeloAppMode | null {
+export function readStoredAppMode(): HaloAppMode | null {
   if (typeof window === "undefined") return null;
   try {
-    const value = sessionStorage.getItem(HAELO_MODE_STORAGE_KEY);
+    const value = sessionStorage.getItem(HALO_MODE_STORAGE_KEY);
     if (value === "personal" || value === "professional") return value;
   } catch {
     /* ignore */
@@ -15,10 +15,10 @@ export function readStoredAppMode(): HaeloAppMode | null {
   return null;
 }
 
-export function writeStoredAppMode(mode: HaeloAppMode) {
+export function writeStoredAppMode(mode: HaloAppMode) {
   if (typeof window === "undefined") return;
   try {
-    sessionStorage.setItem(HAELO_MODE_STORAGE_KEY, mode);
+    sessionStorage.setItem(HALO_MODE_STORAGE_KEY, mode);
   } catch {
     /* ignore */
   }
@@ -27,7 +27,7 @@ export function writeStoredAppMode(mode: HaeloAppMode) {
 export function clearStoredAppMode() {
   if (typeof window === "undefined") return;
   try {
-    sessionStorage.removeItem(HAELO_MODE_STORAGE_KEY);
+    sessionStorage.removeItem(HALO_MODE_STORAGE_KEY);
   } catch {
     /* ignore */
   }

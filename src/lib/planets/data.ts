@@ -167,7 +167,7 @@ function mapInProgressPracticeSessions(
       soundedLikeYou: row.sounded_like_you ?? null,
       authenticityChoice: row.authenticity_choice ?? null,
       analysisStatus: row.analysis_status,
-      haeloObservation: null,
+      haloObservation: null,
       analysisStrength: analysis?.strength ?? null,
       analysisObservation: analysis?.observation ?? null,
       analysisEvidence: analysis?.evidence ?? null,
@@ -187,7 +187,7 @@ function growthFromSessions(sessions: JourneySession[]): string[] {
   const lines: string[] = [];
   const seen = new Set<string>();
 
-  // Newest first — only real analysis / Haelo notes, never invented copy.
+  // Newest first — only real analysis / Halo notes, never invented copy.
   for (const session of [...sessions].sort(
     (a, b) =>
       new Date(b.recordedAt).getTime() - new Date(a.recordedAt).getTime(),
@@ -196,7 +196,7 @@ function growthFromSessions(sessions: JourneySession[]): string[] {
       session.analysisObservation?.description,
       session.analysisStrength?.description,
       session.changeObservation,
-      session.haeloObservation,
+      session.haloObservation,
     ];
 
     for (const raw of candidates) {

@@ -2,7 +2,7 @@
 
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { useOptionalPageTransition } from "@/components/transitions/PageTransitionProvider";
-import { HaeloUsernameField } from "@/components/auth/HaeloUsernameField";
+import { HaloUsernameField } from "@/components/auth/HaloUsernameField";
 import { useRouter } from "next/navigation";
 import { useCallback, useId, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -89,10 +89,10 @@ export function ProfessionalSignupForm() {
     else if (usernameAvailability !== "available") {
       next.username =
         usernameAvailability === "taken"
-          ? "That Haelo name is already taken."
+          ? "That Halo name is already taken."
           : usernameAvailability === "checking"
-            ? "Still checking that Haelo name…"
-            : "Choose an available Haelo name.";
+            ? "Still checking that Halo name…"
+            : "Choose an available Halo name.";
     }
     if (!ageConfirmed) next.age = "Confirm that you are 18 or older.";
     return next;
@@ -129,7 +129,7 @@ export function ProfessionalSignupForm() {
         options: {
           data: {
             first_name: displayName.trim().split(/\s+/)[0] ?? displayName.trim(),
-            haelo_username: usernameParsed.normalized,
+            halo_username: usernameParsed.normalized,
             professional_signup: true,
             professional_display_name: displayName.trim(),
             professional_type: professionalType,
@@ -261,7 +261,7 @@ export function ProfessionalSignupForm() {
           Create professional account
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-[var(--foreground-muted)]">
-          Professional accounts include Haelo&rsquo;s normal voice-growth
+          Professional accounts include Halo&rsquo;s normal voice-growth
           experience plus tools for connecting with people and recommending
           guided Orbits.
         </p>
@@ -417,12 +417,12 @@ export function ProfessionalSignupForm() {
         />
       </div>
 
-      <HaeloUsernameField
+      <HaloUsernameField
         value={username}
         onChange={setUsername}
         disabled={submitting}
         onAvailabilityChange={onAvailabilityChange}
-        hint="People you connect with will see this Haelo name."
+        hint="People you connect with will see this Halo name."
       />
       {errors.username ? (
         <p className="-mt-3 text-sm text-[#9B2C2C]" role="alert">

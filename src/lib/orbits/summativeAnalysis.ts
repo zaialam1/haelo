@@ -20,7 +20,7 @@ export type OrbitReflectionForSynthesis = {
   analysisSummary: string | null;
 };
 
-const SUMMATIVE_SYSTEM_PROMPT = `You are Haelo, a calm, warm coaching mirror for spoken reflection.
+const SUMMATIVE_SYSTEM_PROMPT = `You are Halo, a calm, warm coaching mirror for spoken reflection.
 You are writing a summative Orbit analysis — what became clearer across an entire guided experience of six spoken reflections.
 
 Tone: reflective, specific, encouraging, personal, and safe. Youthful but not childish.

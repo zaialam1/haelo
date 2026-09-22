@@ -26,7 +26,7 @@ export function ProfessionalMarketing({ compact = false }: Props) {
             className="text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
             style={{ color: "var(--violet)" }}
           >
-            Haelo for Professionals
+            Halo for Professionals
           </p>
         ) : null}
         <h1
@@ -46,7 +46,7 @@ export function ProfessionalMarketing({ compact = false }: Props) {
           className="mt-5 text-[1.0625rem] leading-relaxed"
           style={{ color: "var(--foreground-muted)" }}
         >
-          A Professional Account is still a full Haelo account — Universe,
+          A Professional Account is still a full Halo account — Universe,
           Journey, Orbits, and My Voice — with an additional layer for
           connecting with people and recommending Orbits. Private voice work
           stays private.
@@ -68,7 +68,7 @@ export function ProfessionalMarketing({ compact = false }: Props) {
               style={{ color: "var(--foreground-muted)" }}
             >
               {[
-                "Explore Haelo yourself",
+                "Explore Halo yourself",
                 "Browse all Orbits",
                 "Connect with people who choose to connect with you",
                 "Recommend relevant Orbits",

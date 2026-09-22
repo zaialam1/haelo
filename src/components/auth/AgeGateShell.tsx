@@ -7,7 +7,7 @@ type AgeGateShellProps = {
 
 export function AgeGateShell({
   children,
-  eyebrow = "Haelo",
+  eyebrow = "Halo",
 }: AgeGateShellProps) {
   return (
     <div
@@ -25,7 +25,7 @@ export function AgeGateShell({
             fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
           }}
         >
-          Haelo
+          Halo
         </Link>
         <p
           className="text-[0.6875rem] font-semibold tracking-[0.12em] uppercase"

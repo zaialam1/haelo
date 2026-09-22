@@ -1,7 +1,7 @@
 import { ALL_PROMPTS } from "./catalog";
 import type {
   DisplayLevel,
-  HaeloPrompt,
+  HaloPrompt,
   PromptChallenge,
   PromptDepth,
   PromptSkill,
@@ -9,8 +9,8 @@ import type {
 import { PLANETS } from "./types";
 
 function countBy<T extends string | number>(
-  items: readonly HaeloPrompt[],
-  key: (p: HaeloPrompt) => T,
+  items: readonly HaloPrompt[],
+  key: (p: HaloPrompt) => T,
 ): Record<string, number> {
   const out: Record<string, number> = {};
   for (const item of items) {
@@ -22,7 +22,7 @@ function countBy<T extends string | number>(
 
 /** Development-only distribution summary for curriculum QC. */
 export function summarizeDistributions(
-  prompts: readonly HaeloPrompt[] = ALL_PROMPTS,
+  prompts: readonly HaloPrompt[] = ALL_PROMPTS,
 ): string {
   const lines: string[] = [];
   lines.push(`Total prompts: ${prompts.length}`);

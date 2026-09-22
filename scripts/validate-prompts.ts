@@ -4,7 +4,7 @@ import { ALL_PROMPTS } from "../src/lib/prompts/catalog";
 
 const result = validatePromptBank(ALL_PROMPTS);
 
-console.log("Haelo prompt bank validation");
+console.log("Halo prompt bank validation");
 console.log("----------------------------");
 console.log(
   `Counts: express=${result.counts.express} stand=${result.counts.stand} connect=${result.counts.connect} explore=${result.counts.explore} total=${result.counts.total}`,

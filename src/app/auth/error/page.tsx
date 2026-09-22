@@ -3,7 +3,7 @@ import Link from "next/link";
 import { AuthShell } from "@/components/auth/AuthShell";
 
 export const metadata: Metadata = {
-  title: "Auth error — Haelo",
+  title: "Auth error — Halo",
   description: "Something went wrong confirming your account.",
 };
 

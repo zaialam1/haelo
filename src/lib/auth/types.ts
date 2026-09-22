@@ -1,5 +1,5 @@
 /**
- * Auth types for Haelo signup / sign-in against Supabase Auth.
+ * Auth types for Halo signup / sign-in against Supabase Auth.
  */
 
 export type SignUpInput = {
@@ -7,7 +7,7 @@ export type SignUpInput = {
   password: string;
   /** Stored as user metadata `first_name` */
   firstName: string;
-  /** Haelo username (without @); claimed after signup when a session exists */
+  /** Halo username (without @); claimed after signup when a session exists */
   username: string;
 };
 

@@ -8,7 +8,7 @@ type ComingSoonPageProps = {
 
 export function ComingSoonPage({
   title,
-  description = "This part of Haelo is on its way. Come back soon.",
+  description = "This part of Halo is on its way. Come back soon.",
 }: ComingSoonPageProps) {
   return (
     <main
@@ -26,7 +26,7 @@ export function ComingSoonPage({
             fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
           }}
         >
-          Haelo
+          Halo
         </p>
         <h1
           className="font-[family-name:var(--font-fraunces)] text-3xl tracking-tight text-[var(--foreground)] sm:text-4xl"
@@ -66,7 +66,7 @@ export function ComingSoonPage({
 
 export function comingSoonMetadata(title: string): Metadata {
   return {
-    title: `${title} — Haelo`,
-    description: `${title} is coming soon in Haelo.`,
+    title: `${title} — Halo`,
+    description: `${title} is coming soon in Halo.`,
   };
 }

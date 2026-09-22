@@ -67,11 +67,11 @@ export async function completeProfessionalSignupAction(
     const code = payload?.error ?? "unknown";
     const message =
       code === "username_taken" || code === "taken"
-        ? "That Haelo name is already taken."
+        ? "That Halo name is already taken."
         : code === "reserved"
-          ? "That Haelo name isn’t available."
+          ? "That Halo name isn’t available."
           : code === "invalid" || code === "username_invalid"
-            ? "Choose a valid Haelo name."
+            ? "Choose a valid Halo name."
             : "Couldn’t finish professional signup.";
     return { ok: false, message, code };
   }

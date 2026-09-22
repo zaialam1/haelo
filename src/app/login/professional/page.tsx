@@ -4,8 +4,8 @@ import { AuthShell } from "@/components/auth/AuthShell";
 import { ProfessionalLoginForm } from "@/components/auth/ProfessionalLoginForm";
 
 export const metadata: Metadata = {
-  title: "Professional login — Haelo",
-  description: "Log in to your Haelo professional account.",
+  title: "Professional login — Halo",
+  description: "Log in to your Halo professional account.",
 };
 
 export default function ProfessionalLoginPage() {
@@ -36,7 +36,7 @@ export default function ProfessionalLoginPage() {
             className="mt-4 max-w-md text-[1.0625rem] leading-relaxed"
             style={{ color: "var(--foreground)" }}
           >
-            Continue exploring Haelo — and open your Professional tools when
+            Continue exploring Halo — and open your Professional tools when
             you&rsquo;re ready.
           </p>
         </>

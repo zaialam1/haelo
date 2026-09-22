@@ -1,7 +1,7 @@
 /**
  * Proves Orbit completions do not advance normal planet prompt unlock.
  *
- * Haelo uses completed session counts (filtered by source) → display level,
+ * Halo uses completed session counts (filtered by source) → display level,
  * not a sequential question index. This test mirrors resolvePlanetSessionPrompt
  * counting rules.
  */

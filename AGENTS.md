@@ -1,6 +1,6 @@
 <!-- BEGIN:nextjs-agent-rules -->
 
-## Haelo Design
+## Halo Design
 
 Before creating or modifying any UI, read `DESIGN.md`.
 

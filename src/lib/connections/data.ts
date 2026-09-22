@@ -3,7 +3,7 @@ import type { AccountRole } from "@/lib/profiles/types";
 import {
   mapConnectionRow,
   type ConnectionRow,
-  type HaeloConnection,
+  type HaloConnection,
 } from "./types";
 
 type ConnectionListItem = ConnectionRow & {
@@ -11,7 +11,7 @@ type ConnectionListItem = ConnectionRow & {
   counterpart_account_role?: AccountRole | null;
 };
 
-export async function listMyConnections(): Promise<HaeloConnection[]> {
+export async function listMyConnections(): Promise<HaloConnection[]> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -31,7 +31,7 @@ export async function listMyConnections(): Promise<HaeloConnection[]> {
 
 export async function getConnectionById(
   id: string,
-): Promise<HaeloConnection | null> {
+): Promise<HaloConnection | null> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("connections")
@@ -49,7 +49,7 @@ export async function getConnectionById(
 export async function getConnectionBetweenUsers(
   userA: string,
   userB: string,
-): Promise<HaeloConnection | null> {
+): Promise<HaloConnection | null> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("connections")
@@ -69,6 +69,6 @@ export async function getConnectionBetweenUsers(
 export async function getConnectionWithUser(
   professionalUserId: string,
   userId: string,
-): Promise<HaeloConnection | null> {
+): Promise<HaloConnection | null> {
   return getConnectionBetweenUsers(professionalUserId, userId);
 }

@@ -10,7 +10,7 @@ import { getConnectionBetweenUsers } from "./data";
 import { mapConnectionRow, type ConnectionRow } from "./types";
 import type {
   ConnectionStatus,
-  HaeloConnection,
+  HaloConnection,
   UsernameSearchHit,
 } from "./types";
 
@@ -27,7 +27,7 @@ function revalidateConnectionPaths() {
 const CONNECTION_SELECT =
   "id, requester_user_id, recipient_user_id, status, requested_at, responded_at, removed_at, created_at, updated_at";
 
-function rowToConnection(data: ConnectionRow): HaeloConnection {
+function rowToConnection(data: ConnectionRow): HaloConnection {
   return mapConnectionRow(data);
 }
 
@@ -49,7 +49,7 @@ export type SearchUsernameResult =
     };
 
 export type ConnectionActionResult =
-  | { ok: true; connection: HaeloConnection }
+  | { ok: true; connection: HaloConnection }
   | { ok: false; message: string };
 
 async function requireVerifiedProfessional() {
@@ -65,7 +65,7 @@ async function requireVerifiedProfessional() {
     return {
       ok: false as const,
       error: "forbidden" as const,
-      message: "Only Haelo professionals can search for connections.",
+      message: "Only Halo professionals can search for connections.",
     };
   }
   const professional = await getOwnProfessionalProfile(profile.id);
@@ -80,7 +80,7 @@ async function requireVerifiedProfessional() {
   return { ok: true as const, profile };
 }
 
-export async function searchHaeloUsernameAction(
+export async function searchHaloUsernameAction(
   rawUsername: string,
 ): Promise<SearchUsernameResult> {
   const gate = await requireVerifiedProfessional();
@@ -97,12 +97,12 @@ export async function searchHaeloUsernameAction(
     return {
       ok: false,
       error: "not_found",
-      message: "We couldn’t find that Haelo name.",
+      message: "We couldn’t find that Halo name.",
     };
   }
 
   const supabase = await createClient();
-  const { data, error } = await supabase.rpc("search_haelo_username", {
+  const { data, error } = await supabase.rpc("search_halo_username", {
     raw_username: local.normalized,
   });
 
@@ -110,7 +110,7 @@ export async function searchHaeloUsernameAction(
     return {
       ok: false,
       error: "not_found",
-      message: "We couldn’t find that Haelo name.",
+      message: "We couldn’t find that Halo name.",
     };
   }
 
@@ -129,13 +129,13 @@ export async function searchHaeloUsernameAction(
       return {
         ok: false,
         error: "forbidden",
-        message: "Only verified Haelo professionals can search for connections.",
+        message: "Only verified Halo professionals can search for connections.",
       };
     }
     return {
       ok: false,
       error: "not_found",
-      message: "We couldn’t find that Haelo name.",
+      message: "We couldn’t find that Halo name.",
     };
   }
 
@@ -165,7 +165,7 @@ export async function sendConnectionRequestAction(
     return { ok: false, message: gate.message };
   }
   if (!targetUserId || targetUserId === gate.profile.id) {
-    return { ok: false, message: "We couldn’t find that Haelo name." };
+    return { ok: false, message: "We couldn’t find that Halo name." };
   }
 
   const supabase = await createClient();

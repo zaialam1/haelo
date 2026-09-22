@@ -11,9 +11,9 @@ import { formatUsernameDisplay } from "@/lib/profiles/username";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Professional — Haelo",
+  title: "Professional — Halo",
   description:
-    "Haelo Professional Mode — connect with people and recommend Orbits.",
+    "Halo Professional Mode — connect with people and recommend Orbits.",
 };
 
 export default async function ProfessionalPage() {
@@ -48,8 +48,8 @@ export default async function ProfessionalPage() {
             Professional Mode
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-[var(--foreground-muted)]">
-            This layer is for Haelo professional accounts. Your account is a
-            personal Haelo account.
+            This layer is for Halo professional accounts. Your account is a
+            personal Halo account.
           </p>
           <ProfessionalMarketing compact />
         </main>

@@ -53,7 +53,7 @@ export function AgeVerificationClient() {
         className="mt-4 text-[1.0625rem] leading-relaxed"
         style={{ color: "var(--foreground-muted)" }}
       >
-        Haelo needs to know this so we can keep the experience appropriate.
+        Halo needs to know this so we can keep the experience appropriate.
         If you&rsquo;re under 13, we&rsquo;ll ask a parent or guardian for
         permission.
       </p>

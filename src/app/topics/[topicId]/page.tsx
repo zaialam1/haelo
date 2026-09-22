@@ -16,7 +16,7 @@ export async function generateMetadata({
   const topic = getTopicCatalog(topicId);
   const name = topic?.label ?? "Topic";
   return {
-    title: `${name} — Haelo`,
+    title: `${name} — Halo`,
     description:
       topic?.tagline ?? `Explore ${name} in your conversation universe.`,
   };

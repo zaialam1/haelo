@@ -100,7 +100,7 @@ export function HomeNav({
             fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
           }}
         >
-          Haelo
+          Halo
         </p>
 
         {showSwitch ? (

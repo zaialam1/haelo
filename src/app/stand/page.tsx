@@ -4,7 +4,7 @@ import { PlanetPage } from "@/components/planets/PlanetPage";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Stand — Haelo",
+  title: "Stand — Halo",
   description:
     "Speak up and stand behind what you believe. Practice opinions, boundaries, and asking for what you need.",
 };

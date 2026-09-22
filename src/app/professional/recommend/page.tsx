@@ -12,7 +12,7 @@ import {
 import { formatUsernameDisplay } from "@/lib/profiles/username";
 
 export const metadata: Metadata = {
-  title: "Recommend an Orbit — Haelo",
+  title: "Recommend an Orbit — Halo",
   description:
     "Recommend a guided Orbit to someone who has accepted a connection.",
 };

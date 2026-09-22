@@ -56,7 +56,7 @@ export function AnalysisFeedback({
         style={{ color: "var(--foreground-muted)" }}
         role="status"
       >
-        Thanks — that helps Haelo improve.
+        Thanks — that helps Halo improve.
       </p>
     );
   }
@@ -74,7 +74,7 @@ export function AnalysisFeedback({
           type="button"
           disabled={pending}
           onClick={() => submit("up")}
-          className="haelo-btn rounded-full border px-3.5 py-1.5 text-[0.8125rem] font-semibold disabled:opacity-60"
+          className="halo-btn rounded-full border px-3.5 py-1.5 text-[0.8125rem] font-semibold disabled:opacity-60"
           style={{
             borderColor: "var(--hairline)",
             color: "var(--violet)",
@@ -91,7 +91,7 @@ export function AnalysisFeedback({
           type="button"
           disabled={pending}
           onClick={() => setRating("down")}
-          className="haelo-btn rounded-full border px-3.5 py-1.5 text-[0.8125rem] font-semibold disabled:opacity-60"
+          className="halo-btn rounded-full border px-3.5 py-1.5 text-[0.8125rem] font-semibold disabled:opacity-60"
           style={{
             borderColor: "var(--hairline)",
             color: "var(--foreground-muted)",
@@ -150,7 +150,7 @@ export function AnalysisFeedback({
             type="button"
             disabled={pending}
             onClick={() => submit("down", reason)}
-            className="haelo-btn rounded-full bg-[var(--violet)] px-4 py-1.5 text-[0.75rem] font-semibold text-[var(--on-violet)] disabled:opacity-60"
+            className="halo-btn rounded-full bg-[var(--violet)] px-4 py-1.5 text-[0.75rem] font-semibold text-[var(--on-violet)] disabled:opacity-60"
           >
             {pending ? "Sending…" : "Send"}
           </button>

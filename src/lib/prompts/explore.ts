@@ -1,6 +1,6 @@
-import type { HaeloPrompt } from "./types";
+import type { HaloPrompt } from "./types";
 
-export const EXPLORE_PROMPTS: HaeloPrompt[] = [
+export const EXPLORE_PROMPTS: HaloPrompt[] = [
   {
     id: "explore_001",
     planet: "explore",

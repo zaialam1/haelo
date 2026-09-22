@@ -36,7 +36,7 @@ export function validateUsername(raw: string): UsernameValidationResult {
     return {
       ok: false,
       error: "empty",
-      message: "Choose a Haelo name.",
+      message: "Choose a Halo name.",
     };
   }
 
@@ -69,7 +69,7 @@ export function validateUsername(raw: string): UsernameValidationResult {
     return {
       ok: false,
       error: "reserved",
-      message: "That Haelo name isn’t available.",
+      message: "That Halo name isn’t available.",
     };
   }
 
@@ -96,9 +96,9 @@ export function availabilityMessage(
         ? `${formatUsernameDisplay(normalized)} is available`
         : "Available";
     case "taken":
-      return "That Haelo name is already taken";
+      return "That Halo name is already taken";
     case "reserved":
-      return "That Haelo name isn’t available";
+      return "That Halo name isn’t available";
     case "invalid":
       return null;
     case "checking":

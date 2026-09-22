@@ -6,8 +6,8 @@ import { ensureOwnProfile } from "@/lib/profiles/data";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Choose your Haelo name — Haelo",
-  description: "Choose a unique Haelo name so trusted people can find you.",
+  title: "Choose your Halo name — Halo",
+  description: "Choose a unique Halo name so trusted people can find you.",
 };
 
 export default async function UsernameOnboardingPage() {
@@ -33,7 +33,7 @@ export default async function UsernameOnboardingPage() {
             className="text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
             style={{ color: "var(--violet)" }}
           >
-            Your Haelo identity
+            Your Halo identity
           </p>
           <h2
             className="mt-4 font-[family-name:var(--font-fraunces)] text-[2.1rem] leading-tight sm:text-[2.45rem]"
@@ -49,7 +49,7 @@ export default async function UsernameOnboardingPage() {
             className="mt-5 text-[1.0625rem] leading-relaxed"
             style={{ color: "var(--foreground-muted)" }}
           >
-            Your recordings, Journey, and analyses stay private — a Haelo name
+            Your recordings, Journey, and analyses stay private — a Halo name
             never opens those doors.
           </p>
         </>

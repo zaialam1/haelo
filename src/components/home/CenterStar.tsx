@@ -37,7 +37,7 @@ export function CenterStar({ nested = false }: CenterStarProps) {
             fill="none"
           >
             <defs>
-              <radialGradient id="haelo-star-core" cx="50%" cy="45%" r="55%">
+              <radialGradient id="halo-star-core" cx="50%" cy="45%" r="55%">
                 <stop offset="0%" stopColor="#FFF8F0" />
                 <stop offset="45%" stopColor="#F6D365" />
                 <stop offset="100%" stopColor="#E8A0BF" />
@@ -45,7 +45,7 @@ export function CenterStar({ nested = false }: CenterStarProps) {
             </defs>
             <path
               d="M32 4 L38.5 24.5 L60 26 L43 39 L48.5 60 L32 48 L15.5 60 L21 39 L4 26 L25.5 24.5 Z"
-              fill="url(#haelo-star-core)"
+              fill="url(#halo-star-core)"
               stroke="color-mix(in srgb, #FFF8F0 70%, transparent)"
               strokeWidth="1"
             />

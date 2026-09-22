@@ -129,7 +129,7 @@ export function UsernameSetupForm({
             letterSpacing: "-0.015em",
           }}
         >
-          Choose your Haelo name
+          Choose your Halo name
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-[var(--foreground-muted)]">
           This is how people you choose to connect with can find you.
@@ -155,7 +155,7 @@ export function UsernameSetupForm({
           htmlFor={inputId}
           className="text-sm font-semibold text-[var(--foreground)]"
         >
-          Haelo name
+          Halo name
         </label>
         <div
           className="flex items-center rounded-2xl border-2 bg-[var(--surface)] transition-colors focus-within:border-[var(--violet)] focus-within:ring-2 focus-within:ring-[color-mix(in_srgb,var(--violet)_25%,transparent)]"

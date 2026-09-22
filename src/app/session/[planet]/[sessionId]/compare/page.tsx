@@ -12,7 +12,7 @@ type PageProps = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  return { title: "Hear the Difference — Haelo" };
+  return { title: "Hear the Difference — Halo" };
 }
 
 export default async function SessionComparePage({ params }: PageProps) {

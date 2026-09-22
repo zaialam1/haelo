@@ -3,8 +3,8 @@ import { AuthShell } from "@/components/auth/AuthShell";
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 
 export const metadata: Metadata = {
-  title: "Forgot password — Haelo",
-  description: "Reset your Haelo password.",
+  title: "Forgot password — Halo",
+  description: "Reset your Halo password.",
 };
 
 export default function ForgotPasswordPage() {

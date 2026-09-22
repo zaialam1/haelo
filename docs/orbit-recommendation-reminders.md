@@ -1,6 +1,6 @@
 # Orbit recommendation reminders
 
-Haelo sends **one** gentle reminder if a recommended Orbit stays `new` or `viewed` for about **7 days** and was never started or dismissed. The connection must still be `accepted`.
+Halo sends **one** gentle reminder if a recommended Orbit stays `new` or `viewed` for about **7 days** and was never started or dismissed. The connection must still be `accepted`.
 
 ## 1. Environment
 

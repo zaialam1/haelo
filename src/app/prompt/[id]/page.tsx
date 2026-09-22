@@ -12,7 +12,7 @@ export async function generateMetadata({
   const { id } = await params;
   const prompt = SHOOTING_STAR_PROMPTS.find((p) => p.id === id);
   return {
-    title: `${prompt?.label ?? "Prompt"} — Haelo`,
+    title: `${prompt?.label ?? "Prompt"} — Halo`,
     description: "A surprise prompt from your conversation universe.",
   };
 }

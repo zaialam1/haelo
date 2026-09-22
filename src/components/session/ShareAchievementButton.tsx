@@ -19,15 +19,15 @@ function buildShareText(args: {
   promptText?: string | null;
   shareUrl: string;
 }): { title: string; text: string; url: string } {
-  const title = "I practiced on Haelo";
+  const title = "I practiced on Halo";
   const prompt =
     args.promptText?.trim() && args.promptText.trim().length > 0
       ? args.promptText.trim()
       : null;
 
   const body = prompt
-    ? `I just finished a Haelo reflection — “${prompt}” — in ${args.achievementLabel}. Want to try speaking one too?`
-    : `I just finished a Haelo reflection in ${args.achievementLabel}. Want to try speaking one too?`;
+    ? `I just finished a Halo reflection — “${prompt}” — in ${args.achievementLabel}. Want to try speaking one too?`
+    : `I just finished a Halo reflection in ${args.achievementLabel}. Want to try speaking one too?`;
 
   return {
     title,
@@ -126,7 +126,7 @@ export function ShareAchievementButton({
         className="mt-2 text-[0.8125rem] leading-relaxed"
         style={{ color: "var(--foreground-muted)" }}
       >
-        Celebrate finishing this question — invite a friend to try Haelo.
+        Celebrate finishing this question — invite a friend to try Halo.
       </p>
     </div>
   );

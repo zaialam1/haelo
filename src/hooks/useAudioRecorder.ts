@@ -67,7 +67,7 @@ function mapGetUserMediaError(err: unknown): RecorderError {
     return {
       kind: "permission_denied",
       message:
-        "Haelo needs microphone access to record your response. You can enable microphone permission in your browser settings and try again.",
+        "Halo needs microphone access to record your response. You can enable microphone permission in your browser settings and try again.",
     };
   }
 

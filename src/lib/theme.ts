@@ -1,4 +1,4 @@
-export const THEME_STORAGE_KEY = "haelo-theme";
+export const THEME_STORAGE_KEY = "halo-theme";
 
 export type ThemeMode = "light" | "dark";
 

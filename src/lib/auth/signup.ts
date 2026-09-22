@@ -51,7 +51,7 @@ function mapSignUpError(message: string): SignUpResult {
 }
 
 /**
- * Create a Haelo account with Supabase Auth (email + password + username).
+ * Create a Halo account with Supabase Auth (email + password + username).
  * Username is stored in auth metadata and claimed on profiles when a session exists.
  */
 export async function signUp(input: SignUpInput): Promise<SignUpResult> {
@@ -112,14 +112,14 @@ export async function signUp(input: SignUpInput): Promise<SignUpResult> {
     return {
       ok: false,
       code: "username_taken",
-      message: "That Haelo name is already taken.",
+      message: "That Halo name is already taken.",
     };
   }
   if (availability === "reserved") {
     return {
       ok: false,
       code: "username_reserved",
-      message: "That Haelo name isn’t available.",
+      message: "That Halo name isn’t available.",
     };
   }
   if (availability === "invalid") {
@@ -142,7 +142,7 @@ export async function signUp(input: SignUpInput): Promise<SignUpResult> {
     options: {
       data: {
         first_name: firstName,
-        haelo_username: usernameResult.normalized,
+        halo_username: usernameResult.normalized,
       },
       emailRedirectTo,
     },
@@ -166,7 +166,7 @@ export async function signUp(input: SignUpInput): Promise<SignUpResult> {
       return {
         ok: false,
         code: "username_taken",
-        message: "That Haelo name is already taken.",
+        message: "That Halo name is already taken.",
       };
     }
   }

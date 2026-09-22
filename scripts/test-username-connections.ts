@@ -1,5 +1,5 @@
 /**
- * Unit tests for Haelo username validation + reserved list.
+ * Unit tests for Halo username validation + reserved list.
  * Run: npx tsx scripts/test-username-connections.ts
  */
 
@@ -27,7 +27,7 @@ function testUsernameValidation() {
   assert.equal(validateUsername("_zara").ok, false);
   assert.equal(validateUsername("zara_").ok, false);
   assert.equal(validateUsername("admin").ok, false);
-  assert.equal(validateUsername("Haelo").ok, false);
+  assert.equal(validateUsername("Halo").ok, false);
   assert.equal(validateUsername("@Zara17").ok, true);
 
   const upper = validateUsername("ZARA17");

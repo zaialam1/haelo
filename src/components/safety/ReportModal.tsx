@@ -86,7 +86,7 @@ function ReportForm({
         className="mt-1 text-[0.8125rem] leading-relaxed"
         style={{ color: "var(--foreground-muted)" }}
       >
-        Reports help keep Haelo safe. The other person won&apos;t see this.
+        Reports help keep Halo safe. The other person won&apos;t see this.
       </p>
 
       {done ? (
@@ -96,7 +96,7 @@ function ReportForm({
           </p>
           <button
             type="button"
-            className="haelo-btn mt-4 w-full rounded-full bg-[var(--violet)] px-4 py-2.5 text-sm font-semibold text-[var(--on-violet)]"
+            className="halo-btn mt-4 w-full rounded-full bg-[var(--violet)] px-4 py-2.5 text-sm font-semibold text-[var(--on-violet)]"
             onClick={onClose}
           >
             Done
@@ -164,7 +164,7 @@ function ReportForm({
           <div className="mt-5 flex gap-2">
             <button
               type="button"
-              className="haelo-btn flex-1 rounded-full border px-4 py-2.5 text-sm font-semibold"
+              className="halo-btn flex-1 rounded-full border px-4 py-2.5 text-sm font-semibold"
               style={{
                 borderColor: "var(--hairline)",
                 color: "var(--foreground)",
@@ -176,7 +176,7 @@ function ReportForm({
             </button>
             <button
               type="button"
-              className="haelo-btn flex-1 rounded-full bg-[var(--violet)] px-4 py-2.5 text-sm font-semibold text-[var(--on-violet)] disabled:opacity-70"
+              className="halo-btn flex-1 rounded-full bg-[var(--violet)] px-4 py-2.5 text-sm font-semibold text-[var(--on-violet)] disabled:opacity-70"
               onClick={submit}
               disabled={pending}
             >

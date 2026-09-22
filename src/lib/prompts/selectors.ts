@@ -8,7 +8,7 @@ import {
 import { ALL_PROMPTS, getPromptsForPlanet } from "./catalog";
 import type {
   DisplayLevel,
-  HaeloPrompt,
+  HaloPrompt,
   Planet,
   PromptDepth,
   PromptSkill,
@@ -37,17 +37,17 @@ function clampPlanetLevel(level: number): DisplayLevel {
 export function eligiblePrompts(options: {
   planet: Planet;
   planetLevel: DisplayLevel;
-  pool?: readonly HaeloPrompt[];
-}): HaeloPrompt[] {
+  pool?: readonly HaloPrompt[];
+}): HaloPrompt[] {
   const level = clampPlanetLevel(options.planetLevel);
   const source = options.pool ?? getPromptsForPlanet(options.planet);
   return source.filter((p) => p.displayLevel <= level);
 }
 
 export function filterByDepthPreference(
-  pool: readonly HaeloPrompt[],
+  pool: readonly HaloPrompt[],
   preferredDepth: DepthPreference = "normal",
-): HaeloPrompt[] {
+): HaloPrompt[] {
   const allowed = new Set<PromptDepth>(DEPTH_PREFERENCE_FILTERS[preferredDepth]);
   const filtered = pool.filter((p) => allowed.has(p.depth));
   return filtered.length > 0 ? filtered : [...pool];
@@ -58,10 +58,10 @@ export function filterByDepthPreference(
  * If the remaining pool is too small, relax exclusion (keep currentId out if provided).
  */
 export function excludeRecent(
-  pool: readonly HaeloPrompt[],
+  pool: readonly HaloPrompt[],
   recentPromptIds: Iterable<string> = [],
   options: { minPool?: number; alwaysExcludeId?: string } = {},
-): HaeloPrompt[] {
+): HaloPrompt[] {
   const minPool = options.minPool ?? MIN_POOL_AFTER_COOLDOWN;
   const recent = new Set(recentPromptIds);
   if (options.alwaysExcludeId) recent.add(options.alwaysExcludeId);
@@ -82,9 +82,9 @@ export function excludeRecent(
  * Does not hard-exclude; if everything was recent, returns the original pool.
  */
 export function preferUnpracticedSkills(
-  pool: readonly HaeloPrompt[],
+  pool: readonly HaloPrompt[],
   recentSkills: Iterable<PromptSkill | string> = [],
-): HaeloPrompt[] {
+): HaloPrompt[] {
   const recent = new Set(recentSkills);
   if (recent.size === 0) return [...pool];
   const preferred = pool.filter((p) => !recent.has(p.skill));
@@ -115,13 +115,13 @@ function pickWeightedLevel(
 }
 
 export function weightedPickByDisplayLevel(
-  pool: readonly HaeloPrompt[],
+  pool: readonly HaloPrompt[],
   planetLevel: DisplayLevel,
   random: () => number = Math.random,
-): HaeloPrompt | null {
+): HaloPrompt | null {
   if (pool.length === 0) return null;
 
-  const byLevel = new Map<DisplayLevel, HaeloPrompt[]>();
+  const byLevel = new Map<DisplayLevel, HaloPrompt[]>();
   for (const prompt of pool) {
     const list = byLevel.get(prompt.displayLevel) ?? [];
     list.push(prompt);
@@ -146,7 +146,7 @@ export function weightedPickByDisplayLevel(
 
 export function selectPrompt(
   options: SelectPromptOptions,
-): HaeloPrompt | null {
+): HaloPrompt | null {
   const random = options.random ?? Math.random;
   let pool = eligiblePrompts({
     planet: options.planet,
@@ -195,7 +195,7 @@ export function todayKey(date: Date = new Date()): string {
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }
 
-function isDailyFriendly(prompt: HaeloPrompt): boolean {
+function isDailyFriendly(prompt: HaloPrompt): boolean {
   const { allowedDepths, allowedChallenges, excludeDeepStretch } =
     DAILY_PROMPT_DEFAULTS;
   if (!(allowedDepths as readonly PromptDepth[]).includes(prompt.depth)) {
@@ -228,7 +228,7 @@ export type SelectDailyPromptOptions = {
  */
 export function selectDailyPrompt(
   options: SelectDailyPromptOptions = {},
-): HaeloPrompt {
+): HaloPrompt {
   const date = options.date ?? new Date();
   const planetLevel = clampPlanetLevel(options.planetLevel ?? 1);
   const random = mulberry32(hashString(`daily:${todayKey(date)}`));
@@ -264,7 +264,7 @@ export function selectMainSessionPrompts(options: {
   recentSkills?: Iterable<PromptSkill | string>;
   preferredDepth?: DepthPreference;
   seed?: string;
-} = {}): HaeloPrompt[] {
+} = {}): HaloPrompt[] {
   const count = Math.min(options.count ?? 4, PLANETS.length);
   const seed = options.seed ?? `${Date.now()}-${Math.random()}`;
   const random = mulberry32(hashString(`main:${seed}`));
@@ -277,7 +277,7 @@ export function selectMainSessionPrompts(options: {
 
   const recentIds = new Set(options.recentPromptIds ?? []);
   const recentSkills = [...(options.recentSkills ?? [])];
-  const picked: HaeloPrompt[] = [];
+  const picked: HaloPrompt[] = [];
 
   for (const planet of order.slice(0, count)) {
     const level = clampPlanetLevel(options.planetLevels?.[planet] ?? 1);
@@ -309,7 +309,7 @@ export function selectReplacementPrompt(options: {
   recentPromptIds?: Iterable<string>;
   preferredDepth?: DepthPreference;
   random?: () => number;
-}): HaeloPrompt | null {
+}): HaloPrompt | null {
   const random = options.random ?? Math.random;
   let pool = eligiblePrompts({
     planet: options.planet,
@@ -332,7 +332,7 @@ export function selectFocusShortlist(
     seed?: string;
     preferredDepth?: DepthPreference;
   } = {},
-): HaeloPrompt[] {
+): HaloPrompt[] {
   const planetLevel = clampPlanetLevel(options.planetLevel ?? 1);
   const seed = options.seed ?? `${Date.now()}-${Math.random()}`;
   const random = mulberry32(hashString(`focus:${planet}:${seed}`));

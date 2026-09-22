@@ -36,7 +36,7 @@ function baseSession(
     sessionType: "main",
     clips: [],
     userReflection: null,
-    haeloObservation: null,
+    haloObservation: null,
     voiceNotes: [],
     themeLabel: null,
     changeObservation: null,

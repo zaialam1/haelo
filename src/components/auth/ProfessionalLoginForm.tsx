@@ -74,8 +74,8 @@ export function ProfessionalLoginForm() {
           | ProfessionalType
           | undefined;
         const username =
-          typeof meta.haelo_username === "string"
-            ? meta.haelo_username
+          typeof meta.halo_username === "string"
+            ? meta.halo_username
             : undefined;
         if (displayName && professionalType) {
           await finishProfessionalSignupClient({
@@ -155,10 +155,10 @@ export function ProfessionalLoginForm() {
               fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
             }}
           >
-            Personal Haelo account
+            Personal Halo account
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-[var(--foreground-muted)]">
-            This account is a personal Haelo account. Logging in here doesn&rsquo;t
+            This account is a personal Halo account. Logging in here doesn&rsquo;t
             change your account type.
           </p>
         </div>
@@ -171,7 +171,7 @@ export function ProfessionalLoginForm() {
           }}
           className="inline-flex w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)]"
         >
-          Go to Haelo
+          Go to Halo
         </button>
         <TransitionLink
           href="/professional"
@@ -196,7 +196,7 @@ export function ProfessionalLoginForm() {
           Professional login
         </h1>
         <p className="mt-2 text-sm text-[var(--foreground-muted)]">
-          Sign in with your Haelo professional account.
+          Sign in with your Halo professional account.
         </p>
       </div>
 

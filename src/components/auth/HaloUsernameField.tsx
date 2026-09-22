@@ -24,7 +24,7 @@ type Props = {
 /**
  * Shared @username field with debounced availability for signup + onboarding.
  */
-export function HaeloUsernameField({
+export function HaloUsernameField({
   value,
   onChange,
   disabled,
@@ -91,7 +91,7 @@ export function HaeloUsernameField({
         htmlFor={inputId}
         className="text-sm font-semibold text-[var(--foreground)]"
       >
-        Haelo name
+        Halo name
       </label>
       {hint ? (
         <p className="text-xs leading-relaxed text-[var(--foreground-muted)]">

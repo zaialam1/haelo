@@ -10,7 +10,7 @@ import { isPlanet } from "@/lib/prompts";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Journey — Haelo",
+  title: "Journey — Halo",
   description:
     "Your constellation of speaking sessions across Express, Stand, Connect, and Explore.",
 };

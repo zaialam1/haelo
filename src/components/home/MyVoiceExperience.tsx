@@ -132,7 +132,7 @@ function LoadingState() {
         className="mt-3 max-w-md text-base leading-relaxed"
         style={{ color: "var(--foreground-muted)" }}
       >
-        Haelo is gathering what it has noticed across your Universe.
+        Halo is gathering what it has noticed across your Universe.
       </p>
     </div>
   );
@@ -195,7 +195,7 @@ function EmptyState() {
         style={{ color: "var(--foreground-muted)" }}
       >
         Record a reflection on any planet — Connect, Stand, Explore, or Express
-        — and Haelo will begin noticing how you communicate.
+        — and Halo will begin noticing how you communicate.
       </p>
       <PlanetShortcuts />
     </div>
@@ -218,7 +218,7 @@ function BeginningState({ sessionCount }: { sessionCount: number }) {
         className="mx-auto mt-5 max-w-xl text-center text-base leading-relaxed sm:text-lg"
         style={{ color: "var(--foreground)" }}
       >
-        As you explore Connect, Stand, Explore, and Express, Haelo will start
+        As you explore Connect, Stand, Explore, and Express, Halo will start
         noticing patterns in how you communicate across different moments.
       </p>
       <p
@@ -438,7 +438,7 @@ export function MyVoiceExperience({
             <IntroMoment
               milestone="my_voice_opened"
               title="This is My Voice."
-              body="After enough reflections, Haelo gently notices patterns across your planets — not a score, just a mirror of how you’ve been speaking."
+              body="After enough reflections, Halo gently notices patterns across your planets — not a score, just a mirror of how you’ve been speaking."
             />
           </div>
         ) : null}

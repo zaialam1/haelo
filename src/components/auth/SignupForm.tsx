@@ -2,7 +2,7 @@
 
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { useOptionalPageTransition } from "@/components/transitions/PageTransitionProvider";
-import { HaeloUsernameField } from "@/components/auth/HaeloUsernameField";
+import { HaloUsernameField } from "@/components/auth/HaloUsernameField";
 import { useRouter } from "next/navigation";
 import { useCallback, useId, useState } from "react";
 import { signIn } from "@/lib/auth/signin";
@@ -96,15 +96,15 @@ export function SignupForm() {
     const usernameParsed = validateUsername(username);
     if (!usernameParsed.ok) next.username = usernameParsed.message;
     else if (usernameAvailability === "taken")
-      next.username = "That Haelo name is already taken.";
+      next.username = "That Halo name is already taken.";
     else if (usernameAvailability === "reserved")
-      next.username = "That Haelo name isn’t available.";
+      next.username = "That Halo name isn’t available.";
     else if (
       usernameAvailability !== "available" &&
       usernameAvailability !== "idle"
     ) {
       if (usernameAvailability === "checking") {
-        next.username = "Still checking that Haelo name…";
+        next.username = "Still checking that Halo name…";
       } else if (usernameAvailability === "invalid") {
         next.username =
           "Use 3–20 letters, numbers, or underscores. Don’t start or end with an underscore.";
@@ -136,7 +136,7 @@ export function SignupForm() {
         username:
           usernameParsed.ok === false
             ? usernameParsed.message
-            : "Choose an available Haelo name.",
+            : "Choose an available Halo name.",
       });
       return;
     }
@@ -271,7 +271,7 @@ export function SignupForm() {
             <span className="font-semibold text-[var(--foreground)]">
               {email.trim().toLowerCase()}
             </span>
-            . Open it to finish creating your account. Your Haelo name will be
+            . Open it to finish creating your account. Your Halo name will be
             saved when you confirm.
           </p>
         </div>
@@ -337,7 +337,7 @@ export function SignupForm() {
       </Field>
 
       <div>
-        <HaeloUsernameField
+        <HaloUsernameField
           value={username}
           onChange={(value) => {
             setUsername(value);

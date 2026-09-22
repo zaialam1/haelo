@@ -1,7 +1,7 @@
 export type {
   ConnectionStatus,
   NotificationType,
-  HaeloConnection,
+  HaloConnection,
   ProfessionalConnection,
   AppNotification,
   UsernameSearchHit,
@@ -24,7 +24,7 @@ export {
   listAcceptedConnectedUserIds,
 } from "./authorize";
 export {
-  searchHaeloUsernameAction,
+  searchHaloUsernameAction,
   sendConnectionRequestAction,
   respondToConnectionRequestAction,
   removeConnectionAction,
