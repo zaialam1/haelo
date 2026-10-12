@@ -74,7 +74,7 @@ function UtilityButton({
       aria-controls={ariaControls}
       aria-expanded={ariaExpanded}
       data-pulse={pulse ? "true" : "false"}
-      className="home-utility-btn relative flex size-11 items-center justify-center rounded-full transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] sm:size-12"
+      className="home-utility-btn relative flex size-10 items-center justify-center rounded-full transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] sm:size-12"
       style={{
         background: active
           ? "color-mix(in srgb, var(--violet) 16%, var(--surface))"
@@ -198,9 +198,9 @@ export function HomeUtilities({
   return (
     <div
       ref={rootRef}
-      className="pointer-events-auto absolute top-[4.5rem] left-3 z-50 flex flex-col items-start gap-2 sm:top-[5rem] sm:left-5"
+      className="pointer-events-auto absolute top-[3.85rem] left-3 z-50 flex flex-col items-start gap-2 sm:top-[5rem] sm:left-5"
     >
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-row items-center gap-1.5 sm:flex-col sm:gap-2">
         <UtilityButton
           active={panel === "streak"}
           onClick={() => toggle("streak")}

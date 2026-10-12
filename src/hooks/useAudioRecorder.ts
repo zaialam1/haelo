@@ -8,6 +8,7 @@ import {
   isUsableRecordingBlob,
   pickSupportedMimeType,
 } from "@/lib/sessions/audio";
+import { canUseLiveSpeechWithRecorder } from "@/lib/speech/device";
 import {
   getSpeechRecognitionCtor,
   type SpeechRecognitionLike,
@@ -201,6 +202,10 @@ export function useAudioRecorder(
     interimTranscriptRef.current = "";
     setTranscript("");
 
+    // Concurrent speech recognition steals the mic on many phones and
+    // leaves MediaRecorder with a tiny unusable blob.
+    if (!canUseLiveSpeechWithRecorder()) return;
+
     const Ctor = getSpeechRecognitionCtor();
     if (!Ctor) return;
 
@@ -350,19 +355,33 @@ export function useAudioRecorder(
       finishWithBlob(recorded, type);
     };
 
-    try {
-      if (typeof recorder.requestData === "function" && recorder.state === "recording") {
-        recorder.requestData();
+    const stopRecorder = () => {
+      try {
+        recorder.stop();
+      } catch {
+        stoppingRef.current = false;
+        stopTracks();
+        setError({
+          kind: "unknown",
+          message: "Could not stop the recording. Please try again.",
+        });
+        setStatus("error");
       }
-      recorder.stop();
+    };
+
+    // Brief pause after requestData helps Chrome Android flush the last chunk.
+    try {
+      if (
+        typeof recorder.requestData === "function" &&
+        recorder.state === "recording"
+      ) {
+        recorder.requestData();
+        window.setTimeout(stopRecorder, 80);
+      } else {
+        stopRecorder();
+      }
     } catch {
-      stoppingRef.current = false;
-      stopTracks();
-      setError({
-        kind: "unknown",
-        message: "Could not stop the recording. Please try again.",
-      });
-      setStatus("error");
+      stopRecorder();
     }
   }, [clearTimers, finishWithBlob, stopTracks]);
 
@@ -411,18 +430,28 @@ export function useAudioRecorder(
     };
 
     mediaRecorderRef.current = recorder;
-    const mime = recorder.mimeType || preferred || "";
-    // Timeslice WebM is often unplayable. Safari/mp4 still needs a timeslice
-    // or stop() can flush an empty blob.
-    if (mime.toLowerCase().includes("webm") || mime.toLowerCase().includes("ogg")) {
-      recorder.start();
+    const mime = (recorder.mimeType || preferred || "").toLowerCase();
+    // Collect periodic chunks on mobile / Safari so stop() never flushes empty.
+    // Desktop WebM without timeslice stays more reliably playable.
+    const needsTimeslice =
+      !canUseLiveSpeechWithRecorder() ||
+      mime.includes("mp4") ||
+      mime.includes("mpeg") ||
+      mime.includes("aac");
+    if (needsTimeslice) {
+      recorder.start(250);
     } else {
-      recorder.start(1000);
+      recorder.start();
     }
     startedAtRef.current = Date.now();
     setStatus("recording");
     setElapsedSeconds(0);
-    startSpeechRecognition();
+    // Defer speech recognition so MediaRecorder claims the track first.
+    window.setTimeout(() => {
+      if (mediaRecorderRef.current?.state === "recording") {
+        startSpeechRecognition();
+      }
+    }, 350);
 
     timerRef.current = window.setInterval(() => {
       const elapsed = Math.floor((Date.now() - startedAtRef.current) / 1000);

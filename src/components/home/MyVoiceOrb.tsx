@@ -18,7 +18,7 @@ export function MyVoiceOrb({ nested = false }: MyVoiceOrbProps) {
       }
       aria-label="Open My Voice summary"
     >
-      <span className="relative flex size-40 items-center justify-center sm:size-48">
+      <span className="relative flex size-[6.5rem] items-center justify-center sm:size-48">
         {/* Outer violet aura */}
         <span
           className="absolute inset-[-10%] rounded-full motion-safe:animate-[star-wave_5s_ease-in-out_infinite]"
@@ -51,7 +51,7 @@ export function MyVoiceOrb({ nested = false }: MyVoiceOrbProps) {
         />
         {/* Soft highlight */}
         <span
-          className="absolute top-[22%] left-[28%] size-9 rounded-full sm:size-11"
+          className="absolute top-[22%] left-[28%] size-7 rounded-full sm:size-11"
           style={{
             background:
               "radial-gradient(circle, color-mix(in srgb, #fff8f0 80%, transparent), transparent 70%)",
@@ -61,7 +61,7 @@ export function MyVoiceOrb({ nested = false }: MyVoiceOrbProps) {
       </span>
 
       <span
-        className="font-[family-name:var(--font-fraunces)] text-base tracking-tight text-[var(--foreground)] sm:text-lg"
+        className="font-[family-name:var(--font-fraunces)] text-sm tracking-tight text-[var(--foreground)] sm:text-lg"
         style={{
           fontVariationSettings: '"opsz" 72, "SOFT" 40, "WONK" 0, "wght" 550',
         }}
@@ -69,7 +69,7 @@ export function MyVoiceOrb({ nested = false }: MyVoiceOrbProps) {
         My Voice
       </span>
       <span
-        className="voice-orb-hint max-w-[11rem] text-center text-[0.6875rem] leading-snug sm:max-w-[13rem] sm:text-xs"
+        className="voice-orb-hint hidden max-w-[11rem] text-center text-[0.6875rem] leading-snug sm:block sm:max-w-[13rem] sm:text-xs"
         style={{ color: "var(--foreground-muted)" }}
       >
         See how your voice is taking shape

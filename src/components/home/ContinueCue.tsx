@@ -19,11 +19,11 @@ export function ContinueCue({ action }: { action: NextAction }) {
   }, [action.kind]);
 
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-[4.75rem] z-20 flex justify-center px-16 sm:top-[5.5rem]">
-      <div className="pointer-events-auto max-w-sm text-center">
+    <div className="pointer-events-none absolute inset-x-0 bottom-[5.5rem] z-30 flex justify-center px-4 sm:bottom-auto sm:top-[5.5rem] sm:px-16">
+      <div className="pointer-events-auto max-w-[min(20rem,calc(100vw-2rem))] text-center sm:max-w-sm">
         {action.welcomeBack ? (
           <p
-            className="mb-1.5 text-xs"
+            className="mb-1.5 hidden text-xs sm:block"
             style={{
               color: "rgba(255,255,255,0.82)",
               textShadow: "0 1px 8px rgba(0,0,0,0.35)",
@@ -38,12 +38,13 @@ export function ContinueCue({ action }: { action: NextAction }) {
           onClick={() =>
             trackEvent("next_action_followed", { kind: action.kind })
           }
-          className="inline-flex max-w-full items-center gap-2 rounded-full px-4 py-2 text-left transition-transform hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+          className="inline-flex max-w-full items-center gap-2 rounded-full px-3.5 py-1.5 text-left transition-transform hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] sm:px-4 sm:py-2"
           style={{
-            background: "color-mix(in srgb, var(--surface) 62%, transparent)",
+            background: "color-mix(in srgb, var(--surface) 72%, transparent)",
             border:
               "1px solid color-mix(in srgb, var(--gold) 26%, transparent)",
             boxShadow: "var(--shadow-soft)",
+            backdropFilter: "blur(10px)",
           }}
         >
           <span

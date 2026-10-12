@@ -1,5 +1,6 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { EvolvedPlanet } from "@/components/planets/EvolvedPlanet";
 import { CosmeticsOrbDecorations } from "@/components/cosmetics/CosmeticsOrbDecorations";
@@ -21,6 +22,22 @@ type VoicePlanetOrbProps = {
   cosmeticAssignments?: SlotAssignment[];
 };
 
+function subscribeMobile(onChange: () => void) {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return () => {};
+  }
+  const mq = window.matchMedia("(max-width: 639px)");
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
+
+function readMobile() {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return false;
+  }
+  return window.matchMedia("(max-width: 639px)").matches;
+}
+
 export function VoicePlanetOrb({
   planet,
   level = 1,
@@ -29,12 +46,17 @@ export function VoicePlanetOrb({
   subtitle,
   cosmeticAssignments = [],
 }: VoicePlanetOrbProps) {
+  const isMobile = useSyncExternalStore(subscribeMobile, readMobile, () => false);
   const px = voicePlanetSizePx(planet.size);
   const floatDuration = 5 + (floatDelaySec % 1.6);
   const sizeCss = absolute
-    ? `clamp(5rem, 20vw, ${px}px)`
+    ? isMobile
+      ? `clamp(3.75rem, 16vw, 5.25rem)`
+      : `clamp(5rem, 20vw, ${px}px)`
     : `clamp(4.5rem, 13vw, ${Math.min(px, 96)}px)`;
   const caption = subtitle ?? planet.tagline;
+  const left = isMobile ? planet.mobileX : planet.x;
+  const top = isMobile ? planet.mobileY : planet.y;
 
   return (
     <TransitionLink
@@ -43,14 +65,14 @@ export function VoicePlanetOrb({
       accent={planet.color}
       className={
         absolute
-          ? "voice-planet group absolute z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--gold)]"
+          ? "voice-planet group absolute z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--gold)] sm:gap-2.5"
           : "voice-planet group relative z-10 flex flex-col items-center gap-1.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--gold)]"
       }
-      style={absolute ? { left: `${planet.x}%`, top: `${planet.y}%` } : undefined}
+      style={absolute ? { left: `${left}%`, top: `${top}%` } : undefined}
       aria-label={`${planet.label}: ${caption}`}
     >
       <span
-        className="flex flex-col items-center gap-1.5 motion-reduce:animate-none"
+        className="flex flex-col items-center gap-1 motion-reduce:animate-none sm:gap-1.5"
         style={{
           animation: `planet-float ${floatDuration}s ease-in-out ${floatDelaySec}s infinite`,
         }}
@@ -74,16 +96,19 @@ export function VoicePlanetOrb({
           {planet.label}
         </span>
 
-        <span
-          className={
-            absolute
-              ? "voice-planet-tagline max-w-[10rem] text-center text-[0.625rem] leading-snug sm:max-w-[12rem] sm:text-[0.6875rem]"
-              : "max-w-[7rem] text-center text-[0.625rem] leading-snug"
-          }
-          style={{ color: "var(--foreground-muted)" }}
-        >
-          {caption}
-        </span>
+        {/* Taglines only on larger screens — they crowd the phone map */}
+        {!isMobile || !absolute ? (
+          <span
+            className={
+              absolute
+                ? "voice-planet-tagline max-w-[10rem] text-center text-[0.625rem] leading-snug sm:max-w-[12rem] sm:text-[0.6875rem]"
+                : "max-w-[7rem] text-center text-[0.625rem] leading-snug"
+            }
+            style={{ color: "var(--foreground-muted)" }}
+          >
+            {caption}
+          </span>
+        ) : null}
       </span>
     </TransitionLink>
   );

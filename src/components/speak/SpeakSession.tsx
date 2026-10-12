@@ -9,6 +9,7 @@ import { pickReplacementQuestion } from "@/lib/questions/bank";
 import type { BankQuestion } from "@/lib/questions/types";
 import type { SpeakMode } from "@/lib/questions/sessions";
 import { createClient } from "@/lib/supabase/client";
+import { canUseLiveSpeechWithRecorder } from "@/lib/speech/device";
 import {
   getSpeechRecognitionCtor,
   type SpeechRecognitionLike,
@@ -137,6 +138,8 @@ export function SpeakSession({
     stopSpeechRecognition();
     resetTranscriptBuffers();
 
+    if (!canUseLiveSpeechWithRecorder()) return;
+
     const Ctor = getSpeechRecognitionCtor();
     if (!Ctor) return;
 
@@ -217,11 +220,16 @@ export function SpeakSession({
   }
 
   function startMediaRecorder(recorder: MediaRecorder) {
-    const mime = recorder.mimeType || "";
-    if (mime.toLowerCase().includes("webm") || mime.toLowerCase().includes("ogg")) {
-      recorder.start();
+    const mime = (recorder.mimeType || "").toLowerCase();
+    const needsTimeslice =
+      !canUseLiveSpeechWithRecorder() ||
+      mime.includes("mp4") ||
+      mime.includes("mpeg") ||
+      mime.includes("aac");
+    if (needsTimeslice) {
+      recorder.start(250);
     } else {
-      recorder.start(1000);
+      recorder.start();
     }
   }
 
@@ -296,14 +304,26 @@ export function SpeakSession({
         });
         resolve(blob);
       };
+      const stopRecorder = () => {
+        try {
+          recorder.stop();
+        } catch {
+          resolve(null);
+        }
+      };
       try {
-        if (typeof recorder.requestData === "function" && recorder.state === "recording") {
+        if (
+          typeof recorder.requestData === "function" &&
+          recorder.state === "recording"
+        ) {
           recorder.requestData();
+          window.setTimeout(stopRecorder, 80);
+          return;
         }
       } catch {
         /* ignore */
       }
-      recorder.stop();
+      stopRecorder();
     });
   }
 

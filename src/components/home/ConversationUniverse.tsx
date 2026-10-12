@@ -68,13 +68,13 @@ export function ConversationUniverse({
 
       <CelestialDecorations rewards={celestialRewards} />
 
-      <div className="pointer-events-auto absolute right-4 top-[4.75rem] z-30 flex flex-col items-end gap-2 sm:right-6 sm:top-[5.25rem]">
+      <div className="pointer-events-auto absolute right-3 top-[3.85rem] z-30 flex flex-col items-end gap-1.5 sm:right-6 sm:top-[5.25rem] sm:gap-2">
         <StardustChip balance={stardustBalance} compact />
-        <div className="flex gap-2">
+        <div className="flex gap-1.5 sm:gap-2">
           <TransitionLink
             href="/store"
             variant="fade"
-            className="rounded-full px-3 py-1.5 text-[0.75rem] font-semibold"
+            className="hidden rounded-full px-3 py-1.5 text-[0.75rem] font-semibold sm:inline-flex"
             style={{
               background: "color-mix(in srgb, var(--surface) 70%, transparent)",
               color: "var(--foreground)",
@@ -87,7 +87,7 @@ export function ConversationUniverse({
           <TransitionLink
             href="/decorate"
             variant="fade"
-            className="rounded-full px-3 py-1.5 text-[0.75rem] font-semibold"
+            className="rounded-full px-2.5 py-1 text-[0.6875rem] font-semibold sm:px-3 sm:py-1.5 sm:text-[0.75rem]"
             style={{
               background: "color-mix(in srgb, var(--gold) 35%, var(--surface))",
               color: "var(--foreground)",
@@ -99,9 +99,9 @@ export function ConversationUniverse({
       </div>
 
       {showWeeklyGoal ? (
-        <div className="pointer-events-none absolute inset-x-0 bottom-[5.5rem] z-20 flex justify-center sm:bottom-[6.25rem]">
+        <div className="pointer-events-none absolute inset-x-0 bottom-[9.25rem] z-20 flex justify-center sm:bottom-[6.25rem]">
           <div
-            className="rounded-full px-3 py-1.5"
+            className="rounded-full px-2.5 py-1 sm:px-3 sm:py-1.5"
             style={{
               background: "color-mix(in srgb, var(--surface) 55%, transparent)",
               border: "1px solid color-mix(in srgb, var(--gold) 22%, transparent)",
@@ -167,7 +167,7 @@ export function ConversationUniverse({
       </svg>
 
       {/* Planet stage — decorations share this coordinate space with orbs */}
-      <div className="absolute inset-x-0 top-14 bottom-20 sm:top-16 sm:bottom-24">
+      <div className="absolute inset-x-0 top-[5.75rem] bottom-[7.5rem] sm:top-16 sm:bottom-24">
         <CosmeticsUniverseLayer assignments={cosmeticAssignments} />
 
         {RINGS.map((ring, i) => (
@@ -177,8 +177,8 @@ export function ConversationUniverse({
             style={{
               width: `${ring.w}%`,
               height: `${ring.h}%`,
-              maxWidth: "min(98vw, 880px)",
-              maxHeight: "min(88vw, 760px)",
+              maxWidth: "min(92vw, 880px)",
+              maxHeight: "min(72dvh, 760px)",
               borderColor: "rgba(255, 255, 255, 0.38)",
               borderWidth: "1px",
               animationDelay: `${i * 0.55}s`,

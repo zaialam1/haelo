@@ -17,6 +17,9 @@ export type VoicePlanet = {
   /** Fixed position as % of the map (from top-left) */
   x: number;
   y: number;
+  /** Phone map placement — pulled in from chrome so orbs don’t collide */
+  mobileX: number;
+  mobileY: number;
   size: VoicePlanetSize;
   brightness: number;
   detail: VoicePlanetDetail;
@@ -36,6 +39,8 @@ export const VOICE_PLANETS: VoicePlanet[] = [
     color: "#E8A0BF",
     x: 17,
     y: 28,
+    mobileX: 24,
+    mobileY: 30,
     size: "lg",
     brightness: 0.94,
     detail: "smooth",
@@ -52,6 +57,8 @@ export const VOICE_PLANETS: VoicePlanet[] = [
     color: "#5B4B8A",
     x: 82,
     y: 25,
+    mobileX: 76,
+    mobileY: 28,
     size: "lg",
     brightness: 0.96,
     detail: "clouds",
@@ -68,6 +75,8 @@ export const VOICE_PLANETS: VoicePlanet[] = [
     color: "#6B9BC7",
     x: 20,
     y: 72,
+    mobileX: 26,
+    mobileY: 66,
     size: "lg",
     brightness: 0.92,
     detail: "smooth",
@@ -84,6 +93,8 @@ export const VOICE_PLANETS: VoicePlanet[] = [
     color: "#E9A98A",
     x: 81,
     y: 73,
+    mobileX: 74,
+    mobileY: 64,
     size: "lg",
     brightness: 0.94,
     detail: "terrain",
