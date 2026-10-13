@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { ParentApproveClient } from "@/components/auth/ParentApproveClient";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Approve Halo access — Halo",
+  title: "Continue — Halo",
 };
 
+/** Parental approval is retired with the age gate. */
 export default function ParentApprovePage() {
-  return <ParentApproveClient />;
+  redirect("/home");
 }

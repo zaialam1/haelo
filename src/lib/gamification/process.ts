@@ -467,7 +467,7 @@ async function processGamificationEventInner(
     reason: string,
     refKey: string,
   ): Promise<void> {
-    const result = await creditStardust(supabase, amount, reason, refKey);
+    const result = await creditStardust(userId, amount, reason, refKey);
     if (result.ok && result.credited > 0) {
       stardustGranted += result.credited;
       trackEvent("stardust_earned", {

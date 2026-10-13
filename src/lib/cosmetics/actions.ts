@@ -87,7 +87,6 @@ export async function purchaseCosmeticAction(
 
   const { data, error } = await gate.supabase.rpc("purchase_cosmetic", {
     p_cosmetic_key: item.key,
-    p_price: item.price,
   });
 
   if (error) {

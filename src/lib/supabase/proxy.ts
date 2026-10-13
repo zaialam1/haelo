@@ -43,7 +43,6 @@ export async function updateSession(request: NextRequest) {
   const isAuthenticated = Boolean(userId);
 
   const path = request.nextUrl.pathname;
-  const isAgeApprovePath = path === "/age-verification/approve";
 
   const protectedPrefixes = [
     "/home",
@@ -68,11 +67,9 @@ export async function updateSession(request: NextRequest) {
     "/professional/connections",
     "/professional/recommend",
   ];
-  const isProtected =
-    !isAgeApprovePath &&
-    protectedPrefixes.some(
-      (prefix) => path === prefix || path.startsWith(`${prefix}/`),
-    );
+  const isProtected = protectedPrefixes.some(
+    (prefix) => path === prefix || path.startsWith(`${prefix}/`),
+  );
 
   if (!isAuthenticated && isProtected) {
     const url = request.nextUrl.clone();
@@ -98,12 +95,8 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Legacy age-verification URLs no longer gate access — send people onward.
-  if (
-    isAuthenticated &&
-    path.startsWith("/age-verification") &&
-    !isAgeApprovePath
-  ) {
+  // Retired age-verification URLs → home.
+  if (path.startsWith("/age-verification")) {
     const url = request.nextUrl.clone();
     url.pathname = "/home";
     url.search = "";

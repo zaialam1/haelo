@@ -43,7 +43,7 @@ export function HomeNavWithRole({ pinned = false }: { pinned?: boolean }) {
         .maybeSingle();
 
       if (cancelled) return;
-      const status = pro?.verification_status ?? "verified";
+      const status = pro?.verification_status ?? "pending";
       setVerified(status === "verified");
       setPending(status === "pending");
     })();

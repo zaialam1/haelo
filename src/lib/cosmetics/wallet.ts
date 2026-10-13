@@ -6,6 +6,7 @@ import type {
   SlotAssignment,
   StardustLedgerEntry,
 } from "@/lib/cosmetics/types";
+import { createAdminClient } from "@/lib/supabase/admin";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 function isMissingRelationError(message: string | null | undefined): boolean {
@@ -76,15 +77,17 @@ export type CreditStardustResult =
   | { ok: false; error: string };
 
 /**
- * Idempotent Stardust credit via security-definer RPC.
+ * Idempotent Stardust credit via service-role RPC (not callable with user JWT).
  */
 export async function creditStardust(
-  supabase: SupabaseClient,
+  userId: string,
   amount: number,
   reason: string,
   refKey: string,
 ): Promise<CreditStardustResult> {
-  const { data, error } = await supabase.rpc("credit_stardust", {
+  const admin = createAdminClient();
+  const { data, error } = await admin.rpc("credit_stardust", {
+    p_user_id: userId,
     p_amount: amount,
     p_reason: reason,
     p_ref_key: refKey,

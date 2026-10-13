@@ -85,7 +85,7 @@ export async function completeProfessionalSignupAction(
 
   return {
     ok: true,
-    verificationStatus: payload.verification_status ?? "verified",
+    verificationStatus: payload.verification_status ?? "pending",
     username: payload.username ?? username,
   };
 }
