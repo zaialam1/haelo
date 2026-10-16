@@ -117,19 +117,9 @@ export default function Home() {
                 so your voice can grow without an audience or a grade.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <PrimaryCta href="/try">Try a free demo</PrimaryCta>
-                <SecondaryCta href="/signup">Create account</SecondaryCta>
+                <PrimaryCta href="/signup">Start exploring</PrimaryCta>
+                <SecondaryCta href="/login">Log in</SecondaryCta>
               </div>
-              <p className="mt-4 text-sm text-[var(--foreground-muted)]">
-                Already exploring?{" "}
-                <TransitionLink
-                  href="/login"
-                  variant="fade"
-                  className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
-                >
-                  Log in
-                </TransitionLink>
-              </p>
               <p className="mt-6 text-sm leading-relaxed text-[var(--foreground-muted)]">
                 Using Halo with students or clients?{" "}
                 <TransitionLink
