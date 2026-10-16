@@ -80,10 +80,11 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Keep /forgot-password reachable while signed in (email reset / shared device).
+  // Settings uses in-app change-password for the common case.
   const authPages = [
     "/login",
     "/signup",
-    "/forgot-password",
     "/login/professional",
     "/signup/professional",
   ];

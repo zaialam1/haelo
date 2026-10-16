@@ -190,10 +190,10 @@ export function HomeUtilities({
 
   const streakCopy =
     streakDays === 0
-      ? "Start practicing to begin a streak — one day at a time."
+      ? "Showing up takes courage. One short reflection starts your streak."
       : streakDays === 1
-        ? "You've practiced your voice 1 day in a row."
-        : `You've practiced your voice ${streakDays} days in a row.`;
+        ? "You showed up today — that counts. Come back when you’re ready."
+        : `You’ve shown up ${streakDays} days in a row. That’s real courage, not a scoreboard.`;
 
   return (
     <div

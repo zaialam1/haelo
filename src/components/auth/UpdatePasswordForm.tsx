@@ -165,10 +165,10 @@ export function UpdatePasswordForm() {
 
       <p className="text-center text-sm text-[var(--foreground)]">
         <Link
-          href="/login"
+          href="/home"
           className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline"
         >
-          Back to Log In
+          Back to Halo
         </Link>
       </p>
     </form>

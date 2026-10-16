@@ -67,6 +67,11 @@ export function LoginForm() {
 
   const emailId = `${formId}-email`;
   const passwordId = `${formId}-password`;
+  const nextPath = searchParams.get("next");
+  const signupHref = nextPath
+    ? `/signup?next=${encodeURIComponent(nextPath)}`
+    : "/signup";
+  const cameFromApp = Boolean(nextPath && nextPath.startsWith("/"));
 
   function validate(): FieldErrors {
     const next: FieldErrors = {};
@@ -134,7 +139,9 @@ export function LoginForm() {
           Welcome back
         </h1>
         <p className="mt-2 text-sm text-[var(--foreground-muted)]">
-          Log in to continue exploring your voice.
+          {cameFromApp
+            ? "Log in to continue — or create an account if you’re new."
+            : "Log in to continue exploring your voice."}
         </p>
       </div>
 
@@ -224,16 +231,26 @@ export function LoginForm() {
         {submitting ? "Logging in…" : "Log In"}
       </button>
 
-      <p className="text-center text-sm text-[var(--foreground)]">
-        Don&rsquo;t have an account?{" "}
+      {cameFromApp ? (
         <TransitionLink
-          href="/signup"
+          href={signupHref}
           variant="fade"
-          className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+          className="inline-flex w-full items-center justify-center rounded-full border-2 border-[var(--violet)] bg-[color-mix(in_srgb,var(--rose)_20%,var(--background))] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--violet)] transition-colors hover:bg-[color-mix(in_srgb,var(--rose)_35%,var(--background))] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
-          Create an account
+          New here? Create an account
         </TransitionLink>
-      </p>
+      ) : (
+        <p className="text-center text-sm text-[var(--foreground)]">
+          Don&rsquo;t have an account?{" "}
+          <TransitionLink
+            href={signupHref}
+            variant="fade"
+            className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+          >
+            Create an account
+          </TransitionLink>
+        </p>
+      )}
 
       <p className="text-center text-sm text-[var(--foreground-muted)]">
         <TransitionLink

@@ -7,7 +7,7 @@ import { HomeUtilities } from "@/components/home/HomeUtilities";
 import { ContinueCue } from "@/components/home/ContinueCue";
 import { ConversationUniverse } from "@/components/home/ConversationUniverse";
 import { GamificationRevealOverlay } from "@/components/gamification/GamificationRevealOverlay";
-import { UniverseIntroOverlay } from "@/components/onboarding/UniverseIntroOverlay";
+import { ProductTour } from "@/components/onboarding/ProductTour";
 import { WEEKLY_GOAL_INTRO_AFTER_SESSIONS } from "@/lib/gamification/config";
 import {
   countEligibleReflections,
@@ -72,15 +72,15 @@ export default async function HomePage() {
 
   const showWeeklyGoal = reflectionCount >= WEEKLY_GOAL_INTRO_AFTER_SESSIONS;
 
-  // Progressive onboarding moments (server-persisted, never repeat)
-  const showUniverseIntro = Boolean(
+  // Full product tour auto-starts for new users (0 sessions, never finished tour).
+  const autoStartProductTour = Boolean(
     onboarding &&
       onboarding.completedSessionCount === 0 &&
-      !hasSeenMilestone(onboarding.preferences, "universe_seen"),
+      !hasSeenMilestone(onboarding.preferences, "product_tour_completed"),
   );
   const showMyVoiceCue = Boolean(
     onboarding &&
-      !showUniverseIntro &&
+      !autoStartProductTour &&
       reflectionCount >= MY_VOICE_MIN_SESSIONS_FOR_SYNTHESIS &&
       !hasSeenMilestone(onboarding.preferences, "my_voice_introduced"),
   );
@@ -95,9 +95,9 @@ export default async function HomePage() {
   const revealsToShow =
     immediate.length > 0 ? immediate.slice(0, 2) : deferred.slice(0, 1);
 
-  // Smart next action — skipped during first-visit onboarding
+  // Smart next action — skipped during first-visit tour
   const nextAction =
-    userId && !showUniverseIntro
+    userId && !autoStartProductTour
       ? await computeNextAction({
           userId,
           notifications,
@@ -128,9 +128,8 @@ export default async function HomePage() {
         weeklyProgress={showWeeklyGoal ? weeklyProgress : null}
       />
       <HomeBottomNav />
-      {showUniverseIntro ? (
-        <UniverseIntroOverlay />
-      ) : revealsToShow.length > 0 ? (
+      <ProductTour autoStart={autoStartProductTour} />
+      {!autoStartProductTour && revealsToShow.length > 0 ? (
         <GamificationRevealOverlay
           reveals={revealsToShow}
           explainPlanetGrowth={explainPlanetGrowth}

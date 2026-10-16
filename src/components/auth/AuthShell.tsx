@@ -11,8 +11,37 @@ type AuthShellProps = {
 export function AuthShell({ children, brand }: AuthShellProps) {
   return (
     <div className="flex min-h-dvh flex-col lg:flex-row">
+      {/* Mobile: compact brand bar only — form comes first below */}
+      <div
+        className="flex items-center justify-between border-b px-5 py-4 lg:hidden"
+        style={{
+          borderColor: "color-mix(in srgb, var(--rose) 40%, transparent)",
+          background:
+            "radial-gradient(ellipse 80% 120% at 0% 50%, color-mix(in srgb, var(--gold) 40%, transparent), transparent 55%), radial-gradient(ellipse 60% 100% at 100% 50%, color-mix(in srgb, var(--rose) 35%, transparent), transparent 50%), var(--background)",
+        }}
+      >
+        <TransitionLink
+          href="/"
+          variant="fade"
+          className="font-[family-name:var(--font-fraunces)] text-xl tracking-tight text-[var(--violet)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--violet)]"
+          style={{
+            fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
+          }}
+        >
+          Halo
+        </TransitionLink>
+        <TransitionLink
+          href="/"
+          variant="fade"
+          className="text-sm font-medium text-[var(--violet)] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+        >
+          Home
+        </TransitionLink>
+      </div>
+
+      {/* Desktop brand panel */}
       <aside
-        className="relative flex flex-col overflow-hidden border-b px-5 py-8 sm:px-8 lg:w-[44%] lg:justify-between lg:border-b-0 lg:border-r lg:px-12 lg:py-14 xl:px-16"
+        className="relative hidden flex-col overflow-hidden border-r px-12 py-14 lg:flex lg:w-[44%] lg:justify-between xl:px-16"
         style={{
           borderColor: "color-mix(in srgb, var(--rose) 40%, transparent)",
           background:
@@ -23,7 +52,7 @@ export function AuthShell({ children, brand }: AuthShellProps) {
           <TransitionLink
             href="/"
             variant="fade"
-            className="font-[family-name:var(--font-fraunces)] text-xl tracking-tight text-[var(--violet)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--violet)] sm:text-2xl"
+            className="font-[family-name:var(--font-fraunces)] text-2xl tracking-tight text-[var(--violet)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--violet)]"
             style={{
               fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
             }}
@@ -39,12 +68,12 @@ export function AuthShell({ children, brand }: AuthShellProps) {
           </TransitionLink>
         </div>
 
-        <div className="mt-10 max-w-lg flex-1 lg:mt-0 lg:flex lg:flex-col lg:justify-center lg:pb-8">
+        <div className="mt-0 flex max-w-lg flex-1 flex-col justify-center pb-8">
           {brand}
         </div>
 
         <div
-          className="pointer-events-none absolute -right-8 -bottom-10 hidden size-48 rounded-full opacity-70 lg:block xl:size-56"
+          className="pointer-events-none absolute -right-8 -bottom-10 size-48 rounded-full opacity-70 xl:size-56"
           style={{
             background:
               "radial-gradient(circle, var(--gold), color-mix(in srgb, var(--rose) 70%, transparent))",
@@ -53,7 +82,7 @@ export function AuthShell({ children, brand }: AuthShellProps) {
         />
       </aside>
 
-      <div className="flex flex-1 flex-col justify-center px-5 py-12 sm:px-10 lg:px-16 lg:py-16 xl:px-24">
+      <div className="flex flex-1 flex-col justify-center px-5 py-10 sm:px-10 lg:px-16 lg:py-16 xl:px-24">
         <div className="mx-auto w-full max-w-lg">{children}</div>
       </div>
     </div>

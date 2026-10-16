@@ -112,14 +112,24 @@ export default function Home() {
                 className="mt-5 max-w-md text-[1.0625rem] leading-relaxed"
                 style={{ color: "var(--foreground-muted)" }}
               >
-                Short speaking sessions across Express, Stand, Connect, and
-                Explore. Over time, every session becomes part of your personal
-                constellation.
+                Speaking up takes courage. Halo is a private place to practice
+                — short sessions across Express, Stand, Connect, and Explore —
+                so your voice can grow without an audience or a grade.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <PrimaryCta href="/signup">Start exploring</PrimaryCta>
-                <SecondaryCta href="/login">Log in</SecondaryCta>
+                <PrimaryCta href="/try">Try a free demo</PrimaryCta>
+                <SecondaryCta href="/signup">Create account</SecondaryCta>
               </div>
+              <p className="mt-4 text-sm text-[var(--foreground-muted)]">
+                Already exploring?{" "}
+                <TransitionLink
+                  href="/login"
+                  variant="fade"
+                  className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+                >
+                  Log in
+                </TransitionLink>
+              </p>
               <p className="mt-6 text-sm leading-relaxed text-[var(--foreground-muted)]">
                 Using Halo with students or clients?{" "}
                 <TransitionLink
@@ -163,16 +173,17 @@ export default function Home() {
                 color: "var(--violet)",
               }}
             >
-              Your voice has different strengths to grow.
+              Why Halo exists
             </h2>
             <p
               className="mt-5 text-[1.0625rem] leading-relaxed"
               style={{ color: "var(--foreground)" }}
             >
-              Sometimes you need to say what you feel. Sometimes you need to
-              stand behind an opinion. Sometimes you need to connect with
-              someone else — or figure out what you actually think. Halo gives
-              you a calm place to practice each of those.
+              Most people never get a safe place to practice using their voice.
+              Halo is that place — private, judgment-free practice so saying
+              what you feel, standing behind an opinion, connecting with
+              someone, or figuring out what you think feels a little less hard
+              next time.
             </p>
           </div>
         </section>

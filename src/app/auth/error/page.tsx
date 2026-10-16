@@ -4,10 +4,17 @@ import { AuthShell } from "@/components/auth/AuthShell";
 
 export const metadata: Metadata = {
   title: "Auth error — Halo",
-  description: "Something went wrong confirming your account.",
+  description: "Something went wrong with that email link.",
 };
 
-export default function AuthErrorPage() {
+export default async function AuthErrorPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ reason?: string }>;
+}) {
+  const params = await searchParams;
+  const isRecovery = params.reason === "recovery";
+
   return (
     <AuthShell
       brand={
@@ -35,9 +42,9 @@ export default function AuthErrorPage() {
             className="mt-4 max-w-md text-[1.0625rem] leading-relaxed"
             style={{ color: "var(--foreground)" }}
           >
-            Confirmation links from the default Supabase email need a small
-            template update for Next.js, or the link was opened in a different
-            browser than the one you used to sign up.
+            {isRecovery
+              ? "Password reset links only work once, and they work best in the same browser where you requested the reset."
+              : "Confirmation links only work once, and they work best in the same browser where you signed up."}
           </p>
         </>
       }
@@ -50,33 +57,50 @@ export default function AuthErrorPage() {
             letterSpacing: "-0.015em",
           }}
         >
-          Couldn&rsquo;t confirm
+          {isRecovery ? "Couldn’t reset password" : "Couldn’t confirm"}
         </h1>
         <p className="text-sm leading-relaxed text-[var(--foreground-muted)]">
-          In the Supabase dashboard, open{" "}
-          <span className="font-semibold text-[var(--foreground)]">
-            Authentication → Email Templates → Confirm sign up
-          </span>{" "}
-          and set the button link to your{" "}
-          <code className="text-[var(--foreground)]">/auth/confirm</code> URL
-          with <code className="text-[var(--foreground)]">token_hash</code> (see
-          the setup notes from this session). Then request a new confirmation
-          email.
+          {isRecovery ? (
+            <>
+              Request a fresh reset email, then open the link in this browser.
+              If you&rsquo;re already signed in, you can also change your
+              password from Settings.
+            </>
+          ) : (
+            <>
+              Request a new confirmation email from sign up, or try logging in
+              if you already confirmed.
+            </>
+          )}
         </p>
         <Link
-          href="/signup"
+          href={isRecovery ? "/forgot-password" : "/signup"}
           className="inline-flex w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)] shadow-[0_10px_28px_color-mix(in_srgb,var(--violet)_30%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
-          Back to Sign up
+          {isRecovery ? "Request a new reset link" : "Back to Sign up"}
         </Link>
         <p className="text-center text-sm text-[var(--foreground)]">
-          Already confirmed?{" "}
-          <Link
-            href="/login"
-            className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline"
-          >
-            Log in
-          </Link>
+          {isRecovery ? (
+            <>
+              Remembered it?{" "}
+              <Link
+                href="/login"
+                className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline"
+              >
+                Log in
+              </Link>
+            </>
+          ) : (
+            <>
+              Already confirmed?{" "}
+              <Link
+                href="/login"
+                className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline"
+              >
+                Log in
+              </Link>
+            </>
+          )}
         </p>
       </div>
     </AuthShell>

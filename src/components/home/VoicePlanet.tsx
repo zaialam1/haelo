@@ -63,6 +63,7 @@ export function VoicePlanetOrb({
       href={planet.href}
       variant="warp"
       accent={planet.color}
+      data-tour={`planet-${planet.id}`}
       className={
         absolute
           ? "voice-planet group absolute z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--gold)] sm:gap-2.5"

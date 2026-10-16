@@ -35,11 +35,18 @@ export function SiteHeader() {
             Log in
           </TransitionLink>
           <TransitionLink
+            href="/try"
+            variant="fade"
+            className="hidden rounded-full px-3 py-2 text-sm font-semibold text-[var(--violet)] transition-colors hover:bg-[color-mix(in_srgb,var(--rose)_30%,transparent)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] sm:inline-flex sm:px-4"
+          >
+            Try demo
+          </TransitionLink>
+          <TransitionLink
             href="/signup"
             variant="fade"
             className="rounded-full bg-[var(--violet)] px-4 py-2 text-sm font-semibold text-[var(--on-violet)] shadow-[0_6px_18px_color-mix(in_srgb,var(--violet)_30%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           >
-            Start exploring
+            Create account
           </TransitionLink>
         </nav>
       </div>

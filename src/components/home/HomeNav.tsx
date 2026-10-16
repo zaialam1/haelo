@@ -136,6 +136,7 @@ export function HomeNav({
           <TransitionLink
             href="/settings"
             variant="fade"
+            data-tour="nav-settings"
             className="flex size-10 items-center justify-center rounded-full text-[var(--foreground-muted)] transition-[color,background-color,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[var(--violet-soft)] hover:text-[var(--violet)] hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
             aria-label="Settings"
           >

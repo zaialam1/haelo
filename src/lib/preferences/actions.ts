@@ -6,6 +6,7 @@ import { getPreferencesWith } from "./withClient";
 import {
   isNotificationCategory,
   isOnboardingMilestone,
+  PRODUCT_TOUR_COVERED_MILESTONES,
   type NotificationCategory,
   type OnboardingMilestone,
 } from "./types";
@@ -38,6 +39,66 @@ export async function markOnboardingMilestoneAction(
     { onConflict: "user_id" },
   );
 
+  return { ok: !error };
+}
+
+/** Mark all milestones the product tour covers (complete or skip). */
+export async function completeProductTourAction(): Promise<{ ok: boolean }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false };
+
+  const prefs = await getPreferencesWith(supabase, user.id);
+  const now = new Date().toISOString();
+  const onboarding = { ...prefs.onboarding };
+  for (const milestone of PRODUCT_TOUR_COVERED_MILESTONES) {
+    if (!onboarding[milestone]) onboarding[milestone] = now;
+  }
+
+  const { error } = await supabase.from("user_preferences").upsert(
+    {
+      user_id: user.id,
+      onboarding,
+      notification_prefs: prefs.notificationPrefs,
+      updated_at: now,
+    },
+    { onConflict: "user_id" },
+  );
+
+  if (!error) {
+    revalidatePath("/home");
+    revalidatePath("/settings");
+    revalidatePath("/journey");
+    revalidatePath("/orbits");
+  }
+  return { ok: !error };
+}
+
+/** Clear product tour completion so Settings can replay it. */
+export async function resetProductTourAction(): Promise<{ ok: boolean }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false };
+
+  const prefs = await getPreferencesWith(supabase, user.id);
+  const onboarding = { ...prefs.onboarding };
+  delete onboarding.product_tour_completed;
+
+  const { error } = await supabase.from("user_preferences").upsert(
+    {
+      user_id: user.id,
+      onboarding,
+      notification_prefs: prefs.notificationPrefs,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "user_id" },
+  );
+
+  if (!error) revalidatePath("/settings");
   return { ok: !error };
 }
 

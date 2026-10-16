@@ -8,9 +8,14 @@ import {
   signOut,
   type AccountProfile,
 } from "@/lib/auth/account";
+import { ChangePasswordPanel } from "@/components/home/ChangePasswordPanel";
 import { deleteAccountAction } from "@/lib/auth/actions";
 import { submitProductFeedbackAction } from "@/lib/feedback/actions";
-import { setNotificationPrefAction } from "@/lib/preferences/actions";
+import { startTourSession } from "@/lib/onboarding/productTour";
+import {
+  resetProductTourAction,
+  setNotificationPrefAction,
+} from "@/lib/preferences/actions";
 import {
   NOTIFICATION_CATEGORIES,
   NOTIFICATION_CATEGORY_LABELS,
@@ -250,6 +255,7 @@ export function SettingsClient({
     >
       <header
         className="sticky top-0 z-40 border-b backdrop-blur-md"
+        data-tour="settings-page"
         style={{
           borderColor: "var(--hairline)",
           backgroundColor:
@@ -367,27 +373,7 @@ export function SettingsClient({
                   {account.email}
                 </dd>
               </div>
-              <div>
-                <dt
-                  className="text-xs font-semibold"
-                  style={{ color: "var(--foreground-muted)" }}
-                >
-                  Password
-                </dt>
-                <dd
-                  className="mt-1 text-sm leading-relaxed"
-                  style={{ color: "var(--foreground-muted)" }}
-                >
-                  For security, your password isn&rsquo;t shown here.{" "}
-                  <Link
-                    href="/forgot-password"
-                    className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline"
-                  >
-                    Reset it
-                  </Link>{" "}
-                  if you need a new one.
-                </dd>
-              </div>
+              <ChangePasswordPanel />
             </dl>
           ) : (
             <p
@@ -708,6 +694,26 @@ export function SettingsClient({
                 reflections, see how they land, watch your Universe grow, and
                 use Orbits when something specific is on your mind.
               </p>
+              <button
+                type="button"
+                disabled={busy}
+                onClick={async () => {
+                  setBusy(true);
+                  setError(null);
+                  const result = await resetProductTourAction();
+                  setBusy(false);
+                  if (!result.ok) {
+                    setError("Couldn’t restart the tour. Try again.");
+                    return;
+                  }
+                  startTourSession(0);
+                  router.push("/home");
+                  router.refresh();
+                }}
+                className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-full border-2 border-[var(--violet)] px-5 py-2.5 text-sm font-semibold text-[var(--violet)] transition-colors hover:bg-[var(--violet-soft)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] disabled:opacity-50"
+              >
+                Replay product tour
+              </button>
               {feedbackDone ? (
                 <p
                   className="mt-4 text-sm font-medium"

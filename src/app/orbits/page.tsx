@@ -3,6 +3,7 @@ import { PageView } from "@/components/analytics/PageView";
 import { HomeBottomNav } from "@/components/home/HomeBottomNav";
 import { HomeNavWithRole } from "@/components/home/HomeNavWithRole";
 import { IntroMoment } from "@/components/onboarding/IntroMoment";
+import { ProductTour } from "@/components/onboarding/ProductTour";
 import { OrbitsExperience } from "@/components/orbits/OrbitsExperience";
 import { getOnboardingSnapshot } from "@/lib/onboarding/data";
 import { ORBIT_REGIONS, isOrbitRegionKey } from "@/lib/orbits/regions";
@@ -46,10 +47,12 @@ export default async function OrbitsPage({ searchParams }: OrbitsPageProps) {
     if (user?.id) {
       recommendations = await listRecipientActiveRecommendations(user.id);
       const onboarding = await getOnboardingSnapshot(user.id);
-      showIntro = !hasSeenMilestone(
-        onboarding.preferences,
-        "orbits_discovered",
-      );
+      const tourAlreadyDone =
+        hasSeenMilestone(onboarding.preferences, "product_tour_completed") ||
+        hasSeenMilestone(onboarding.preferences, "universe_seen");
+      showIntro =
+        tourAlreadyDone &&
+        !hasSeenMilestone(onboarding.preferences, "orbits_discovered");
     }
   } catch (err) {
     console.error("[orbits] browse load failed:", err);
@@ -128,6 +131,7 @@ export default async function OrbitsPage({ searchParams }: OrbitsPageProps) {
       </main>
 
       <HomeBottomNav />
+      <ProductTour />
     </div>
   );
 }

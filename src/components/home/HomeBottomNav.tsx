@@ -10,6 +10,7 @@ function NavItem({
   active,
   icon,
   emphasize,
+  tourId,
 }: {
   href: string;
   label: string;
@@ -17,11 +18,13 @@ function NavItem({
   icon: ReactNode;
   /** Universe stays visually strongest / centered. */
   emphasize?: boolean;
+  tourId?: string;
 }) {
   return (
     <TransitionLink
       href={href}
       variant="fade"
+      data-tour={tourId}
       className={`flex flex-col items-center gap-0.5 rounded-lg px-3 py-1.5 transition-[color,transform,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] ${
         emphasize ? "min-w-[6.25rem]" : "min-w-[5.25rem]"
       }`}
@@ -63,6 +66,7 @@ export function HomeBottomNav() {
     <nav
       className="home-bottom-nav pointer-events-auto absolute inset-x-0 bottom-0 z-40"
       aria-label="Primary"
+      data-tour="bottom-nav"
     >
       <div
         className="mx-auto flex h-[4.25rem] items-center justify-center gap-1 px-3 pb-[env(safe-area-inset-bottom)] sm:h-20 sm:gap-2 sm:px-6"
@@ -76,6 +80,7 @@ export function HomeBottomNav() {
             href="/journey"
             label="Journey"
             active={onJourney}
+            tourId="nav-journey"
             icon={
               <svg
                 width="20"
@@ -123,6 +128,7 @@ export function HomeBottomNav() {
             href="/orbits"
             label="Orbits"
             active={onOrbits}
+            tourId="nav-orbits"
             icon={
               <svg
                 width="20"

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SettingsClient } from "@/components/home/SettingsClient";
+import { ProductTour } from "@/components/onboarding/ProductTour";
 import { getOwnPreferences } from "@/lib/preferences/data";
 import { EMPTY_PREFERENCES } from "@/lib/preferences/types";
 import { getOwnProfessionalProfile } from "@/lib/professional/data";
@@ -20,13 +21,16 @@ export default async function SettingsPage() {
   ]);
 
   return (
-    <SettingsClient
-      username={profile?.username ?? null}
-      accountRole={profile?.accountRole ?? "user"}
-      professionalType={professional?.professionalType ?? null}
-      professionalDisplayName={professional?.displayName ?? null}
-      verificationStatus={professional?.verificationStatus ?? null}
-      initialPreferences={preferences}
-    />
+    <>
+      <SettingsClient
+        username={profile?.username ?? null}
+        accountRole={profile?.accountRole ?? "user"}
+        professionalType={professional?.professionalType ?? null}
+        professionalDisplayName={professional?.displayName ?? null}
+        verificationStatus={professional?.verificationStatus ?? null}
+        initialPreferences={preferences}
+      />
+      <ProductTour />
+    </>
   );
 }

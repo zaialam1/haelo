@@ -11,6 +11,7 @@ export function MyVoiceOrb({ nested = false }: MyVoiceOrbProps) {
     <TransitionLink
       href="/my-voice"
       variant="fade"
+      data-tour="my-voice"
       className={
         nested
           ? "voice-orb group pointer-events-auto relative z-20 flex flex-col items-center gap-1.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--gold)]"

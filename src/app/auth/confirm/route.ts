@@ -12,30 +12,6 @@ export async function GET(request: NextRequest) {
     type === "recovery" ? "/auth/update-password" : "/home",
   );
 
-  // #region agent log
-  fetch("http://127.0.0.1:7260/ingest/327a9bfd-1a4e-4e3a-9bbf-2eff52fa2f90", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Debug-Session-Id": "15d12f",
-    },
-    body: JSON.stringify({
-      sessionId: "15d12f",
-      runId: "post-fix",
-      hypothesisId: "D",
-      location: "auth/confirm/route.ts:entry",
-      message: "Auth confirm hit",
-      data: {
-        hasTokenHash: Boolean(token_hash),
-        type,
-        next,
-        paramKeys: Array.from(searchParams.keys()),
-      },
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {});
-  // #endregion
-
   const redirectTo = request.nextUrl.clone();
   redirectTo.pathname = next;
   redirectTo.search = "";
@@ -44,34 +20,16 @@ export async function GET(request: NextRequest) {
     const supabase = await createClient();
     const { error } = await supabase.auth.verifyOtp({ type, token_hash });
 
-    // #region agent log
-    fetch("http://127.0.0.1:7260/ingest/327a9bfd-1a4e-4e3a-9bbf-2eff52fa2f90", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Debug-Session-Id": "15d12f",
-      },
-      body: JSON.stringify({
-        sessionId: "15d12f",
-        runId: "post-fix",
-        hypothesisId: "D",
-        location: "auth/confirm/route.ts:verify",
-        message: "verifyOtp result",
-        data: {
-          ok: !error,
-          errorMessage: error?.message ?? null,
-          errorStatus: error?.status ?? null,
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
-
     if (!error) {
       return NextResponse.redirect(redirectTo);
     }
   }
 
   redirectTo.pathname = "/auth/error";
+  redirectTo.search = "";
+  redirectTo.searchParams.set(
+    "reason",
+    type === "recovery" ? "recovery" : "confirm",
+  );
   return NextResponse.redirect(redirectTo);
 }

@@ -8,6 +8,7 @@
 
 export type OnboardingMilestone =
   | "universe_seen"
+  | "product_tour_completed"
   | "first_session_started"
   | "first_session_completed"
   | "first_analysis_viewed"
@@ -23,6 +24,7 @@ export type OnboardingMilestone =
 
 export const ONBOARDING_MILESTONES: readonly OnboardingMilestone[] = [
   "universe_seen",
+  "product_tour_completed",
   "first_session_started",
   "first_session_completed",
   "first_analysis_viewed",
@@ -35,6 +37,16 @@ export const ONBOARDING_MILESTONES: readonly OnboardingMilestone[] = [
   "my_voice_opened",
   "connections_discovered",
   "professional_discovered",
+];
+
+/** Milestones covered by the full product tour so one-shot intros don’t double-teach. */
+export const PRODUCT_TOUR_COVERED_MILESTONES: readonly OnboardingMilestone[] = [
+  "product_tour_completed",
+  "universe_seen",
+  "journey_discovered",
+  "orbits_discovered",
+  "my_voice_introduced",
+  "planet_discovered",
 ];
 
 export type NotificationCategory =
