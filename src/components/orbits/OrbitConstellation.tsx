@@ -6,6 +6,7 @@ import {
   ORBIT_NODE_EDGES,
   ORBIT_NODE_LAYOUT,
   REGION_ACCENT,
+  abbreviateOrbitTitle,
   formatOrbitMeta,
   getOrbitStatus,
   orbitProgressLabel,
@@ -37,7 +38,7 @@ export function OrbitConstellation({
       id="orbit-constellation-panel"
       role="tabpanel"
       aria-labelledby={`orbit-region-${regionKey}`}
-      className="orbits-constellation absolute inset-[14%] sm:inset-[16%]"
+      className="orbits-constellation absolute inset-[10%] sm:inset-[16%]"
     >
       <div
         className="pointer-events-none absolute inset-[-6%] rounded-[42%] opacity-80 blur-3xl"
@@ -108,7 +109,7 @@ export function OrbitConstellation({
                   <TransitionLink
                     href={`/orbits/${orbit.orbitKey}`}
                     variant="fade"
-                    className={`orbits-star-node group relative flex flex-col items-center gap-1.5 rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--violet)]${
+                    className={`orbits-star-node group relative flex flex-col items-center gap-1 sm:gap-1.5 rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--violet)]${
                       isMatch && searching ? " orbits-star-node--search-match" : ""
                     }`}
                     style={{
@@ -130,18 +131,21 @@ export function OrbitConstellation({
                       orbitKey={orbit.orbitKey}
                       regionKey={orbit.regionKey}
                       status={status}
-                      size="lg"
-                      className="orbits-star-node__mark transition-transform duration-300 group-hover:scale-110 group-focus-visible:scale-110"
+                      size="md"
+                      className="orbits-star-node__mark scale-90 sm:scale-100 transition-transform duration-300 group-hover:scale-110 group-focus-visible:scale-110"
                     />
                     <span
-                      className="max-w-[7.5rem] text-center text-[0.75rem] font-semibold leading-snug tracking-wide sm:max-w-[9rem] sm:text-[0.875rem]"
+                      className="max-w-[4.25rem] text-center text-[0.625rem] font-semibold leading-tight tracking-wide sm:max-w-[9rem] sm:text-[0.875rem] sm:leading-snug"
                       style={{
                         color: "var(--foreground)",
                         textShadow:
                           "0 1px 10px color-mix(in srgb, var(--background) 75%, transparent)",
                       }}
                     >
-                      {orbit.title}
+                      <span className="sm:hidden">
+                        {abbreviateOrbitTitle(orbit.title, 11)}
+                      </span>
+                      <span className="hidden sm:inline">{orbit.title}</span>
                     </span>
                     <span
                       className="orbits-star-node__hint pointer-events-none absolute left-1/2 top-[calc(100%+0.35rem)] z-30 hidden w-[12rem] -translate-x-1/2 rounded-xl px-2.5 py-2 text-left opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100 sm:block"

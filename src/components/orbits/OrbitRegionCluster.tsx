@@ -20,9 +20,9 @@ const COMPANION_STARS = [
 ] as const;
 
 const REGION_SHORT: Record<OrbitRegionKey, string> = {
-  friendships_people: "Friendships",
-  speaking_up: "Speaking Up",
-  figuring_things_out: "Figuring Out",
+  friendships_people: "Friends",
+  speaking_up: "Speak Up",
+  figuring_things_out: "Figure Out",
   putting_yourself_out_there: "Out There",
 };
 
@@ -62,7 +62,7 @@ export function OrbitRegionCluster({
         zIndex: active ? 5 : 1,
       }}
     >
-      <span className="relative flex size-[6.5rem] items-center justify-center sm:size-[8.5rem]">
+      <span className="relative flex size-[5.25rem] items-center justify-center sm:size-[8.5rem]">
         <span
           className="orbits-region-nebula pointer-events-none absolute inset-[-40%] rounded-full blur-2xl"
           style={{
@@ -130,10 +130,10 @@ export function OrbitRegionCluster({
 
       {!active ? (
         <span
-          className={`pointer-events-none absolute w-[9.5rem] sm:w-[13.5rem] ${LABEL_POS[layout.labelToward]}`}
+          className={`pointer-events-none absolute w-[5.5rem] sm:w-[13.5rem] ${LABEL_POS[layout.labelToward]}`}
         >
           <span
-            className="block font-[family-name:var(--font-display)] text-[1.0625rem] font-semibold tracking-tight sm:text-xl"
+            className="block font-[family-name:var(--font-display)] text-[0.8125rem] font-semibold tracking-tight sm:text-xl"
             style={{
               color: "var(--foreground)",
               textShadow:

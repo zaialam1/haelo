@@ -138,8 +138,24 @@ export function formatOrbitMeta(orbit: OrbitDefinition): string {
 }
 
 /**
- * Soft help points for Orbit preview — derived from question explanations
- * without revealing the spoken prompts.
+ * Short label for dense constellation nodes (especially mobile).
+ * Keeps full title available via aria-label / detail page.
+ */
+export function abbreviateOrbitTitle(title: string, maxChars = 12): string {
+  const trimmed = title.trim().replace(/\s+/g, " ");
+  if (trimmed.length <= maxChars) return trimmed;
+
+  const budget = Math.max(4, maxChars - 1);
+  const slice = trimmed.slice(0, budget);
+  const lastSpace = slice.lastIndexOf(" ");
+  const base =
+    lastSpace >= 4 ? slice.slice(0, lastSpace) : slice.replace(/[.,:;!?]+$/, "");
+  return `${base}…`;
+}
+
+/**
+ * Soft help points for Orbit preview — derived from question explanations.
+ * Spoken prompts are listed separately on the Orbit detail page.
  */
 export function deriveOrbitHelpPoints(orbit: OrbitDefinition): string[] {
   const seen = new Set<string>();

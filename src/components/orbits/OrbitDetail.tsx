@@ -3,6 +3,8 @@ import { OrbitCelestialMark } from "@/components/orbits/OrbitCelestialMark";
 import { PlanetTags } from "@/components/orbits/PlanetTags";
 import { beginOrbitAction } from "@/lib/orbits/actions";
 import {
+  PLANET_COLOR,
+  PLANET_LABEL,
   deriveOrbitHelpPoints,
   formatOrbitMeta,
   orbitCtaLabel,
@@ -150,6 +152,68 @@ export function OrbitDetail({
           Unique planets:{" "}
           {planetsInvolved.map((p) => p).join(", ")}
         </p>
+      </section>
+
+      <section className="mt-10" aria-labelledby="orbit-questions-heading">
+        <h2
+          id="orbit-questions-heading"
+          className="text-[0.8125rem] font-semibold tracking-tight"
+          style={{ color: "var(--foreground)" }}
+        >
+          Questions in this Orbit
+        </h2>
+        <p
+          className="mt-1.5 text-[0.8125rem] leading-relaxed"
+          style={{ color: "var(--foreground-muted)" }}
+        >
+          Six reflections, in order — each tied to a planet.
+        </p>
+        <ol className="mt-4 space-y-4">
+          {[...orbit.questions]
+            .sort((a, b) => a.sequenceNumber - b.sequenceNumber)
+            .map((question) => (
+              <li
+                key={question.questionKey}
+                className="flex gap-3 sm:gap-3.5"
+              >
+                <span
+                  className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full text-[0.6875rem] font-semibold tabular-nums"
+                  style={{
+                    background:
+                      "color-mix(in srgb, var(--violet) 14%, transparent)",
+                    color: "var(--violet)",
+                  }}
+                  aria-hidden="true"
+                >
+                  {question.sequenceNumber}
+                </span>
+                <div className="min-w-0">
+                  <p className="inline-flex items-center gap-1.5">
+                    <span
+                      className="size-1.5 rounded-full"
+                      style={{
+                        background: PLANET_COLOR[question.planet],
+                        boxShadow: `0 0 8px color-mix(in srgb, ${PLANET_COLOR[question.planet]} 55%, transparent)`,
+                      }}
+                      aria-hidden="true"
+                    />
+                    <span
+                      className="text-[0.6875rem] font-medium tracking-wide"
+                      style={{ color: "var(--foreground-muted)" }}
+                    >
+                      {PLANET_LABEL[question.planet]}
+                    </span>
+                  </p>
+                  <p
+                    className="mt-1 text-[0.9375rem] leading-snug sm:text-base"
+                    style={{ color: "var(--foreground)" }}
+                  >
+                    {question.prompt}
+                  </p>
+                </div>
+              </li>
+            ))}
+        </ol>
       </section>
 
       <p
