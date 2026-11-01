@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { GUEST_MAX_SESSIONS } from "@/lib/guest/config";
 import { toClientSafeErrorMessage } from "@/lib/openai";
 import { processSessionAnalysis } from "@/lib/sessions/processAnalysis";
 import { createClient } from "@/lib/supabase/server";
@@ -25,6 +26,20 @@ export async function POST(_request: Request, context: RouteContext) {
 
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Defense in depth: anonymous guests cannot process beyond the soft cap.
+  if (user.is_anonymous) {
+    const { count } = await supabase
+      .from("sessions")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id);
+    if ((count ?? 0) > GUEST_MAX_SESSIONS) {
+      return NextResponse.json(
+        { error: "Guest practice limit reached." },
+        { status: 429 },
+      );
+    }
   }
 
   try {

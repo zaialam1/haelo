@@ -14,6 +14,13 @@ export type AnalyticsEventName =
   | "onboarding_started"
   | "onboarding_completed"
   | "onboarding_milestone_reached"
+  // Guest try / adoption funnel
+  | "try_halo_clicked"
+  | "guest_session_started"
+  | "guest_session_completed"
+  | "guest_question_skipped"
+  | "guest_session_repeat"
+  | "guest_converted"
   // Voice sessions
   | "session_started"
   | "recording_started"

@@ -37,9 +37,23 @@ export function SiteHeader() {
           <TransitionLink
             href="/signup"
             variant="fade"
-            className="rounded-full bg-[var(--violet)] px-4 py-2 text-sm font-semibold text-[var(--on-violet)] shadow-[0_6px_18px_color-mix(in_srgb,var(--violet)_30%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+            className="hidden rounded-full px-3 py-2 text-sm font-semibold text-[var(--violet)] transition-colors hover:bg-[color-mix(in_srgb,var(--rose)_30%,transparent)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] sm:inline-flex sm:px-4"
           >
-            Start exploring
+            Create account
+          </TransitionLink>
+          <TransitionLink
+            href="/try"
+            variant="fade"
+            onClick={() => {
+              void import("@/lib/analytics/track")
+                .then((m) =>
+                  m.trackEvent("try_halo_clicked", { placement: "header" }),
+                )
+                .catch(() => {});
+            }}
+            className="rounded-full bg-[var(--violet)] px-5 py-2.5 text-sm font-semibold text-[var(--on-violet)] shadow-[0_8px_22px_color-mix(in_srgb,var(--violet)_38%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] sm:px-6"
+          >
+            Try Halo
           </TransitionLink>
         </nav>
       </div>

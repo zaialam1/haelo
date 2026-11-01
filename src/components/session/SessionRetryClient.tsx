@@ -15,6 +15,7 @@ import {
 } from "@/lib/sessions/saveSession";
 import {
   planetSessionFlow,
+  guestSessionFlow,
   orbitSessionFlowFromSession,
   type SessionFlowConfig,
 } from "@/lib/sessions/sessionFlow";
@@ -31,6 +32,7 @@ type SessionRetryClientProps = {
   flow?: SessionFlowConfig;
   /** True when user arrived via Try the Experiment CTA */
   experimentIntent?: boolean;
+  guestMode?: boolean;
 };
 
 type Phase =
@@ -55,6 +57,7 @@ export function SessionRetryClient({
   orbitKey,
   flow: flowProp,
   experimentIntent = false,
+  guestMode = false,
 }: SessionRetryClientProps) {
   const router = useRouter();
   const content = getPlanetPageContent(planet);
@@ -62,15 +65,17 @@ export function SessionRetryClient({
   const statusId = useId();
   const flow =
     flowProp ??
-    (orbitKey
-      ? orbitSessionFlowFromSession({
-          orbitKey,
-          planet,
-          orbitQuestionKey: initialSession.orbit_question_key,
-          userOrbitProgressId: initialSession.user_orbit_progress_id,
-          orbitVersion: initialSession.orbit_version,
-        })
-      : planetSessionFlow(planet));
+    (guestMode
+      ? guestSessionFlow(planet)
+      : orbitKey
+        ? orbitSessionFlowFromSession({
+            orbitKey,
+            planet,
+            orbitQuestionKey: initialSession.orbit_question_key,
+            userOrbitProgressId: initialSession.user_orbit_progress_id,
+            orbitVersion: initialSession.orbit_version,
+          })
+        : planetSessionFlow(planet));
 
   const experiment = initialSession.analysis?.experiment;
   const isExperiment = experimentIntent && Boolean(experiment);
@@ -79,10 +84,11 @@ export function SessionRetryClient({
   );
 
   useEffect(() => {
+    if (guestMode) return;
     if (isExperiment) {
       void markExperimentIntentAction(sessionId);
     }
-  }, [isExperiment, sessionId]);
+  }, [isExperiment, sessionId, guestMode]);
 
   const recorder = useAudioRecorder({
     maxSeconds: DEFAULT_MAX_RECORDING_SECONDS,
@@ -127,7 +133,7 @@ export function SessionRetryClient({
         attemptNumber: 2,
         transcript: recorder.transcript,
       });
-      if (isExperiment) {
+      if (isExperiment && !guestMode) {
         await markExperimentTriedAction(sessionId);
       }
       kickoffSessionProcessing(sessionId);

@@ -28,6 +28,7 @@ import {
 } from "@/lib/sessions/types";
 import {
   planetSessionFlow,
+  guestSessionFlow,
   orbitSessionFlowFromSession,
   type SessionFlowConfig,
 } from "@/lib/sessions/sessionFlow";
@@ -41,6 +42,8 @@ type SessionReviewClientProps = {
   flow?: SessionFlowConfig;
   /** Completing this session adds the user's first Journey star. */
   firstStarMoment?: boolean;
+  /** Anonymous guest try — guest routes, no Journey/Stardust onboarding. */
+  guestMode?: boolean;
 };
 
 export function SessionReviewClient({
@@ -50,22 +53,26 @@ export function SessionReviewClient({
   orbitKey,
   flow: flowProp,
   firstStarMoment = false,
+  guestMode = false,
 }: SessionReviewClientProps) {
   const router = useRouter();
   const transition = useOptionalPageTransition();
   const content = getPlanetPageContent(planet);
   const accent = getVoicePlanetById(planet)?.color ?? "var(--violet)";
+  const showFirstStarMoment = firstStarMoment && !guestMode;
   const flow =
     flowProp ??
-    (orbitKey
-      ? orbitSessionFlowFromSession({
-          orbitKey,
-          planet,
-          orbitQuestionKey: initialSession.orbit_question_key,
-          userOrbitProgressId: initialSession.user_orbit_progress_id,
-          orbitVersion: initialSession.orbit_version,
-        })
-      : planetSessionFlow(planet));
+    (guestMode
+      ? guestSessionFlow(planet)
+      : orbitKey
+        ? orbitSessionFlowFromSession({
+            orbitKey,
+            planet,
+            orbitQuestionKey: initialSession.orbit_question_key,
+            userOrbitProgressId: initialSession.user_orbit_progress_id,
+            orbitVersion: initialSession.orbit_version,
+          })
+        : planetSessionFlow(planet));
 
   const [session, setSession] = useState(initialSession);
   const [feeling, setFeeling] = useState<FeelingReflection | null>(
@@ -191,8 +198,8 @@ export function SessionReviewClient({
       setShowAnalysis(true);
       if (!analysisViewedMarked.current) {
         analysisViewedMarked.current = true;
-        trackEvent("analysis_viewed", { sessionId, planet });
-        if (firstStarMoment) {
+        trackEvent("analysis_viewed", { sessionId, planet, guestMode });
+        if (showFirstStarMoment) {
           void markOnboardingMilestoneAction("first_analysis_viewed").catch(
             () => {},
           );
@@ -221,8 +228,20 @@ export function SessionReviewClient({
     try {
       await persistReflectionNow();
       await completeSession(sessionId);
-      trackEvent("session_completed", { sessionId, planet, source: flow.source });
-      if (firstStarMoment && !nextHref) {
+      if (guestMode) {
+        trackEvent("guest_session_completed", {
+          sessionId,
+          planet,
+          source: flow.source,
+        });
+      } else {
+        trackEvent("session_completed", {
+          sessionId,
+          planet,
+          source: flow.source,
+        });
+      }
+      if (showFirstStarMoment && !nextHref) {
         setShowFirstStar(true);
         setBusy(false);
         return;
@@ -246,7 +265,11 @@ export function SessionReviewClient({
       navigateTo(flow.exitHref);
       return;
     }
-    const leaveHref = flow.source === "orbit" ? flow.exitHref : "/home";
+    const leaveHref = guestMode
+      ? flow.afterCompleteHref(sessionId)
+      : flow.source === "orbit"
+        ? flow.exitHref
+        : "/home";
     await finishSession(leaveHref);
   }
 

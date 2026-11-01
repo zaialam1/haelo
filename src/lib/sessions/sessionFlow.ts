@@ -52,6 +52,32 @@ export function planetSessionFlow(planet: Planet): SessionFlowConfig {
   };
 }
 
+/**
+ * Guest try reuses the planet session engine under `/try/*` so guests never
+ * enter Universe / Journey / store routes.
+ */
+export function guestSessionFlow(planet: Planet): SessionFlowConfig {
+  return {
+    source: "planet",
+    exitHref: "/try",
+    exitLabel: "Leave",
+    reviewHref: (sessionId) =>
+      `/try/session/${planet}/${sessionId}/review`,
+    retryHref: (sessionId) => `/try/session/${planet}/${sessionId}/retry`,
+    compareHref: (sessionId) =>
+      `/try/session/${planet}/${sessionId}/compare`,
+    afterCompleteHref: (sessionId) =>
+      `/try/session/${planet}/${sessionId}/complete`,
+    finishLabel: "Finish",
+    lookLaterLabel: "Finish for now",
+    reviewTitle: "Your practice",
+    completeTitle: "Nice work",
+    completeBody:
+      "This guest practice stays temporary. Create an account anytime to keep a private Universe of your own.",
+    journeyHref: "/signup",
+  };
+}
+
 export function orbitSessionFlow(opts: {
   orbitKey: string;
   planet: Planet;

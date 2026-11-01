@@ -36,6 +36,14 @@ async function requireUserClient() {
       user: null,
     };
   }
+  if (user.is_anonymous) {
+    return {
+      ok: false as const,
+      message: "Create an account to use the store.",
+      supabase: null,
+      user: null,
+    };
+  }
   return { ok: true as const, supabase, user, message: undefined };
 }
 

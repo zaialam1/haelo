@@ -8,34 +8,19 @@ function PrimaryCta({
   href,
   children,
   className = "",
+  onClick,
 }: {
   href: string;
   children: React.ReactNode;
   className?: string;
+  onClick?: () => void;
 }) {
   return (
     <TransitionLink
       href={href}
       variant="fade"
-      className={`inline-flex items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3 text-[0.9375rem] font-semibold text-[var(--on-violet)] shadow-[0_10px_28px_color-mix(in_srgb,var(--violet)_35%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] ${className}`}
-    >
-      {children}
-    </TransitionLink>
-  );
-}
-
-function SecondaryCta({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <TransitionLink
-      href={href}
-      variant="fade"
-      className="inline-flex items-center justify-center rounded-full border-2 border-[var(--violet)] bg-[color-mix(in_srgb,var(--rose)_25%,var(--background))] px-5 py-3 text-[0.9375rem] font-semibold text-[var(--violet)] transition-colors hover:bg-[color-mix(in_srgb,var(--rose)_40%,var(--background))] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+      onClick={onClick}
+      className={`inline-flex min-h-14 w-full max-w-sm items-center justify-center rounded-full bg-[var(--violet)] px-8 py-4 text-[1.0625rem] font-semibold tracking-tight text-[var(--on-violet)] shadow-[0_14px_36px_color-mix(in_srgb,var(--violet)_42%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] sm:min-h-[3.75rem] sm:text-[1.125rem] ${className}`}
     >
       {children}
     </TransitionLink>
@@ -116,11 +101,47 @@ export default function Home() {
                 — short sessions across Express, Stand, Connect, and Explore —
                 so your voice can grow without an audience or a grade.
               </p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <PrimaryCta href="/signup">Start exploring</PrimaryCta>
-                <SecondaryCta href="/login">Log in</SecondaryCta>
+              <div className="mt-9 flex w-full max-w-sm flex-col items-stretch gap-3">
+                <PrimaryCta
+                  href="/try"
+                  onClick={() => {
+                    void import("@/lib/analytics/track")
+                      .then((m) =>
+                        m.trackEvent("try_halo_clicked", {
+                          placement: "hero",
+                        }),
+                      )
+                      .catch(() => {});
+                  }}
+                >
+                  Try Halo
+                </PrimaryCta>
+                <p
+                  className="text-center text-sm leading-relaxed"
+                  style={{ color: "var(--foreground-muted)" }}
+                >
+                  No account needed · one short practice
+                </p>
               </div>
               <p className="mt-6 text-sm leading-relaxed text-[var(--foreground-muted)]">
+                Want to keep your Journey?{" "}
+                <TransitionLink
+                  href="/signup"
+                  variant="fade"
+                  className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+                >
+                  Create account
+                </TransitionLink>
+                {" · "}
+                <TransitionLink
+                  href="/login"
+                  variant="fade"
+                  className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+                >
+                  Log in
+                </TransitionLink>
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-[var(--foreground-muted)]">
                 Using Halo with students or clients?{" "}
                 <TransitionLink
                   href="/professional"
@@ -373,20 +394,29 @@ export default function Home() {
               Start with a few short sessions. Watch your constellation begin to
               take shape.
             </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <div className="mt-8 flex flex-col items-center gap-3">
               <TransitionLink
                 variant="fade"
-                href="/signup"
-                className="inline-flex items-center justify-center rounded-full bg-[var(--gold)] px-6 py-3 text-[0.9375rem] font-semibold text-[var(--on-warm)] shadow-[0_10px_28px_rgba(0,0,0,0.18)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                href="/try"
+                onClick={() => {
+                  void import("@/lib/analytics/track")
+                    .then((m) =>
+                      m.trackEvent("try_halo_clicked", {
+                        placement: "closing",
+                      }),
+                    )
+                    .catch(() => {});
+                }}
+                className="inline-flex min-h-14 w-full max-w-sm items-center justify-center rounded-full bg-[var(--gold)] px-8 py-4 text-[1.0625rem] font-semibold text-[var(--on-warm)] shadow-[0_14px_36px_rgba(0,0,0,0.22)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:text-[1.125rem]"
               >
-                Start exploring
+                Try Halo
               </TransitionLink>
               <TransitionLink
                 variant="fade"
-                href="/login"
-                className="inline-flex items-center justify-center rounded-full border-2 border-white/80 bg-white/15 px-5 py-3 text-[0.9375rem] font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                href="/signup"
+                className="text-sm font-semibold text-white/90 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
-                Log in
+                Or create an account
               </TransitionLink>
             </div>
             <p className="mt-6 text-sm text-white/85">

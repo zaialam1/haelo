@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/orbit-reminders",
       "schedule": "0 14 * * *"
+    },
+    {
+      "path": "/api/cron/guest-cleanup",
+      "schedule": "0 * * * *"
     }
   ]
 }

@@ -30,7 +30,7 @@ export async function runGamificationEventAction(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return emptyResult;
+  if (!user || user.is_anonymous) return emptyResult;
 
   try {
     return await processGamificationEvent(supabase, user.id, event);

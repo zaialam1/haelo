@@ -58,8 +58,11 @@ console.log("launch-readiness tests…");
     "analysis_feedback_given",
     "user_blocked",
     "report_submitted",
+    "try_halo_clicked",
+    "guest_session_started",
+    "guest_converted",
   ];
-  assert.equal(events.length, 6);
+  assert.equal(events.length, 9);
 }
 
 // --- Preferences ---

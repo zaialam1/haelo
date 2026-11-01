@@ -39,7 +39,7 @@ type RecordingSessionProps = {
   prompt: SessionPromptPayload;
   /** Why this reflection matters (Orbit questions). */
   explanation?: string | null;
-  /** Shared planet/orbit navigation + source metadata. Defaults to planet flow. */
+  /** Shared planet/orbit navigation + route metadata. Defaults to planet flow. */
   flow?: SessionFlowConfig;
   /** Optional progress / constellation chrome above the prompt. */
   headerSlot?: ReactNode;
@@ -47,6 +47,8 @@ type RecordingSessionProps = {
   firstSession?: boolean;
   /** One-time intro banner for new users on their first recording screen. */
   showIntro?: boolean;
+  /** Anonymous guest try — skip account onboarding hooks; fire guest analytics. */
+  guestMode?: boolean;
 };
 
 function formatTime(seconds: number): string {
@@ -63,6 +65,7 @@ export function RecordingSession({
   headerSlot,
   firstSession = false,
   showIntro = false,
+  guestMode = false,
 }: RecordingSessionProps) {
   const content = getPlanetPageContent(planet);
   const voicePlanet = getVoicePlanetById(planet);
@@ -89,23 +92,31 @@ export function RecordingSession({
     if (sessionStartedMarked.current) return;
     sessionStartedMarked.current = true;
     void import("@/lib/analytics/track")
-      .then((m) =>
+      .then((m) => {
+        if (guestMode) {
+          m.trackEvent("guest_session_started", {
+            planet,
+            source: flow.source,
+          });
+          return;
+        }
         m.trackEvent("session_started", {
           planet,
           source: flow.source,
           firstSession,
-        }),
-      )
+        });
+      })
       .catch(() => {});
-  }, [planet, flow.source, firstSession]);
+  }, [planet, flow.source, firstSession, guestMode]);
 
   useEffect(() => {
+    if (guestMode) return;
     if (!firstSession || firstSessionMarked.current) return;
     firstSessionMarked.current = true;
     void import("@/lib/preferences/actions")
       .then((m) => m.markOnboardingMilestoneAction("first_session_started"))
       .catch(() => {});
-  }, [firstSession]);
+  }, [firstSession, guestMode]);
 
   useEffect(() => {
     if (recorder.status !== "recording" || recordingStartedMarked.current) {

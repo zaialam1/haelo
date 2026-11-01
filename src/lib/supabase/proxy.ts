@@ -39,8 +39,12 @@ export async function updateSession(request: NextRequest) {
   // Refresh the auth token. Do not insert logic between createServerClient
   // and getClaims — it can cause intermittent logouts.
   const { data } = await supabase.auth.getClaims();
-  const userId = data?.claims?.sub as string | undefined;
+  const claims = data?.claims as
+    | { sub?: string; is_anonymous?: boolean }
+    | undefined;
+  const userId = claims?.sub;
   const isAuthenticated = Boolean(userId);
+  const isAnonymous = Boolean(claims?.is_anonymous);
 
   const path = request.nextUrl.pathname;
 
@@ -71,6 +75,14 @@ export async function updateSession(request: NextRequest) {
     (prefix) => path === prefix || path.startsWith(`${prefix}/`),
   );
 
+  // Anonymous guests only use /try (+ auth pages). Keep product surfaces closed.
+  if (isAnonymous && isProtected) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/try";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
+
   if (!isAuthenticated && isProtected) {
     const url = request.nextUrl.clone();
     url.pathname = path.startsWith("/professional")
@@ -80,15 +92,24 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Registered users who land on /try go to their Universe.
+  if (isAuthenticated && !isAnonymous && (path === "/try" || path.startsWith("/try/"))) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/home";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
+
   // Keep /forgot-password reachable while signed in (email reset / shared device).
   // Settings uses in-app change-password for the common case.
+  // Anonymous guests may open signup/login to convert — do not bounce them to /home.
   const authPages = [
     "/login",
     "/signup",
     "/login/professional",
     "/signup/professional",
   ];
-  if (isAuthenticated && authPages.includes(path)) {
+  if (isAuthenticated && !isAnonymous && authPages.includes(path)) {
     const next = request.nextUrl.searchParams.get("next");
     const url = request.nextUrl.clone();
     url.pathname = isSafeNextPath(next) ? next : "/home";
@@ -104,8 +125,8 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // One-time username setup for authenticated users.
-  if (isAuthenticated && userId && isProtected) {
+  // One-time username setup for registered users only (not anonymous guests).
+  if (isAuthenticated && !isAnonymous && userId && isProtected) {
     const usernameExempt =
       path === "/onboarding/username" || path.startsWith("/auth/");
 

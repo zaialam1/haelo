@@ -144,6 +144,15 @@ export function SignupForm() {
     setSubmitting(true);
     setErrors({});
 
+    const wasGuest = await import("@/lib/guest/auth")
+      .then((m) => m.peekGuestConversionFlag())
+      .catch(() => false);
+
+    // Guests do not convert session data — clear anonymous session first.
+    await import("@/lib/guest/auth")
+      .then((m) => m.clearGuestSessionIfAnonymous())
+      .catch(() => {});
+
     async function ensureUsernameClaimed(normalized: string): Promise<boolean> {
       const supabase = createClient();
       const { data: claimData } = await supabase.rpc("claim_username", {
@@ -221,27 +230,34 @@ export function SignupForm() {
         return;
       }
 
-      if (result.needsEmailConfirmation) {
+      function trackSignupSuccess(needsEmailConfirmation: boolean) {
         void import("@/lib/analytics/track")
-          .then((m) =>
+          .then(async (m) => {
             m.trackEvent("signup_completed", {
               accountType: "personal",
-              needsEmailConfirmation: true,
-            }),
-          )
+              needsEmailConfirmation,
+            });
+            if (wasGuest) {
+              const { consumeGuestConversionFlag } = await import(
+                "@/lib/guest/auth"
+              );
+              consumeGuestConversionFlag();
+              m.trackEvent("guest_converted", {
+                accountType: "personal",
+                needsEmailConfirmation,
+              });
+            }
+          })
           .catch(() => {});
+      }
+
+      if (result.needsEmailConfirmation) {
+        trackSignupSuccess(true);
         setCheckEmail(true);
         return;
       }
 
-      void import("@/lib/analytics/track")
-        .then((m) =>
-          m.trackEvent("signup_completed", {
-            accountType: "personal",
-            needsEmailConfirmation: false,
-          }),
-        )
-        .catch(() => {});
+      trackSignupSuccess(false);
       goNext();
     } catch {
       setErrors({

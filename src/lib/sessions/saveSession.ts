@@ -1,4 +1,5 @@
 import { SESSION_AUDIO_BUCKET } from "@/config/recording";
+import { GUEST_MAX_SESSIONS } from "@/lib/guest/config";
 import { createClient } from "@/lib/supabase/client";
 import { extensionForMime } from "@/lib/sessions/audio";
 import {
@@ -87,6 +88,23 @@ export async function saveSessionAttempt(
     if (attemptNumber !== 1) {
       throw new Error("A session is required for this recording attempt.");
     }
+
+    // Soft-cap anonymous guests before upload / AI spend.
+    if (user.is_anonymous) {
+      const { count, error: countError } = await supabase
+        .from("sessions")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user.id);
+      if (countError) {
+        throw new Error("Could not start a guest session. Try again.");
+      }
+      if ((count ?? 0) >= GUEST_MAX_SESSIONS) {
+        throw new Error(
+          "You’ve reached the guest practice limit. Create a free account to keep exploring.",
+        );
+      }
+    }
+
     sessionId = newId();
     createdNewSession = true;
   }

@@ -20,6 +20,7 @@ import {
 } from "@/lib/sessions/types";
 import {
   planetSessionFlow,
+  guestSessionFlow,
   orbitSessionFlowFromSession,
   type SessionFlowConfig,
 } from "@/lib/sessions/sessionFlow";
@@ -30,6 +31,7 @@ type SessionCompareClientProps = {
   initialSession: SessionDetail;
   orbitKey?: string;
   flow?: SessionFlowConfig;
+  guestMode?: boolean;
 };
 
 export function SessionCompareClient({
@@ -38,13 +40,16 @@ export function SessionCompareClient({
   initialSession,
   orbitKey,
   flow: flowProp,
+  guestMode = false,
 }: SessionCompareClientProps) {
   const router = useRouter();
   const content = getPlanetPageContent(planet);
   const accent = getVoicePlanetById(planet)?.color ?? "var(--violet)";
   const flow =
     flowProp ??
-    (orbitKey
+    (guestMode
+      ? guestSessionFlow(planet)
+      : orbitKey
       ? orbitSessionFlowFromSession({
           orbitKey,
           planet,
@@ -100,6 +105,18 @@ export function SessionCompareClient({
         await updateAuthenticityChoice(sessionId, choice);
       }
       await completeSession(sessionId);
+      if (guestMode) {
+        void import("@/lib/analytics/track")
+          .then((m) =>
+            m.trackEvent("guest_session_completed", {
+              sessionId,
+              planet,
+              source: flow.source,
+              via: "compare",
+            }),
+          )
+          .catch(() => {});
+      }
       router.push(flow.afterCompleteHref(sessionId));
     } catch (e) {
       setError(

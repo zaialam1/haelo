@@ -126,6 +126,11 @@ export async function completeSession(sessionId: string): Promise<void> {
     orbitProgressId = session.user_orbit_progress_id;
   }
 
+  // Guests must not earn Stardust or account rewards.
+  if (user.is_anonymous) {
+    return;
+  }
+
   // Gamification is idempotent — safe even if session was already completed.
   try {
     await processGamificationEvent(supabase, user.id, {
