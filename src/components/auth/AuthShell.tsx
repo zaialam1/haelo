@@ -1,5 +1,6 @@
 "use client";
 
+import { HaloLogo } from "@/components/branding/HaloLogo";
 import { ThemeIconToggle } from "@/components/theme/ThemeIconToggle";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 
@@ -21,16 +22,7 @@ export function AuthShell({ children, brand }: AuthShellProps) {
             "radial-gradient(ellipse 80% 120% at 0% 50%, color-mix(in srgb, var(--gold) 40%, transparent), transparent 55%), radial-gradient(ellipse 60% 100% at 100% 50%, color-mix(in srgb, var(--rose) 35%, transparent), transparent 50%), var(--background)",
         }}
       >
-        <TransitionLink
-          href="/"
-          variant="fade"
-          className="font-[family-name:var(--font-fraunces)] text-xl tracking-tight text-[var(--violet)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--violet)]"
-          style={{
-            fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
-          }}
-        >
-          Halo
-        </TransitionLink>
+        <HaloLogo href="/" size="md" priority />
         <div className="flex items-center gap-0.5">
           <ThemeIconToggle />
           <TransitionLink
@@ -53,16 +45,7 @@ export function AuthShell({ children, brand }: AuthShellProps) {
         }}
       >
         <div>
-          <TransitionLink
-            href="/"
-            variant="fade"
-            className="font-[family-name:var(--font-fraunces)] text-2xl tracking-tight text-[var(--violet)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--violet)]"
-            style={{
-              fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
-            }}
-          >
-            Halo
-          </TransitionLink>
+          <HaloLogo href="/" size="lg" priority />
           <TransitionLink
             href="/"
             variant="fade"

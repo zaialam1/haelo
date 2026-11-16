@@ -1,5 +1,6 @@
 "use client";
 
+import { HaloLogo } from "@/components/branding/HaloLogo";
 import { ThemeIconToggle } from "@/components/theme/ThemeIconToggle";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 
@@ -11,13 +12,7 @@ export function GuestDoneClient({ skipped = false }: GuestDoneClientProps) {
   return (
     <div className="mx-auto flex w-full max-w-lg flex-col px-5 py-14 sm:px-8">
       <div className="flex items-center justify-between gap-3">
-        <TransitionLink
-          href="/"
-          variant="fade"
-          className="self-start text-sm font-medium text-[var(--violet)] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
-        >
-          ← Home
-        </TransitionLink>
+        <HaloLogo href="/" size="md" />
         <ThemeIconToggle />
       </div>
 

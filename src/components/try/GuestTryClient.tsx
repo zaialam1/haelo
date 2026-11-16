@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { HaloLogo } from "@/components/branding/HaloLogo";
 import { RecordingSession } from "@/components/recording/RecordingSession";
 import { ThemeIconToggle } from "@/components/theme/ThemeIconToggle";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
@@ -127,7 +128,8 @@ export function GuestTryClient({
   if (phase === "boot") {
     return (
       <div className="mx-auto flex w-full max-w-lg flex-col px-5 py-16 sm:px-8">
-        <div className="mb-8 flex justify-end">
+        <div className="mb-8 flex items-center justify-between gap-3">
+          <HaloLogo href="/" size="md" />
           <ThemeIconToggle />
         </div>
         <p
@@ -144,13 +146,7 @@ export function GuestTryClient({
     return (
       <div className="mx-auto flex w-full max-w-lg flex-col px-5 py-14 sm:px-8">
         <div className="flex items-center justify-between gap-3">
-          <TransitionLink
-            href="/"
-            variant="fade"
-            className="self-start text-sm font-medium text-[var(--violet)] underline-offset-4 hover:underline"
-          >
-            ← Home
-          </TransitionLink>
+          <HaloLogo href="/" size="md" />
           <ThemeIconToggle />
         </div>
         <h1
@@ -192,13 +188,7 @@ export function GuestTryClient({
     return (
       <div className="mx-auto flex w-full max-w-lg flex-col px-5 py-14 sm:px-8">
         <div className="flex items-center justify-between gap-3">
-          <TransitionLink
-            href="/"
-            variant="fade"
-            className="self-start text-sm font-medium text-[var(--violet)] underline-offset-4 hover:underline"
-          >
-            ← Home
-          </TransitionLink>
+          <HaloLogo href="/" size="md" />
           <ThemeIconToggle />
         </div>
         <h1
@@ -244,18 +234,24 @@ export function GuestTryClient({
   return (
     <div className="relative mx-auto flex w-full max-w-3xl flex-1 flex-col px-5 py-8 sm:px-10 sm:py-12">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <p
-          className="text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
-          style={{ color: "var(--violet)" }}
-        >
-          Guest · {content.label}
-        </p>
-        <p
-          className="text-sm"
-          style={{ color: "var(--foreground-muted)" }}
-        >
-          {remaining} of {GUEST_MAX_SESSIONS} left · not saved
-        </p>
+        <div className="flex items-center gap-3">
+          <HaloLogo href="/" size="sm" />
+          <p
+            className="text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
+            style={{ color: "var(--violet)" }}
+          >
+            Guest · {content.label}
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <p
+            className="text-sm"
+            style={{ color: "var(--foreground-muted)" }}
+          >
+            {remaining} of {GUEST_MAX_SESSIONS} left · not saved
+          </p>
+          <ThemeIconToggle />
+        </div>
       </div>
 
       <RecordingSession

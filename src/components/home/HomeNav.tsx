@@ -1,5 +1,6 @@
 "use client";
 
+import { HaloLogo } from "@/components/branding/HaloLogo";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { ProfessionalModeSwitch } from "@/components/professional/ProfessionalModeSwitch";
 import { ThemeIconToggle } from "@/components/theme/ThemeIconToggle";
@@ -37,14 +38,7 @@ export function HomeNav({
             "linear-gradient(to bottom, color-mix(in srgb, var(--background) 88%, transparent), transparent)",
         }}
       >
-        <p
-          className="shrink-0 font-[family-name:var(--font-fraunces)] text-xl tracking-tight text-[var(--violet)] sm:text-2xl"
-          style={{
-            fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
-          }}
-        >
-          Halo
-        </p>
+        <HaloLogo href="/home" size={36} label="Halo home" />
 
         {showSwitch ? (
           <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 sm:block">

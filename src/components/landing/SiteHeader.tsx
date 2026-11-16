@@ -1,5 +1,6 @@
 "use client";
 
+import { HaloLogo } from "@/components/branding/HaloLogo";
 import { ThemeIconToggle } from "@/components/theme/ThemeIconToggle";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 
@@ -14,16 +15,7 @@ export function SiteHeader() {
       }}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
-        <TransitionLink
-          href="/"
-          variant="fade"
-          className="font-[family-name:var(--font-fraunces)] text-xl tracking-tight text-[var(--violet)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--violet)]"
-          style={{
-            fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
-          }}
-        >
-          Halo
-        </TransitionLink>
+        <HaloLogo href="/" size="md" priority />
 
         <nav className="flex items-center gap-2 sm:gap-3" aria-label="Account">
           <ThemeIconToggle />

@@ -1,5 +1,6 @@
 "use client";
 
+import { HaloLogo } from "@/components/branding/HaloLogo";
 import { ContextOrbit } from "@/components/landing/ContextOrbit";
 import { SiteHeader } from "@/components/landing/SiteHeader";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
@@ -73,16 +74,7 @@ export default function Home() {
 
           <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 py-14 sm:px-8 sm:py-20 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16 lg:py-24">
             <div className="flex flex-col items-start">
-              <p
-                className="inline-flex items-center rounded-full px-3 py-1 text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
-                style={{
-                  color: "var(--violet)",
-                  backgroundColor:
-                    "color-mix(in srgb, var(--gold) 45%, var(--rose) 25%, var(--background))",
-                }}
-              >
-                Halo
-              </p>
+              <HaloLogo href={null} size={40} label="Halo" priority />
               <h1
                 className="mt-5 max-w-xl font-[family-name:var(--font-fraunces)] text-[2.35rem] leading-[1.12] text-[var(--foreground)] sm:text-[3.15rem]"
                 style={{
@@ -436,9 +428,7 @@ export default function Home() {
           className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-5 text-sm sm:flex-row sm:px-8"
           style={{ color: "var(--foreground-muted)" }}
         >
-          <p className="font-[family-name:var(--font-fraunces)] text-[var(--violet)]">
-            Halo
-          </p>
+          <HaloLogo href="/" size="sm" label="Halo home" />
           <p>Private voice practice for teens.</p>
         </div>
       </footer>

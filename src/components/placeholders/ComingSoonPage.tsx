@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { HaloLogo } from "@/components/branding/HaloLogo";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 
 type ComingSoonPageProps = {
@@ -20,14 +21,7 @@ export function ComingSoonPage({
         aria-hidden="true"
       />
       <div className="relative z-10 flex max-w-md flex-col items-center gap-4 text-center">
-        <p
-          className="font-[family-name:var(--font-fraunces)] text-sm tracking-tight text-[var(--violet)]"
-          style={{
-            fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
-          }}
-        >
-          Halo
-        </p>
+        <HaloLogo href="/home" size="lg" />
         <h1
           className="font-[family-name:var(--font-fraunces)] text-3xl tracking-tight text-[var(--foreground)] sm:text-4xl"
           style={{
