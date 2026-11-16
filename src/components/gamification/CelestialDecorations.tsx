@@ -53,7 +53,7 @@ export function CelestialDecorations({ rewards }: CelestialDecorationsProps) {
       <ul className="sr-only">
         {shown.map((r) => (
           <li key={r.id}>
-            New celestial discovery: {r.title}
+            New decoration: {r.title}
             {r.description ? `. ${r.description}` : ""}
           </li>
         ))}

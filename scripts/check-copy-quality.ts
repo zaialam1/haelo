@@ -66,6 +66,27 @@ const GENERIC_PHRASES: readonly string[] = [
   "one step at a time",
   "you have the power to",
   "this is an opportunity to grow",
+  "it's okay to feel",
+  "honor your feelings",
+  "create space for",
+  "let your voice shine",
+  "chart your own path",
+  "your universe is waiting",
+  "you've got this",
+  "amazing job",
+  "way to go",
+  "taking shape",
+  "what does authenticity mean",
+  "mixed feelings are normal",
+  "fear is information",
+];
+
+const EM_DASH_PATTERNS: readonly RegExp[] = [
+  /—/,
+  /&mdash;/i,
+  /&#8212;/,
+  /&#x2014;/i,
+  /\\u2014/,
 ];
 
 type Finding = {
@@ -160,6 +181,10 @@ function isCommentOrDevOnlyLine(file: string, line: string): boolean {
   return false;
 }
 
+function lineHasEmDash(line: string): boolean {
+  return EM_DASH_PATTERNS.some((re) => re.test(line));
+}
+
 function checkEmDashes(file: string, findings: Finding[]): void {
   const text = fs.readFileSync(file, "utf8");
   const lines = text.split(/\r?\n/);
@@ -177,7 +202,7 @@ function checkEmDashes(file: string, findings: Finding[]): void {
   }
 
   lines.forEach((line, idx) => {
-    if (!line.includes("—")) return;
+    if (!lineHasEmDash(line)) return;
     if (isCommentOrDevOnlyLine(file, line)) return;
 
     // Allow the character inside brandVoice prompt anti-examples and tidy helpers

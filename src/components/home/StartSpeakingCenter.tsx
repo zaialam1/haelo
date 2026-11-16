@@ -41,7 +41,7 @@ export function StartSpeakingCenter({ nested = false }: StartSpeakingCenterProps
         className="pointer-events-none relative z-40 mt-3 max-w-[14rem] text-center text-[0.6875rem] leading-snug sm:text-xs"
         style={{ color: "var(--foreground-muted)" }}
       >
-        Five short reflections across your map
+        Five short sessions across your map
       </p>
     </>
   );

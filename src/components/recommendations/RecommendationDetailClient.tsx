@@ -170,7 +170,7 @@ export function RecommendationDetailClient({
           {orbit.openingBody}
         </p>
         <p className="mt-3 text-xs text-[var(--foreground-muted)]">
-          {orbit.questionCount} reflections · About {orbit.estimatedMinutes}{" "}
+          {orbit.questionCount} questions · About {orbit.estimatedMinutes}{" "}
           minutes
         </p>
       </section>

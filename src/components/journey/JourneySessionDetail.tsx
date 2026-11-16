@@ -222,13 +222,13 @@ export function JourneySessionDetail({
             className="text-[0.9375rem] leading-relaxed"
             style={{ color: "var(--foreground-muted)" }}
           >
-            This reflection could not be loaded.
+            This session could not be loaded.
           </p>
         </PanelSection>
       )}
 
       {feeling || sounded || session.userReflection?.trim() ? (
-        <PanelSection title="Your reflection">
+        <PanelSection title="Your notes">
           {feeling ? (
             <p
               className="text-[0.9375rem] leading-relaxed"

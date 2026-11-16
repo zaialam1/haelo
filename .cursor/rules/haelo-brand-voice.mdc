@@ -1,7 +1,7 @@
 ---
 description: Halo brand voice for all user-facing copy, questions, and AI prompts
-globs: src/app/**/*.{ts,tsx},src/components/**/*.{ts,tsx},src/lib/**/*.{ts,tsx},docs/HAELO_BRAND_VOICE.md
-alwaysApply: false
+globs: src/app/**/*.{ts,tsx},src/components/**/*.{ts,tsx},src/lib/**/*.{ts,tsx},docs/HAELO_BRAND_VOICE.md,scripts/check-copy-quality.ts
+alwaysApply: true
 ---
 
 # Halo brand voice
@@ -16,6 +16,7 @@ Runtime AI rules: `src/lib/ai/brandVoice.ts` (use `withBrandVoice(...)` for ever
 - Never use em dashes (`—`) in user-facing copy. Avoid stylistic en dashes as sentence breaks. Rewrite; do not comma-swap.
 - Prefer fewer words. Delete unnecessary subtitles and filler explanations.
 - Sound like a thoughtful human writing for smart teens (13–18): natural, clear, understated, occasionally playful. Not ChatGPT, not therapy, not corporate wellness, not motivational poster.
+- Smart, not academic. Warm, not sentimental. Confident, not motivational. Playful, not childish. Curious, not intrusive. Specific, not generic. Natural, not artificially polished. Minimal, not empty.
 - Questions should feel interesting to answer out loud, not like worksheets.
 - Feedback and AI prompts must stay specific, observational, and honest. No generic praise, no assumed emotions, no growth-journey language.
 - Preserve accessibility labels, safety/consent messaging, and instructions required to complete a task.
@@ -24,4 +25,4 @@ Runtime AI rules: `src/lib/ai/brandVoice.ts` (use `withBrandVoice(...)` for ever
 
 ## AI generation
 
-Any new model prompt that writes text users will read must go through `withBrandVoice` from `@/lib/ai/brandVoice`. Do not paste a second full style guide into each prompt file. Keep `BRAND_VOICE_PROMPT` aligned with the Markdown guide.
+Any new model prompt that writes text users will read must go through `withBrandVoice` from `@/lib/ai/brandVoice`. Do not paste a second full style guide into each prompt file. Keep `BRAND_VOICE_PROMPT` aligned with the Markdown guide. Apply `tidyGeneratedCopy` to model prose fields before they reach the UI.

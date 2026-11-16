@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Explore | Halo",
   description:
-    "Discover what you think and what matters to you. Use your voice to explore ideas, values, and identity.",
+    "Talk through ideas, values, and what matters to you.",
 };
 
 export default async function ExplorePage() {

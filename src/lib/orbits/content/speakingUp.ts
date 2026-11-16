@@ -9,21 +9,21 @@ export const SPEAKING_UP_ORBITS: readonly OrbitDefinition[] = [
     shortDescription: "Something keeps crossing a boundary you want to make clearer.",
     situation: "Something keeps crossing a boundary you want to make clearer.",
     openingTitle: "Draw the Line",
-    openingBody: `Sometimes you know something bothers you, but actually saying "stop" feels much harder.
+    openingBody: `Sometimes you know something bothers you, but saying "stop" feels harder.
 
-Figure out where your line is. Practice saying it without turning into someone you're not.`,
+Say where your line is, in your own words.`,
     sortOrder: 1,
     questions: [
       {
         planet: "explore",
         prompt: "What keeps happening that you don't want to keep happening?",
-        explanation: "A boundary starts with naming a behavior clearly.",
+        explanation: "Name the behavior before you decide how to respond.",
       },
       {
         planet: "explore",
         prompt: "Why does this matter to you?",
         explanation:
-          "Knowing the reason makes it easier to stand behind what you're asking for.",
+          "Knowing the reason makes the ask easier to stand behind.",
       },
       {
         planet: "express",
@@ -41,14 +41,13 @@ Figure out where your line is. Practice saying it without turning into someone y
         planet: "stand",
         prompt:
           "Say what you need without \"maybe,\" \"sorry,\" or pretending it doesn't matter.",
-        explanation: "Hear your boundary without shrinking it first.",
+        explanation: "Hear the boundary without shrinking it first.",
       },
       {
         planet: "connect",
         prompt:
           "Now say it in a way that stays firm while still sounding like you.",
-        explanation:
-          "Being clear and staying connected aren't opposites.",
+        explanation: "You can be clear without sounding like a stranger.",
       },
     ],
   }),
@@ -62,7 +61,7 @@ Figure out where your line is. Practice saying it without turning into someone y
     openingTitle: "I Need to Ask",
     openingBody: `Sometimes asking feels harder than needing.
 
-Get clear on what you want. Practice making the request without apologizing for having one.`,
+Say what you want without apologizing for wanting it.`,
     sortOrder: 2,
     questions: [
       {
@@ -80,7 +79,7 @@ Get clear on what you want. Practice making the request without apologizing for 
         planet: "explore",
         prompt: "What makes asking uncomfortable?",
         explanation:
-          "The fear around the request may be different from the request itself.",
+          "What's hard about asking may not be the ask itself.",
       },
       {
         planet: "stand",
@@ -90,7 +89,7 @@ Get clear on what you want. Practice making the request without apologizing for 
       {
         planet: "stand",
         prompt:
-          "Practice asking without immediately taking the request back.",
+          "Ask without immediately taking the request back.",
         explanation:
           "You don't need to erase your ask before someone has answered.",
       },
@@ -98,7 +97,7 @@ Get clear on what you want. Practice making the request without apologizing for 
         planet: "connect",
         prompt:
           "How could you ask clearly while still respecting their position?",
-        explanation: "Asking for yourself and considering them can happen together.",
+        explanation: "You can ask for yourself and still consider them.",
       },
     ],
   }),
@@ -112,7 +111,7 @@ Get clear on what you want. Practice making the request without apologizing for 
     openingTitle: "I Disagree",
     openingBody: `Having an opinion feels different when everyone around you has another one.
 
-Figure out what you actually believe. Practice saying it without turning disagreement into a fight.`,
+Say what you actually think without turning it into a fight.`,
     sortOrder: 3,
     questions: [
       {
@@ -136,21 +135,21 @@ Figure out what you actually believe. Practice saying it without turning disagre
         planet: "stand",
         prompt:
           "Say your opinion clearly without watering it down because someone might disagree.",
-        explanation: "Practice hearing yourself take a real position.",
+        explanation: "Hear yourself take a real position.",
       },
       {
         planet: "connect",
         prompt:
           "What part of the other side can you genuinely understand?",
         explanation:
-          "Understanding another view doesn't mean abandoning yours.",
+          "Understanding another view doesn't mean dropping yours.",
       },
       {
         planet: "stand",
         prompt:
           "Explain your opinion again while leaving room for disagreement.",
         explanation:
-          "Confidence doesn't require thinking everyone else is wrong.",
+          "You can be sure of your view without needing everyone else to be wrong.",
       },
     ],
   }),
@@ -162,22 +161,22 @@ Figure out what you actually believe. Practice saying it without turning disagre
     shortDescription: "You need to talk with a teacher about something that matters.",
     situation: "You need to talk with a teacher about something that matters.",
     openingTitle: "Talking to a Teacher",
-    openingBody: `Talking to an adult with authority can make a simple question feel much bigger.
+    openingBody: `Talking to a teacher can make a simple question feel bigger than it is.
 
-Get clear on what you need to say before you're standing in front of them.`,
+Say it here first.`,
     sortOrder: 4,
     questions: [
       {
         planet: "explore",
         prompt: "What do you need to talk to your teacher about?",
-        explanation: "Define the actual issue.",
+        explanation: "Name the actual issue.",
       },
       {
         planet: "express",
         prompt:
           "What part of the situation has been frustrating or difficult?",
         explanation:
-          "Your experience counts, even if you communicate it respectfully.",
+          "Say what was hard, even if you keep it respectful.",
       },
       {
         planet: "stand",
@@ -198,7 +197,7 @@ Get clear on what you need to say before you're standing in front of them.`,
       },
       {
         planet: "express",
-        prompt: "Practice the first 30 seconds of the conversation.",
+        prompt: "Say the first 30 seconds of the conversation.",
         explanation: "Starting is often the hardest part.",
       },
     ],
@@ -211,11 +210,9 @@ Get clear on what you need to say before you're standing in front of them.`,
     shortDescription: "You want to turn something down without making it a whole thing.",
     situation: "You want to turn something down without making it a whole thing.",
     openingTitle: "Saying No",
-    openingBody: `"No" is a complete answer.
+    openingBody: `Saying no can feel like you need a whole legal defense.
 
-But sometimes saying it feels like you need a whole legal defense.
-
-Get clear on why you're saying no. Practice doing it without getting harsh or disappearing into excuses.`,
+Say it without getting harsh or burying it in excuses.`,
     sortOrder: 5,
     questions: [
       {
@@ -226,7 +223,7 @@ Get clear on why you're saying no. Practice doing it without getting harsh or di
       {
         planet: "explore",
         prompt: "Why don't you want to do it?",
-        explanation: "Knowing your reason can strengthen your decision.",
+        explanation: "Knowing your reason can steady the decision.",
       },
       {
         planet: "stand",
@@ -237,7 +234,7 @@ Get clear on why you're saying no. Practice doing it without getting harsh or di
       {
         planet: "stand",
         prompt: "Say no in the simplest way you can.",
-        explanation: "Practice without over-explaining.",
+        explanation: "Try it without over-explaining.",
       },
       {
         planet: "connect",
@@ -249,7 +246,7 @@ Get clear on why you're saying no. Practice doing it without getting harsh or di
         planet: "stand",
         prompt: "Say your final answer in a way that sounds like you.",
         explanation:
-          "A boundary works best when you can actually imagine saying it.",
+          "It helps if you can actually imagine saying it out loud.",
       },
     ],
   }),
@@ -261,11 +258,9 @@ Get clear on why you're saying no. Practice doing it without getting harsh or di
     shortDescription: "A joke or comment landed wrong, and you want to say so.",
     situation: "A joke or comment landed wrong, and you want to say so.",
     openingTitle: "That Joke Isn't Funny to Me",
-    openingBody: `Sometimes everyone else is laughing and you're the person wondering whether you're "allowed" to be bothered.
+    openingBody: `Sometimes everyone else is laughing and you're wondering whether you're "allowed" to be bothered.
 
-You are.
-
-Figure out what crossed the line and how you might say it.`,
+Say what crossed the line.`,
     sortOrder: 6,
     questions: [
       {
@@ -277,7 +272,7 @@ Figure out what crossed the line and how you might say it.`,
         planet: "explore",
         prompt: "What about it bothered you?",
         explanation:
-          "Understanding the impact helps you say more than \"I didn't like it.\"",
+          "Naming the impact helps you say more than \"I didn't like it.\"",
       },
       {
         planet: "stand",
@@ -300,7 +295,7 @@ Figure out what crossed the line and how you might say it.`,
       },
       {
         planet: "stand",
-        prompt: "Practice saying the message directly.",
+        prompt: "Say the message directly.",
         explanation: "Hear what standing up for yourself sounds like.",
       },
     ],
@@ -313,11 +308,9 @@ Figure out what crossed the line and how you might say it.`,
     shortDescription: "Your work or idea got overlooked, and you want recognition.",
     situation: "Your work or idea got overlooked, and you want recognition.",
     openingTitle: "I Deserve Credit",
-    openingBody: `Speaking up about your own contribution can feel awkward.
+    openingBody: `Speaking up about your own contribution can feel awkward. Staying quiet can leave people with the wrong story.
 
-But staying silent can leave people with the wrong story.
-
-Practice advocating for your work without feeling like you need to brag.`,
+Say what you did without dressing it up as a brag.`,
     sortOrder: 7,
     questions: [
       {
@@ -329,7 +322,7 @@ Practice advocating for your work without feeling like you need to brag.`,
         planet: "express",
         prompt:
           "What bothers you about how the situation is being represented?",
-        explanation: "Understand why speaking up matters here.",
+        explanation: "Say why speaking up matters here.",
       },
       {
         planet: "stand",
@@ -352,7 +345,7 @@ Practice advocating for your work without feeling like you need to brag.`,
       {
         planet: "express",
         prompt:
-          "Practice explaining your contribution confidently and simply.",
+          "Explain your contribution confidently and simply.",
         explanation: "Owning your work is not exaggerating it.",
       },
     ],
@@ -375,12 +368,12 @@ Say that before pressure makes the decision for you.`,
       {
         planet: "explore",
         prompt: "What do you need more time for?",
-        explanation: "Get clear about the decision or task.",
+        explanation: "Name the decision or task.",
       },
       {
         planet: "express",
         prompt: "What is making the current timeline difficult?",
-        explanation: "Understand the pressure.",
+        explanation: "Say what's creating the pressure.",
       },
       {
         planet: "stand",
@@ -391,11 +384,11 @@ Say that before pressure makes the decision for you.`,
         planet: "connect",
         prompt:
           "What does the other person need from you while they wait?",
-        explanation: "Respect their needs too.",
+        explanation: "Include what they need too.",
       },
       {
         planet: "stand",
-        prompt: "Practice asking for the extra time directly.",
+        prompt: "Ask for the extra time directly.",
         explanation:
           "You don't have to pretend you can meet an unrealistic timeline.",
       },
@@ -416,9 +409,9 @@ Say that before pressure makes the decision for you.`,
     openingTitle: "Stop Pressuring Me",
     openingBody: `Sometimes you already know your answer.
 
-The hard part is continuing to believe it when someone keeps pushing.
+The hard part is sticking with it when someone keeps pushing.
 
-Practice holding onto your decision under pressure.`,
+Hold your decision under pressure.`,
     sortOrder: 9,
     questions: [
       {
@@ -435,7 +428,7 @@ Practice holding onto your decision under pressure.`,
       {
         planet: "stand",
         prompt: "What do you actually want to do?",
-        explanation: "Reconnect with your own answer.",
+        explanation: "Come back to your own answer.",
       },
       {
         planet: "stand",
@@ -451,7 +444,7 @@ Practice holding onto your decision under pressure.`,
       {
         planet: "stand",
         prompt: "Say your answer as if they asked you one more time.",
-        explanation: "Practice staying consistent.",
+        explanation: "Stay consistent when they push again.",
       },
     ],
   }),
@@ -479,7 +472,7 @@ Say it here first.`,
         planet: "express",
         prompt: "What are you feeling about having it?",
         explanation:
-          "Your emotions may explain why you've been avoiding it.",
+          "How you feel about it may explain why you've been putting it off.",
       },
       {
         planet: "explore",
@@ -492,21 +485,21 @@ Say it here first.`,
         prompt:
           "What are you afraid you won't be able to say once you're actually there?",
         explanation:
-          "That's often the sentence worth practicing most.",
+          "That's often the sentence worth saying out loud here.",
       },
       {
         planet: "connect",
         prompt:
           "What do you want the relationship to feel like after the conversation?",
         explanation:
-          "Your goal can influence how you communicate.",
+          "Your goal can shape how you say it.",
       },
       {
         planet: "stand",
         prompt:
           "Start the conversation out loud right now. What would you say first?",
         explanation:
-          "Practicing the opening makes the real conversation more familiar.",
+          "Saying the opening here makes the real one less unfamiliar.",
       },
     ],
   }),

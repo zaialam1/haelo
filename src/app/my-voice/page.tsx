@@ -9,7 +9,7 @@ import { createClient } from "@/lib/supabase/server";
 export const metadata: Metadata = {
   title: "My Voice | Halo",
   description:
-    "Notice how your voice has been taking shape across Connect, Stand, Explore, and Express.",
+    "See patterns from your sessions across Connect, Stand, Explore, and Express.",
 };
 
 export default async function MyVoicePage() {

@@ -10,7 +10,7 @@ export const COSMETICS_CATALOG: readonly CosmeticDefinition[] = [
   {
     key: "alien_soft",
     name: "Soft Alien",
-    blurb: "A quiet visitor who likes to listen.",
+    blurb: "A small visitor for your map.",
     slotTypes: ["creature"],
     price: 8,
     rarity: "common",
@@ -19,7 +19,7 @@ export const COSMETICS_CATALOG: readonly CosmeticDefinition[] = [
   {
     key: "alien_glow",
     name: "Glow Alien",
-    blurb: "Soft light for long reflections.",
+    blurb: "Soft light for longer sessions.",
     slotTypes: ["creature"],
     price: 18,
     rarity: "uncommon",
@@ -28,7 +28,7 @@ export const COSMETICS_CATALOG: readonly CosmeticDefinition[] = [
   {
     key: "fireflies",
     name: "Firefly Drift",
-    blurb: "Tiny sparks that hover near your voice.",
+    blurb: "Tiny sparks that hover nearby.",
     slotTypes: ["creature", "sky"],
     price: 12,
     rarity: "common",
@@ -46,7 +46,7 @@ export const COSMETICS_CATALOG: readonly CosmeticDefinition[] = [
   {
     key: "tide_creature",
     name: "Tide Companion",
-    blurb: "Rises and settles with your mood.",
+    blurb: "Rises and settles in a slow tide.",
     slotTypes: ["creature"],
     price: 22,
     rarity: "rare",
@@ -92,7 +92,7 @@ export const COSMETICS_CATALOG: readonly CosmeticDefinition[] = [
   {
     key: "moss_bloom",
     name: "Moss Bloom",
-    blurb: "Soft green that settles after speaking.",
+    blurb: "Soft green near the ground.",
     slotTypes: ["ground"],
     price: 9,
     rarity: "common",
@@ -101,7 +101,7 @@ export const COSMETICS_CATALOG: readonly CosmeticDefinition[] = [
   {
     key: "garden_stone",
     name: "Garden Stone",
-    blurb: "A place to rest your attention.",
+    blurb: "A simple stone for the ground.",
     slotTypes: ["ground"],
     price: 7,
     rarity: "common",
@@ -138,7 +138,7 @@ export const COSMETICS_CATALOG: readonly CosmeticDefinition[] = [
   {
     key: "ember_moon",
     name: "Ember Moon",
-    blurb: "Warm dusk for brave words.",
+    blurb: "A warm dusk glow.",
     slotTypes: ["moon"],
     price: 20,
     rarity: "uncommon",
@@ -156,7 +156,7 @@ export const COSMETICS_CATALOG: readonly CosmeticDefinition[] = [
   {
     key: "mirror_moon",
     name: "Mirror Moon",
-    blurb: "Shows you a quieter outline of yourself.",
+    blurb: "A reflective moon for your orbit.",
     slotTypes: ["moon"],
     price: 32,
     rarity: "legendary",
@@ -175,7 +175,7 @@ export const COSMETICS_CATALOG: readonly CosmeticDefinition[] = [
   {
     key: "soft_ring",
     name: "Soft Ring",
-    blurb: "A gentle halo around your planet.",
+    blurb: "A soft ring around your planet.",
     slotTypes: ["ring"],
     price: 14,
     rarity: "common",
@@ -193,7 +193,7 @@ export const COSMETICS_CATALOG: readonly CosmeticDefinition[] = [
   {
     key: "aurora_ring",
     name: "Aurora Ring",
-    blurb: "Color that shifts as you grow.",
+    blurb: "Color that shifts over time.",
     slotTypes: ["ring"],
     price: 30,
     rarity: "rare",
@@ -212,7 +212,7 @@ export const COSMETICS_CATALOG: readonly CosmeticDefinition[] = [
   {
     key: "mist_sky",
     name: "Soft Mist",
-    blurb: "A veil of calm around the planet.",
+    blurb: "A soft mist around the planet.",
     slotTypes: ["sky"],
     price: 8,
     rarity: "common",
@@ -221,7 +221,7 @@ export const COSMETICS_CATALOG: readonly CosmeticDefinition[] = [
   {
     key: "aurora_veil",
     name: "Aurora Veil",
-    blurb: "Northern light for quiet courage.",
+    blurb: "A northern light wash.",
     slotTypes: ["sky"],
     price: 26,
     rarity: "rare",

@@ -62,7 +62,7 @@ export async function sendOrbitRecommendationAction(input: {
     return {
       ok: false,
       error: "invalid_purpose",
-      message: `Add a short purpose (1–${PURPOSE_MAX_LENGTH} characters).`,
+      message: `Add a short purpose (1-${PURPOSE_MAX_LENGTH} characters).`,
     };
   }
 

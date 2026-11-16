@@ -89,7 +89,7 @@ export function OrbitDetail({
               style={{ color: "var(--violet)" }}
             >
               {Math.min(6, Math.max(1, progress.current_question_index))} of 6
-              reflections
+              questions
             </p>
           ) : null}
         </div>
@@ -258,8 +258,7 @@ export function OrbitDetail({
           className="mt-4 max-w-md text-[0.8125rem] leading-relaxed"
           style={{ color: "var(--foreground-muted)" }}
         >
-          You&apos;ve completed this Orbit. Revisit to see what came into focus
-          across your six reflections.
+          You&apos;ve completed this Orbit. Open it again to see your summary.
         </p>
       ) : null}
 

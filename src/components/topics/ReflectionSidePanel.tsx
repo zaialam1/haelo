@@ -109,7 +109,7 @@ export function ReflectionSidePanel({
             : "none",
         }}
         aria-hidden={!open}
-        aria-label="Reflection details"
+        aria-label="Session details"
       >
         {node && (
           <div
@@ -239,7 +239,7 @@ export function ReflectionSidePanel({
                       "color-mix(in srgb, var(--violet) 12%, transparent)",
                     color: "var(--foreground)",
                   }}
-                  title={hasAudio ? undefined : "No audio for this reflection"}
+                  title={hasAudio ? undefined : "No audio for this session"}
                 >
                   <span aria-hidden="true">{playing ? "❚❚" : "▶"}</span>
                   {loadingAudio
@@ -279,7 +279,7 @@ export function ReflectionSidePanel({
                     className="mt-2 text-[0.9375rem] leading-relaxed"
                     style={{ color: "var(--foreground-muted)" }}
                   >
-                    A transcript wasn&rsquo;t captured for this reflection.
+                    A transcript wasn&rsquo;t captured for this session.
                     New recordings will save one when speech recognition is
                     available in your browser.
                   </p>
@@ -303,7 +303,7 @@ export function ReflectionSidePanel({
                 }}
               >
                 {node.stoodOut ??
-                  "Insights will appear after your first few reflections."}
+                  "Notes will appear after a few sessions."}
               </p>
             </div>
 
@@ -312,7 +312,7 @@ export function ReflectionSidePanel({
                 className="text-[0.6875rem] font-semibold tracking-[0.08em] uppercase"
                 style={{ color: "var(--foreground-muted)" }}
               >
-                Your voice
+                Delivery
               </p>
               {node.voiceNotes.length > 0 ? (
                 <ul className="mt-2 space-y-1.5">
@@ -331,7 +331,7 @@ export function ReflectionSidePanel({
                   className="mt-2 text-[0.9375rem] leading-relaxed"
                   style={{ color: "var(--foreground-muted)" }}
                 >
-                  Voice patterns will show here once this reflection is analyzed.
+                  Delivery notes will show here once this session is analyzed.
                 </p>
               )}
             </div>

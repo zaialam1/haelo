@@ -11,7 +11,7 @@ export const PUTTING_YOURSELF_OUT_THERE_ORBITS: readonly OrbitDefinition[] = [
     openingTitle: "I Have an Idea",
     openingBody: `Ideas can feel obvious inside your own head and suddenly confusing when you try to explain them.
 
-Find the heart of your idea and practice sharing it.`,
+Find the heart of your idea and say it out loud.`,
     sortOrder: 1,
     questions: [
       {
@@ -34,7 +34,7 @@ Find the heart of your idea and practice sharing it.`,
         prompt:
           "What do you believe about the idea even if someone doesn't immediately get it?",
         explanation:
-          "Original ideas sometimes require tolerating uncertainty from others.",
+          "Original ideas sometimes require sitting with other people's uncertainty.",
       },
       {
         planet: "connect",
@@ -60,7 +60,7 @@ Find the heart of your idea and practice sharing it.`,
     openingTitle: "New Room",
     openingBody: `Walking into a new group can make you suddenly see yourself through everyone else's eyes.
 
-Practice entering something new without inventing a different person.`,
+Walk in as yourself, not as a version you invented for the room.`,
     sortOrder: 2,
     questions: [
       {
@@ -78,7 +78,7 @@ Practice entering something new without inventing a different person.`,
         planet: "connect",
         prompt: "What kind of person would you actually like to meet there?",
         explanation:
-          "Shift attention from being judged toward finding connection.",
+          "Put attention on finding connection, not on being judged.",
       },
       {
         planet: "explore",
@@ -90,13 +90,13 @@ Practice entering something new without inventing a different person.`,
         planet: "connect",
         prompt: "What is one simple way you could start a conversation?",
         explanation:
-          "Connection usually starts smaller than an amazing first impression.",
+          "Most conversations start smaller than a perfect first impression.",
       },
       {
         planet: "stand",
         prompt:
           "What part of yourself do you not want to shrink just to fit in?",
-        explanation: "Belonging shouldn't require disappearing.",
+        explanation: "You shouldn't have to disappear to belong.",
       },
     ],
   }),
@@ -122,18 +122,18 @@ Find the words for something you genuinely care about.`,
       {
         planet: "explore",
         prompt: "Where do you think that feeling comes from?",
-        explanation: "Origins can reveal meaning.",
+        explanation: "Where it started can help explain why it stuck.",
       },
       {
         planet: "express",
         prompt: "Tell a story that captures why this matters to you.",
         explanation:
-          "Stories often communicate meaning better than explanations.",
+          "Stories often land better than abstract explanations.",
       },
       {
         planet: "stand",
         prompt: "What do you believe about this that you would defend?",
-        explanation: "Values become clearer when challenged.",
+        explanation: "Values get clearer when you say what you'd stand by.",
       },
       {
         planet: "connect",
@@ -161,7 +161,7 @@ Find the words for something you genuinely care about.`,
     openingTitle: "Big Opportunity",
     openingBody: `Wanting something can make the possibility of not getting it feel much bigger.
 
-Separate excitement from pressure. Practice showing up as yourself.`,
+Separate excitement from pressure. Show up as yourself.`,
     sortOrder: 4,
     questions: [
       {
@@ -178,7 +178,7 @@ Separate excitement from pressure. Practice showing up as yourself.`,
       {
         planet: "explore",
         prompt: "What are you most afraid might happen?",
-        explanation: "Fear becomes easier to manage when specific.",
+        explanation: "Fear gets easier to handle when it's specific.",
       },
       {
         planet: "stand",
@@ -212,13 +212,13 @@ Separate excitement from pressure. Practice showing up as yourself.`,
     openingTitle: "Tell My Story",
     openingBody: `You have thousands of moments you could use to explain who you are.
 
-The hard part is figuring out which ones actually say something.`,
+The hard part is picking which ones actually say something.`,
     sortOrder: 5,
     questions: [
       {
         planet: "explore",
         prompt: "What is one experience that changed something about you?",
-        explanation: "Stories become meaningful when something shifts.",
+        explanation: "Stories get sharper when something actually shifted.",
       },
       {
         planet: "explore",
@@ -234,7 +234,7 @@ The hard part is figuring out which ones actually say something.`,
       {
         planet: "express",
         prompt: "What did the experience teach you?",
-        explanation: "Meaning comes from reflection, not just events.",
+        explanation: "Say what changed, not just what happened.",
       },
       {
         planet: "connect",
@@ -258,7 +258,7 @@ The hard part is figuring out which ones actually say something.`,
     openingTitle: "I Want to Lead",
     openingBody: `Leadership isn't only about being the loudest person in the room.
 
-Figure out why you want to lead and what kind of leader you actually want to be.`,
+Say why you want to lead and what kind of leader you actually want to be.`,
     sortOrder: 6,
     questions: [
       {
@@ -275,7 +275,7 @@ Figure out why you want to lead and what kind of leader you actually want to be.
       {
         planet: "connect",
         prompt: "What do the people you'd be leading actually need?",
-        explanation: "Leadership is relational.",
+        explanation: "Leadership depends on the people you're with.",
       },
       {
         planet: "express",
@@ -354,13 +354,13 @@ Prepare for the part where your work leaves your head and enters someone else's 
     openingTitle: "Speaking in Front of People",
     openingBody: `Sometimes you know exactly what you want to say until a room full of people is looking at you.
 
-Prepare your message and your relationship with the audience before you step up.`,
+Get your message ready, and think about who you're talking to, before you step up.`,
     sortOrder: 8,
     questions: [
       {
         planet: "explore",
         prompt: "What are you speaking about?",
-        explanation: "Reconnect with the subject instead of the fear.",
+        explanation: "Come back to the subject instead of the fear.",
       },
       {
         planet: "express",
@@ -376,12 +376,12 @@ Prepare your message and your relationship with the audience before you step up.
       {
         planet: "connect",
         prompt: "What does your audience actually need from you?",
-        explanation: "Shift attention from yourself toward communication.",
+        explanation: "Put attention on the message, not just on yourself.",
       },
       {
         planet: "express",
-        prompt: "Practice your opening out loud.",
-        explanation: "A confident start can make everything after it easier.",
+        prompt: "Say your opening out loud.",
+        explanation: "A steady start can make everything after it easier.",
       },
       {
         planet: "stand",
@@ -434,7 +434,7 @@ You mostly need somewhere to begin. Take the pressure off making an impression a
       },
       {
         planet: "connect",
-        prompt: "Practice how you might actually start talking to them.",
+        prompt: "How might you actually start talking to them?",
         explanation: "Make the first step familiar.",
       },
     ],
@@ -449,7 +449,7 @@ You mostly need somewhere to begin. Take the pressure off making an impression a
     openingTitle: "Take the Chance",
     openingBody: `Sometimes you know you want to try something and still keep finding reasons not to.
 
-This won't tell you whether you should do it. It helps you understand what is pulling you forward and what is holding you back.`,
+This won't tell you whether you should do it. It helps you see what's pulling you forward and what's holding you back.`,
     sortOrder: 10,
     questions: [
       {
@@ -466,7 +466,7 @@ This won't tell you whether you should do it. It helps you understand what is pu
         planet: "explore",
         prompt: "What are you afraid might happen?",
         explanation:
-          "Fear is information. It doesn't automatically get to decide.",
+          "Name the fear. It doesn't automatically get to decide.",
       },
       {
         planet: "stand",

@@ -159,7 +159,7 @@ export function evaluateMilestones(ctx: MilestoneContext): MilestoneCandidate[] 
     tryPush(out, have, {
       milestoneKey: "reflections_50",
       title: "50 sessions",
-      body: "Fifty sessions. That's a real history to look back on.",
+      body: "Fifty sessions done.",
       category: "exploration",
     });
   }
@@ -186,7 +186,7 @@ export function evaluateMilestones(ctx: MilestoneContext): MilestoneCandidate[] 
     tryPush(out, have, {
       milestoneKey: "weekly_goal_x3",
       title: "Weekly goal x3",
-      body: "You've hit your weekly constellation three times.",
+      body: "You've hit your weekly goal three times.",
       category: "behavior",
     });
   }

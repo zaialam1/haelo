@@ -76,10 +76,10 @@ function nodeAriaLabel(n: JourneyNode): string {
   if (variant === "orbit_cluster") {
     const count = n.orbitResponses?.length ?? 6;
     const title = n.orbitTitle ?? n.prompt;
-    return `${title} Orbit, completed ${longDate(n.recordedAt)}, ${count} reflections.`;
+    return `${title} Orbit, completed ${longDate(n.recordedAt)}, ${count} sessions.`;
   }
   if (variant === "orbit") {
-    return `${n.planetLabel} Orbit reflection on ${shortDate(n.recordedAt)}: ${truncate(n.prompt, 60)}`;
+    return `${n.planetLabel} Orbit session on ${shortDate(n.recordedAt)}: ${truncate(n.prompt, 60)}`;
   }
   return `${n.planetLabel} session on ${shortDate(n.recordedAt)}: ${truncate(n.prompt, 60)}`;
 }
@@ -249,17 +249,17 @@ export function JourneyConstellation({
   }
 
   const ariaLabel = journeyEmpty
-    ? "Empty journey constellation. Your first completed session will appear here."
+    ? "Empty Journey. Finish a session to add a star."
     : filterEmpty
       ? filterLabel
-        ? `No ${filterLabel} sessions in your journey yet.`
-        : "No experiences in your overall journey yet."
-      : `Journey constellation with ${nodes.length} session${nodes.length === 1 ? "" : "s"}`;
+        ? `No ${filterLabel} sessions in Journey yet.`
+        : "No sessions in this Journey view yet."
+      : `Journey with ${nodes.length} session${nodes.length === 1 ? "" : "s"}`;
 
   return (
     <section
       className="journey-constellation relative z-10 flex-1 px-3 sm:px-6"
-      aria-label="Your journey constellation"
+      aria-label="Journey"
     >
       <div
         ref={scrollerRef}
@@ -364,7 +364,7 @@ export function JourneyConstellation({
             <OriginMarker
               cx={contentWidth * 0.38}
               cy={VIEW_H * 0.45}
-              label="Your first star will show up here"
+              label="Finish a session to add a star"
             />
           ) : filterEmpty ? (
             <OriginMarker
@@ -372,8 +372,8 @@ export function JourneyConstellation({
               cy={VIEW_H * 0.45}
               label={
                 filterLabel
-                  ? `No ${filterLabel} stars yet`
-                  : "No stars in this view yet"
+                  ? `No ${filterLabel} sessions yet`
+                  : "No sessions in this view yet"
               }
             />
           ) : (
@@ -659,7 +659,7 @@ export function JourneyConstellation({
                   className="mt-1 text-[0.6875rem] leading-snug"
                   style={{ color: "var(--foreground-muted)" }}
                 >
-                  {(hovered.orbitResponses?.length ?? 6)} reflections
+                  {(hovered.orbitResponses?.length ?? 6)} sessions
                   {hovered.orbitPlanets && hovered.orbitPlanets.length > 0
                     ? ` · ${hovered.orbitPlanets
                         .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
@@ -670,7 +670,7 @@ export function JourneyConstellation({
                   className="mt-1.5 text-[0.625rem]"
                   style={{ color: "var(--foreground-muted)" }}
                 >
-                  Click to explore
+                  Click for details
                 </p>
               </>
             ) : (

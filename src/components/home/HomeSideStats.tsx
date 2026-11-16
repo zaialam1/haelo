@@ -333,7 +333,7 @@ export function HomeSideStats() {
               >
                 {(stats?.totalReflections ?? 0) === 0
                   ? "Record a session to start your map."
-                  : `${stats?.totalReflections} reflection${(stats?.totalReflections ?? 0) === 1 ? "" : "s"} so far`}
+                  : `${stats?.totalReflections} session${(stats?.totalReflections ?? 0) === 1 ? "" : "s"} so far`}
               </p>
             </li>
           </ul>

@@ -106,8 +106,8 @@ export function ProfessionalMarketing({ compact = false }: Props) {
         {!compact ? (
           <p className="mt-8 text-sm leading-relaxed text-[var(--foreground-muted)]">
             Switch between Personal and Professional Mode anytime. Personal Mode
-            is your own universe of voice; Professional Mode is a constellation of
-            connections and paths you can help point people toward.
+            is your own practice. Professional Mode is for connections and Orbit
+            recommendations.
           </p>
         ) : null}
       </div>

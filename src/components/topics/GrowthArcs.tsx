@@ -18,7 +18,7 @@ export function GrowthArcs({ planetLabel, arcs, isEmpty }: GrowthArcsProps) {
           color: "var(--foreground)",
         }}
       >
-        Your growth in {planetLabel}
+        In {planetLabel}
       </h2>
 
       <ul className="mt-4 space-y-5">

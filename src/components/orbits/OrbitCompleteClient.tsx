@@ -87,12 +87,6 @@ export function OrbitCompleteClient({
       >
         {orbitTitle}
       </h1>
-      <p
-        className="mt-3 text-[1.0625rem] leading-relaxed"
-        style={{ color: "var(--foreground-muted)" }}
-      >
-        Here&apos;s what came into focus.
-      </p>
 
       {stardustEarned > 0 ? (
         <div
@@ -123,8 +117,7 @@ export function OrbitCompleteClient({
           style={{ color: "var(--foreground-muted)" }}
           aria-live="polite"
         >
-          Completing your Orbit… Halo is gathering what became clearer across
-          your six reflections.
+          Finishing your Orbit summary…
         </p>
       ) : null}
 
@@ -137,7 +130,7 @@ export function OrbitCompleteClient({
             role="alert"
           >
             {localFailure ||
-              "We're having trouble creating your final reflection. Try again."}
+              "We're having trouble creating your Orbit summary. Try again."}
           </p>
           <button
             type="button"

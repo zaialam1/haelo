@@ -4,7 +4,7 @@ export const ORBIT_REGIONS: readonly OrbitRegionDefinition[] = [
   {
     key: "friendships_people",
     title: "Friendships & People",
-    description: "Belonging, closeness, conflict, and the people around you.",
+    description: "Friendship, closeness, conflict, and the people around you.",
     sortOrder: 1,
   },
   {

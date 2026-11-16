@@ -147,7 +147,7 @@ export function OrbitsExperience({
             className="font-[family-name:var(--font-display)] text-lg font-semibold tracking-tight sm:text-xl"
             style={{ color: "var(--foreground)" }}
           >
-            What are you navigating?
+            What&apos;s going on?
           </label>
           <p
             className="mt-1 text-[0.75rem] leading-relaxed sm:text-[0.8125rem]"

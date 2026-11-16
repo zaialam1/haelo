@@ -60,7 +60,7 @@ Sometimes what you want is hard to separate from what everyone else expects.`,
     openingTitle: "Everyone Else Seems Ahead",
     openingBody: `It's easy to compare the inside of your life to the outside of everyone else's.
 
-Figure out what the comparison is actually pointing toward.`,
+Look at what the comparison is actually pointing toward.`,
     sortOrder: 2,
     questions: [
       {
@@ -108,7 +108,7 @@ Figure out what the comparison is actually pointing toward.`,
     openingTitle: "Something Is Changing",
     openingBody: `Change can feel exciting, sad, terrifying, freeing, or all of those at once.
 
-Notice what's changing without deciding immediately whether it's good or bad.`,
+Say what's changing before you decide whether it's good or bad.`,
     sortOrder: 3,
     questions: [
       {
@@ -119,12 +119,12 @@ Notice what's changing without deciding immediately whether it's good or bad.`,
       {
         planet: "express",
         prompt: "What feelings come up when you think about it?",
-        explanation: "Mixed feelings are normal here.",
+        explanation: "You might feel more than one thing at once.",
       },
       {
         planet: "explore",
         prompt: "What are you afraid you might lose?",
-        explanation: "Fear often points toward something you value.",
+        explanation: "What you're scared to lose often shows what you value.",
       },
       {
         planet: "express",
@@ -155,7 +155,7 @@ Notice what's changing without deciding immediately whether it's good or bad.`,
     openingTitle: "What Do I Actually Care About?",
     openingBody: `Sometimes you're so busy doing things that you don't stop to ask why any of them matter.
 
-This one is about noticing what feels genuinely important to you.`,
+This one is about what feels genuinely important to you.`,
     sortOrder: 4,
     questions: [
       {
@@ -188,8 +188,8 @@ This one is about noticing what feels genuinely important to you.`,
       },
       {
         planet: "express",
-        prompt: "Finish this idea: \"I think a good life includes…\"",
-        explanation: "The point is hearing your answer.",
+        prompt: "Ignore the big speech. What would make an ordinary week feel worth it?",
+        explanation: "Keep it ordinary. Skip the mission statement.",
       },
     ],
   }),
@@ -203,14 +203,14 @@ This one is about noticing what feels genuinely important to you.`,
     openingTitle: "Who Am I Around Different People?",
     openingBody: `Most people aren't exactly the same around everyone. That isn't automatically fake.
 
-Notice which differences feel natural and which ones make you feel like you're disappearing.`,
+Look at which differences feel natural and which ones make you feel like you're disappearing.`,
     sortOrder: 5,
     questions: [
       {
         planet: "explore",
         prompt: "Who are you most different around?",
         explanation:
-          "Identify where your voice shifts most noticeably.",
+          "Identify where you shift most.",
       },
       {
         planet: "express",
@@ -237,7 +237,7 @@ Notice which differences feel natural and which ones make you feel like you're d
         planet: "explore",
         prompt: "What feels consistent across all the different versions of you?",
         explanation:
-          "Your voice can change while still belonging to the same person.",
+          "You can sound different in different rooms and still be the same person.",
       },
     ],
   }),
@@ -251,7 +251,7 @@ Notice which differences feel natural and which ones make you feel like you're d
     openingTitle: "I Changed My Mind",
     openingBody: `Changing your mind isn't automatically weakness. Sometimes it means you learned something.
 
-Figure out what changed and whether you actually believe something different now.`,
+Say what changed and whether you actually believe something different now.`,
     sortOrder: 6,
     questions: [
       {
@@ -327,7 +327,7 @@ But they still deserve real thought.`,
         planet: "explore",
         prompt: "What future are you imagining for each option?",
         explanation:
-          "Notice whether those imagined futures are realistic or exaggerated.",
+          "Check whether those imagined futures are realistic or exaggerated.",
       },
       {
         planet: "explore",
@@ -396,7 +396,7 @@ Separate the two.`,
     openingTitle: "I Feel Stuck",
     openingBody: `Sometimes you don't need a giant breakthrough.
 
-You need to figure out what is actually keeping you in the same place.`,
+You need to see what is actually keeping you in the same place.`,
     sortOrder: 9,
     questions: [
       {
@@ -470,13 +470,13 @@ But it can be interesting to think about what qualities you want to carry with y
       },
       {
         planet: "connect",
-        prompt: "How do you want people to feel when they're around you?",
-        explanation: "Who you become affects others too.",
+        prompt: "What do you want someone to walk away knowing after hanging out with you?",
+        explanation: "Skip the vibe. Name the thing.",
       },
       {
         planet: "explore",
-        prompt: "Finish this: \"I want to become someone who…\"",
-        explanation: "This is a snapshot, not a permanent definition.",
+        prompt: "What's one way you want to be different a year from now that you're actually into?",
+        explanation: "A snapshot, not a permanent definition.",
       },
     ],
   }),

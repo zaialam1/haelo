@@ -154,7 +154,7 @@ export const DAILY_PROMPT: DailyPrompt = {
 };
 
 export const SHOOTING_STAR_PROMPTS: ShootingStarPrompt[] = [
-  { id: "reflection", label: "Reflection prompt" },
+  { id: "reflection", label: "Talk prompt" },
   { id: "fun-fact", label: "Fun fact" },
   { id: "challenge", label: "Conversation challenge" },
   { id: "reward", label: "Tiny reward" },

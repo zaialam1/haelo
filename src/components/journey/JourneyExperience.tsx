@@ -61,22 +61,21 @@ export function JourneyExperience({
 
   let contextLine: string | null = null;
   if (journeyEmpty) {
-    contextLine =
-      "Your first completed session will become the first star in your Journey.";
+    contextLine = "Finish a session to add a star.";
   } else if (filterEmpty && filter === "all") {
     contextLine =
-      "Orbit reflections appear on their planets until you complete the full Orbit.";
+      "Orbit sessions show on their planets until you finish the full Orbit.";
   } else if (filter === "all" && count === 1) {
-    contextLine = "Your constellation has begun.";
+    contextLine = "1 session so far.";
   } else if (filter === "all" && model.beganAt) {
-    contextLine = `Your journey began ${formatBegan(model.beganAt)} · ${count} experiences`;
+    contextLine = `Started ${formatBegan(model.beganAt)} · ${count} sessions`;
   } else if (filter !== "all") {
     contextLine =
       count === 0
         ? null
-        : `${count} ${filterLabel ?? "planet"} reflection${count === 1 ? "" : "s"}`;
+        : `${count} ${filterLabel ?? "planet"} session${count === 1 ? "" : "s"}`;
   } else {
-    contextLine = `${count} experiences`;
+    contextLine = `${count} sessions`;
   }
 
   function handleSelect(node: JourneyNode) {
@@ -116,14 +115,8 @@ export function JourneyExperience({
                     '"opsz" 72, "SOFT" 45, "WONK" 0, "wght" 550',
                 }}
               >
-                Your Journey
+                Journey
               </h1>
-              <p
-                className="mt-1 max-w-md text-sm leading-relaxed"
-                style={{ color: "var(--foreground-muted)" }}
-              >
-                Everything you&apos;ve explored with your voice.
-              </p>
               {contextLine ? (
                 <p
                   className="mt-1.5 text-xs"

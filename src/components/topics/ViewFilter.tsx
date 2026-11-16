@@ -3,10 +3,10 @@
 import type { TimelineViewMode } from "@/lib/topics/types";
 
 const MODES: { id: TimelineViewMode; label: string }[] = [
-  { id: "all", label: "All reflections" },
+  { id: "all", label: "All sessions" },
   { id: "confidence", label: "Confidence" },
   { id: "topics", label: "Topics" },
-  { id: "growth", label: "Growth" },
+  { id: "growth", label: "Highlights" },
 ];
 
 type ViewFilterProps = {
@@ -63,7 +63,7 @@ export function ViewFilter({ value, onChange, disabled }: ViewFilterProps) {
           className="mt-2 text-xs"
           style={{ color: "var(--foreground-muted)" }}
         >
-          Filters unlock after your first reflection.
+          Filters show up after your first session.
         </p>
       )}
     </div>

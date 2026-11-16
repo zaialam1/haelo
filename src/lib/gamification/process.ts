@@ -528,8 +528,8 @@ async function processGamificationEventInner(
           revealKey: `weekly_complete:${weekly.weekKey}`,
           revealType: "weekly_goal_complete",
           priority: "immediate",
-          title: "Your weekly constellation is complete.",
-          body: "Three voice moments, gathered into one quiet shape.",
+          title: "Weekly goal complete.",
+          body: "Three sessions done this week.",
           payload: { weekKey: weekly.weekKey },
         });
         if (reveal) reveals.push(reveal);
@@ -571,8 +571,8 @@ async function processGamificationEventInner(
           revealKey: `planet_evolution:${change.planet}:${change.stage}`,
           revealType: "planet_evolution",
           priority: "immediate",
-          title: `Your ${label} planet evolved.`,
-          body: "Keep exploring to see what changes next.",
+          title: `${label} evolved.`,
+          body: "Keep practicing to see what changes next.",
           payload: change,
         });
         if (reveal) reveals.push(reveal);
@@ -742,7 +742,7 @@ async function processGamificationEventInner(
       revealKey: `discovery:${reward.rewardKey}`,
       revealType: "celestial_discovery",
       priority: def.revealPriority,
-      title: `New celestial discovery: ${reward.title}`,
+      title: `New decoration: ${reward.title}`,
       body: reward.description,
       payload: { rewardKey: reward.rewardKey, rewardType: reward.rewardType },
     });

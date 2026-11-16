@@ -68,9 +68,6 @@ export function ProfessionalHomeExperience({
         <header className="professional-home__header">
           <p className="professional-home__eyebrow">Professional</p>
           <h1 className="professional-home__title">Professional</h1>
-          <p className="professional-home__lede">
-            Help someone find the right place to practice their voice.
-          </p>
           {showIntro ? (
             <div className="mt-5 text-left">
               <IntroMoment
@@ -149,10 +146,10 @@ export function ProfessionalHomeExperience({
 
         {isEmpty && !pending ? (
           <section className="professional-home__empty">
-            <h2>Your professional constellation starts here.</h2>
+            <h2>No connections yet.</h2>
             <p>
-              Connect with someone on Halo, then you&rsquo;ll be able to recommend
-              an Orbit when the right moment comes.
+              Connect with someone on Halo, then you can recommend an Orbit when
+              it fits.
             </p>
             <div className="professional-home__empty-actions">
               <TransitionLink

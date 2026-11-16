@@ -20,6 +20,11 @@ import {
 } from "../src/lib/sessions/quoteGrounding";
 import { deriveSpeechMetrics } from "../src/lib/sessions/speechMetrics";
 import { planetLensSummary } from "../src/lib/sessions/analysisPrompt";
+import {
+  BRAND_VOICE_PROMPT,
+  tidyGeneratedCopy,
+  withBrandVoice,
+} from "../src/lib/ai/brandVoice";
 
 let passed = 0;
 function check(name: string, fn: () => void) {
@@ -32,6 +37,36 @@ function check(name: string, fn: () => void) {
     throw e;
   }
 }
+
+// --- Brand voice runtime helpers ---
+check("withBrandVoice appends shared writing rules", () => {
+  const combined = withBrandVoice("Task-specific instructions go here.");
+  assert.match(combined, /Task-specific instructions go here/);
+  assert.match(combined, /Never use em dashes/);
+  assert.match(combined, /No therapy or self-help language/);
+  assert.ok(combined.includes(BRAND_VOICE_PROMPT));
+});
+
+check("ANALYSIS_SYSTEM_PROMPT includes brand voice rules", () => {
+  assert.match(ANALYSIS_SYSTEM_PROMPT, /Never use em dashes/);
+  assert.match(ANALYSIS_SYSTEM_PROMPT, /Observation before encouragement/);
+  assert.doesNotMatch(ANALYSIS_SYSTEM_PROMPT, /—/);
+});
+
+check("tidyGeneratedCopy strips em dashes outside quotes", () => {
+  const cleaned = tidyGeneratedCopy(
+    "You got clearer — especially after the first point.",
+  );
+  assert.equal(cleaned.includes("—"), false);
+  assert.match(cleaned, /You got clearer/);
+});
+
+check("tidyGeneratedCopy preserves quoted user words with dashes", () => {
+  const cleaned = tidyGeneratedCopy(
+    'You said "I was tired—really tired" and then finished the point.',
+  );
+  assert.ok(cleaned.includes('"I was tired—really tired"'));
+});
 
 // --- Speech metrics ---
 check("deriveSpeechMetrics counts words, hedges, fillers, WPM", () => {

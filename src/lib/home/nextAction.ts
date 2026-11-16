@@ -142,7 +142,7 @@ export async function computeNextAction(opts: {
   ) {
     return {
       kind: "weekly_goal",
-      title: "One more session finishes this week's constellation.",
+      title: "One more session finishes this week's goal.",
       cta: "Start one",
       href: "/practice",
       welcomeBack,

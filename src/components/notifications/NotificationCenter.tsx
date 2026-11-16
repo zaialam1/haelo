@@ -24,7 +24,7 @@ const TYPE_COPY: Record<
     context: "A recommended Orbit is still waiting.",
   },
   celestial_discovery: {
-    title: "Celestial discovery",
+    title: "New decoration",
     context: "Something new appeared in your Universe.",
   },
   milestone_moment: {

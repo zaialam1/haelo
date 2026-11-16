@@ -119,17 +119,17 @@ function buildSummaryInsights(
     return [
       {
         label: "Most natural talking about",
-        value: "Will appear as you reflect",
+        value: "Will appear after sessions",
         isPlaceholder: true,
       },
       {
         label: "Practicing more",
-        value: "Will appear as you reflect",
+        value: "Will appear after sessions",
         isPlaceholder: true,
       },
       {
         label: "Recently exploring",
-        value: "Will appear as you reflect",
+        value: "Will appear after sessions",
         isPlaceholder: true,
       },
     ];
@@ -186,12 +186,12 @@ function buildGrowthArcs(
     return [
       {
         id: "placeholder",
-        label: `Expressing yourself in ${topic.label}`,
+        label: `Sessions in ${topic.label}`,
         points: [0.25, 0.35, 0.4, 0.45],
         startLabel: "Soon",
         endLabel: "Later",
         summary:
-          "Growth patterns will appear as you keep reflecting on this planet.",
+          "Patterns will appear after a few more sessions here.",
       },
     ];
   }
@@ -220,12 +220,12 @@ function buildGrowthArcs(
   return [
     {
       id: "placeholder",
-      label: `Your growth in ${topic.label}`,
-      points: reflections.map((_, i) => (count === 1 ? 0.5 : i / (count - 1))),
-      startLabel: formatMonthYear(reflections[0].recorded_at),
-      endLabel: formatMonthYear(reflections[reflections.length - 1].recorded_at),
-      summary:
-        "Deeper growth notes will appear once your reflections are analyzed.",
+        label: `Sessions in ${topic.label}`,
+        points: reflections.map((_, i) => (count === 1 ? 0.5 : i / (count - 1))),
+        startLabel: formatMonthYear(reflections[0].recorded_at),
+        endLabel: formatMonthYear(reflections[reflections.length - 1].recorded_at),
+        summary:
+        "More notes will appear once these sessions are analyzed.",
     },
   ];
 }

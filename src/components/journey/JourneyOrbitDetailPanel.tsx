@@ -90,7 +90,7 @@ function OrbitMiniConstellation({
         className="text-[0.9375rem] leading-relaxed"
         style={{ color: "var(--foreground-muted)" }}
       >
-        Individual reflections from this Orbit could not be loaded.
+        Individual sessions from this Orbit could not be loaded.
       </p>
     );
   }
@@ -101,7 +101,7 @@ function OrbitMiniConstellation({
         const accent = planetAccent(response.planet);
         const selected = selectedId === response.sessionId;
         const seq = response.orbitSequenceNumber ?? index + 1;
-        const label = `${response.planetLabel}, reflection ${seq} of ${responses.length}: ${response.prompt.slice(0, 80)}`;
+        const label = `${response.planetLabel}, session ${seq} of ${responses.length}: ${response.prompt.slice(0, 80)}`;
 
         return (
           <li
@@ -215,14 +215,14 @@ function SummativeBlock({
   const showPending = localStatus === "pending" || pending;
 
   return (
-    <PanelSection title="What came into focus">
+    <PanelSection title="Orbit summary">
       {showPending ? (
         <p
           className="text-[0.9375rem] leading-relaxed"
           style={{ color: "var(--foreground-muted)" }}
           aria-live="polite"
         >
-          Halo is still gathering your Orbit reflection…
+          Still building your Orbit summary…
         </p>
       ) : null}
 
@@ -235,7 +235,7 @@ function SummativeBlock({
             role="alert"
           >
             {localFailure ||
-              "The final Orbit reflection isn’t available yet. You can try again."}
+              "The Orbit summary isn’t available yet. You can try again."}
           </p>
           <button
             type="button"
@@ -451,7 +451,7 @@ export function JourneyOrbitDetailPanel({
                   </div>
                 ) : null}
 
-                <PanelSection title="Six reflections">
+                <PanelSection title="Six sessions">
                   <OrbitMiniConstellation
                     responses={responses}
                     selectedId={null}

@@ -26,7 +26,7 @@ export function MyVoiceIntroCue() {
           color: "var(--foreground)",
         }}
       >
-        Your Voice is starting to take shape.
+        My Voice is ready.
       </span>
     </div>
   );

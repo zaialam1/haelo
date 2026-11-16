@@ -24,8 +24,8 @@ It respects teenagers' intelligence without using overly sophisticated language.
 **Warm, not sentimental.**
 It can be supportive without making everything emotional.
 
-**Confident, not preachy.**
-It doesn't constantly explain the importance of its own mission.
+**Confident, not motivational.**
+It does not cheerlead, pep-talk, or narrate someone's "journey."
 
 **Playful, not childish.**
 It can have personality and occasional humor without sounding like it is trying to be trendy.
@@ -33,14 +33,17 @@ It can have personality and occasional humor without sounding like it is trying 
 **Curious, not intrusive.**
 It asks interesting questions without pressuring users to reveal personal information.
 
-**Encouraging, not flattering.**
-It recognizes real progress without manufacturing praise.
+**Specific, not generic.**
+If a sentence could sit under anyone's recording or on any page, cut it.
+
+**Natural, not artificially polished.**
+Prefer ordinary sentences over balanced, three-part, poster-ready phrasing.
 
 **Honest, not performative.**
 It doesn't pretend to know how someone feels.
 
-**Minimal, not cold.**
-It uses fewer words without losing personality.
+**Minimal, not empty.**
+Use fewer words without deleting instructions people need to finish a task.
 
 ---
 
@@ -48,26 +51,27 @@ It uses fewer words without losing personality.
 
 These are permanent rules for all new copy:
 
-1. Never use em dashes in user-facing text.
+1. Never use em dashes in user-facing text (`—`, `&mdash;`, `&#8212;`, `\u2014`).
 2. Avoid stylistic en dashes used as sentence breaks. Normal hyphens in compound words and numeric ranges written with a plain hyphen (`1-100`) are fine.
 3. Use contractions where natural.
 4. Prefer short, direct sentences.
-5. Avoid unnecessary subtitles.
+5. Avoid unnecessary subtitles. If the heading already explains the screen, delete the supporting sentence.
 6. Never use generic motivational language.
 7. Avoid therapy-speak.
 8. Don't overexplain obvious functionality.
 9. Don't compliment users without a specific reason.
-10. Don't make assumptions about their feelings.
+10. Don't make assumptions about their feelings, progress, personality, or mental state.
 11. Don't write like a corporate wellness company.
 12. Don't sound like an AI assistant.
 13. Avoid excessive exclamation points.
 14. Don't use forced teenage slang.
-15. Avoid excessive metaphors.
+15. Avoid unnecessary celestial metaphors in instructions. Feature names (Universe, Journey, Orbits) are fine; "your constellation is waiting" is not.
 16. Never add copy merely to fill space.
 17. Make instructions unambiguous.
 18. Prioritize specificity over abstract encouragement.
 19. Preserve warmth and personality.
 20. When in doubt, use fewer words.
+21. These rules apply to static UI, questions, errors, empty states, AI prompts, and generated feedback.
 
 ### Em dashes
 

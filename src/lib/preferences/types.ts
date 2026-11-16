@@ -67,12 +67,12 @@ export const NOTIFICATION_CATEGORY_LABELS: Record<
   { title: string; description: string }
 > = {
   weekly_encouragement: {
-    title: "Weekly encouragement",
-    description: "Gentle nudges about your weekly constellation.",
+    title: "Weekly goal updates",
+    description: "Updates about your weekly session goal.",
   },
   orbit_reminders: {
     title: "Unfinished Orbit reminders",
-    description: "A quiet reminder when a recommended Orbit is waiting.",
+    description: "A reminder when a recommended Orbit is waiting.",
   },
   orbit_recommendations: {
     title: "Orbit recommendations",
@@ -80,8 +80,8 @@ export const NOTIFICATION_CATEGORY_LABELS: Record<
       "When someone you're connected with recommends an Orbit. Muted recommendations still appear on your Orbits page.",
   },
   milestones_discoveries: {
-    title: "Milestones & discoveries",
-    description: "Celestial discoveries and milestone moments.",
+    title: "Milestones & decorations",
+    description: "New decorations and milestone moments.",
   },
 };
 

@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Stand | Halo",
   description:
-    "Speak up and stand behind what you believe. Practice opinions, boundaries, and asking for what you need.",
+    "Practice opinions, boundaries, and asking for what you need.",
 };
 
 export default async function StandPage() {

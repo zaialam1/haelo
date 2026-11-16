@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Connect | Halo",
   description:
-    "Build confidence communicating with other people. Practice being open, clear, and understood.",
+    "Practice talking with other people: being clear, open, and understood.",
 };
 
 export default async function ConnectPage() {

@@ -38,7 +38,7 @@ export function ExplorePrompt({ topic }: ExplorePromptProps) {
         variant="fade"
         className="planet-explore-cta mt-5 inline-flex items-center gap-2 rounded-full bg-[var(--violet)] px-5 py-3 text-sm font-semibold text-[var(--on-violet)] hover:opacity-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
       >
-        Record a reflection
+        Record a session
         <span aria-hidden="true">→</span>
       </TransitionLink>
     </section>

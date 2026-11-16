@@ -132,8 +132,8 @@ export function ConstellationTimeline({
           role="img"
           aria-label={
             isEmpty
-              ? "Empty reflection constellation. Your first reflection will appear here."
-              : "Reflection timeline constellation"
+              ? "Empty timeline. Finish a session to add a point."
+              : "Session timeline"
           }
         >
           <line
@@ -222,7 +222,7 @@ export function ConstellationTimeline({
                 fontSize="13"
                 opacity="0.9"
               >
-                Your first reflection will appear here
+                Finish a session to add a point
               </text>
             </>
           ) : (
@@ -265,7 +265,7 @@ export function ConstellationTimeline({
                     }}
                     role="button"
                     tabIndex={0}
-                    aria-label={`${n.isDaily ? "Daily prompt reflection" : "Reflection"} from ${new Date(n.recordedAt).toLocaleDateString()}`}
+                    aria-label={`${n.isDaily ? "Daily prompt session" : "Session"} from ${new Date(n.recordedAt).toLocaleDateString()}`}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();

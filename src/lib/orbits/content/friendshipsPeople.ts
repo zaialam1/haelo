@@ -13,14 +13,14 @@ export const FRIENDSHIPS_PEOPLE_ORBITS: readonly OrbitDefinition[] = [
 
 Maybe one weird moment did it. Maybe nothing obvious happened and it still feels different.
 
-Slow it down. Separate what you've noticed from what you're guessing. Then decide if there's anything you want to say.`,
+Separate what you've noticed from what you're guessing. Then decide if there's anything you want to say.`,
     sortOrder: 1,
     questions: [
       {
         planet: "explore",
         prompt: "What has felt different lately?",
         explanation:
-          "Stick to what you've actually noticed before deciding what it means.",
+          "Stick to what you've actually seen before deciding what it means.",
       },
       {
         planet: "explore",
@@ -33,7 +33,7 @@ Slow it down. Separate what you've noticed from what you're guessing. Then decid
         planet: "express",
         prompt: "What's the feeling you keep coming back to about this?",
         explanation:
-          "Getting the feeling out loud can show why the change is sticking with you.",
+          "Saying the feeling out loud can show why the change is sticking with you.",
       },
       {
         planet: "explore",
@@ -67,7 +67,7 @@ Slow it down. Separate what you've noticed from what you're guessing. Then decid
     openingTitle: "Left Out",
     openingBody: `Being left out makes your brain invent a whole story fast.
 
-Before you decide what everyone thinks of you, get clear on what happened, what hurt, and what you actually want next.`,
+Before you decide what everyone thinks of you, look at what happened, what hurt, and what you want next.`,
     sortOrder: 2,
     questions: [
       {
@@ -121,9 +121,7 @@ Before you decide what everyone thinks of you, get clear on what happened, what 
     openingTitle: "I Need to Fix This",
     openingBody: `Sometimes you replay a conversation and know you wish part of it had gone differently.
 
-Fixing it doesn't mean taking the blame for everything.
-
-It means getting clear on your part so you can decide what to do next.`,
+Fixing it doesn't mean taking the blame for everything. It means seeing your part so you can decide what to do next.`,
     sortOrder: 3,
     questions: [
       {
@@ -175,7 +173,7 @@ It means getting clear on your part so you can decide what to do next.`,
 
 Others disappear for a while and then come back looking almost exactly the same.
 
-Look under the latest fight and figure out what keeps repeating.`,
+Look under the latest fight and see what keeps repeating.`,
     sortOrder: 4,
     questions: [
       {
@@ -227,13 +225,9 @@ Look under the latest fight and figure out what keeps repeating.`,
     shortDescription: "A friendship is changing or becoming less close.",
     situation: "A friendship is changing or becoming less close.",
     openingTitle: "Growing Apart",
-    openingBody: `Not every friendship ends because someone did something wrong.
+    openingBody: `Not every friendship ends because someone did something wrong. Sometimes two people just start changing. That can still hurt.
 
-Sometimes two people just start changing.
-
-That can still hurt.
-
-Figure out what the friendship has meant, what's different now, and what you want to do with that.`,
+Say what the friendship has meant, what's different now, and what you want to do with that.`,
     sortOrder: 5,
     questions: [
       {
@@ -289,7 +283,7 @@ Figure out what the friendship has meant, what's different now, and what you wan
 
 Two people getting closer doesn't automatically mean you're being rejected. Feeling pushed aside still counts.
 
-Get clear on what's actually happening and what you need.`,
+Look at what's actually happening and what you need.`,
     sortOrder: 6,
     questions: [
       {
@@ -330,7 +324,7 @@ Get clear on what's actually happening and what you need.`,
         prompt:
           "What other friendships do you want to put energy into too?",
         explanation:
-          "Your sense of belonging doesn't have to hang on one trio.",
+          "You don't have to hang your whole social life on one trio.",
       },
     ],
   }),
@@ -342,11 +336,9 @@ Get clear on what's actually happening and what you need.`,
     shortDescription: "Someone you care about hurt you, and you're still figuring out what that means.",
     situation: "Someone you care about hurt you, and you're still figuring out what that means.",
     openingTitle: "They Hurt Me, But I Still Care",
-    openingBody: `You can be angry with someone and still care about them.
+    openingBody: `You can be angry with someone and still care about them. You can miss someone and still know they crossed a line.
 
-You can miss someone and still know they crossed a line.
-
-Both can be true at the same time.`,
+That doesn't make the next step obvious.`,
     sortOrder: 7,
     questions: [
       {
@@ -400,7 +392,7 @@ Both can be true at the same time.`,
 
 Figuring out how a new friendship actually becomes a real one can feel less obvious.
 
-Notice what you like about the connection and how you might keep building it without forcing it.`,
+Say what you like about the connection and how you might keep building it without forcing it.`,
     sortOrder: 8,
     questions: [
       {
@@ -453,7 +445,7 @@ Notice what you like about the connection and how you might keep building it wit
     openingTitle: "Friend Group Drama",
     openingBody: `When a whole group gets involved, it gets hard to tell what you actually think from what everyone else is saying.
 
-Step outside the noise and figure out your own position.`,
+Step outside the noise and find your own position.`,
     sortOrder: 9,
     questions: [
       {
@@ -473,7 +465,7 @@ Step outside the noise and figure out your own position.`,
         planet: "express",
         prompt: "How is being caught in this affecting you?",
         explanation:
-          "It's fair to notice what this is doing to you too.",
+          "It's fair to say what this is doing to you too.",
       },
       {
         planet: "stand",
@@ -504,16 +496,16 @@ Step outside the noise and figure out your own position.`,
     shortDescription: "You act differently around them, and it doesn't feel like you.",
     situation: "You act differently around them, and it doesn't feel like you.",
     openingTitle: "I Don't Feel Like Myself Around Them",
-    openingBody: `Sometimes you can like people and still notice you become a different version of yourself around them.
+    openingBody: `Sometimes you can like people and still become a different version of yourself around them.
 
-Notice what you're changing, and whether that change actually feels okay to you.`,
+Look at what you're changing, and whether that change actually feels okay to you.`,
     sortOrder: 10,
     questions: [
       {
         planet: "explore",
         prompt:
           "What feels different about you when you're around these people?",
-        explanation: "Notice the change before deciding what it means.",
+        explanation: "Name the change before deciding what it means.",
       },
       {
         planet: "express",
@@ -526,7 +518,7 @@ Notice what you're changing, and whether that change actually feels okay to you.
         prompt:
           "What are you worried would happen if you acted more like yourself?",
         explanation:
-          "The fear underneath the performance may matter more than the performance.",
+          "The worry underneath may matter more than the performance.",
       },
       {
         planet: "stand",

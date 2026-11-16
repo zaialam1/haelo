@@ -24,7 +24,7 @@ const CATALOG_BY_ID: Record<string, Omit<TopicCatalogEntry, "id" | "label" | "co
   friendships: {
     tagline: "Talking about friends",
     subtopics: subs([
-      ["belonging", "Belonging", soft.rose],
+      ["belonging", "Fitting in", soft.rose],
       ["conflict", "Conflict", soft.violetMid],
       ["humor", "Humor", soft.gold],
       ["trust", "Trust", soft.mauve],
@@ -78,7 +78,7 @@ const CATALOG_BY_ID: Record<string, Omit<TopicCatalogEntry, "id" | "label" | "co
       ["pressure", "Pressure", soft.violet],
       ["friendship", "Friendship", soft.rose],
       ["curiosity", "Curiosity", soft.gold],
-      ["belonging", "Belonging", soft.mauve],
+      ["belonging", "Fitting in", soft.mauve],
       ["confidence", "Confidence", soft.goldSoft],
       ["setbacks", "Setbacks", soft.violetMid],
     ]),
@@ -97,7 +97,7 @@ const CATALOG_BY_ID: Record<string, Omit<TopicCatalogEntry, "id" | "label" | "co
       ["discipline", "Discipline", soft.violet],
       ["setbacks", "Setbacks", soft.violetMid],
       ["pride", "Pride", soft.goldSoft],
-      ["belonging", "Belonging", soft.mauve],
+      ["belonging", "Team fit", soft.mauve],
     ]),
     explorePrompt: "What does competing teach you about yourself?",
     insightPlaceholders: [
@@ -164,7 +164,7 @@ const CATALOG_BY_ID: Record<string, Omit<TopicCatalogEntry, "id" | "label" | "co
       ["doubt", "Doubt", soft.violetSoft],
       ["speaking-up", "Speaking up", soft.violet],
       ["comparison", "Comparison", soft.mauve],
-      ["courage", "Courage", soft.goldSoft],
+      ["courage", "Trying anyway", soft.goldSoft],
       ["presence", "Presence", soft.rose],
     ]),
     explorePrompt: "When do you feel most like yourself when you speak?",

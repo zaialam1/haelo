@@ -10,7 +10,7 @@ export function OrbitProgressConstellation({
 }: {
   current: number;
   total?: number;
-  /** How many reflections are fully completed (canonical). */
+  /** How many questions are fully completed (canonical). */
   completedCount?: number;
 }) {
   const safeCurrent = Math.min(total, Math.max(1, current));
@@ -24,7 +24,7 @@ export function OrbitProgressConstellation({
         className="text-[0.8125rem] font-medium"
         style={{ color: "var(--foreground)" }}
       >
-        Reflection {safeCurrent} of {total}
+        Question {safeCurrent} of {total}
       </p>
       <ol
         className="mt-3 flex flex-wrap items-center gap-1.5 sm:gap-2"

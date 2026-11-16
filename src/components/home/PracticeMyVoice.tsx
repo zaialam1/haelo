@@ -33,7 +33,7 @@ export function PracticeMyVoice({ nested = false }: PracticeMyVoiceProps) {
         <path d="M12 18v4" />
         <path d="M8 22h8" />
       </svg>
-      Practice My Voice
+      Practice
     </TransitionLink>
   );
 

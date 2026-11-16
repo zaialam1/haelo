@@ -21,7 +21,7 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
 
   return (
     <UniverseEmptyPage
-      title="Practice My Voice"
+      title="Practice"
       description="Pick Express, Stand, Connect, or Explore, then start a session."
     />
   );

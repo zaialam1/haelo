@@ -28,8 +28,8 @@ export function WeeklyConstellationGoal({
   const complete = Boolean(progress?.completedAt) || count >= goal;
 
   const label = complete
-    ? "Weekly constellation complete"
-    : `Weekly voice goal: ${count} of ${goal} moments`;
+    ? "Weekly goal complete"
+    : `Weekly goal: ${count} of ${goal} sessions`;
 
   return (
     <div
@@ -120,10 +120,10 @@ export function WeeklyConstellationGoal({
           style={{ color: "var(--foreground-muted)" }}
         >
           {complete
-            ? "Your weekly constellation is complete."
+            ? "Weekly goal complete."
             : count === 0
-              ? "Three voice moments this week."
-              : `${goal - count} more to complete the constellation.`}
+              ? "Three sessions this week."
+              : `${goal - count} more to finish this week's goal.`}
         </p>
       ) : null}
     </div>

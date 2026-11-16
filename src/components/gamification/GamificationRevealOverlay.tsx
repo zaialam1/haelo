@@ -134,10 +134,10 @@ function eyebrowFor(type: GamificationReveal["revealType"]): string {
     case "planet_evolution":
       return "Planet evolution";
     case "weekly_goal_complete":
-      return "Weekly constellation";
+      return "Weekly goal";
     case "celestial_discovery":
     case "orbit_reward":
-      return "Celestial discovery";
+      return "New decoration";
     case "milestone":
       return "Milestone";
     case "experiment_ack":
