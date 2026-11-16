@@ -141,7 +141,7 @@ export function HomeSideStats() {
           type="button"
           onClick={() => setStreakOpen(true)}
           className="flex w-full flex-col items-center gap-1 rounded-2xl py-1 transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
-          aria-label={`${streakDays}-day streak — view details`}
+          aria-label={`${streakDays}-day streak. View details`}
         >
           <span
             className="flex size-9 items-center justify-center rounded-full sm:size-10"
@@ -195,7 +195,7 @@ export function HomeSideStats() {
           className="mt-2 flex w-full flex-col items-center gap-1 rounded-2xl py-1 transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           aria-label={
             dailyCompleted
-              ? "Daily question completed — view details"
+              ? "Daily question completed. View details"
               : "Open today’s daily question"
           }
         >
@@ -325,7 +325,7 @@ export function HomeSideStats() {
                 className="mt-1 text-xl font-semibold"
                 style={{ color: "var(--foreground)" }}
               >
-                {stats?.topPlanetLabel ?? "—"}
+                {stats?.topPlanetLabel ?? "None yet"}
               </p>
               <p
                 className="mt-1 text-sm"

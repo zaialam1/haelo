@@ -37,14 +37,14 @@ function mapClaimError(
       return {
         ok: false,
         error: "unauthenticated",
-        message: "You need to be signed in.",
+        message: "Log in to continue.",
       };
     case "invalid":
       return {
         ok: false,
         error: "invalid",
         message:
-          "Use 3–20 letters, numbers, or underscores. Don’t start or end with an underscore.",
+          "Use 3 to 20 letters, numbers, or underscores. Don’t start or end with an underscore.",
       };
     case "reserved":
       return {

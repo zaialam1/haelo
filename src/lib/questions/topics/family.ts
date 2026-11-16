@@ -40,7 +40,7 @@ export const FAMILY_QUESTIONS: BankQuestion[] = [
   { id: "family-037", topicId: "family", text: "Talk about privacy and sharing at home." },
   { id: "family-038", topicId: "family", text: "When do you ask family for help?" },
   { id: "family-039", topicId: "family", text: "Describe a road trip or outing with family." },
-  { id: "family-040", topicId: "family", text: "What makes home feel chaotic—and how do you cope?" },
+  { id: "family-040", topicId: "family", text: "When home feels chaotic, how do you cope?" },
   { id: "family-041", topicId: "family", text: "Talk about a compliment from a parent or guardian that stuck." },
   { id: "family-042", topicId: "family", text: "How do you talk about school or work at home?" },
   { id: "family-043", topicId: "family", text: "Describe inventing a new small tradition." },

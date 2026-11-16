@@ -1,0 +1,27 @@
+---
+description: Halo brand voice for all user-facing copy, questions, and AI prompts
+globs: src/app/**/*.{ts,tsx},src/components/**/*.{ts,tsx},src/lib/**/*.{ts,tsx},docs/HAELO_BRAND_VOICE.md
+alwaysApply: false
+---
+
+# Halo brand voice
+
+Authoritative guide: `docs/HAELO_BRAND_VOICE.md`
+
+Runtime AI rules: `src/lib/ai/brandVoice.ts` (use `withBrandVoice(...)` for every system prompt that produces user-readable text)
+
+## When editing copy
+
+- Follow `docs/HAELO_BRAND_VOICE.md` for every new or revised user-facing string.
+- Never use em dashes (`—`) in user-facing copy. Avoid stylistic en dashes as sentence breaks. Rewrite; do not comma-swap.
+- Prefer fewer words. Delete unnecessary subtitles and filler explanations.
+- Sound like a thoughtful human writing for smart teens (13–18): natural, clear, understated, occasionally playful. Not ChatGPT, not therapy, not corporate wellness, not motivational poster.
+- Questions should feel interesting to answer out loud, not like worksheets.
+- Feedback and AI prompts must stay specific, observational, and honest. No generic praise, no assumed emotions, no growth-journey language.
+- Preserve accessibility labels, safety/consent messaging, and instructions required to complete a task.
+- Do not change functionality, scoring, navigation, or design system while editing copy.
+- After substantive copy edits, run `npm run check:copy`.
+
+## AI generation
+
+Any new model prompt that writes text users will read must go through `withBrandVoice` from `@/lib/ai/brandVoice`. Do not paste a second full style guide into each prompt file. Keep `BRAND_VOICE_PROMPT` aligned with the Markdown guide.

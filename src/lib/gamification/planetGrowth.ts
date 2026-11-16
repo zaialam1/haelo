@@ -59,11 +59,11 @@ export function planetEvolutionTeaser(
   if (remaining == null) {
     hint = null;
   } else if (remaining === 0) {
-    hint = "Your planet is ready to change";
+    hint = "This planet is ready to change";
   } else if (remaining <= PLANET_EVOLUTION_CLOSE_REMAINING) {
-    hint = "Your planet is close to changing";
+    hint = "This planet is close to changing";
   } else {
-    hint = `${remaining} reflections until something changes`;
+    hint = `${remaining} more sessions until something changes`;
   }
 
   return {

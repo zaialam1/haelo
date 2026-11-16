@@ -4,7 +4,7 @@ import { UniverseEmptyPage } from "@/components/placeholders/UniverseEmptyPage";
 import { isPlanet } from "@/lib/prompts";
 
 export const metadata: Metadata = {
-  title: "Practice — Halo",
+  title: "Practice | Halo",
   description: "Choose a planet and start a guided voice session.",
 };
 
@@ -22,7 +22,7 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
   return (
     <UniverseEmptyPage
       title="Practice My Voice"
-      description="Choose a planet to practice — Express, Stand, Connect, or Explore — and start a guided voice session."
+      description="Pick Express, Stand, Connect, or Explore, then start a session."
     />
   );
 }

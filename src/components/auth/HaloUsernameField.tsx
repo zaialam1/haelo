@@ -29,7 +29,7 @@ export function HaloUsernameField({
   onChange,
   disabled,
   onAvailabilityChange,
-  hint = "This is how people you choose to connect with can find you.",
+  hint = "People use this to find you and ask to connect.",
 }: Props) {
   const inputId = useId();
   const statusId = useId();
@@ -158,7 +158,7 @@ export function HaloUsernameField({
         {statusMessage ??
           (normalized
             ? formatUsernameDisplay(normalized)
-            : "Letters, numbers, and underscores · 3–20 characters")}
+            : "3 to 20 letters, numbers, or underscores")}
       </p>
     </div>
   );

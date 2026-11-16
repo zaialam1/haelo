@@ -157,8 +157,8 @@ export function DecorateClient({ initialState }: DecorateClientProps) {
             className="mt-3 max-w-xl text-[1.0625rem] leading-relaxed"
             style={{ color: "var(--foreground-muted)" }}
           >
-            Tap a spot on the planet, then add as many decorations as you want
-            there — no limit.
+            Tap a spot on the planet, then add as many decorations as you want.
+            No limit.
           </p>
         </div>
         <StardustChip balance={state.balance} />
@@ -340,7 +340,7 @@ export function DecorateClient({ initialState }: DecorateClientProps) {
               className="mt-1 text-sm"
               style={{ color: "var(--foreground-muted)" }}
             >
-              Tap an item to place another copy here — as many as you want.
+              Tap an item to place another copy here. As many as you want.
             </p>
 
             {onActiveSlot.length > 0 ? (

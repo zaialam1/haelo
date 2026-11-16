@@ -292,7 +292,7 @@ export function SettingsClient({
                   Name
                 </dt>
                 <dd className="mt-1 text-[1.0625rem] font-medium">
-                  {account.firstName || "—"}
+                  {account.firstName || "Not set"}
                 </dd>
               </div>
               <div>
@@ -305,7 +305,7 @@ export function SettingsClient({
                 <dd className="mt-1 text-[1.0625rem] font-medium">
                   {account.username
                     ? formatUsernameDisplay(account.username)
-                    : "—"}
+                    : "Not set"}
                 </dd>
               </div>
               <div>
@@ -380,7 +380,7 @@ export function SettingsClient({
               className="text-sm leading-relaxed"
               style={{ color: "var(--foreground-muted)" }}
             >
-              You&rsquo;re not signed in.{" "}
+              You&rsquo;re not logged in.{" "}
               <Link
                 href="/login"
                 className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline"
@@ -531,8 +531,8 @@ export function SettingsClient({
                 className="mt-3 text-sm leading-relaxed"
                 style={{ color: "var(--foreground-muted)" }}
               >
-                Journey scores are communication observations — how your voice
-                moved in a moment — not personality judgments or grades.
+                Journey scores are communication observations for that recording,
+                not personality judgments or grades.
               </p>
             </SettingsSection>
 
@@ -690,9 +690,8 @@ export function SettingsClient({
                 className="text-sm leading-relaxed"
                 style={{ color: "var(--foreground-muted)" }}
               >
-                Halo is a private space to practice your voice. Record short
-                reflections, see how they land, watch your Universe grow, and
-                use Orbits when something specific is on your mind.
+                Record short answers, get specific feedback, and use Orbits when
+                something concrete is going on. Your sessions stay private.
               </p>
               <button
                 type="button"
@@ -719,7 +718,7 @@ export function SettingsClient({
                   className="mt-4 text-sm font-medium"
                   style={{ color: "var(--violet)" }}
                 >
-                  Thank you — your feedback was sent.
+                  Feedback sent. Thanks.
                 </p>
               ) : (
                 <>

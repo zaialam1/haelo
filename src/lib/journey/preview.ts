@@ -102,7 +102,7 @@ export const JOURNEY_PREVIEW_SESSIONS: JourneySession[] = [
     voiceNotes: ["Clearer stance on the second try"],
     themeLabel: null,
     changeObservation:
-      "Your second take felt steadier — less hedging, more ownership.",
+      "Your second take felt steadier. Less hedging, more ownership.",
     isMilestone: false,
   },
   {
@@ -122,7 +122,7 @@ export const JOURNEY_PREVIEW_SESSIONS: JourneySession[] = [
         recordedAt: isoDaysAgo(3),
         audioUrl: null,
         transcript:
-          "I check in with small messages. Not big speeches — just noticing when someone's quiet and asking if they're okay.",
+          "I check in with small messages. Not big speeches. Just noticing when someone's quiet and asking if they're okay.",
         durationSeconds: 39,
       },
     ],

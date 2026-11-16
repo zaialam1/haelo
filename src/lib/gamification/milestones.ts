@@ -107,8 +107,8 @@ export function evaluateMilestones(ctx: MilestoneContext): MilestoneCandidate[] 
   if (total >= 1) {
     tryPush(out, have, {
       milestoneKey: "first_session",
-      title: "Something shifted",
-      body: "You recorded your first reflection. Your Universe has begun.",
+      title: "First session",
+      body: "You recorded your first answer.",
       category: "exploration",
     });
   }
@@ -121,8 +121,8 @@ export function evaluateMilestones(ctx: MilestoneContext): MilestoneCandidate[] 
   ) {
     tryPush(out, have, {
       milestoneKey: "first_all_planets",
-      title: "Something shifted",
-      body: "You’ve spoken across Connect, Stand, Explore, and Express.",
+      title: "All four planets",
+      body: "You've practiced on Connect, Stand, Explore, and Express.",
       category: "exploration",
     });
   }
@@ -130,8 +130,8 @@ export function evaluateMilestones(ctx: MilestoneContext): MilestoneCandidate[] 
   if (ctx.completedOrbitCount >= 1) {
     tryPush(out, have, {
       milestoneKey: "first_orbit",
-      title: "Something shifted",
-      body: "You completed your first Orbit — a fuller arc of practice.",
+      title: "First Orbit",
+      body: "You finished your first Orbit.",
       category: "exploration",
     });
   }
@@ -139,8 +139,8 @@ export function evaluateMilestones(ctx: MilestoneContext): MilestoneCandidate[] 
   for (const region of ctx.completedRegions) {
     tryPush(out, have, {
       milestoneKey: `first_orbit_region:${region}`,
-      title: "Something shifted",
-      body: "You finished an Orbit in a new region of your practice.",
+      title: "New Orbit region",
+      body: "You finished an Orbit in a new region.",
       category: "exploration",
       sourceMetadata: { region },
     });
@@ -149,8 +149,8 @@ export function evaluateMilestones(ctx: MilestoneContext): MilestoneCandidate[] 
   if (total >= 25) {
     tryPush(out, have, {
       milestoneKey: "reflections_25",
-      title: "Something shifted",
-      body: "Twenty-five reflections — a steady body of practice is forming.",
+      title: "25 sessions",
+      body: "Twenty-five sessions on the board.",
       category: "exploration",
     });
   }
@@ -158,8 +158,8 @@ export function evaluateMilestones(ctx: MilestoneContext): MilestoneCandidate[] 
   if (total >= 50) {
     tryPush(out, have, {
       milestoneKey: "reflections_50",
-      title: "Something shifted",
-      body: "Fifty reflections. Your voice history is becoming a landscape.",
+      title: "50 sessions",
+      body: "Fifty sessions. That's a real history to look back on.",
       category: "exploration",
     });
   }
@@ -167,8 +167,8 @@ export function evaluateMilestones(ctx: MilestoneContext): MilestoneCandidate[] 
   if (ctx.experimentCount >= 1) {
     tryPush(out, have, {
       milestoneKey: "first_experiment",
-      title: "Something shifted",
-      body: "You tested a new way of saying it.",
+      title: "First experiment",
+      body: "You tried a new way of saying it.",
       category: "behavior",
     });
   }
@@ -176,8 +176,8 @@ export function evaluateMilestones(ctx: MilestoneContext): MilestoneCandidate[] 
   if (ctx.experimentCount >= 5) {
     tryPush(out, have, {
       milestoneKey: "experiments_5",
-      title: "Something shifted",
-      body: "You’ve tried five experiments — curiosity is becoming a habit.",
+      title: "Five experiments",
+      body: "You've tried five experiments.",
       category: "behavior",
     });
   }
@@ -185,8 +185,8 @@ export function evaluateMilestones(ctx: MilestoneContext): MilestoneCandidate[] 
   if (ctx.weeklyGoalsCompletedAllTime >= 3) {
     tryPush(out, have, {
       milestoneKey: "weekly_goal_x3",
-      title: "Something shifted",
-      body: "Your weekly constellation has completed three times.",
+      title: "Weekly goal x3",
+      body: "You've hit your weekly constellation three times.",
       category: "behavior",
     });
   }
@@ -195,33 +195,38 @@ export function evaluateMilestones(ctx: MilestoneContext): MilestoneCandidate[] 
   const skillChecks: Array<{
     metric: JourneyMetricKey;
     key: string;
+    title: string;
     body: (planet?: VoicePlanetId) => string;
   }> = [
     {
       metric: "directness",
       key: "skill_directness_range",
+      title: "More direct",
       body: (planet) =>
         planet === "stand"
-          ? "Your recent Stand reflections are becoming more direct."
-          : "A new range of Directness is showing up in your Journey.",
+          ? "Your recent Stand sessions get to the point sooner."
+          : "Your recent sessions are stating the point more clearly.",
     },
     {
       metric: "listener_clarity",
       key: "skill_listener_clarity_range",
+      title: "Easier to follow",
       body: () =>
-        "Your recent Connect reflections have been landing in a stronger Listener Clarity range.",
+        "Your recent Connect sessions would be easier for someone else to follow.",
     },
     {
       metric: "expressiveness",
       key: "skill_expressiveness_range",
+      title: "More specific",
       body: () =>
-        "A fuller Expressiveness range is beginning to show in your Journey.",
+        "Your recent Express sessions use more concrete detail.",
     },
     {
       metric: "thought_clarity",
       key: "skill_thought_clarity_range",
+      title: "Clearer thinking out loud",
       body: () =>
-        "Your Thought Clarity is becoming more consistent across recent Explore reflections.",
+        "Your recent Explore sessions spell out what you're figuring out more clearly.",
     },
   ];
 
@@ -230,7 +235,7 @@ export function evaluateMilestones(ctx: MilestoneContext): MilestoneCandidate[] 
     if (!result.shifted) continue;
     tryPush(out, have, {
       milestoneKey: check.key,
-      title: "Something shifted",
+      title: check.title,
       body: check.body(result.planetHint),
       category: "skill",
       sourceMetadata: {

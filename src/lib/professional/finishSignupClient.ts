@@ -90,7 +90,7 @@ export async function finishProfessionalSignupClient(
             ? "Choose a valid Halo name."
             : code === "unauthenticated"
               ? "You’re signed up, but we couldn’t confirm your session. Try Professional login."
-              : "Couldn’t finish professional signup. Try Professional login to complete setup.";
+              : "Couldn’t finish professional signup. Try Professional login to finish setting up.";
     return { ok: false, message, code };
   }
 

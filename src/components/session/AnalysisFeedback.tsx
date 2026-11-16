@@ -56,7 +56,7 @@ export function AnalysisFeedback({
         style={{ color: "var(--foreground-muted)" }}
         role="status"
       >
-        Thanks — that helps Halo improve.
+        Thanks. That helps.
       </p>
     );
   }
@@ -67,7 +67,7 @@ export function AnalysisFeedback({
         className="text-[0.8125rem] font-semibold"
         style={{ color: "var(--foreground)" }}
       >
-        Was this useful?
+        Was this feedback useful?
       </p>
       <div className="mt-2 flex gap-2">
         <button
@@ -112,7 +112,7 @@ export function AnalysisFeedback({
             className="text-[0.75rem]"
             style={{ color: "var(--foreground-muted)" }}
           >
-            What felt off? (optional)
+            What was off? (optional)
           </p>
           <div className="flex flex-wrap gap-1.5">
             {ANALYSIS_FEEDBACK_REASONS.map((r) => (

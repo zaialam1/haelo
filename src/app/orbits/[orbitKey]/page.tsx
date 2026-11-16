@@ -23,7 +23,7 @@ export async function generateMetadata({
   const { orbitKey } = await params;
   const orbit = getOrbitByKey(orbitKey);
   return {
-    title: orbit ? `${orbit.title} — Orbits — Halo` : "Orbit — Halo",
+    title: orbit ? `${orbit.title} | Orbits | Halo` : "Orbit | Halo",
     description: orbit?.shortDescription,
   };
 }

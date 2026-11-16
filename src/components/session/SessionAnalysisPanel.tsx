@@ -60,7 +60,7 @@ export function SessionAnalysisPanel({
         style={{ color: "var(--foreground-muted)" }}
         aria-live="polite"
       >
-        Halo is looking at your response…
+        Working on your feedback…
       </p>
     );
   }
@@ -72,8 +72,8 @@ export function SessionAnalysisPanel({
           className="text-[0.9375rem] leading-relaxed"
           style={{ color: "var(--foreground-muted)" }}
         >
-          Analysis isn’t available for this session yet. Your recording is still
-          saved — you can keep practicing normally.
+          Feedback isn’t available for this session yet. Your recording is
+          saved.
         </p>
         {failureMessage ? (
           <p
@@ -94,7 +94,7 @@ export function SessionAnalysisPanel({
               color: "var(--on-violet)",
             }}
           >
-            {retrying ? "Trying again…" : "Try analysis again"}
+            {retrying ? "Trying again…" : "Try again"}
           </button>
         ) : null}
       </div>
@@ -114,7 +114,7 @@ export function SessionAnalysisPanel({
         className="text-[0.9375rem] leading-relaxed"
         style={{ color: "var(--foreground-muted)" }}
       >
-        Analysis isn’t available for this session yet.
+        Feedback isn’t available for this session yet.
       </p>
     );
   }

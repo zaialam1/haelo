@@ -66,15 +66,15 @@ export function ForgotPasswordForm() {
             Check your email
           </h1>
           <p className="mt-2 text-sm text-[var(--foreground-muted)]">
-            If an account exists for that address, we sent a link to reset your
-            password.
+            If there&rsquo;s an account with that email, we sent it a reset
+            link.
           </p>
         </div>
         <Link
           href="/login"
           className="inline-flex w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)] shadow-[0_10px_28px_color-mix(in_srgb,var(--violet)_30%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
-          Back to Log In
+          Back to log in
         </Link>
       </div>
     );
@@ -126,7 +126,7 @@ export function ForgotPasswordForm() {
           inputMode="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@email.com"
+          placeholder="you@example.com"
           aria-invalid={Boolean(errors.email)}
           className={inputClassName(Boolean(errors.email))}
           disabled={submitting}

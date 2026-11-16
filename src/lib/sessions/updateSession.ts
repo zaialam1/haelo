@@ -11,7 +11,7 @@ async function requireUser() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    throw new Error("Sign in to update your session.");
+    throw new Error("Log in to update your session.");
   }
   return { supabase, user };
 }

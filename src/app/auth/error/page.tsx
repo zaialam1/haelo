@@ -3,8 +3,8 @@ import Link from "next/link";
 import { AuthShell } from "@/components/auth/AuthShell";
 
 export const metadata: Metadata = {
-  title: "Auth error — Halo",
-  description: "Something went wrong with that email link.",
+  title: "Link didn't work | Halo",
+  description: "That email link didn't work.",
 };
 
 export default async function AuthErrorPage({
@@ -19,18 +19,8 @@ export default async function AuthErrorPage({
     <AuthShell
       brand={
         <>
-          <p
-            className="inline-flex rounded-full px-3 py-1 text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
-            style={{
-              color: "var(--violet)",
-              backgroundColor:
-                "color-mix(in srgb, var(--gold) 45%, var(--rose) 25%, var(--background))",
-            }}
-          >
-            Link issue
-          </p>
           <h2
-            className="mt-5 font-[family-name:var(--font-fraunces)] text-[2.15rem] leading-tight text-[var(--violet)] sm:text-[2.6rem]"
+            className="font-[family-name:var(--font-fraunces)] text-[2.15rem] leading-tight text-[var(--violet)] sm:text-[2.6rem]"
             style={{
               fontVariationSettings: '"opsz" 84, "SOFT" 55, "WONK" 1, "wght" 550',
               letterSpacing: "-0.02em",
@@ -38,14 +28,6 @@ export default async function AuthErrorPage({
           >
             That link didn&rsquo;t work.
           </h2>
-          <p
-            className="mt-4 max-w-md text-[1.0625rem] leading-relaxed"
-            style={{ color: "var(--foreground)" }}
-          >
-            {isRecovery
-              ? "Password reset links only work once, and they work best in the same browser where you requested the reset."
-              : "Confirmation links only work once, and they work best in the same browser where you signed up."}
-          </p>
         </>
       }
     >
@@ -62,14 +44,14 @@ export default async function AuthErrorPage({
         <p className="text-sm leading-relaxed text-[var(--foreground-muted)]">
           {isRecovery ? (
             <>
-              Request a fresh reset email, then open the link in this browser.
-              If you&rsquo;re already signed in, you can also change your
-              password from Settings.
+              Reset links only work once. Request a new one and open it in
+              this browser. If you&rsquo;re already logged in, you can change
+              your password in Settings.
             </>
           ) : (
             <>
-              Request a new confirmation email from sign up, or try logging in
-              if you already confirmed.
+              Confirmation links only work once. Sign up again to get a new
+              one, or log in if you&rsquo;ve already confirmed.
             </>
           )}
         </p>
@@ -77,7 +59,7 @@ export default async function AuthErrorPage({
           href={isRecovery ? "/forgot-password" : "/signup"}
           className="inline-flex w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)] shadow-[0_10px_28px_color-mix(in_srgb,var(--violet)_30%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
-          {isRecovery ? "Request a new reset link" : "Back to Sign up"}
+          {isRecovery ? "Request a new reset link" : "Back to sign up"}
         </Link>
         <p className="text-center text-sm text-[var(--foreground)]">
           {isRecovery ? (

@@ -147,15 +147,15 @@ export function SessionReviewClient({
 
       if (!res.ok) {
         setAnalysisFailure(
-          body?.error || "Could not restart analysis. Check the server log.",
+          body?.error || "Couldn’t get your feedback. Try again in a minute.",
         );
       } else if (body?.analysisStatus === "failed") {
         setAnalysisFailure(
-          body.message || "Analysis could not be completed.",
+          body.message || "Couldn’t finish your feedback. Try again in a minute.",
         );
       }
     } catch {
-      setAnalysisFailure("Could not reach the analysis service.");
+      setAnalysisFailure("Couldn’t reach Halo. Check your connection and try again.");
       const next = await fetchSessionDetailClient(sessionId);
       if (next) setSession(next);
     } finally {
@@ -208,7 +208,7 @@ export function SessionReviewClient({
       const next = await fetchSessionDetailClient(sessionId);
       if (next) setSession(next);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not open analysis.");
+      setError(e instanceof Error ? e.message : "Couldn’t open your feedback. Try again.");
     } finally {
       setBusy(false);
     }
@@ -249,7 +249,7 @@ export function SessionReviewClient({
       navigateTo(nextHref ?? flow.afterCompleteHref(sessionId));
     } catch (e) {
       setError(
-        e instanceof Error ? e.message : "Could not finish this session.",
+        e instanceof Error ? e.message : "Couldn’t finish this session. Try again.",
       );
       setBusy(false);
     }
@@ -308,7 +308,7 @@ export function SessionReviewClient({
             fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
           }}
         >
-          {flow.reviewTitle ?? "Session Review"}
+          {flow.reviewTitle ?? "Session review"}
         </h1>
       </header>
 
@@ -317,7 +317,7 @@ export function SessionReviewClient({
           className="text-[0.6875rem] font-semibold tracking-[0.1em] uppercase"
           style={{ color: "var(--foreground-muted)" }}
         >
-          Original prompt
+          The question
         </p>
         <p
           className="mt-3 max-w-2xl font-[family-name:var(--font-fraunces)] text-xl leading-snug sm:text-2xl"
@@ -361,7 +361,7 @@ export function SessionReviewClient({
           style={{ color: "var(--foreground-muted)" }}
           aria-live="polite"
         >
-          Halo is looking at your response…
+          Working on your feedback…
         </p>
       ) : null}
 
@@ -372,7 +372,7 @@ export function SessionReviewClient({
             fontVariationSettings: '"opsz" 72, "SOFT" 40, "WONK" 1, "wght" 500',
           }}
         >
-          How did that feel?
+          Did you say what you meant?
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           {FEELING_OPTIONS.map((opt) => {
@@ -471,7 +471,7 @@ export function SessionReviewClient({
             onClick={() => void handleSeeAnalysis()}
             className="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-sm font-semibold text-[var(--on-violet)] transition-opacity hover:opacity-90 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           >
-            See My Analysis
+            See feedback
           </button>
           {!hasSecondAttempt ? (
             <button
@@ -484,7 +484,7 @@ export function SessionReviewClient({
                 color: "var(--on-warm)",
               }}
             >
-              {hasExperiment ? "Try the Experiment" : "Try Again"}
+              {hasExperiment ? "Try the experiment" : "Try again"}
             </button>
           ) : null}
           <button
@@ -497,7 +497,7 @@ export function SessionReviewClient({
               color: "var(--foreground)",
             }}
           >
-            Look at Analysis Later
+            Read feedback later
           </button>
         </div>
       ) : (
@@ -506,7 +506,7 @@ export function SessionReviewClient({
             className="text-[0.6875rem] font-semibold tracking-[0.1em] uppercase"
             style={{ color: accent }}
           >
-            Halo analysis
+            Feedback
           </p>
           <div className="mt-4">
             <SessionAnalysisPanel
@@ -551,7 +551,7 @@ export function SessionReviewClient({
                       color: "var(--on-warm)",
                     }}
                   >
-                    Try the Experiment
+                    Try the experiment
                   </button>
                 ) : null}
                 <button
@@ -566,7 +566,7 @@ export function SessionReviewClient({
                     color: hasExperiment ? "var(--foreground)" : "var(--on-warm)",
                   }}
                 >
-                  {hasExperiment ? "Record again" : "Try Again"}
+                  {hasExperiment ? "Record again" : "Try again"}
                 </button>
               </>
             ) : (
@@ -580,7 +580,7 @@ export function SessionReviewClient({
                   color: "var(--on-warm)",
                 }}
               >
-                Hear the Difference
+                Hear the difference
               </button>
             )}
             <button

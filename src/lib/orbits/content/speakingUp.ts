@@ -9,46 +9,46 @@ export const SPEAKING_UP_ORBITS: readonly OrbitDefinition[] = [
     shortDescription: "Something keeps crossing a boundary you want to make clearer.",
     situation: "Something keeps crossing a boundary you want to make clearer.",
     openingTitle: "Draw the Line",
-    openingBody: `Sometimes you know something bothers you, but actually saying “stop” feels much harder.
+    openingBody: `Sometimes you know something bothers you, but actually saying "stop" feels much harder.
 
-This Orbit helps you figure out where your line is and practice communicating it without turning yourself into someone you're not.`,
+Figure out where your line is. Practice saying it without turning into someone you're not.`,
     sortOrder: 1,
     questions: [
       {
         planet: "explore",
         prompt: "What keeps happening that you don't want to keep happening?",
-        explanation: "A boundary starts with identifying a behavior clearly.",
+        explanation: "A boundary starts with naming a behavior clearly.",
       },
       {
         planet: "explore",
         prompt: "Why does this matter to you?",
         explanation:
-          "Understanding the reason helps you stand behind what you're asking for.",
+          "Knowing the reason makes it easier to stand behind what you're asking for.",
       },
       {
         planet: "express",
         prompt: "How does it affect you when it happens?",
         explanation:
-          "Putting the impact into words makes the boundary easier to understand.",
+          "Putting the impact into words makes the boundary easier to explain.",
       },
       {
         planet: "stand",
         prompt:
           "What exactly do you want them to stop, start, or do differently?",
-        explanation: "A specific request is stronger than “just be better.”",
+        explanation: "A specific request beats \"just be better.\"",
       },
       {
         planet: "stand",
         prompt:
-          "Say what you need without using “maybe,” “sorry,” or pretending it doesn't matter.",
-        explanation: "This lets you hear your boundary without shrinking it.",
+          "Say what you need without \"maybe,\" \"sorry,\" or pretending it doesn't matter.",
+        explanation: "Hear your boundary without shrinking it first.",
       },
       {
         planet: "connect",
         prompt:
           "Now say it in a way that stays firm while still sounding like you.",
         explanation:
-          "Being clear and maintaining connection aren't opposites.",
+          "Being clear and staying connected aren't opposites.",
       },
     ],
   }),
@@ -62,7 +62,7 @@ This Orbit helps you figure out where your line is and practice communicating it
     openingTitle: "I Need to Ask",
     openingBody: `Sometimes asking feels harder than needing.
 
-This Orbit helps you get clear about what you want and practice making the request without apologizing for having one.`,
+Get clear on what you want. Practice making the request without apologizing for having one.`,
     sortOrder: 2,
     questions: [
       {
@@ -84,7 +84,7 @@ This Orbit helps you get clear about what you want and practice making the reque
       },
       {
         planet: "stand",
-        prompt: "What is the simplest version of your ask?",
+        prompt: "What's the simplest version of your ask?",
         explanation: "Clear requests are easier to respond to.",
       },
       {
@@ -97,8 +97,8 @@ This Orbit helps you get clear about what you want and practice making the reque
       {
         planet: "connect",
         prompt:
-          "How could you ask clearly while respecting the other person's position?",
-        explanation: "Self-advocacy and consideration can coexist.",
+          "How could you ask clearly while still respecting their position?",
+        explanation: "Asking for yourself and considering them can happen together.",
       },
     ],
   }),
@@ -112,7 +112,7 @@ This Orbit helps you get clear about what you want and practice making the reque
     openingTitle: "I Disagree",
     openingBody: `Having an opinion feels different when everyone around you has another one.
 
-This Orbit helps you figure out what you actually believe and practice saying it without turning disagreement into a fight.`,
+Figure out what you actually believe. Practice saying it without turning disagreement into a fight.`,
     sortOrder: 3,
     questions: [
       {
@@ -124,18 +124,18 @@ This Orbit helps you figure out what you actually believe and practice saying it
         planet: "explore",
         prompt: "Why do you think that?",
         explanation:
-          "Understanding your reasoning makes your position stronger.",
+          "Knowing your reasoning makes your position stronger.",
       },
       {
         planet: "express",
         prompt: "What part of your opinion is hardest to explain?",
         explanation:
-          "You may know what you believe before knowing how to communicate it.",
+          "You may know what you believe before you know how to say it.",
       },
       {
         planet: "stand",
         prompt:
-          "Say your opinion clearly without weakening it because someone might disagree.",
+          "Say your opinion clearly without watering it down because someone might disagree.",
         explanation: "Practice hearing yourself take a real position.",
       },
       {
@@ -143,14 +143,14 @@ This Orbit helps you figure out what you actually believe and practice saying it
         prompt:
           "What part of the other side can you genuinely understand?",
         explanation:
-          "Understanding another view doesn't require abandoning yours.",
+          "Understanding another view doesn't mean abandoning yours.",
       },
       {
         planet: "stand",
         prompt:
           "Explain your opinion again while leaving room for disagreement.",
         explanation:
-          "Confidence doesn't require certainty that everyone else is wrong.",
+          "Confidence doesn't require thinking everyone else is wrong.",
       },
     ],
   }),
@@ -164,7 +164,7 @@ This Orbit helps you figure out what you actually believe and practice saying it
     openingTitle: "Talking to a Teacher",
     openingBody: `Talking to an adult with authority can make a simple question feel much bigger.
 
-This Orbit helps you figure out what you need to communicate before you're standing in front of them.`,
+Get clear on what you need to say before you're standing in front of them.`,
     sortOrder: 4,
     questions: [
       {
@@ -177,18 +177,18 @@ This Orbit helps you figure out what you need to communicate before you're stand
         prompt:
           "What part of the situation has been frustrating or difficult?",
         explanation:
-          "Your experience matters, even if you communicate it respectfully.",
+          "Your experience counts, even if you communicate it respectfully.",
       },
       {
         planet: "stand",
         prompt: "What do you want your teacher to know?",
-        explanation: "Identify your central message.",
+        explanation: "Find your central message.",
       },
       {
         planet: "stand",
         prompt: "What are you asking them to do, if anything?",
         explanation:
-          "Know whether you're asking for help, clarification, or change.",
+          "Know whether you're asking for help, clarification, or a change.",
       },
       {
         planet: "connect",
@@ -211,11 +211,11 @@ This Orbit helps you figure out what you need to communicate before you're stand
     shortDescription: "You want to turn something down without making it a whole thing.",
     situation: "You want to turn something down without making it a whole thing.",
     openingTitle: "Saying No",
-    openingBody: `“No” is a complete idea.
+    openingBody: `"No" is a complete answer.
 
-But sometimes actually saying it feels like you need a whole legal defense.
+But sometimes saying it feels like you need a whole legal defense.
 
-This Orbit helps you understand why you're saying no and practice doing it without becoming harsh or disappearing into excuses.`,
+Get clear on why you're saying no. Practice doing it without getting harsh or disappearing into excuses.`,
     sortOrder: 5,
     questions: [
       {
@@ -232,7 +232,7 @@ This Orbit helps you understand why you're saying no and practice doing it witho
         planet: "stand",
         prompt: "What are you afraid will happen if you say no?",
         explanation:
-          "The reaction you're imagining may be making this difficult.",
+          "The reaction you're imagining may be what's making this hard.",
       },
       {
         planet: "stand",
@@ -243,7 +243,7 @@ This Orbit helps you understand why you're saying no and practice doing it witho
         planet: "connect",
         prompt: "Is there anything you genuinely want to offer instead?",
         explanation:
-          "An alternative can be kind when authentic, but isn't required.",
+          "An alternative can be kind when it's real, but it isn't required.",
       },
       {
         planet: "stand",
@@ -261,11 +261,11 @@ This Orbit helps you understand why you're saying no and practice doing it witho
     shortDescription: "A joke or comment landed wrong, and you want to say so.",
     situation: "A joke or comment landed wrong, and you want to say so.",
     openingTitle: "That Joke Isn't Funny to Me",
-    openingBody: `Sometimes everyone else is laughing and you're the person wondering whether you're “allowed” to be bothered.
+    openingBody: `Sometimes everyone else is laughing and you're the person wondering whether you're "allowed" to be bothered.
 
 You are.
 
-This Orbit helps you figure out what crossed the line and how you might say it.`,
+Figure out what crossed the line and how you might say it.`,
     sortOrder: 6,
     questions: [
       {
@@ -277,7 +277,7 @@ This Orbit helps you figure out what crossed the line and how you might say it.`
         planet: "explore",
         prompt: "What about it bothered you?",
         explanation:
-          "Understanding the impact helps you communicate beyond “I didn't like it.”",
+          "Understanding the impact helps you say more than \"I didn't like it.\"",
       },
       {
         planet: "stand",
@@ -289,12 +289,12 @@ This Orbit helps you figure out what crossed the line and how you might say it.`
       {
         planet: "stand",
         prompt: "What do you want them to do differently next time?",
-        explanation: "Make the boundary concrete.",
+        explanation: "Make the ask concrete.",
       },
       {
         planet: "connect",
         prompt:
-          "How could you say it without turning the person into the behavior?",
+          "How could you say it without treating the person like the whole problem?",
         explanation:
           "Challenge the action without attacking the whole person.",
       },
@@ -315,9 +315,9 @@ This Orbit helps you figure out what crossed the line and how you might say it.`
     openingTitle: "I Deserve Credit",
     openingBody: `Speaking up about your own contribution can feel awkward.
 
-But staying silent can leave other people with the wrong story.
+But staying silent can leave people with the wrong story.
 
-This Orbit helps you advocate for your work without feeling like you need to brag.`,
+Practice advocating for your work without feeling like you need to brag.`,
     sortOrder: 7,
     questions: [
       {
@@ -329,7 +329,7 @@ This Orbit helps you advocate for your work without feeling like you need to bra
         planet: "express",
         prompt:
           "What bothers you about how the situation is being represented?",
-        explanation: "Understand why speaking up matters.",
+        explanation: "Understand why speaking up matters here.",
       },
       {
         planet: "stand",
@@ -347,7 +347,7 @@ This Orbit helps you advocate for your work without feeling like you need to bra
         planet: "stand",
         prompt:
           "What would you say if someone minimized your contribution?",
-        explanation: "Prepare for resistance.",
+        explanation: "Prepare for pushback.",
       },
       {
         planet: "express",
@@ -367,9 +367,9 @@ This Orbit helps you advocate for your work without feeling like you need to bra
     openingTitle: "I Need More Time",
     openingBody: `Sometimes the most responsible answer isn't yes or no.
 
-It's “I need a little more time.”
+It's "I need a little more time."
 
-This Orbit helps you communicate that before pressure makes the decision for you.`,
+Say that before pressure makes the decision for you.`,
     sortOrder: 8,
     questions: [
       {
@@ -402,7 +402,7 @@ This Orbit helps you communicate that before pressure makes the decision for you
       {
         planet: "explore",
         prompt: "What will you do with the additional time if you get it?",
-        explanation: "Know how you'll use the space you're requesting.",
+        explanation: "Know how you'll use the room you're requesting.",
       },
     ],
   }),
@@ -418,7 +418,7 @@ This Orbit helps you communicate that before pressure makes the decision for you
 
 The hard part is continuing to believe it when someone keeps pushing.
 
-This Orbit helps you hold onto your decision under pressure.`,
+Practice holding onto your decision under pressure.`,
     sortOrder: 9,
     questions: [
       {
@@ -467,7 +467,7 @@ This Orbit helps you hold onto your decision under pressure.`,
 
 Maybe you keep rewriting the conversation in your head.
 
-This Orbit gives you somewhere to say it first.`,
+Say it here first.`,
     sortOrder: 10,
     questions: [
       {

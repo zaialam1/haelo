@@ -69,7 +69,7 @@ export async function saveSessionAttempt(
   } = await supabase.auth.getUser();
 
   if (!user) {
-    throw new Error("Sign in to save your session.");
+    throw new Error("Log in to save your session.");
   }
 
   if (!isUsableRecordingBlob(input.blob)) {
@@ -100,7 +100,7 @@ export async function saveSessionAttempt(
       }
       if ((count ?? 0) >= GUEST_MAX_SESSIONS) {
         throw new Error(
-          "You’ve reached the guest practice limit. Create a free account to keep exploring.",
+          "You’ve used all your guest sessions. Create a free account to keep going.",
         );
       }
     }

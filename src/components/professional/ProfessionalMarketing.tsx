@@ -40,16 +40,15 @@ export function ProfessionalMarketing({ compact = false }: Props) {
         >
           {compact
             ? "Learn about professional access"
-            : "Help young people practice the conversations that matter."}
+            : "Recommend Orbits. Keep their practice private."}
         </h1>
         <p
           className="mt-5 text-[1.0625rem] leading-relaxed"
           style={{ color: "var(--foreground-muted)" }}
         >
-          A Professional Account is still a full Halo account — Universe,
-          Journey, Orbits, and My Voice — with an additional layer for
-          connecting with people and recommending Orbits. Private voice work
-          stays private.
+          A Professional Account is still a full Halo account (Universe,
+          Journey, Orbits, and My Voice), plus tools for connecting with people
+          and recommending Orbits. Private voice work stays private.
         </p>
 
         {!compact ? (

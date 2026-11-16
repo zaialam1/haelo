@@ -210,7 +210,7 @@ export function OrbitsExperience({
             {searchError
               ? searchError
               : usedFallback && matches && matches.length > 0
-                ? "Showing close title matches — AI search was unavailable."
+                ? "Showing close title matches. Search is temporarily unavailable."
                 : null}
           </p>
         </form>
@@ -294,7 +294,7 @@ export function OrbitsExperience({
                 style={{ color: "var(--foreground-muted)" }}
                 aria-live="polite"
               >
-                Tap a star to open an Orbit — or choose another corner of the
+                Tap a star to open an Orbit, or choose another corner of the
                 sky.
               </p>
             </>
@@ -320,7 +320,7 @@ export function OrbitsExperience({
           }}
           role="alert"
         >
-          <p>Progress couldn&apos;t load — you can still explore every Orbit.</p>
+          <p>Progress couldn&apos;t load. You can still browse every Orbit.</p>
           <button
             type="button"
             className="mt-2 text-[0.75rem] font-semibold"

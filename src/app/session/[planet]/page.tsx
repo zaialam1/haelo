@@ -22,11 +22,11 @@ export async function generateMetadata({
 }: SessionPageProps): Promise<Metadata> {
   const { planet } = await params;
   if (!isPlanet(planet)) {
-    return { title: "Session — Halo" };
+    return { title: "Session | Halo" };
   }
   const content = getPlanetPageContent(planet);
   return {
-    title: `${content.label} Session — Halo`,
+    title: `${content.label} Session | Halo`,
     description: `Record a ${content.label} practice session.`,
   };
 }

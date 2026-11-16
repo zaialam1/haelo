@@ -66,7 +66,7 @@ export function ComingSoonPage({
 
 export function comingSoonMetadata(title: string): Metadata {
   return {
-    title: `${title} — Halo`,
+    title: `${title} | Halo`,
     description: `${title} is coming soon in Halo.`,
   };
 }

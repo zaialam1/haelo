@@ -14,7 +14,7 @@ import { listRecipientActiveRecommendations } from "@/lib/recommendations";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Orbits — Halo",
+  title: "Orbits | Halo",
   description:
     "Choose an Orbit to work through a real situation one reflection at a time.",
 };
@@ -94,29 +94,14 @@ export default async function OrbitsPage({ searchParams }: OrbitsPageProps) {
           >
             Orbits
           </h1>
-          <p
-            className="mt-2.5 text-[0.9375rem] leading-relaxed"
-            style={{ color: "var(--foreground-muted)" }}
-          >
-            Sometimes you come to Halo to grow.
-            <br className="hidden sm:block" />{" "}
-            Sometimes you come because something is happening right now.
-          </p>
-          <p
-            className="mt-1.5 text-[0.8125rem] leading-relaxed"
-            style={{ color: "var(--foreground-muted)" }}
-          >
-            Choose an Orbit to work through a situation one reflection at a
-            time.
-          </p>
         </header>
 
         {showIntro ? (
           <div className="max-w-xl px-4 sm:px-8 lg:px-12">
             <IntroMoment
               milestone="orbits_discovered"
-              title="Orbits are guided reflections for something specific."
-              body="A conversation you're dreading, a decision you're circling — pick one and work through it a few minutes at a time."
+              title="Orbits are for something specific."
+              body="A hard conversation, a decision you keep avoiding. Six short questions, a few minutes at a time."
             />
           </div>
         ) : null}

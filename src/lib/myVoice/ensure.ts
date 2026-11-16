@@ -107,7 +107,7 @@ export async function openMyVoiceForUser(opts: {
         phase: "error",
         sessionCount,
         message:
-          "Your voice summary isn't ready yet. Keep exploring and check back soon.",
+          "Your summary isn't ready yet. Try again in a bit.",
       };
     }
   }
@@ -137,7 +137,7 @@ export async function openMyVoiceForUser(opts: {
       phase: "error",
       sessionCount,
       message:
-        "Your voice summary isn't ready yet. Keep exploring and check back soon.",
+        "Your summary isn't ready yet. Try again in a bit.",
     };
   }
 
@@ -148,7 +148,7 @@ export async function openMyVoiceForUser(opts: {
         phase: "error",
         sessionCount,
         message:
-          "Your voice summary isn't ready yet. Keep exploring and check back soon.",
+          "Your summary isn't ready yet. Try again in a bit.",
       };
     }
     trackMyVoiceEvent("my_voice_generated", {
@@ -167,7 +167,7 @@ export async function openMyVoiceForUser(opts: {
       phase: "error",
       sessionCount,
       message:
-        "Your voice summary isn't ready yet. Keep exploring and check back soon.",
+        "Your summary isn't ready yet. Try again in a bit.",
       content: cached?.status === "ready" ? cached.synthesis_json : undefined,
       generatedAt: cached?.generated_at,
       updatedLabel: cached

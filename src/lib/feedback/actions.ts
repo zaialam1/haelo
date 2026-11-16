@@ -26,7 +26,7 @@ export async function submitProductFeedbackAction(input: {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { ok: false, message: "Sign in to continue." };
+  if (!user) return { ok: false, message: "Log in to continue." };
 
   const { error } = await supabase.from("user_feedback").insert({
     user_id: user.id,
@@ -70,7 +70,7 @@ export async function submitAnalysisFeedbackAction(input: {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { ok: false, message: "Sign in to continue." };
+  if (!user) return { ok: false, message: "Log in to continue." };
 
   const { data: session } = await supabase
     .from("sessions")

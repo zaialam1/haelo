@@ -158,8 +158,8 @@ export function ProfessionalLoginForm() {
             Personal Halo account
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-[var(--foreground-muted)]">
-            This account is a personal Halo account. Logging in here doesn&rsquo;t
-            change your account type.
+            You&rsquo;re logged in, but this is a personal account. Logging in
+            here doesn&rsquo;t change that.
           </p>
         </div>
         <button
@@ -195,9 +195,6 @@ export function ProfessionalLoginForm() {
         >
           Professional login
         </h1>
-        <p className="mt-2 text-sm text-[var(--foreground-muted)]">
-          Sign in with your Halo professional account.
-        </p>
       </div>
 
       {errors.form ? (
@@ -268,7 +265,7 @@ export function ProfessionalLoginForm() {
         disabled={submitting}
         className="inline-flex w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)] disabled:opacity-70"
       >
-        {submitting ? "Signing in…" : "Log in"}
+        {submitting ? "Logging in…" : "Log in"}
       </button>
 
       <p className="text-center text-sm text-[var(--foreground-muted)]">

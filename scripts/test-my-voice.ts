@@ -168,7 +168,7 @@ check("refresh: new completed Orbit triggers update", () => {
 });
 
 check("updated label is subtle and non-numeric-score", () => {
-  assert.equal(formatMyVoiceUpdatedLabel(24), "Updated after 24 reflections");
+  assert.equal(formatMyVoiceUpdatedLabel(24), "Updated after 24 sessions");
   assert.doesNotMatch(formatMyVoiceUpdatedLabel(24), /\/100|%|score/i);
 });
 

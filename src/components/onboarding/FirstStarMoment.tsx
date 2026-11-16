@@ -72,8 +72,7 @@ export function FirstStarMoment({
           className="mx-auto mt-3 max-w-sm text-[0.9375rem] leading-relaxed"
           style={{ color: "var(--foreground-muted)" }}
         >
-          Every reflection becomes a star in your Journey — a quiet record of
-          your voice over time.
+          It&apos;s saved in Journey. Tap it anytime to hear it again.
         </p>
 
         <div className="mt-8 flex flex-col items-center gap-3">

@@ -96,8 +96,8 @@ export async function PlanetPage({ planetId }: PlanetPageProps) {
         {showIntro ? (
           <IntroMoment
             milestone="planet_discovered"
-            title={`Welcome to ${content.label}.`}
-            body="Each planet is a different kind of practice. Read the prompt below, then tap the button when you’re ready to speak — just a few minutes, no scores."
+            title="How planets work"
+            body="Each planet is a different kind of practice. Read the question, then start a session to answer it out loud. It takes a few minutes."
           />
         ) : null}
 
@@ -130,13 +130,6 @@ export async function PlanetPage({ planetId }: PlanetPageProps) {
               {content.shortLine}
             </p>
 
-            <p
-              className="mt-2.5 max-w-md text-sm leading-relaxed sm:text-[0.9375rem] lg:max-w-lg"
-              style={{ color: "var(--foreground-muted)" }}
-            >
-              {content.description}
-            </p>
-
             {teaser.hint ? (
               <p
                 className="mt-4 max-w-md text-[0.8125rem] leading-relaxed sm:text-sm"
@@ -152,9 +145,9 @@ export async function PlanetPage({ planetId }: PlanetPageProps) {
             className="flex flex-col items-center text-center lg:items-start lg:text-left"
             aria-labelledby="try-this-heading"
           >
-            <SectionLabel>Try this</SectionLabel>
+            <SectionLabel>Next question</SectionLabel>
             <h2 id="try-this-heading" className="sr-only">
-              Featured practice for {content.label}
+              Next {content.label} question
             </h2>
             <p
               className="mt-4 max-w-lg font-[family-name:var(--font-fraunces)] text-xl leading-snug sm:text-2xl lg:text-[1.65rem]"
@@ -193,9 +186,9 @@ export async function PlanetPage({ planetId }: PlanetPageProps) {
         {/* Growth + recent — two columns on desktop */}
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           <section aria-labelledby="growth-heading">
-            <SectionLabel>Your growth</SectionLabel>
+            <SectionLabel>Recent feedback</SectionLabel>
             <h2 id="growth-heading" className="sr-only">
-              Growth observations for {content.label}
+              Recent feedback from {content.label} sessions
             </h2>
             {hasGrowth ? (
               <ul className="mt-5 flex max-w-md flex-col gap-4 lg:max-w-none">

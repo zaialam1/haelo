@@ -2,6 +2,7 @@
  * Parse + validate My Voice structured JSON (mirrors orbit summative parsing).
  */
 
+import { tidyGeneratedCopy } from "@/lib/ai/brandVoice";
 import type { MyVoiceSummaryContent } from "./types";
 
 type RawMyVoiceJson = {
@@ -16,7 +17,7 @@ function requireNonEmptyString(value: unknown, field: string): string {
   if (typeof value !== "string" || !value.trim()) {
     throw new Error(`My Voice summary missing ${field}.`);
   }
-  return value.trim();
+  return tidyGeneratedCopy(value.trim());
 }
 
 function approximateWordCount(text: string): number {
@@ -56,7 +57,7 @@ export function parseMyVoiceSummaryJson(raw: string): MyVoiceSummaryContent {
   const carryRaw = parsed.carryForward;
   let carryForward: string | null = null;
   if (typeof carryRaw === "string" && carryRaw.trim()) {
-    carryForward = carryRaw.trim();
+    carryForward = tidyGeneratedCopy(carryRaw.trim());
   }
 
   const content: MyVoiceSummaryContent = {

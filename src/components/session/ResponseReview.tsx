@@ -57,7 +57,7 @@ export function ResponseReview({
           }}
         >
           <span aria-hidden="true">▶</span>
-          Play Recording
+          Recording
         </button>
         <button
           type="button"

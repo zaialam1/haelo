@@ -63,7 +63,7 @@ export async function deleteSessionAction(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { ok: false, message: "Sign in to continue." };
+  if (!user) return { ok: false, message: "Log in to continue." };
 
   const { data: session, error: sessionError } = await supabase
     .from("sessions")

@@ -58,7 +58,7 @@ async function requireVerifiedProfessional() {
     return {
       ok: false as const,
       error: "unauthenticated" as const,
-      message: "You need to be signed in.",
+      message: "Log in to continue.",
     };
   }
   if (profile.accountRole !== "professional") {
@@ -235,7 +235,7 @@ export async function respondToConnectionRequestAction(
 ): Promise<ConnectionActionResult> {
   const profile = await getOwnProfile();
   if (!profile) {
-    return { ok: false, message: "You need to be signed in." };
+    return { ok: false, message: "Log in to continue." };
   }
 
   const supabase = await createClient();
@@ -261,7 +261,7 @@ export async function removeConnectionAction(
 ): Promise<ConnectionActionResult> {
   const profile = await getOwnProfile();
   if (!profile) {
-    return { ok: false, message: "You need to be signed in." };
+    return { ok: false, message: "Log in to continue." };
   }
 
   const supabase = await createClient();

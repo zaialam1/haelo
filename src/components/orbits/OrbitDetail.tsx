@@ -166,7 +166,7 @@ export function OrbitDetail({
           className="mt-1.5 text-[0.8125rem] leading-relaxed"
           style={{ color: "var(--foreground-muted)" }}
         >
-          Six reflections, in order — each tied to a planet.
+          Six questions, in order. Each one uses a different planet.
         </p>
         <ol className="mt-4 space-y-4">
           {[...orbit.questions]
@@ -248,7 +248,7 @@ export function OrbitDetail({
               color: "var(--on-violet)",
             }}
           >
-            Sign in to begin
+            Log in to begin
           </TransitionLink>
         )}
       </div>
@@ -268,7 +268,7 @@ export function OrbitDetail({
           className="mt-4 max-w-md text-[0.8125rem] leading-relaxed"
           style={{ color: "var(--foreground-muted)" }}
         >
-          Continue when you&apos;re ready — one reflection at a time.
+          Continue when you&apos;re ready. One question at a time.
         </p>
       ) : null}
     </article>

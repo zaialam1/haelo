@@ -7,7 +7,7 @@ import { getOwnProfessionalProfile } from "@/lib/professional/data";
 import { getOwnProfile } from "@/lib/profiles/data";
 
 export const metadata: Metadata = {
-  title: "Settings — Halo",
+  title: "Settings | Halo",
   description: "Manage your Halo privacy, notifications, and account.",
 };
 

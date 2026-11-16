@@ -124,7 +124,7 @@ export async function computeNextAction(opts: {
       );
       return {
         kind: "orbit_in_progress",
-        title: `${orbit.title} — Reflection ${step} of 6.`,
+        title: `${orbit.title}: question ${step} of 6.`,
         cta: "Continue Orbit",
         href: `/orbits/${orbit.orbitKey}`,
         welcomeBack,
@@ -142,8 +142,8 @@ export async function computeNextAction(opts: {
   ) {
     return {
       kind: "weekly_goal",
-      title: "One reflection completes this week's constellation.",
-      cta: "Reflect now",
+      title: "One more session finishes this week's constellation.",
+      cta: "Start one",
       href: "/practice",
       welcomeBack,
     };
@@ -156,10 +156,8 @@ export async function computeNextAction(opts: {
   if (!reflectedToday) {
     return {
       kind: "daily_reflection",
-      title: welcomeBack
-        ? "Whenever you're ready, today's question is here."
-        : "Today's question is waiting.",
-      cta: "Answer in 60 seconds",
+      title: "Today's question is up.",
+      cta: "Answer it",
       href: "/practice?from=today",
       welcomeBack,
     };
@@ -172,8 +170,8 @@ export async function computeNextAction(opts: {
   if (myVoiceUpdate) {
     return {
       kind: "my_voice_update",
-      title: "Your Voice has taken new shape.",
-      cta: "Open My Voice",
+      title: "My Voice has a new summary.",
+      cta: "Read it",
       href: "/my-voice",
       welcomeBack,
     };
@@ -213,7 +211,7 @@ export async function computeNextAction(opts: {
       return {
         kind: "planet_teaser",
         title: `${planetDef.label} is close to changing.`,
-        cta: "Add a reflection",
+        cta: "Do a session",
         href: planetDef.href,
         welcomeBack,
       };

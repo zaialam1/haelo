@@ -80,6 +80,6 @@ export function myVoicePhaseFromSessionCount(
 
 export function formatMyVoiceUpdatedLabel(sessionCountAtGeneration: number): string {
   if (sessionCountAtGeneration <= 0) return "Updated recently";
-  if (sessionCountAtGeneration === 1) return "Updated after 1 reflection";
-  return `Updated after ${sessionCountAtGeneration} reflections`;
+  if (sessionCountAtGeneration === 1) return "Updated after 1 session";
+  return `Updated after ${sessionCountAtGeneration} sessions`;
 }

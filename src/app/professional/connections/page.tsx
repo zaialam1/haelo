@@ -9,7 +9,7 @@ import { getProfessionalContext } from "@/lib/professional";
 import { formatUsernameDisplay } from "@/lib/profiles/username";
 
 export const metadata: Metadata = {
-  title: "Connections — Professional — Halo",
+  title: "Connections | Professional | Halo",
   description: "Connect with people on Halo before recommending an Orbit.",
 };
 

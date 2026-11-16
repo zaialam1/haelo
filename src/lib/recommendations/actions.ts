@@ -37,7 +37,7 @@ export async function sendOrbitRecommendationAction(input: {
     return {
       ok: false,
       error: "unauthenticated",
-      message: "You need to be signed in.",
+      message: "Log in to continue.",
     };
   }
   if (profile.accountRole !== "professional") {

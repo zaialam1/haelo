@@ -19,15 +19,15 @@ function buildShareText(args: {
   promptText?: string | null;
   shareUrl: string;
 }): { title: string; text: string; url: string } {
-  const title = "I practiced on Halo";
+  const title = "Try Halo";
   const prompt =
     args.promptText?.trim() && args.promptText.trim().length > 0
       ? args.promptText.trim()
       : null;
 
   const body = prompt
-    ? `I just finished a Halo reflection — “${prompt}” — in ${args.achievementLabel}. Want to try speaking one too?`
-    : `I just finished a Halo reflection in ${args.achievementLabel}. Want to try speaking one too?`;
+    ? `I just answered this out loud on Halo: “${prompt}” Want to try it?`
+    : `I just did a ${args.achievementLabel} session on Halo. Want to try one?`;
 
   return {
     title,
@@ -105,8 +105,8 @@ export function ShareAchievementButton({
       : status === "shared"
         ? "Shared"
         : status === "error"
-          ? "Couldn’t share — try again"
-          : "Share with a friend";
+          ? "Couldn’t share. Try again"
+          : "Send to a friend";
 
   return (
     <div className={className}>
@@ -126,7 +126,7 @@ export function ShareAchievementButton({
         className="mt-2 text-[0.8125rem] leading-relaxed"
         style={{ color: "var(--foreground-muted)" }}
       >
-        Celebrate finishing this question — invite a friend to try Halo.
+        Sends the question and a link. Your recording stays private.
       </p>
     </div>
   );

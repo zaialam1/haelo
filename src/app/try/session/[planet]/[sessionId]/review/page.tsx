@@ -13,7 +13,7 @@ type PageProps = {
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Guest practice review — Halo",
+    title: "Guest practice review | Halo",
     description: "Review your guest practice session.",
   };
 }

@@ -11,9 +11,8 @@ import { isPlanet } from "@/lib/prompts";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Journey — Halo",
-  description:
-    "Your constellation of speaking sessions across Express, Stand, Connect, and Explore.",
+  title: "Journey | Halo",
+  description: "Every session you finish, saved as a star you can replay.",
 };
 
 type JourneyPageProps = {
@@ -64,7 +63,7 @@ export default async function JourneyPage({ searchParams }: JourneyPageProps) {
             <IntroMoment
               milestone="journey_discovered"
               title="This is your Journey."
-              body="Every reflection becomes a star here — a quiet record of your voice over time. Tap a star to revisit it."
+              body="Every session you finish shows up here as a star. Tap one to hear it again."
             />
           </div>
         </div>

@@ -142,7 +142,7 @@ export function ConnectionsClient({
             body={
               isProfessional
                 ? "Find someone by their Halo name, then recommend an Orbit when it might help. They stay in control of their practice."
-                : "You can connect with people you trust. Sharing stays private unless you choose otherwise — you can always disconnect."
+                : "You can connect with people you trust. Sharing stays private unless you choose otherwise. You can always disconnect."
             }
           />
         ) : null}

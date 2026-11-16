@@ -140,7 +140,7 @@ export function SessionRetryClient({
       router.push(flow.compareHref(sessionId));
     } catch (e) {
       setSaveError(
-        e instanceof Error ? e.message : "Could not save this recording.",
+        e instanceof Error ? e.message : "Couldn’t save this recording. Try again.",
       );
       setSaving(false);
       savingLockRef.current = false;
@@ -162,7 +162,7 @@ export function SessionRetryClient({
             fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
           }}
         >
-          {isExperiment ? "Try the Experiment" : "Try Again"}
+          {isExperiment ? "Try the experiment" : "Try again"}
         </h1>
       </header>
 
@@ -172,9 +172,9 @@ export function SessionRetryClient({
           style={{ color: "var(--foreground-muted)" }}
         >
           {isExperiment
-            ? "Try this"
+            ? "The experiment"
             : experiment
-              ? "Your experiment"
+              ? "Something to try"
               : "This time"}
         </p>
         {experiment ? (
@@ -186,9 +186,7 @@ export function SessionRetryClient({
                   '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 500',
               }}
             >
-              {isExperiment
-                ? `Try this: ${experiment.instruction}`
-                : experiment.title}
+              {isExperiment ? experiment.instruction : experiment.title}
             </p>
             {!isExperiment ? (
               <p
@@ -204,9 +202,7 @@ export function SessionRetryClient({
             className="mt-3 max-w-xl text-[0.9375rem] leading-relaxed"
             style={{ color: "var(--foreground-muted)" }}
           >
-            Answer the same prompt again. Focus on one thing you want to try
-            differently — Halo coaching will appear here once analysis is
-            connected.
+            Answer the same question again. Pick one thing to do differently.
           </p>
         )}
       </section>
@@ -216,7 +212,7 @@ export function SessionRetryClient({
           className="text-[0.6875rem] font-semibold tracking-[0.1em] uppercase"
           style={{ color: "var(--foreground-muted)" }}
         >
-          Same prompt
+          Same question
         </p>
         <p
           className="mt-3 max-w-2xl font-[family-name:var(--font-fraunces)] text-xl leading-snug"
@@ -254,7 +250,7 @@ export function SessionRetryClient({
         )}
         {phase === "uploading" && (
           <p className="text-sm font-medium" style={{ color: accent }}>
-            Saving your second response…
+            Saving…
           </p>
         )}
       </div>
@@ -294,7 +290,7 @@ export function SessionRetryClient({
             aria-describedby={statusId}
             className="inline-flex min-h-12 items-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-sm font-semibold text-[var(--on-violet)]"
           >
-            Start Recording
+            Start recording
           </button>
         )}
         {(phase === "countdown" || phase === "recording") && (
@@ -304,7 +300,7 @@ export function SessionRetryClient({
             className="inline-flex min-h-12 items-center rounded-full px-6 py-3.5 text-sm font-semibold"
             style={{ background: "var(--gold)", color: "var(--on-warm)" }}
           >
-            Stop Recording
+            Stop recording
           </button>
         )}
         {phase === "review" && (
@@ -315,7 +311,7 @@ export function SessionRetryClient({
               onClick={() => void handleSave()}
               className="inline-flex min-h-12 items-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-sm font-semibold text-[var(--on-violet)] disabled:opacity-50"
             >
-              Save & Compare
+              Save and compare
             </button>
             <button
               type="button"

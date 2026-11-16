@@ -11,7 +11,7 @@ export const FIGURING_THINGS_OUT_ORBITS: readonly OrbitDefinition[] = [
     openingTitle: "I Don't Know What I Want",
     openingBody: `Not knowing doesn't mean you have nothing to say.
 
-Sometimes your own answer is buried underneath expectations, fear, excitement, and everyone else's opinions.`,
+Sometimes what you want is hard to separate from what everyone else expects.`,
     sortOrder: 1,
     questions: [
       {
@@ -35,7 +35,7 @@ Sometimes your own answer is buried underneath expectations, fear, excitement, a
         prompt:
           "If nobody ever found out what you chose, what would you want?",
         explanation:
-          "Removing the audience can make your preference easier to hear.",
+          "Ignore the audience for a second and see what you actually prefer.",
       },
       {
         planet: "stand",
@@ -46,7 +46,7 @@ Sometimes your own answer is buried underneath expectations, fear, excitement, a
       {
         planet: "explore",
         prompt: "What feels clearer now?",
-        explanation: "You do not need a final answer to make progress.",
+        explanation: "You don't need a final answer yet.",
       },
     ],
   }),
@@ -60,7 +60,7 @@ Sometimes your own answer is buried underneath expectations, fear, excitement, a
     openingTitle: "Everyone Else Seems Ahead",
     openingBody: `It's easy to compare the inside of your life to the outside of everyone else's.
 
-This Orbit helps you figure out what the comparison is actually pointing toward.`,
+Figure out what the comparison is actually pointing toward.`,
     sortOrder: 2,
     questions: [
       {
@@ -106,9 +106,9 @@ This Orbit helps you figure out what the comparison is actually pointing toward.
     shortDescription: "Something in your life is shifting, and you're trying to keep up.",
     situation: "Something in your life is shifting, and you're trying to keep up.",
     openingTitle: "Something Is Changing",
-    openingBody: `Change can feel exciting, sad, terrifying, freeing, or all of those things at once.
+    openingBody: `Change can feel exciting, sad, terrifying, freeing, or all of those at once.
 
-This Orbit gives you room to notice what's changing without deciding immediately whether it's good or bad.`,
+Notice what's changing without deciding immediately whether it's good or bad.`,
     sortOrder: 3,
     questions: [
       {
@@ -119,7 +119,7 @@ This Orbit gives you room to notice what's changing without deciding immediately
       {
         planet: "express",
         prompt: "What feelings come up when you think about it?",
-        explanation: "Contradictory feelings are allowed.",
+        explanation: "Mixed feelings are normal here.",
       },
       {
         planet: "explore",
@@ -130,7 +130,7 @@ This Orbit gives you room to notice what's changing without deciding immediately
         planet: "express",
         prompt:
           "Is there anything about the change you're excited about but feel weird admitting?",
-        explanation: "Excitement and sadness can coexist.",
+        explanation: "Excitement and sadness can show up together.",
       },
       {
         planet: "stand",
@@ -155,7 +155,7 @@ This Orbit gives you room to notice what's changing without deciding immediately
     openingTitle: "What Do I Actually Care About?",
     openingBody: `Sometimes you're so busy doing things that you don't stop to ask why any of them matter.
 
-This Orbit is about noticing what feels genuinely important to you.`,
+This one is about noticing what feels genuinely important to you.`,
     sortOrder: 4,
     questions: [
       {
@@ -184,11 +184,11 @@ This Orbit is about noticing what feels genuinely important to you.`,
         prompt:
           "What matters to you even if people around you don't really care about it?",
         explanation:
-          "Values become clearer when they aren't socially rewarded.",
+          "Values get clearer when they aren't socially rewarded.",
       },
       {
         planet: "express",
-        prompt: "Finish this idea: “I think a good life includes…”",
+        prompt: "Finish this idea: \"I think a good life includes…\"",
         explanation: "The point is hearing your answer.",
       },
     ],
@@ -203,7 +203,7 @@ This Orbit is about noticing what feels genuinely important to you.`,
     openingTitle: "Who Am I Around Different People?",
     openingBody: `Most people aren't exactly the same around everyone. That isn't automatically fake.
 
-This Orbit helps you notice which differences feel natural and which ones make you feel like you're disappearing.`,
+Notice which differences feel natural and which ones make you feel like you're disappearing.`,
     sortOrder: 5,
     questions: [
       {
@@ -220,18 +220,18 @@ This Orbit helps you notice which differences feel natural and which ones make y
       {
         planet: "explore",
         prompt: "Which version of you feels easiest?",
-        explanation: "Ease can reveal where you feel safe.",
+        explanation: "Ease can show where you feel least on guard.",
       },
       {
         planet: "connect",
         prompt: "What do different people bring out in you?",
-        explanation: "Relationships genuinely influence communication.",
+        explanation: "Relationships genuinely influence how you talk.",
       },
       {
         planet: "stand",
         prompt: "Is there any version of yourself you feel pressured to perform?",
         explanation:
-          "Adaptation and self-erasure are not the same thing.",
+          "Adapting and erasing yourself are not the same thing.",
       },
       {
         planet: "explore",
@@ -249,9 +249,9 @@ This Orbit helps you notice which differences feel natural and which ones make y
     shortDescription: "Your perspective shifted, and you're making sense of that.",
     situation: "Your perspective shifted, and you're making sense of that.",
     openingTitle: "I Changed My Mind",
-    openingBody: `Changing your mind isn't automatically weakness. Sometimes it's evidence that you learned something.
+    openingBody: `Changing your mind isn't automatically weakness. Sometimes it means you learned something.
 
-This Orbit helps you understand what changed and whether you actually believe something different now.`,
+Figure out what changed and whether you actually believe something different now.`,
     sortOrder: 6,
     questions: [
       {
@@ -285,7 +285,7 @@ This Orbit helps you understand what changed and whether you actually believe so
       {
         planet: "explore",
         prompt: "What did changing your mind teach you about yourself?",
-        explanation: "The process may matter as much as the answer.",
+        explanation: "How you changed may matter as much as the new answer.",
       },
     ],
   }),
@@ -316,7 +316,7 @@ But they still deserve real thought.`,
         planet: "express",
         prompt: "What scares you about each option?",
         explanation:
-          "Fear can influence decisions without deserving the final vote.",
+          "Fear can influence decisions without getting the final vote.",
       },
       {
         planet: "stand",
@@ -348,7 +348,7 @@ But they still deserve real thought.`,
     openingTitle: "Am I Doing This for Me?",
     openingBody: `Sometimes it's hard to tell where your own ambition ends and everyone else's expectations begin.
 
-This Orbit helps you separate the two.`,
+Separate the two.`,
     sortOrder: 8,
     questions: [
       {
@@ -382,7 +382,7 @@ This Orbit helps you separate the two.`,
         planet: "stand",
         prompt:
           "What would you choose differently if you trusted your own preferences more?",
-        explanation: "Give your own voice more space.",
+        explanation: "Give your own preference more weight.",
       },
     ],
   }),
@@ -424,13 +424,13 @@ You need to figure out what is actually keeping you in the same place.`,
       {
         planet: "explore",
         prompt: "What is the smallest next step that would actually count?",
-        explanation: "Progress doesn't have to be dramatic.",
+        explanation: "Small counts.",
       },
       {
         planet: "express",
         prompt:
           "What would you tell yourself if you were talking to a friend in the same situation?",
-        explanation: "Distance can make your thinking easier to hear.",
+        explanation: "Advice you'd give a friend is often clearer.",
       },
     ],
   }),
@@ -460,7 +460,7 @@ But it can be interesting to think about what qualities you want to carry with y
       {
         planet: "explore",
         prompt: "What qualities do you already see in yourself?",
-        explanation: "Growth isn't only about what's missing.",
+        explanation: "This isn't only about what's missing.",
       },
       {
         planet: "stand",
@@ -475,7 +475,7 @@ But it can be interesting to think about what qualities you want to carry with y
       },
       {
         planet: "explore",
-        prompt: "Finish this: “I want to become someone who…”",
+        prompt: "Finish this: \"I want to become someone who…\"",
         explanation: "This is a snapshot, not a permanent definition.",
       },
     ],

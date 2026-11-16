@@ -28,7 +28,7 @@ export function GuestCompleteClient({ planet }: GuestCompleteClientProps) {
         className="text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
         style={{ color: accent }}
       >
-        Guest try · {content.label}
+        Guest · {content.label}
       </p>
       <h1
         className="mt-3 font-[family-name:var(--font-fraunces)] text-3xl leading-tight sm:text-4xl"
@@ -36,15 +36,14 @@ export function GuestCompleteClient({ planet }: GuestCompleteClientProps) {
           fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
         }}
       >
-        Nice work
+        Session complete
       </h1>
       <p
         className="mt-4 max-w-xl text-[1.0625rem] leading-relaxed"
         style={{ color: "var(--foreground-muted)" }}
       >
-        This guest practice stays temporary — it isn’t saved to a permanent
-        account, and it doesn’t earn Stardust. Create an account anytime if you
-        want a private Universe of your own.
+        Guest sessions aren’t saved. Create a free account to keep the ones
+        you do next.
       </p>
 
       <div className="mt-10 flex flex-col gap-3 sm:max-w-sm">

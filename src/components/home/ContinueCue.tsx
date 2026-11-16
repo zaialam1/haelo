@@ -29,7 +29,7 @@ export function ContinueCue({ action }: { action: NextAction }) {
               textShadow: "0 1px 8px rgba(0,0,0,0.35)",
             }}
           >
-            Welcome back. Your Universe is right where you left it.
+            Welcome back.
           </p>
         ) : null}
         <TransitionLink

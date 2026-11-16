@@ -11,9 +11,9 @@ import { formatUsernameDisplay } from "@/lib/profiles/username";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Professional — Halo",
+  title: "Professional | Halo",
   description:
-    "Halo Professional Mode — connect with people and recommend Orbits.",
+    "Halo Professional Mode. Connect with people and recommend Orbits.",
 };
 
 export default async function ProfessionalPage() {

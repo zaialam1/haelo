@@ -8,7 +8,7 @@ import { resolveSpeakSession } from "@/lib/questions/sessions";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Start Speaking — Halo",
+  title: "Start Speaking | Halo",
   description: "Begin a speaking session in Halo.",
 };
 
@@ -92,7 +92,7 @@ export default async function SpeakPage({ searchParams }: SpeakPageProps) {
           <IntroMoment
             milestone="recording_introduced"
             title="How a session works"
-            body="You’ll get a short prompt, then record your voice. When you stop, Halo reflects back what it noticed — private to you, never graded."
+            body="You'll get a short prompt, then record. When you stop, Halo tells you what stood out. Private, never graded."
           />
         ) : null}
         <SpeakSession

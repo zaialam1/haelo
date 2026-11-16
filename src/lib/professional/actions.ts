@@ -38,7 +38,7 @@ export async function completeProfessionalSignupAction(
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return { ok: false, message: "You need to be signed in.", code: "unauthenticated" };
+    return { ok: false, message: "Log in to continue.", code: "unauthenticated" };
   }
 
   const { data, error } = await supabase.rpc("complete_professional_signup", {

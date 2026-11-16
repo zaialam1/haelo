@@ -19,7 +19,7 @@ export async function openMyVoiceAction(): Promise<OpenMyVoiceResult> {
     return {
       ok: false,
       error: "unauthenticated",
-      message: "You need to be signed in to open My Voice.",
+      message: "Log in to open My Voice.",
     };
   }
 
@@ -37,7 +37,7 @@ export async function retryMyVoiceAction(): Promise<OpenMyVoiceResult> {
     return {
       ok: false,
       error: "unauthenticated",
-      message: "You need to be signed in to open My Voice.",
+      message: "Log in to open My Voice.",
     };
   }
 

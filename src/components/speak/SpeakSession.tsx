@@ -255,7 +255,7 @@ export function SpeakSession({
       startTimer();
       setPhase("recording");
     } catch {
-      setError("Microphone access is needed to record. Check browser permissions.");
+      setError("Halo needs your microphone to record. Check your browser’s permissions.");
     }
   }
 
@@ -269,7 +269,7 @@ export function SpeakSession({
       seenQuestionIdsRef.current,
     );
     if (!replacement) {
-      setError("No other questions left in this topic right now.");
+      setError("That’s the last question in this topic.");
       return;
     }
 
@@ -341,7 +341,7 @@ export function SpeakSession({
       data: { user },
     } = await supabase.auth.getUser();
     if (!user) {
-      throw new Error("Sign in to save your recording.");
+      throw new Error("Log in to save your recording.");
     }
     if (!opts.blob || opts.blob.size === 0) {
       throw new Error("No audio was captured. Try recording again.");
@@ -363,7 +363,7 @@ export function SpeakSession({
       });
     if (uploadError) {
       throw new Error(
-        uploadError.message || "Could not upload this recording.",
+        uploadError.message || "Couldn’t upload this recording. Try again.",
       );
     }
 
@@ -505,7 +505,7 @@ export function SpeakSession({
             fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
           }}
         >
-          Nice work
+          Saved
         </h1>
         <p
           className="mt-4 max-w-xl text-[1.0625rem] leading-relaxed"
@@ -515,19 +515,13 @@ export function SpeakSession({
           {mode === "main" ? "s are" : " is"} saved to{" "}
           {placeLabel ?? "your map"}.
         </p>
-        <p
-          className="mt-6 max-w-md text-xs leading-relaxed"
-          style={{ color: "var(--foreground-muted)" }}
-        >
-          Reflection details live on each planet&rsquo;s constellation timeline
-          when you&rsquo;re ready to revisit them.
-        </p>
+
         <TransitionLink
           href={doneHref}
           variant="fade"
           className="mt-10 inline-flex w-fit rounded-full bg-[var(--violet)] px-5 py-3 text-sm font-semibold text-[var(--on-violet)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
-          {placeLabel ? `Back to ${placeLabel}` : "Back to universe"}
+          {placeLabel ? `Back to ${placeLabel}` : "Back to Universe"}
         </TransitionLink>
       </div>
     );
@@ -540,7 +534,7 @@ export function SpeakSession({
         ? `Question ${index + 1} of ${sessionQuestions.length}`
         : mode === "focus"
           ? `Focus · ${index + 1} of ${sessionQuestions.length}`
-          : "Daily prompt";
+          : "Today’s question";
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -592,8 +586,8 @@ export function SpeakSession({
           className="mt-5 max-w-lg text-[0.9375rem] leading-relaxed sm:text-base"
           style={{ color: "var(--foreground-muted)" }}
         >
-          Take your time — most answers land under about 2 minutes 30 seconds.
-          There&rsquo;s no hard timer.
+          Most answers run under two and a half minutes. There&rsquo;s no
+          timer.
         </p>
 
         {phase === "recording" && (

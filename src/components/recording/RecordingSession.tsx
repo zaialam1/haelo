@@ -200,7 +200,7 @@ export function RecordingSession({
       setSaveError(
         e instanceof Error
           ? e.message
-          : "Could not save your session. Please try again.",
+          : "Couldn’t save your session. Try again.",
       );
       setSaving(false);
       savingLockRef.current = false;
@@ -238,12 +238,6 @@ export function RecordingSession({
           >
             {content.label}
           </p>
-          <p
-            className="mt-1.5 max-w-sm text-sm leading-relaxed"
-            style={{ color: "var(--foreground-muted)" }}
-          >
-            {content.shortLine}
-          </p>
         </div>
         <button
           type="button"
@@ -260,7 +254,7 @@ export function RecordingSession({
           <IntroMoment
             milestone="recording_introduced"
             title="How a session works"
-            body="You’ll get a short prompt, then record your voice. When you stop, Halo reflects back what it noticed — private to you, never graded."
+            body="Read the question, hit record, and answer out loud. When you stop, you get feedback on how it came across. Only you can see it."
           />
         </div>
       ) : null}
@@ -268,14 +262,8 @@ export function RecordingSession({
       {headerSlot ? <div className="mt-6">{headerSlot}</div> : null}
 
       <div className="flex flex-1 flex-col justify-center py-8 sm:py-12">
-        <p
-          className="text-[0.6875rem] font-semibold tracking-[0.1em] uppercase"
-          style={{ color: "var(--foreground-muted)" }}
-        >
-          Your prompt
-        </p>
         <h1
-          className="mt-4 max-w-2xl font-[family-name:var(--font-fraunces)] text-2xl leading-snug sm:text-3xl lg:text-[2.15rem]"
+          className="max-w-2xl font-[family-name:var(--font-fraunces)] text-2xl leading-snug sm:text-3xl lg:text-[2.15rem]"
           style={{
             fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
           }}
@@ -289,7 +277,7 @@ export function RecordingSession({
               className="text-[0.6875rem] font-semibold tracking-[0.1em] uppercase"
               style={{ color: "var(--foreground-muted)" }}
             >
-              Why this matters
+              Why this question
             </p>
             <p
               className="mt-2 text-[0.9375rem] leading-relaxed"
@@ -305,7 +293,7 @@ export function RecordingSession({
             className="mt-5 max-w-lg text-[0.9375rem] leading-relaxed"
             style={{ color: "var(--violet)" }}
           >
-            Say whatever comes to mind. There isn&rsquo;t a right answer.
+            Just start talking. You can retake it if you want.
           </p>
         ) : null}
 
@@ -314,8 +302,8 @@ export function RecordingSession({
             className="mt-5 max-w-lg text-[0.9375rem] leading-relaxed"
             style={{ color: "var(--foreground-muted)" }}
           >
-            Speak naturally. You can stop any time — up to{" "}
-            {formatTime(DEFAULT_MAX_RECORDING_SECONDS)}.
+            You have up to {formatTime(DEFAULT_MAX_RECORDING_SECONDS)}. Stop
+            whenever you&rsquo;re done.
           </p>
         )}
 
@@ -373,7 +361,7 @@ export function RecordingSession({
 
           {phase === "uploading" && (
             <p className="text-sm font-medium" style={{ color: accent }}>
-              Saving your response…
+              Saving…
             </p>
           )}
         </div>
@@ -403,7 +391,7 @@ export function RecordingSession({
               className="mt-3 text-sm leading-relaxed"
               style={{ color: "var(--foreground-muted)" }}
             >
-              Listen once, then save to continue into Session Review.
+              Listen back, then submit or retake.
             </p>
           </div>
         )}
@@ -436,7 +424,7 @@ export function RecordingSession({
             aria-describedby={statusId}
             className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--violet)] px-6 py-3.5 text-sm font-semibold text-[var(--on-violet)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           >
-            {phase === "error" ? "Try Again" : "Start Recording"}
+            {phase === "error" ? "Try again" : "Start recording"}
           </button>
         )}
 
@@ -451,7 +439,7 @@ export function RecordingSession({
               color: "var(--on-warm)",
             }}
           >
-            Stop Recording
+            Stop recording
           </button>
         )}
 
@@ -463,7 +451,7 @@ export function RecordingSession({
               disabled={saving}
               className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--violet)] px-6 py-3.5 text-sm font-semibold text-[var(--on-violet)] transition-opacity hover:opacity-90 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
             >
-              {saveError ? "Retry Save" : "Submit"}
+              {saveError ? "Try saving again" : "Submit"}
             </button>
             <button
               type="button"
@@ -487,7 +475,7 @@ export function RecordingSession({
             disabled
             className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--violet)] px-6 py-3.5 text-sm font-semibold text-[var(--on-violet)] opacity-50"
           >
-            Saving your response…
+            Saving…
           </button>
         )}
 
@@ -497,7 +485,7 @@ export function RecordingSession({
             variant="fade"
             className="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3 text-sm font-semibold text-[var(--on-violet)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           >
-            {flow.source === "orbit" ? "Back to Orbit" : `Return to ${content.label}`}
+            {flow.source === "orbit" ? "Back to Orbit" : `Back to ${content.label}`}
           </TransitionLink>
         )}
       </div>

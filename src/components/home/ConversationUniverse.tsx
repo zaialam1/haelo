@@ -52,7 +52,7 @@ export function ConversationUniverse({
       style={{
         background: "var(--universe-map)",
       }}
-      aria-label="Your voice universe"
+      aria-label="Your Universe"
       data-tour="universe"
     >
       {/* Tiny white stars */}

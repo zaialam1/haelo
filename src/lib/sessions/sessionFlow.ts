@@ -44,9 +44,9 @@ export function planetSessionFlow(planet: Planet): SessionFlowConfig {
     compareHref: (sessionId) => `/session/${planet}/${sessionId}/compare`,
     afterCompleteHref: (sessionId) =>
       `/session/${planet}/${sessionId}/complete`,
-    finishLabel: "Finish Session",
-    lookLaterLabel: "Look at Analysis Later",
-    reviewTitle: "Session Review",
+    finishLabel: "Finish session",
+    lookLaterLabel: "Read feedback later",
+    reviewTitle: "Session review",
     completeTitle: "Session complete",
     journeyHref: `/journey?planet=${planet}`,
   };
@@ -70,10 +70,10 @@ export function guestSessionFlow(planet: Planet): SessionFlowConfig {
       `/try/session/${planet}/${sessionId}/complete`,
     finishLabel: "Finish",
     lookLaterLabel: "Finish for now",
-    reviewTitle: "Your practice",
-    completeTitle: "Nice work",
+    reviewTitle: "Session review",
+    completeTitle: "Session complete",
     completeBody:
-      "This guest practice stays temporary. Create an account anytime to keep a private Universe of your own.",
+      "Guest sessions aren’t saved. Create an account to keep the ones you do next.",
     journeyHref: "/signup",
   };
 }
@@ -99,9 +99,9 @@ export function orbitSessionFlow(opts: {
     // Resume engine decides next question vs synthesis.
     afterCompleteHref: () => `/orbits/${orbitKey}/reflect`,
     finishLabel: "Continue Orbit",
-    lookLaterLabel: "Look at Analysis Later",
-    reviewTitle: "Reflection Review",
-    completeTitle: "Reflection saved",
+    lookLaterLabel: "Read feedback later",
+    reviewTitle: "Your answer",
+    completeTitle: "Answer saved",
     journeyHref: "/journey",
     orbit: {
       orbitKey: opts.orbitKey,

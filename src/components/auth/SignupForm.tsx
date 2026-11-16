@@ -107,7 +107,7 @@ export function SignupForm() {
         next.username = "Still checking that Halo name…";
       } else if (usernameAvailability === "invalid") {
         next.username =
-          "Use 3–20 letters, numbers, or underscores. Don’t start or end with an underscore.";
+          "Use 3 to 20 letters, numbers, or underscores. Don’t start or end with an underscore.";
       }
     }
     if (!email.trim()) next.email = "Enter your email.";
@@ -204,7 +204,7 @@ export function SignupForm() {
             }
             setErrors({
               form:
-                "An account with this email already exists. Log in with the same password to continue.",
+                "There’s already an account with this email. Log in instead.",
             });
             return;
           }
@@ -262,7 +262,7 @@ export function SignupForm() {
     } catch {
       setErrors({
         form:
-          "Something went wrong. If an account was created, log in with the same password to continue.",
+          "Something went wrong. If your account was created, try logging in.",
       });
     } finally {
       setSubmitting(false);
@@ -287,8 +287,7 @@ export function SignupForm() {
             <span className="font-semibold text-[var(--foreground)]">
               {email.trim().toLowerCase()}
             </span>
-            . Open it to finish creating your account. Your Halo name will be
-            saved when you confirm.
+            . Open it to finish creating your account.
           </p>
         </div>
         <TransitionLink
@@ -296,7 +295,7 @@ export function SignupForm() {
           href="/login"
           className="inline-flex w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)] shadow-[0_10px_28px_color-mix(in_srgb,var(--violet)_30%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
-          Back to Log In
+          Back to log in
         </TransitionLink>
       </div>
     );
@@ -317,9 +316,6 @@ export function SignupForm() {
         >
           Create your account
         </h1>
-        <p className="mt-2 text-sm text-[var(--foreground-muted)]">
-          It only takes a minute.
-        </p>
       </div>
 
       {errors.form ? (
@@ -370,7 +366,7 @@ export function SignupForm() {
           </p>
         ) : null}
         <p className="mt-2 text-xs leading-relaxed text-[var(--foreground-muted)]">
-          Your recordings, Journey, and analyses stay private.
+          Your recordings, Journey, and feedback stay private.
         </p>
       </div>
 
@@ -383,7 +379,7 @@ export function SignupForm() {
           inputMode="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@email.com"
+          placeholder="you@example.com"
           aria-invalid={Boolean(errors.email)}
           aria-describedby={errors.email ? `${emailId}-error` : undefined}
           className={inputClassName(Boolean(errors.email))}
@@ -487,9 +483,6 @@ export function SignupForm() {
         .
       </p>
 
-      <p className="text-center text-sm text-[var(--foreground-muted)]">
-        Your recordings stay private to you.
-      </p>
 
       <p className="text-center text-sm text-[var(--foreground)]">
         Already have an account?{" "}

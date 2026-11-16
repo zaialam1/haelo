@@ -9,6 +9,7 @@ import {
   retryMyVoiceAction,
   trackMyVoiceJourneyClickAction,
 } from "@/lib/myVoice/actions";
+import { MY_VOICE_MIN_SESSIONS_FOR_SYNTHESIS } from "@/lib/myVoice/thresholds";
 import type { MyVoiceViewModel } from "@/lib/myVoice/types";
 import {
   useEffect,
@@ -126,13 +127,7 @@ function LoadingState() {
           fontVariationSettings: '"opsz" 72, "SOFT" 40, "WONK" 0, "wght" 550',
         }}
       >
-        Your voice has been taking shape…
-      </p>
-      <p
-        className="mt-3 max-w-md text-base leading-relaxed"
-        style={{ color: "var(--foreground-muted)" }}
-      >
-        Halo is gathering what it has noticed across your Universe.
+        Putting your summary together…
       </p>
     </div>
   );
@@ -145,7 +140,7 @@ function PlanetShortcuts() {
         className="text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
         style={{ color: "var(--violet)" }}
       >
-        Keep exploring your Universe
+        Pick a planet
       </p>
       <ul className="mt-4 flex flex-wrap gap-2.5">
         {VOICE_PLANETS.map((planet) => (
@@ -188,14 +183,14 @@ function EmptyState() {
           fontVariationSettings: '"opsz" 72, "SOFT" 40, "WONK" 0, "wght" 550',
         }}
       >
-        Your voice is waiting to be heard
+        Nothing here yet
       </p>
       <p
         className="mx-auto mt-4 max-w-xl text-center text-base leading-relaxed sm:text-lg"
         style={{ color: "var(--foreground-muted)" }}
       >
-        Record a reflection on any planet — Connect, Stand, Explore, or Express
-        — and Halo will begin noticing how you communicate.
+        My Voice is a short summary of the patterns in how you talk. It shows
+        up after {MY_VOICE_MIN_SESSIONS_FOR_SYNTHESIS} sessions.
       </p>
       <PlanetShortcuts />
     </div>
@@ -212,23 +207,14 @@ function BeginningState({ sessionCount }: { sessionCount: number }) {
           fontVariationSettings: '"opsz" 72, "SOFT" 40, "WONK" 0, "wght" 550',
         }}
       >
-        Your voice is just beginning to take shape.
+        Not enough to go on yet
       </p>
       <p
         className="mx-auto mt-5 max-w-xl text-center text-base leading-relaxed sm:text-lg"
         style={{ color: "var(--foreground)" }}
       >
-        As you explore Connect, Stand, Explore, and Express, Halo will start
-        noticing patterns in how you communicate across different moments.
-      </p>
-      <p
-        className="mx-auto mt-5 max-w-md text-center text-sm leading-relaxed sm:text-base"
-        style={{ color: "var(--foreground-muted)" }}
-      >
-        Keep exploring your Universe
-        {sessionCount > 0
-          ? ` — ${sessionCount} reflection${sessionCount === 1 ? "" : "s"} so far.`
-          : "."}
+        My Voice needs {MY_VOICE_MIN_SESSIONS_FOR_SYNTHESIS} sessions before it
+        can spot patterns. You&rsquo;ve done {sessionCount}.
       </p>
       <PlanetShortcuts />
     </div>
@@ -250,16 +236,16 @@ function ReadyContent({
       >
         {content.openingSynthesis}
       </p>
-      <Section title="Taking Shape">{content.takingShape}</Section>
-      <Section title="Still Exploring">{content.stillExploring}</Section>
-      <Section title="Across Your Voice">{content.acrossYourVoice}</Section>
+      <Section title="What’s consistent">{content.takingShape}</Section>
+      <Section title="What still varies">{content.stillExploring}</Section>
+      <Section title="Across planets">{content.acrossYourVoice}</Section>
       {content.carryForward ? (
         <section className="mt-9">
           <h2
             className="text-[0.6875rem] font-semibold tracking-[0.1em] uppercase"
             style={{ color: "var(--foreground-muted)" }}
           >
-            Carry forward
+            Something to try
           </h2>
           <p
             className="mt-3 text-base leading-relaxed sm:text-lg"
@@ -273,7 +259,7 @@ function ReadyContent({
         className="mt-10 text-center text-sm tracking-wide"
         style={{ color: "var(--foreground-muted)" }}
       >
-        {view.refreshing ? "Updating gently…" : view.updatedLabel}
+        {view.refreshing ? "Updating…" : view.updatedLabel}
       </p>
       <div className="mt-6 flex justify-center">
         <TransitionLink
@@ -285,7 +271,7 @@ function ReadyContent({
           className="text-base font-medium underline-offset-4 transition hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold)]"
           style={{ color: "var(--violet)" }}
         >
-          Explore your Journey →
+          See your Journey →
         </TransitionLink>
       </div>
     </div>
@@ -437,8 +423,8 @@ export function MyVoiceExperience({
           <div className="mt-6">
             <IntroMoment
               milestone="my_voice_opened"
-              title="This is My Voice."
-              body="After enough reflections, Halo gently notices patterns across your planets — not a score, just a mirror of how you’ve been speaking."
+              title="My Voice"
+              body="A short summary of the patterns in how you talk, across all four planets. It updates every few sessions. It isn’t a score."
             />
           </div>
         ) : null}

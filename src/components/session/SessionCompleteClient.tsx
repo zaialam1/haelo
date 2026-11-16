@@ -46,8 +46,8 @@ export function SessionCompleteClient({
         style={{ color: "var(--foreground-muted)" }}
       >
         {alreadyInJourney
-          ? "This practice is saved privately and is part of your Journey."
-          : "Your recording is saved. When this session is marked complete, it will appear as a star in Journey."}
+          ? "It’s saved to your Journey. Only you can see it."
+          : "Your recording is saved. It shows up in Journey once the session is finished."}
       </p>
 
       {stardustEarned > 0 ? (
@@ -85,7 +85,7 @@ export function SessionCompleteClient({
           className="text-sm font-medium"
           style={{ color: "var(--foreground-muted)" }}
         >
-          One session · one Journey star
+          One new star in your Journey
         </span>
       </div>
 
@@ -112,7 +112,7 @@ export function SessionCompleteClient({
             color: "var(--foreground)",
           }}
         >
-          View in Journey
+          See it in Journey
         </TransitionLink>
       </div>
     </div>

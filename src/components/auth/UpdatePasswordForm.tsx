@@ -72,9 +72,6 @@ export function UpdatePasswordForm() {
         >
           Choose a new password
         </h1>
-        <p className="mt-2 text-sm text-[var(--foreground-muted)]">
-          Then you can get back to exploring your voice.
-        </p>
       </div>
 
       {errors.form ? (

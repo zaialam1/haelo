@@ -14,8 +14,6 @@ export type PlanetPageContent = {
   label: string;
   /** Hero short line */
   shortLine: string;
-  /** Hero supporting sentence */
-  description: string;
   tryThis: string;
   sessionCta: string;
   /** Wired to /session/[planet] */
@@ -48,18 +46,16 @@ export const PLANET_PAGES: Record<VoicePlanetId, PlanetPageContent> = {
   express: {
     id: "express",
     label: "Express",
-    shortLine: "Say what you really think and feel.",
-    description:
-      "Practice putting your thoughts and feelings into words without over-editing yourself.",
+    shortLine: "Put what's in your head into words.",
     tryThis:
       "What's something you've been thinking about lately but haven't really said out loud?",
-    sessionCta: "Start Express Session",
+    sessionCta: "Start Express session",
     sessionHref: "/session/express",
     growth: [],
     growthEmpty:
-      "After a few sessions here, gentle observations about how you express yourself will appear.",
+      "Feedback from your Express sessions will collect here.",
     recentSessions: [],
-    recentEmpty: "No Express sessions yet. Start one above to begin.",
+    recentEmpty: "No Express sessions yet.",
     journeyHref: "/journey?planet=express",
     journeyLabel: "See all Express sessions in Journey →",
     atmosphere: "warm",
@@ -67,18 +63,16 @@ export const PLANET_PAGES: Record<VoicePlanetId, PlanetPageContent> = {
   stand: {
     id: "stand",
     label: "Stand",
-    shortLine: "Speak up and stand behind what you believe.",
-    description:
-      "Practice opinions, disagreement, boundaries, and asking for what you need.",
+    shortLine: "Say what you think without backing down.",
     tryThis:
       "Someone disagrees with an opinion you care about. Explain what you think without apologizing for having the opinion.",
-    sessionCta: "Start Stand Session",
+    sessionCta: "Start Stand session",
     sessionHref: "/session/stand",
     growth: [],
     growthEmpty:
-      "After a few sessions here, gentle observations about how you stand up for yourself will appear.",
+      "Feedback from your Stand sessions will collect here.",
     recentSessions: [],
-    recentEmpty: "No Stand sessions yet. Start one above to begin.",
+    recentEmpty: "No Stand sessions yet.",
     journeyHref: "/journey?planet=stand",
     journeyLabel: "See all Stand sessions in Journey →",
     atmosphere: "deep",
@@ -86,18 +80,16 @@ export const PLANET_PAGES: Record<VoicePlanetId, PlanetPageContent> = {
   connect: {
     id: "connect",
     label: "Connect",
-    shortLine: "Build confidence communicating with other people.",
-    description:
-      "Practice being open, clear, and understood in conversations that matter.",
+    shortLine: "Say it so the other person gets it.",
     tryThis:
       "A friend did something that bothered you. What would you want to say to them?",
-    sessionCta: "Start Connect Session",
+    sessionCta: "Start Connect session",
     sessionHref: "/session/connect",
     growth: [],
     growthEmpty:
-      "After a few sessions here, gentle observations about how you connect with others will appear.",
+      "Feedback from your Connect sessions will collect here.",
     recentSessions: [],
-    recentEmpty: "No Connect sessions yet. Start one above to begin.",
+    recentEmpty: "No Connect sessions yet.",
     journeyHref: "/journey?planet=connect",
     journeyLabel: "See all Connect sessions in Journey →",
     atmosphere: "soft",
@@ -105,17 +97,15 @@ export const PLANET_PAGES: Record<VoicePlanetId, PlanetPageContent> = {
   explore: {
     id: "explore",
     label: "Explore",
-    shortLine: "Discover what you think and what matters to you.",
-    description:
-      "Use your voice to explore your ideas, values, interests, and identity.",
+    shortLine: "Think out loud and see where you land.",
     tryThis: "What's something you've changed your mind about recently?",
-    sessionCta: "Start Explore Session",
+    sessionCta: "Start Explore session",
     sessionHref: "/session/explore",
     growth: [],
     growthEmpty:
-      "After a few sessions here, gentle observations about what you're discovering will appear.",
+      "Feedback from your Explore sessions will collect here.",
     recentSessions: [],
-    recentEmpty: "No Explore sessions yet. Start one above to begin.",
+    recentEmpty: "No Explore sessions yet.",
     journeyHref: "/journey?planet=explore",
     journeyLabel: "See all Explore sessions in Journey →",
     atmosphere: "spark",

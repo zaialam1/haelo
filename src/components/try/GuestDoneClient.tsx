@@ -42,15 +42,14 @@ export function GuestDoneClient({ skipped = false }: GuestDoneClientProps) {
             fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
           }}
         >
-          {skipped ? "No pressure — try another when you’re ready." : "Nice work."}
+          {skipped ? "Skipped." : "Session complete."}
         </h1>
         <p
           className="mt-3 max-w-sm text-[0.9375rem] leading-relaxed"
           style={{ color: "var(--foreground-muted)" }}
         >
-          Guest practice is temporary and isn’t saved to an account. Create a
-          free account anytime to keep a private Universe — optional, never
-          required.
+          Guest sessions aren’t saved. Create a free account to keep the ones
+          you do next.
         </p>
       </div>
 

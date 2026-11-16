@@ -81,15 +81,14 @@ export function UniverseIntroOverlay() {
           className="mx-auto mt-3 max-w-sm text-[0.9375rem] leading-relaxed"
           style={{ color: "var(--foreground-muted)" }}
         >
-          Each planet is a different side of your voice, and it grows as you
-          practice. The light at the center is My Voice — a picture of how you
-          sound that takes shape over time.
+          Four planets, four kinds of practice. The light in the middle is My
+          Voice. After a few sessions, it sums up patterns in how you talk.
         </p>
         <p
           className="mx-auto mt-3 max-w-sm text-[0.9375rem] leading-relaxed"
           style={{ color: "var(--foreground-muted)" }}
         >
-          It all starts with one short reflection — just you, talking.
+          Start with one short question. Just you, talking.
         </p>
 
         <div className="mt-8 flex flex-col items-center gap-3">

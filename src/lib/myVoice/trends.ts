@@ -101,9 +101,9 @@ export function computeMetricTrend(
     falling:
       "Recent period median is meaningfully lower than earlier period (describe carefully; do not invent decline narratives).",
     stable:
-      "Earlier and recent period medians are similar — prefer language about consistency, not growth.",
+      "Earlier and recent period medians are similar. Describe it as consistent; do not describe a change.",
     variable:
-      "Scores vary widely across sessions — prefer context-dependent language over a single growth story.",
+      "Scores vary widely across sessions. Describe it as depending on topic or context; do not tell a single improvement story.",
     insufficient: "Insufficient evidence.",
   };
 

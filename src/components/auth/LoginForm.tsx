@@ -138,11 +138,6 @@ export function LoginForm() {
         >
           Welcome back
         </h1>
-        <p className="mt-2 text-sm text-[var(--foreground-muted)]">
-          {cameFromApp
-            ? "Log in to continue — or create an account if you’re new."
-            : "Log in to continue exploring your voice."}
-        </p>
       </div>
 
       {errors.form ? (
@@ -228,7 +223,7 @@ export function LoginForm() {
         disabled={submitting}
         className="mt-1 inline-flex w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)] shadow-[0_10px_28px_color-mix(in_srgb,var(--violet)_30%,transparent)] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
       >
-        {submitting ? "Logging in…" : "Log In"}
+        {submitting ? "Logging in…" : "Log in"}
       </button>
 
       {cameFromApp ? (

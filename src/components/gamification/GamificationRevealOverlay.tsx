@@ -112,8 +112,8 @@ export function GamificationRevealOverlay({
             className="relative mx-auto mt-3 max-w-sm text-[0.9375rem] leading-relaxed"
             style={{ color: "var(--foreground-muted)" }}
           >
-            Your planets grow like this as you keep practicing — no scores,
-            just your voice getting more room.
+            Your planets change like this as you keep practicing. No scores.
+            Just more going on visually.
           </p>
         ) : null}
 
@@ -139,7 +139,7 @@ function eyebrowFor(type: GamificationReveal["revealType"]): string {
     case "orbit_reward":
       return "Celestial discovery";
     case "milestone":
-      return "Something shifted";
+      return "Milestone";
     case "experiment_ack":
       return "Experiment";
     default:

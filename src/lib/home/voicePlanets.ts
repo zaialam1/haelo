@@ -34,7 +34,7 @@ export const VOICE_PLANETS: VoicePlanet[] = [
   {
     id: "express",
     label: "Express",
-    tagline: "Say what you really think and feel.",
+    tagline: "Put what's in your head into words.",
     href: "/express",
     color: "#E8A0BF",
     x: 17,
@@ -52,7 +52,7 @@ export const VOICE_PLANETS: VoicePlanet[] = [
   {
     id: "stand",
     label: "Stand",
-    tagline: "Speak up and stand behind what you believe.",
+    tagline: "Say what you think without backing down.",
     href: "/stand",
     color: "#5B4B8A",
     x: 82,
@@ -70,7 +70,7 @@ export const VOICE_PLANETS: VoicePlanet[] = [
   {
     id: "connect",
     label: "Connect",
-    tagline: "Build confidence communicating with other people.",
+    tagline: "Say it so the other person gets it.",
     href: "/connect",
     color: "#6B9BC7",
     x: 20,
@@ -88,7 +88,7 @@ export const VOICE_PLANETS: VoicePlanet[] = [
   {
     id: "explore",
     label: "Explore",
-    tagline: "Discover what you think and what matters to you.",
+    tagline: "Think out loud and see where you land.",
     href: "/explore",
     color: "#E9A98A",
     x: 81,

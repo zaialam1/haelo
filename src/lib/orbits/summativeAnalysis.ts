@@ -7,6 +7,7 @@ import {
   getOpenAIAnalysisModel,
   getOpenAIApiKey,
 } from "@/lib/openai";
+import { tidyGeneratedCopy, withBrandVoice } from "@/lib/ai/brandVoice";
 import type { OrbitDefinition } from "@/lib/orbits/types";
 import type { OrbitSummativeAnalysisContent } from "@/lib/orbits/types";
 import { PLANET_LABEL } from "@/lib/orbits/ui";
@@ -20,12 +21,16 @@ export type OrbitReflectionForSynthesis = {
   analysisSummary: string | null;
 };
 
-const SUMMATIVE_SYSTEM_PROMPT = `You are Halo, a calm, warm coaching mirror for spoken reflection.
-You are writing a summative Orbit analysis — what became clearer across an entire guided experience of six spoken reflections.
+/**
+ * Shared writing rules are appended by withBrandVoice
+ * (see src/lib/ai/brandVoice.ts and docs/HAELO_BRAND_VOICE.md).
+ */
+const SUMMATIVE_SYSTEM_PROMPT = withBrandVoice(`You are Halo. A teenager (about 13 to 18) just answered six spoken questions about one real situation. This guided set is called an Orbit.
+You are writing the summary they read at the end: what became clearer across all six answers.
 
-Tone: reflective, specific, encouraging, personal, and safe. Youthful but not childish.
+Tone: warm but plain, specific, honest. Write like someone who listened to all six answers and is telling them what stood out. Not a therapist, not a teacher, not a cheerleader.
 
-Focus on: what became clearer across the whole experience — NOT a second pass of individual-response coaching.
+Focus on: what became clearer across the whole set. This is NOT a second pass of individual-response coaching.
 
 Rules:
 - Base every claim on the transcripts and context provided. Do not invent quotes or facts.
@@ -33,11 +38,12 @@ Rules:
 - Do NOT claim another person definitely thinks or intends something.
 - Do NOT treat speech speed/pitch as direct evidence of emotion.
 - Do NOT tell the user what decision they must make.
-- Do NOT manufacture improvement. If nothing shifted, say their position stayed consistent or they still seem to be working something out.
-- Prefer language like: "You returned several times to…", "One thing that became clearer…", "Earlier you focused on…", "Later you described…", "You may still be figuring out…"
-- Keep each section to 2–4 sentences.
-- practicePrompt is optional: one short spoken practice they could try later, or null if nothing natural fits.
-- Respond with a single JSON object matching the schema. No markdown fences.`;
+- Do NOT manufacture improvement. If nothing shifted, say their position stayed consistent or that it still seems unsettled.
+- Refer to specific answers ("In your second answer...", "By the last question..."). Useful framings: "You came back several times to...", "Early on you focused on...", "Later you described...", "It's still not clear whether...". Don't use the same framing twice.
+- Keep each section to 2 to 4 sentences. Shorter is fine when there's less to say.
+- carryThisWithYou: one concrete thing from their own answers that's worth remembering. Not a pep talk, not a life lesson.
+- practicePrompt is optional: one short thing they could say out loud later, or null if nothing natural fits.
+- Respond with a single JSON object matching the schema. No markdown fences.`);
 
 type RawSummativeJson = {
   whatBecameClearer?: unknown;
@@ -51,7 +57,7 @@ function requireNonEmptyString(value: unknown, field: string): string {
   if (typeof value !== "string" || !value.trim()) {
     throw new Error(`Summative analysis missing ${field}.`);
   }
-  return value.trim();
+  return tidyGeneratedCopy(value.trim());
 }
 
 function parseSummativeJson(raw: string): OrbitSummativeAnalysisContent {
@@ -65,7 +71,7 @@ function parseSummativeJson(raw: string): OrbitSummativeAnalysisContent {
   const practiceRaw = parsed.practicePrompt;
   let practicePrompt: string | null = null;
   if (typeof practiceRaw === "string" && practiceRaw.trim()) {
-    practicePrompt = practiceRaw.trim();
+    practicePrompt = tidyGeneratedCopy(practiceRaw.trim());
   }
 
   return {

@@ -190,10 +190,10 @@ export function HomeUtilities({
 
   const streakCopy =
     streakDays === 0
-      ? "Showing up takes courage. One short reflection starts your streak."
+      ? "One session starts a streak."
       : streakDays === 1
-        ? "You showed up today — that counts. Come back when you’re ready."
-        : `You’ve shown up ${streakDays} days in a row. That’s real courage, not a scoreboard.`;
+        ? "Do a session tomorrow to keep it going."
+        : null;
 
   return (
     <div
@@ -206,7 +206,7 @@ export function HomeUtilities({
           onClick={() => toggle("streak")}
           ariaLabel={
             streakDays > 0
-              ? `${streakDays}-day streak — view details`
+              ? `${streakDays}-day streak. View details.`
               : "View your streak"
           }
           ariaControls={streakPanelId}
@@ -232,7 +232,7 @@ export function HomeUtilities({
           onClick={() => toggle("daily")}
           ariaLabel={
             dailyCompleted
-              ? "Today's question completed — view details"
+              ? "Today's question, answered. View details."
               : "Open today's question"
           }
           ariaControls={dailyPanelId}
@@ -260,7 +260,7 @@ export function HomeUtilities({
           onClick={() => toggle("notifications")}
           ariaLabel={
             unreadCount > 0
-              ? `Notifications — ${unreadCount} unread`
+              ? `Notifications, ${unreadCount} unread`
               : "Notifications"
           }
           ariaControls={notifyPanelId}
@@ -323,7 +323,7 @@ export function HomeUtilities({
                 color: "var(--foreground)",
               }}
             >
-              Your Streak
+              Your streak
             </p>
             <p
               className="mt-1 font-[family-name:var(--font-fraunces)] text-2xl tabular-nums"
@@ -345,12 +345,14 @@ export function HomeUtilities({
             ×
           </button>
         </div>
-        <p
-          className="mt-3 text-sm leading-relaxed"
-          style={{ color: "var(--foreground-muted)" }}
-        >
-          {streakCopy}
-        </p>
+        {streakCopy ? (
+          <p
+            className="mt-3 text-sm leading-relaxed"
+            style={{ color: "var(--foreground-muted)" }}
+          >
+            {streakCopy}
+          </p>
+        ) : null}
         <div className="mt-5 flex justify-between gap-1" aria-label="This week">
           {WEEK_LABELS.map((label, i) => (
             <div key={`${label}-${i}`} className="flex flex-1 flex-col items-center gap-1.5">
@@ -397,7 +399,7 @@ export function HomeUtilities({
               color: "var(--foreground)",
             }}
           >
-            Today&apos;s Question
+            Today&apos;s question
           </p>
           <button
             type="button"
@@ -423,7 +425,8 @@ export function HomeUtilities({
             className="mt-5 text-sm"
             style={{ color: "var(--foreground-muted)" }}
           >
-            You already answered today. A new question will be here tomorrow.
+            You&apos;ve answered today&apos;s question. There&apos;s a new one
+            tomorrow.
           </p>
         ) : (
           <TransitionLink
@@ -433,7 +436,7 @@ export function HomeUtilities({
             style={{ color: "var(--violet)" }}
             onClick={() => setPanel(null)}
           >
-            Answer in 60 seconds →
+            Answer out loud →
           </TransitionLink>
         )}
       </div>

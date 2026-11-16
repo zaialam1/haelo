@@ -38,13 +38,16 @@ export async function ensureGuestSession(): Promise<{ userId: string }> {
   if (error || !data.user) {
     const raw = error?.message || "";
     if (/captcha/i.test(raw)) {
+      console.error(
+        "[guest] Anonymous sign-in blocked by Supabase CAPTCHA. In the Supabase dashboard, open Authentication → Attack Protection and turn off CAPTCHA protection, or wire a CAPTCHA widget into Try Halo.",
+      );
       throw new Error(
-        "Guest practice is blocked by Supabase CAPTCHA. In the Supabase dashboard, open Authentication → Attack Protection and turn off CAPTCHA protection (or we can wire a CAPTCHA widget into Try Halo).",
+        "Guest practice isn’t working right now. You can create an account and practice there.",
       );
     }
     throw new Error(
       raw ||
-        "Guest practice isn’t available right now. Try again, or create an account.",
+        "Guest practice isn’t working right now. Try again, or create an account.",
     );
   }
 

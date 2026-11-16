@@ -156,19 +156,19 @@ export function OrbitCompleteClient({
       {localStatus === "ready" && localAnalysis && !showPending ? (
         <div className="mt-10 space-y-10">
           <AnalysisSection
-            title="What Became Clearer"
+            title="What got clearer"
             body={localAnalysis.whatBecameClearer}
           />
           <AnalysisSection
-            title="What Kept Coming Up"
+            title="What kept coming up"
             body={localAnalysis.whatKeptComingUp}
           />
           <AnalysisSection
-            title="How Your Voice Moved"
+            title="How you said it"
             body={localAnalysis.howYourVoiceMoved}
           />
           <AnalysisSection
-            title="Carry This With You"
+            title="Worth keeping"
             body={localAnalysis.carryThisWithYou}
           />
           {localAnalysis.practicePrompt ? (
@@ -189,7 +189,7 @@ export function OrbitCompleteClient({
                 className="mt-2 text-[0.75rem]"
                 style={{ color: "var(--foreground-muted)" }}
               >
-                Optional — not required to complete this Orbit.
+                Optional. Not required to finish this Orbit.
               </p>
             </section>
           ) : null}

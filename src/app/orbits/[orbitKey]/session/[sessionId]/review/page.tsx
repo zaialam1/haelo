@@ -18,8 +18,8 @@ export async function generateMetadata({
   const orbit = getOrbitByKey(orbitKey);
   return {
     title: orbit
-      ? `${orbit.title} · Review — Halo`
-      : "Orbit Review — Halo",
+      ? `${orbit.title} · Review | Halo`
+      : "Orbit Review | Halo",
   };
 }
 

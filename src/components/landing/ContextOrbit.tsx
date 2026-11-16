@@ -60,8 +60,7 @@ export function ContextOrbit({ className = "" }: ContextOrbitProps) {
       onMouseLeave={() => setPaused(false)}
     >
       <p id={labelId} className="sr-only">
-        Interactive preview of your voice universe. Select a planet to highlight
-        it.
+        Preview of the Halo Universe. Select a planet to highlight it.
       </p>
 
       <div
@@ -175,7 +174,7 @@ export function ContextOrbit({ className = "" }: ContextOrbitProps) {
         </span>
         <span className="hidden sm:inline" style={{ color: "var(--foreground-muted)" }}>
           {" "}
-          — tap another planet to see it shift
+          Tap another planet to see it shift
         </span>
       </p>
     </div>

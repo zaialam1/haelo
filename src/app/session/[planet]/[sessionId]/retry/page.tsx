@@ -18,7 +18,7 @@ export async function generateMetadata({
   const { intent } = await searchParams;
   return {
     title:
-      intent === "experiment" ? "Try the Experiment — Halo" : "Try Again — Halo",
+      intent === "experiment" ? "Try the Experiment | Halo" : "Try Again | Halo",
   };
 }
 

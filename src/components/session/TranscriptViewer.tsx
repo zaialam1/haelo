@@ -14,15 +14,15 @@ function statusMessage(status: TranscriptStatus | null | undefined): string {
   switch (status) {
     case "pending":
     case "not_started":
-      return "Transcript is being prepared.";
+      return "Transcript is on its way.";
     case "unavailable":
-      return "No transcript was captured for this recording. New recordings can capture one live in supported browsers (Chrome / Edge).";
+      return "This recording doesn’t have a transcript.";
     case "failed":
-      return "Transcript couldn’t be prepared for this recording.";
+      return "Couldn’t make a transcript for this recording.";
     case "ready":
       return "";
     default:
-      return "No transcript is available for this recording yet.";
+      return "No transcript yet.";
   }
 }
 

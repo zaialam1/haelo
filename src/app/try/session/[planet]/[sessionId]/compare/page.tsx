@@ -11,7 +11,7 @@ type PageProps = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  return { title: "Compare recordings — Halo" };
+  return { title: "Compare recordings | Halo" };
 }
 
 export default async function GuestSessionComparePage({ params }: PageProps) {

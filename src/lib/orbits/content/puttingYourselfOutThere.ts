@@ -11,7 +11,7 @@ export const PUTTING_YOURSELF_OUT_THERE_ORBITS: readonly OrbitDefinition[] = [
     openingTitle: "I Have an Idea",
     openingBody: `Ideas can feel obvious inside your own head and suddenly confusing when you try to explain them.
 
-This Orbit helps you find the heart of your idea and practice sharing it.`,
+Find the heart of your idea and practice sharing it.`,
     sortOrder: 1,
     questions: [
       {
@@ -60,7 +60,7 @@ This Orbit helps you find the heart of your idea and practice sharing it.`,
     openingTitle: "New Room",
     openingBody: `Walking into a new group can make you suddenly see yourself through everyone else's eyes.
 
-This Orbit helps you enter something new without feeling like you have to invent a different person.`,
+Practice entering something new without inventing a different person.`,
     sortOrder: 2,
     questions: [
       {
@@ -72,7 +72,7 @@ This Orbit helps you enter something new without feeling like you have to invent
         planet: "express",
         prompt: "What are you most nervous about?",
         explanation:
-          "A specific fear is easier to work with than “this is awkward.”",
+          "A specific fear is easier to work with than \"this is awkward.\"",
       },
       {
         planet: "connect",
@@ -110,7 +110,7 @@ This Orbit helps you enter something new without feeling like you have to invent
     openingTitle: "This Matters to Me",
     openingBody: `Some things feel important before you know how to explain why.
 
-This Orbit helps you find the words for something you genuinely care about.`,
+Find the words for something you genuinely care about.`,
     sortOrder: 3,
     questions: [
       {
@@ -147,7 +147,7 @@ This Orbit helps you find the words for something you genuinely care about.`,
         prompt:
           "Explain what this means to you without trying to sound impressive.",
         explanation:
-          "Authentic explanations are often simpler than polished ones.",
+          "Simple explanations often land better than polished ones.",
       },
     ],
   }),
@@ -161,7 +161,7 @@ This Orbit helps you find the words for something you genuinely care about.`,
     openingTitle: "Big Opportunity",
     openingBody: `Wanting something can make the possibility of not getting it feel much bigger.
 
-This Orbit helps you separate excitement from pressure and practice showing up as yourself.`,
+Separate excitement from pressure. Practice showing up as yourself.`,
     sortOrder: 4,
     questions: [
       {
@@ -184,7 +184,7 @@ This Orbit helps you separate excitement from pressure and practice showing up a
         planet: "stand",
         prompt: "What do you know you're capable of bringing?",
         explanation:
-          "Confidence can be grounded in evidence rather than hype.",
+          "Confidence works better when it's based on evidence, not hype.",
       },
       {
         planet: "express",
@@ -212,7 +212,7 @@ This Orbit helps you separate excitement from pressure and practice showing up a
     openingTitle: "Tell My Story",
     openingBody: `You have thousands of moments you could use to explain who you are.
 
-The hard part is figuring out which ones actually say something meaningful.`,
+The hard part is figuring out which ones actually say something.`,
     sortOrder: 5,
     questions: [
       {
@@ -223,7 +223,7 @@ The hard part is figuring out which ones actually say something meaningful.`,
       {
         planet: "explore",
         prompt: "What did you think before that experience?",
-        explanation: "The “before” makes the change visible.",
+        explanation: "The \"before\" makes the change visible.",
       },
       {
         planet: "express",
@@ -244,7 +244,7 @@ The hard part is figuring out which ones actually say something meaningful.`,
       {
         planet: "stand",
         prompt: "What does this story say about who you are now?",
-        explanation: "Practice owning the meaning without shrinking it.",
+        explanation: "Own the meaning without shrinking it.",
       },
     ],
   }),
@@ -258,7 +258,7 @@ The hard part is figuring out which ones actually say something meaningful.`,
     openingTitle: "I Want to Lead",
     openingBody: `Leadership isn't only about being the loudest person in the room.
 
-This Orbit helps you figure out why you want to lead and what kind of leader you actually want to be.`,
+Figure out why you want to lead and what kind of leader you actually want to be.`,
     sortOrder: 6,
     questions: [
       {
@@ -305,7 +305,7 @@ This Orbit helps you figure out why you want to lead and what kind of leader you
     openingTitle: "Showing Something I Made",
     openingBody: `Making something and showing it to someone are two completely different experiences.
 
-This Orbit helps you prepare for the vulnerable part where your work leaves your head and enters someone else's world.`,
+Prepare for the part where your work leaves your head and enters someone else's world.`,
     sortOrder: 7,
     questions: [
       {
@@ -322,7 +322,7 @@ This Orbit helps you prepare for the vulnerable part where your work leaves your
       {
         planet: "stand",
         prompt: "What part are you nervous people might judge?",
-        explanation: "Naming vulnerability can reduce its control over you.",
+        explanation: "Saying the worry out loud can shrink its grip.",
       },
       {
         planet: "express",
@@ -354,7 +354,7 @@ This Orbit helps you prepare for the vulnerable part where your work leaves your
     openingTitle: "Speaking in Front of People",
     openingBody: `Sometimes you know exactly what you want to say until a room full of people is looking at you.
 
-This Orbit helps you prepare your message — and your relationship with the audience — before you step up.`,
+Prepare your message and your relationship with the audience before you step up.`,
     sortOrder: 8,
     questions: [
       {
@@ -371,7 +371,7 @@ This Orbit helps you prepare your message — and your relationship with the aud
       {
         planet: "stand",
         prompt: "What are you afraid the audience might think about you?",
-        explanation: "Naming imagined judgment can reduce its power.",
+        explanation: "Saying the imagined judgment out loud can cut its power.",
       },
       {
         planet: "connect",
@@ -401,7 +401,7 @@ This Orbit helps you prepare your message — and your relationship with the aud
     openingTitle: "Talking to Someone New",
     openingBody: `You don't need the perfect opening line.
 
-You mostly need somewhere to begin. This Orbit helps you take the pressure off making an impression and focus on creating an actual conversation.`,
+You mostly need somewhere to begin. Take the pressure off making an impression and focus on creating an actual conversation.`,
     sortOrder: 9,
     questions: [
       {
@@ -430,7 +430,7 @@ You mostly need somewhere to begin. This Orbit helps you take the pressure off m
         planet: "explore",
         prompt: "What are you worried might be awkward?",
         explanation:
-          "Naming the fear keeps it from silently running the interaction.",
+          "Saying the fear out loud keeps it from silently running the interaction.",
       },
       {
         planet: "connect",
@@ -449,7 +449,7 @@ You mostly need somewhere to begin. This Orbit helps you take the pressure off m
     openingTitle: "Take the Chance",
     openingBody: `Sometimes you know you want to try something and still keep finding reasons not to.
 
-This Orbit doesn't tell you whether you should do it. It helps you understand what is pulling you forward and what is holding you back.`,
+This won't tell you whether you should do it. It helps you understand what is pulling you forward and what is holding you back.`,
     sortOrder: 10,
     questions: [
       {
@@ -466,7 +466,7 @@ This Orbit doesn't tell you whether you should do it. It helps you understand wh
         planet: "explore",
         prompt: "What are you afraid might happen?",
         explanation:
-          "Fear deserves to be understood, not automatically obeyed.",
+          "Fear is information. It doesn't automatically get to decide.",
       },
       {
         planet: "stand",
@@ -478,7 +478,7 @@ This Orbit doesn't tell you whether you should do it. It helps you understand wh
       {
         planet: "stand",
         prompt: "If you decided to do it, what is the first actual step?",
-        explanation: "Courage becomes more concrete when it has an action.",
+        explanation: "A decision gets real when it has an action.",
       },
       {
         planet: "express",

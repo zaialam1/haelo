@@ -97,7 +97,7 @@ export function GuestTryClient({
         setError(
           e instanceof Error
             ? e.message
-            : "Guest practice isn’t available right now.",
+            : "Guest practice isn’t working right now.",
         );
         setPhase("error");
       }
@@ -130,7 +130,7 @@ export function GuestTryClient({
           className="text-sm"
           style={{ color: "var(--foreground-muted)" }}
         >
-          Preparing a practice prompt…
+          Finding a question…
         </p>
       </div>
     );
@@ -160,28 +160,21 @@ export function GuestTryClient({
         >
           {error}
         </p>
-        <p
-          className="mt-3 text-sm leading-relaxed"
-          style={{ color: "var(--foreground-muted)" }}
-        >
-          Check Supabase: Anonymous sign-ins on, and CAPTCHA off under Attack
-          Protection (guest try doesn’t collect a captcha token yet). Or create
-          an account to practice.
-        </p>
+
         <div className="mt-8 flex flex-wrap gap-3">
           <TransitionLink
             href="/signup"
             variant="fade"
             className="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3 text-sm font-semibold text-[var(--on-violet)]"
           >
-            Create account
+            Create an account
           </TransitionLink>
           <TransitionLink
             href="/"
             variant="fade"
             className="inline-flex min-h-12 items-center justify-center rounded-full border-2 border-[var(--violet)] px-5 py-3 text-sm font-semibold text-[var(--violet)]"
           >
-            Back home
+            Back to home
           </TransitionLink>
         </div>
       </div>
@@ -204,14 +197,14 @@ export function GuestTryClient({
             fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
           }}
         >
-          You’ve tried {GUEST_MAX_SESSIONS} guest sessions
+          That’s all {GUEST_MAX_SESSIONS} guest sessions
         </h1>
         <p
           className="mt-4 text-[1.0625rem] leading-relaxed"
           style={{ color: "var(--foreground-muted)" }}
         >
-          Create a free account to keep practicing, save your Journey, and grow
-          your private Universe. Guest practice isn’t saved permanently.
+          Create a free account to keep going. Your sessions will be saved
+          from then on.
         </p>
         <div className="mt-8 flex flex-col gap-3">
           <TransitionLink
@@ -226,7 +219,7 @@ export function GuestTryClient({
             variant="fade"
             className="inline-flex min-h-11 w-full items-center justify-center rounded-full border-2 border-[var(--violet)] px-6 py-3 text-sm font-semibold text-[var(--violet)]"
           >
-            Leave for now
+            Leave
           </TransitionLink>
         </div>
       </div>
@@ -245,13 +238,13 @@ export function GuestTryClient({
           className="text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
           style={{ color: "var(--violet)" }}
         >
-          Guest try · {content.label}
+          Guest · {content.label}
         </p>
         <p
           className="text-sm"
           style={{ color: "var(--foreground-muted)" }}
         >
-          {remaining} of {GUEST_MAX_SESSIONS} left · nothing saved to an account
+          {remaining} of {GUEST_MAX_SESSIONS} left · not saved
         </p>
       </div>
 

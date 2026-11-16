@@ -30,25 +30,25 @@ function PrimaryCta({
 const PLANETS = [
   {
     name: "Express",
-    prompt: "Say what you really think and feel",
+    prompt: "Put what's in your head into words",
     accent: "var(--rose)",
     wash: "color-mix(in srgb, var(--rose) 28%, var(--background))",
   },
   {
     name: "Stand",
-    prompt: "Speak up and stand behind what you believe",
+    prompt: "Say what you think without backing down",
     accent: "var(--violet)",
     wash: "color-mix(in srgb, var(--violet) 14%, var(--background))",
   },
   {
     name: "Connect",
-    prompt: "Build confidence communicating with other people",
+    prompt: "Say it so the other person gets it",
     accent: "var(--rose)",
     wash: "color-mix(in srgb, var(--rose) 22%, var(--gold) 12%, var(--background))",
   },
   {
     name: "Explore",
-    prompt: "Discover what you think and what matters to you",
+    prompt: "Think out loud and see where you land",
     accent: "var(--violet)",
     wash: "color-mix(in srgb, var(--violet) 18%, var(--rose) 10%, var(--background))",
   },
@@ -91,15 +91,15 @@ export default function Home() {
                   letterSpacing: "-0.02em",
                 }}
               >
-                Practice using your voice — and watch it grow.
+                Practice saying it out loud.
               </h1>
               <p
                 className="mt-5 max-w-md text-[1.0625rem] leading-relaxed"
                 style={{ color: "var(--foreground-muted)" }}
               >
-                Speaking up takes courage. Halo is a private place to practice
-                — short sessions across Express, Stand, Connect, and Explore —
-                so your voice can grow without an audience or a grade.
+                Halo asks you a question. You answer out loud, then get
+                specific feedback on how it came across. No audience, no
+                grades.
               </p>
               <div className="mt-9 flex w-full max-w-sm flex-col items-stretch gap-3">
                 <PrimaryCta
@@ -120,11 +120,11 @@ export default function Home() {
                   className="text-center text-sm leading-relaxed"
                   style={{ color: "var(--foreground-muted)" }}
                 >
-                  No account needed · one short practice
+                  No account needed
                 </p>
               </div>
               <p className="mt-6 text-sm leading-relaxed text-[var(--foreground-muted)]">
-                Want to keep your Journey?{" "}
+                Want to save your sessions?{" "}
                 <TransitionLink
                   href="/signup"
                   variant="fade"
@@ -184,17 +184,16 @@ export default function Home() {
                 color: "var(--violet)",
               }}
             >
-              Why Halo exists
+              Talking gets easier with practice.
             </h2>
             <p
               className="mt-5 text-[1.0625rem] leading-relaxed"
               style={{ color: "var(--foreground)" }}
             >
-              Most people never get a safe place to practice using their voice.
-              Halo is that place — private, judgment-free practice so saying
-              what you feel, standing behind an opinion, connecting with
-              someone, or figuring out what you think feels a little less hard
-              next time.
+              You get to rehearse a presentation. You don&rsquo;t usually get
+              to rehearse disagreeing with a friend, asking for something you
+              need, or working out what you actually think. Halo is where you
+              try those out first, in private.
             </p>
           </div>
         </section>
@@ -226,15 +225,14 @@ export default function Home() {
                   letterSpacing: "-0.015em",
                 }}
               >
-                Short speaking sessions on four planets.
+                Four planets, four kinds of talking.
               </h2>
               <p
                 className="mt-5 max-w-2xl text-[1.0625rem] leading-relaxed"
                 style={{ color: "var(--foreground-muted)" }}
               >
-                Pick a planet, answer a prompt out loud, and save the moment.
-                Come back when you have a spare minute — not as a streak, just
-                as a way to practice being yourself.
+                Pick one and answer a question out loud. A session takes a
+                couple of minutes.
               </p>
             </div>
 
@@ -300,36 +298,27 @@ export default function Home() {
                 letterSpacing: "-0.015em",
               }}
             >
-              A universe to practice in — and a journey that grows with you.
+              Every session becomes a star.
             </h2>
-            <p
-              className="mt-5 text-[1.0625rem] leading-relaxed"
-              style={{ color: "var(--foreground-muted)" }}
-            >
-              Your home is a private universe of four planets. As you complete
-              sessions, Journey gathers them into a constellation — the story of
-              how your voice develops over time. No rankings. No comparison to
-              anyone else.
-            </p>
 
             <ul className="mt-10 flex flex-col gap-3">
               {[
                 {
-                  title: "Universe — where you grow next",
+                  title: "Universe",
                   detail:
-                    "Choose Express, Stand, Connect, or Explore when you want to practice.",
+                    "Your home screen. Four planets, one for each kind of practice.",
                   chip: "var(--violet)",
                 },
                 {
-                  title: "Journey — what you’ve practiced",
+                  title: "Journey",
                   detail:
-                    "Every completed session becomes a star in your constellation.",
+                    "Every session you finish, saved as a star you can replay.",
                   chip: "var(--rose)",
                 },
                 {
-                  title: "Growth, not grades",
+                  title: "Private",
                   detail:
-                    "Private to you. No leaderboards. No comparing yourself to anyone else.",
+                    "Your recordings are yours. No leaderboard, no feed, no audience.",
                   chip: "var(--gold)",
                 },
               ].map((row) => (
@@ -388,11 +377,10 @@ export default function Home() {
                 letterSpacing: "-0.015em",
               }}
             >
-              Ready to practice your voice?
+              Try one question.
             </h2>
             <p className="mx-auto mt-4 max-w-md text-[1.0625rem] leading-relaxed text-white/90">
-              Start with a few short sessions. Watch your constellation begin to
-              take shape.
+              It takes a couple of minutes, and you don&rsquo;t need an account.
             </p>
             <div className="mt-8 flex flex-col items-center gap-3">
               <TransitionLink
@@ -451,7 +439,7 @@ export default function Home() {
           <p className="font-[family-name:var(--font-fraunces)] text-[var(--violet)]">
             Halo
           </p>
-          <p>A private place to practice your voice.</p>
+          <p>Private voice practice for teens.</p>
         </div>
       </footer>
     </div>

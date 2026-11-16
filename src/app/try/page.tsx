@@ -4,7 +4,7 @@ import { GuestTryClient } from "@/components/try/GuestTryClient";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Try Halo — guest practice",
+  title: "Try Halo",
   description:
     "Try a short Halo voice practice without an account. Create an account anytime to keep your Journey.",
 };

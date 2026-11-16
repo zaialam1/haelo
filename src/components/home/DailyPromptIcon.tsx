@@ -51,7 +51,7 @@ export function DailyPromptIcon() {
           className="mt-2 flex w-20 flex-col items-center gap-1 rounded-2xl px-1 py-1.5 transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] sm:w-24"
           aria-label={
             completed
-              ? "Daily question completed — view details"
+              ? "Daily question completed. View details"
               : "Open today’s daily question"
           }
         >

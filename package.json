@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
+    "check:copy": "npx tsx scripts/check-copy-quality.ts",
     "validate:prompts": "npx tsx scripts/validate-prompts.ts",
     "validate:orbits": "npx tsx scripts/validate-orbits.ts",
     "test:orbit-progression": "npx tsx scripts/test-orbit-progression-isolation.ts",

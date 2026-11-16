@@ -28,12 +28,12 @@ const TYPE_COPY: Record<
     context: "Something new appeared in your Universe.",
   },
   milestone_moment: {
-    title: "Something shifted",
-    context: "A quiet change showed up in your practice.",
+    title: "Milestone",
+    context: "You hit a new milestone.",
   },
   my_voice_updated: {
     title: "My Voice",
-    context: "Your voice summary has taken new shape.",
+    context: "Your My Voice summary updated.",
   },
 };
 

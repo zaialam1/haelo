@@ -76,7 +76,7 @@ export function ProfessionalHomeExperience({
               <IntroMoment
                 milestone="professional_discovered"
                 title="This is Professional Mode."
-                body="Connect with people on Halo, then recommend an Orbit when a situation fits. Their practice stays theirs — you just point the way."
+                body="Connect with people on Halo, then recommend an Orbit when a situation fits. Their practice stays theirs. You just point the way."
               />
             </div>
           ) : null}

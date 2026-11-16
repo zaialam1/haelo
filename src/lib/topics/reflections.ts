@@ -123,7 +123,7 @@ function buildSummaryInsights(
         isPlaceholder: true,
       },
       {
-        label: "Growing in",
+        label: "Practicing more",
         value: "Will appear as you reflect",
         isPlaceholder: true,
       },
@@ -159,24 +159,20 @@ function buildSummaryInsights(
   const exploring =
     topic.subtopics.find((s) => s.id === recent?.subtopic_id)?.label ?? null;
 
-  const hasAnalysis = reflections.some(
-    (r) => r.stood_out || (r.voice_notes && r.voice_notes.length > 0),
-  );
-
   return [
     {
       label: "Most natural talking about",
-      value: mostNatural ?? "—",
+      value: mostNatural ?? "Not yet",
       isPlaceholder: !mostNatural,
     },
     {
-      label: "Growing in",
-      value: growingIn ?? (hasAnalysis ? "—" : "—"),
+      label: "Practicing more",
+      value: growingIn ?? "Not yet",
       isPlaceholder: !growingIn,
     },
     {
       label: "Recently exploring",
-      value: exploring ?? "—",
+      value: exploring ?? "Not yet",
       isPlaceholder: !exploring,
     },
   ];

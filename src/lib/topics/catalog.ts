@@ -22,24 +22,24 @@ function subs(
 
 const CATALOG_BY_ID: Record<string, Omit<TopicCatalogEntry, "id" | "label" | "color">> = {
   friendships: {
-    tagline: "How your voice has evolved when talking about friendship",
+    tagline: "Talking about friends",
     subtopics: subs([
       ["belonging", "Belonging", soft.rose],
       ["conflict", "Conflict", soft.violetMid],
       ["humor", "Humor", soft.gold],
       ["trust", "Trust", soft.mauve],
       ["boundaries", "Boundaries", soft.violet],
-      ["vulnerability", "Vulnerability", soft.roseDeep],
+      ["vulnerability", "Being open", soft.roseDeep],
     ]),
     explorePrompt: "What's something you wish your friends understood about you?",
     insightPlaceholders: [
-      "Most natural talking about: —",
-      "Growing in: —",
-      "Recently exploring: —",
+      "Most natural talking about: Not yet",
+      "Practicing more: Not yet",
+      "Recently exploring: Not yet",
     ],
   },
   family: {
-    tagline: "How your voice shifts when you talk about family",
+    tagline: "Talking about family",
     subtopics: subs([
       ["support", "Support", soft.rose],
       ["expectations", "Expectations", soft.violet],
@@ -50,30 +50,30 @@ const CATALOG_BY_ID: Record<string, Omit<TopicCatalogEntry, "id" | "label" | "co
     ]),
     explorePrompt: "What do you wish you could say more freely at home?",
     insightPlaceholders: [
-      "Most natural talking about: —",
-      "Growing in: —",
-      "Recently exploring: —",
+      "Most natural talking about: Not yet",
+      "Practicing more: Not yet",
+      "Recently exploring: Not yet",
     ],
   },
   relationships: {
-    tagline: "How your voice shows up in closeness and connection",
+    tagline: "Talking about close relationships",
     subtopics: subs([
       ["affection", "Affection", soft.rose],
       ["communication", "Communication", soft.violetMid],
       ["trust", "Trust", soft.mauve],
       ["boundaries", "Boundaries", soft.violet],
       ["conflict", "Conflict", soft.blush],
-      ["vulnerability", "Vulnerability", soft.roseDeep],
+      ["vulnerability", "Being open", soft.roseDeep],
     ]),
     explorePrompt: "What feels hardest to say out loud in a close relationship?",
     insightPlaceholders: [
-      "Most natural talking about: —",
-      "Growing in: —",
-      "Recently exploring: —",
+      "Most natural talking about: Not yet",
+      "Practicing more: Not yet",
+      "Recently exploring: Not yet",
     ],
   },
   school: {
-    tagline: "How your voice grows around learning and school life",
+    tagline: "Talking about school",
     subtopics: subs([
       ["pressure", "Pressure", soft.violet],
       ["friendship", "Friendship", soft.rose],
@@ -84,13 +84,13 @@ const CATALOG_BY_ID: Record<string, Omit<TopicCatalogEntry, "id" | "label" | "co
     ]),
     explorePrompt: "What's something school brings out in you that others might not see?",
     insightPlaceholders: [
-      "Most natural talking about: —",
-      "Growing in: —",
-      "Recently exploring: —",
+      "Most natural talking about: Not yet",
+      "Practicing more: Not yet",
+      "Recently exploring: Not yet",
     ],
   },
   sports: {
-    tagline: "How your voice evolves when you talk about sports and play",
+    tagline: "Talking about sports",
     subtopics: subs([
       ["teamwork", "Teamwork", soft.rose],
       ["competition", "Competition", soft.gold],
@@ -101,13 +101,13 @@ const CATALOG_BY_ID: Record<string, Omit<TopicCatalogEntry, "id" | "label" | "co
     ]),
     explorePrompt: "What does competing teach you about yourself?",
     insightPlaceholders: [
-      "Most natural talking about: —",
-      "Growing in: —",
-      "Recently exploring: —",
+      "Most natural talking about: Not yet",
+      "Practicing more: Not yet",
+      "Recently exploring: Not yet",
     ],
   },
   hobbies: {
-    tagline: "How your voice lights up around the things you love doing",
+    tagline: "Talking about hobbies",
     subtopics: subs([
       ["flow", "Flow", soft.gold],
       ["creativity", "Creativity", soft.rose],
@@ -116,15 +116,15 @@ const CATALOG_BY_ID: Record<string, Omit<TopicCatalogEntry, "id" | "label" | "co
       ["persistence", "Persistence", soft.violet],
       ["joy", "Joy", soft.goldSoft],
     ]),
-    explorePrompt: "What hobby makes you lose track of time — and why?",
+    explorePrompt: "Which hobby makes time disappear for you?",
     insightPlaceholders: [
-      "Most natural talking about: —",
-      "Growing in: —",
-      "Recently exploring: —",
+      "Most natural talking about: Not yet",
+      "Practicing more: Not yet",
+      "Recently exploring: Not yet",
     ],
   },
   future: {
-    tagline: "How your voice sounds when you imagine what's next",
+    tagline: "Talking about what's next",
     subtopics: subs([
       ["hopes", "Hopes", soft.gold],
       ["uncertainty", "Uncertainty", soft.violetSoft],
@@ -135,30 +135,30 @@ const CATALOG_BY_ID: Record<string, Omit<TopicCatalogEntry, "id" | "label" | "co
     ]),
     explorePrompt: "What future version of yourself are you curious about?",
     insightPlaceholders: [
-      "Most natural talking about: —",
-      "Growing in: —",
-      "Recently exploring: —",
+      "Most natural talking about: Not yet",
+      "Practicing more: Not yet",
+      "Recently exploring: Not yet",
     ],
   },
   emotions: {
-    tagline: "How your voice names and holds what you feel",
+    tagline: "Talking about feelings",
     subtopics: subs([
       ["joy", "Joy", soft.gold],
       ["sadness", "Sadness", soft.violetSoft],
       ["anger", "Anger", soft.blush],
       ["calm", "Calm", soft.mauve],
       ["anxiety", "Anxiety", soft.violetMid],
-      ["tenderness", "Tenderness", soft.rose],
+      ["tenderness", "Softness", soft.rose],
     ]),
     explorePrompt: "What emotion have you been carrying that you haven't said out loud?",
     insightPlaceholders: [
-      "Most natural talking about: —",
-      "Growing in: —",
-      "Recently exploring: —",
+      "Most natural talking about: Not yet",
+      "Practicing more: Not yet",
+      "Recently exploring: Not yet",
     ],
   },
   confidence: {
-    tagline: "How your voice steadies when you speak about yourself",
+    tagline: "Talking about yourself",
     subtopics: subs([
       ["self-belief", "Self-belief", soft.gold],
       ["doubt", "Doubt", soft.violetSoft],
@@ -169,13 +169,13 @@ const CATALOG_BY_ID: Record<string, Omit<TopicCatalogEntry, "id" | "label" | "co
     ]),
     explorePrompt: "When do you feel most like yourself when you speak?",
     insightPlaceholders: [
-      "Most natural talking about: —",
-      "Growing in: —",
-      "Recently exploring: —",
+      "Most natural talking about: Not yet",
+      "Practicing more: Not yet",
+      "Recently exploring: Not yet",
     ],
   },
   creativity: {
-    tagline: "How your voice expands when you talk about making and imagining",
+    tagline: "Talking about making things",
     subtopics: subs([
       ["ideas", "Ideas", soft.gold],
       ["expression", "Expression", soft.rose],
@@ -184,11 +184,11 @@ const CATALOG_BY_ID: Record<string, Omit<TopicCatalogEntry, "id" | "label" | "co
       ["blocks", "Blocks", soft.violetMid],
       ["sharing", "Sharing", soft.mauve],
     ]),
-    explorePrompt: "What are you creating — or wishing you could create — right now?",
+    explorePrompt: "What are you creating right now, or wishing you could create?",
     insightPlaceholders: [
-      "Most natural talking about: —",
-      "Growing in: —",
-      "Recently exploring: —",
+      "Most natural talking about: Not yet",
+      "Practicing more: Not yet",
+      "Recently exploring: Not yet",
     ],
   },
 };

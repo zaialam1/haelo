@@ -364,7 +364,7 @@ export function JourneyConstellation({
             <OriginMarker
               cx={contentWidth * 0.38}
               cy={VIEW_H * 0.45}
-              label="Where your constellation will begin"
+              label="Your first star will show up here"
             />
           ) : filterEmpty ? (
             <OriginMarker
@@ -373,7 +373,7 @@ export function JourneyConstellation({
               label={
                 filterLabel
                   ? `No ${filterLabel} stars yet`
-                  : "Your overall constellation will grow here"
+                  : "No stars in this view yet"
               }
             />
           ) : (
@@ -712,7 +712,7 @@ export function JourneyConstellation({
                       className="mt-1.5 text-[0.6875rem] leading-snug"
                       style={{ color: "var(--foreground-muted)" }}
                     >
-                      {JOURNEY_METRIC_LABELS[metricKey]} — {label}
+                      {JOURNEY_METRIC_LABELS[metricKey]}: {label}
                     </p>
                   );
                 })()}

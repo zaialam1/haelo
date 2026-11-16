@@ -11,7 +11,7 @@ function mapSignUpError(message: string): SignUpResult {
     return {
       ok: false,
       code: "email_taken",
-      message: "An account with this email already exists.",
+      message: "There’s already an account with this email.",
     };
   }
 
@@ -127,7 +127,7 @@ export async function signUp(input: SignUpInput): Promise<SignUpResult> {
       ok: false,
       code: "username_invalid",
       message:
-        "Use 3–20 letters, numbers, or underscores. Don’t start or end with an underscore.",
+        "Use 3 to 20 letters, numbers, or underscores. Don’t start or end with an underscore.",
     };
   }
 

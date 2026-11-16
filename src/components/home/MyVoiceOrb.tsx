@@ -73,7 +73,7 @@ export function MyVoiceOrb({ nested = false }: MyVoiceOrbProps) {
         className="voice-orb-hint hidden max-w-[11rem] text-center text-[0.6875rem] leading-snug sm:block sm:max-w-[13rem] sm:text-xs"
         style={{ color: "var(--foreground-muted)" }}
       >
-        See how your voice is taking shape
+        The patterns in how you talk
       </span>
     </TransitionLink>
   );

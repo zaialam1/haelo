@@ -70,7 +70,7 @@ export async function deleteAccountAction(): Promise<DeleteAccountResult> {
   } = await supabase.auth.getUser();
 
   if (userError || !user) {
-    return { ok: false, message: "You need to be signed in to delete your account." };
+    return { ok: false, message: "Log in to delete your account." };
   }
 
   try {

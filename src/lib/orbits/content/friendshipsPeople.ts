@@ -9,53 +9,51 @@ export const FRIENDSHIPS_PEOPLE_ORBITS: readonly OrbitDefinition[] = [
     shortDescription: "A friendship has changed, but you aren't sure why.",
     situation: "A friendship has changed, but you aren't sure why.",
     openingTitle: "Something Feels Off",
-    openingBody: `Sometimes you notice that something has changed before you can explain exactly what it is.
+    openingBody: `You can tell something shifted before you can explain what.
 
-Maybe there was one moment that shifted things. Maybe nothing obvious happened at all.
+Maybe one weird moment did it. Maybe nothing obvious happened and it still feels different.
 
-This Orbit helps you slow the situation down, separate what you've noticed from what you're assuming, and figure out whether there's something you want to say.
-
-You don't need to know the answer yet.`,
+Slow it down. Separate what you've noticed from what you're guessing. Then decide if there's anything you want to say.`,
     sortOrder: 1,
     questions: [
       {
         planet: "explore",
         prompt: "What has felt different lately?",
         explanation:
-          "Start with what you've actually noticed before deciding what it means.",
+          "Stick to what you've actually noticed before deciding what it means.",
       },
       {
         planet: "explore",
         prompt:
-          "Was there a moment when you first noticed something felt off? What happened?",
+          "When did you first clock that something was off? What happened?",
         explanation:
-          "A specific moment can help turn a vague feeling into something easier to understand.",
+          "A specific moment turns a vague gut feeling into something you can talk about.",
       },
       {
         planet: "express",
-        prompt: "How has this situation actually made you feel?",
+        prompt: "What's the feeling you keep coming back to about this?",
         explanation:
-          "Naming the feeling can reveal why the change matters to you.",
+          "Getting the feeling out loud can show why the change is sticking with you.",
       },
       {
         planet: "explore",
-        prompt: "What are you most worried this change might mean?",
+        prompt: "What's the worst story your brain is telling you about this?",
         explanation:
-          "What happened and what you're afraid it means may be two different things.",
+          "What happened and what you're scared it means can be two different things.",
       },
       {
         planet: "stand",
         prompt:
-          "If you could ask this person one completely honest question, what would you ask?",
+          "If you could ask this person one completely honest question, what would it be?",
         explanation:
-          "An honest question can turn uncertainty into something you could actually communicate.",
+          "An honest question can turn uncertainty into something you could actually say.",
       },
       {
         planet: "connect",
         prompt:
-          "How could you bring it up without assuming you already know what they're thinking?",
+          "How could you bring it up without acting like you already know what they're thinking?",
         explanation:
-          "You can be honest about what you've noticed while leaving room for their experience.",
+          "You can be straight about what you've noticed and still leave room for their side.",
       },
     ],
   }),
@@ -67,9 +65,9 @@ You don't need to know the answer yet.`,
     shortDescription: "You feel excluded, overlooked, or outside the group.",
     situation: "You feel excluded, overlooked, or outside the group.",
     openingTitle: "Left Out",
-    openingBody: `Being left out can make your brain start filling in the blanks very quickly.
+    openingBody: `Being left out makes your brain invent a whole story fast.
 
-Before deciding what everyone else thinks about you, this Orbit helps you understand what happened, what hurt about it, and what you actually want next.`,
+Before you decide what everyone thinks of you, get clear on what happened, what hurt, and what you actually want next.`,
     sortOrder: 2,
     questions: [
       {
@@ -80,36 +78,36 @@ Before deciding what everyone else thinks about you, this Orbit helps you unders
       },
       {
         planet: "express",
-        prompt: "What did you feel when it happened?",
+        prompt: "When it hit you that you were left out, what did that feel like?",
         explanation:
-          "“Left out” can contain sadness, embarrassment, anger, jealousy, disappointment, or several feelings at once.",
+          "\"Left out\" can be sad, embarrassing, angry, jealous, disappointed, or a mix.",
       },
       {
         planet: "explore",
         prompt:
-          "What explanation did your mind immediately give you for why it happened?",
+          "What explanation did your mind jump to for why it happened?",
         explanation:
-          "Your first explanation may feel true even when you don't actually know yet.",
+          "Your first explanation can feel true even when you don't actually know yet.",
       },
       {
         planet: "stand",
         prompt: "What do you wish had happened instead?",
         explanation:
-          "Knowing what you wanted can reveal what you need from the people around you.",
+          "Knowing what you wanted can show what you need from the people around you.",
       },
       {
         planet: "connect",
         prompt:
-          "Is there someone involved you would actually want to talk to? What would you want them to understand?",
+          "Is there someone involved you'd actually want to talk to? What would you want them to get?",
         explanation:
           "Sometimes being understood matters more than proving someone wrong.",
       },
       {
         planet: "connect",
         prompt:
-          "What is one thing you could do that might help you feel more connected now?",
+          "What's one thing you could do that might help you feel less on the outside right now?",
         explanation:
-          "Your next step does not have to depend completely on what everyone else does.",
+          "Your next step doesn't have to wait on what everyone else does.",
       },
     ],
   }),
@@ -123,45 +121,45 @@ Before deciding what everyone else thinks about you, this Orbit helps you unders
     openingTitle: "I Need to Fix This",
     openingBody: `Sometimes you replay a conversation and know you wish part of it had gone differently.
 
-Repairing something doesn't mean taking responsibility for everything.
+Fixing it doesn't mean taking the blame for everything.
 
-It means understanding your part clearly enough to decide what you want to do next.`,
+It means getting clear on your part so you can decide what to do next.`,
     sortOrder: 3,
     questions: [
       {
         planet: "explore",
         prompt: "What happened, from your point of view?",
-        explanation: "Start by understanding your own version of the situation.",
+        explanation: "Start with your own version of the situation.",
       },
       {
         planet: "explore",
-        prompt: "What part do you genuinely wish you had handled differently?",
-        explanation: "A meaningful repair begins with something specific.",
+        prompt: "What part do you genuinely wish you'd handled differently?",
+        explanation: "A real apology usually starts with something specific.",
       },
       {
         planet: "express",
         prompt: "How do you think the other person may have felt?",
         explanation:
-          "Considering their experience can make your response more thoughtful.",
+          "Considering their side can make your response sharper, not softer.",
       },
       {
         planet: "connect",
         prompt: "What do you most want them to understand about your side?",
         explanation:
-          "Repairing something doesn't require erasing your perspective.",
+          "Owning your part doesn't mean erasing your perspective.",
       },
       {
         planet: "stand",
         prompt:
           "What are you willing to apologize for, and what aren't you apologizing for?",
         explanation:
-          "An honest apology is different from taking responsibility just to end a conflict.",
+          "An honest apology is different from taking the fall just to end the conflict.",
       },
       {
         planet: "connect",
         prompt: "If you talked to them now, what would you actually say?",
         explanation:
-          "This turns reflection into something you could use in real life.",
+          "This turns the thought spiral into something you could use in real life.",
       },
     ],
   }),
@@ -175,49 +173,49 @@ It means understanding your part clearly enough to decide what you want to do ne
     openingTitle: "We Keep Having the Same Fight",
     openingBody: `Some arguments end.
 
-Others disappear for a while and then somehow come back looking almost exactly the same.
+Others disappear for a while and then come back looking almost exactly the same.
 
-This Orbit helps you look underneath the latest fight and figure out what keeps repeating.`,
+Look under the latest fight and figure out what keeps repeating.`,
     sortOrder: 4,
     questions: [
       {
         planet: "explore",
         prompt: "What do you usually end up fighting about?",
-        explanation: "Start by naming the repeating surface-level issue.",
+        explanation: "Name the surface issue that keeps coming back.",
       },
       {
         planet: "explore",
         prompt: "What usually happens right before the argument gets worse?",
         explanation:
-          "Patterns often become clearer when you notice the turning point.",
+          "Patterns get clearer when you catch the turning point.",
       },
       {
         planet: "express",
         prompt:
-          "What do you feel like the other person doesn't understand about you?",
+          "What do you feel like the other person still doesn't get about you?",
         explanation:
-          "Repeated conflict often contains an unmet need to be understood.",
+          "Repeated fights often hide something you want understood.",
       },
       {
         planet: "connect",
         prompt:
-          "What do you think they might feel like you don't understand about them?",
+          "What might they feel like you still don't get about them?",
         explanation:
-          "Recurring arguments usually contain two experiences, not one.",
+          "Recurring arguments usually have two versions, not one.",
       },
       {
         planet: "stand",
         prompt:
-          "What would actually need to change for this fight not to keep happening?",
+          "What would actually need to change for this fight to stop looping?",
         explanation:
-          "Naming the change you need is different from simply wishing the conflict would stop.",
+          "Saying the change you need is different from wishing the conflict would vanish.",
       },
       {
         planet: "connect",
         prompt:
-          "How could you talk about the pattern itself instead of waiting for the next argument?",
+          "How could you talk about the pattern itself instead of waiting for the next blowup?",
         explanation:
-          "Sometimes the most useful conversation happens outside the fight.",
+          "Sometimes the useful conversation happens outside the fight.",
       },
     ],
   }),
@@ -231,49 +229,49 @@ This Orbit helps you look underneath the latest fight and figure out what keeps 
     openingTitle: "Growing Apart",
     openingBody: `Not every friendship ends because someone did something wrong.
 
-Sometimes two people simply start changing.
+Sometimes two people just start changing.
 
 That can still hurt.
 
-This Orbit gives you space to understand what the friendship has meant, what's different now, and what you want to do with that change.`,
+Figure out what the friendship has meant, what's different now, and what you want to do with that.`,
     sortOrder: 5,
     questions: [
       {
         planet: "explore",
         prompt: "What feels different about the friendship now?",
         explanation:
-          "Naming the change helps you understand what you're responding to.",
+          "Getting specific about the change helps you know what you're reacting to.",
       },
       {
         planet: "express",
         prompt: "What do you miss most about how things used to be?",
         explanation:
-          "What you miss often reveals what the friendship gave you.",
+          "What you miss often shows what the friendship gave you.",
       },
       {
         planet: "explore",
         prompt:
-          "Do you want the friendship to become close again, or do you mostly wish the change didn't hurt?",
+          "Do you want it to get close again, or do you mostly wish the change didn't sting?",
         explanation:
-          "Those two feelings can seem similar but lead to very different choices.",
+          "Those can feel similar and still lead to very different choices.",
       },
       {
         planet: "connect",
         prompt: "What do you think may have changed for the other person?",
         explanation:
-          "There may be reasons for the distance that aren't about rejection.",
+          "There may be reasons for the distance that aren't about rejecting you.",
       },
       {
         planet: "stand",
         prompt:
           "What would you need from this friendship for it to still feel good to you?",
         explanation:
-          "History alone doesn't mean a relationship has to work in exactly the same way forever.",
+          "History alone doesn't mean it has to work the same way forever.",
       },
       {
         planet: "explore",
         prompt:
-          "What do you want to carry forward from this friendship, even if it keeps changing?",
+          "What do you want to keep from this friendship, even if it keeps changing?",
         explanation:
           "Something can matter without needing to stay exactly as it was.",
       },
@@ -287,11 +285,11 @@ This Orbit gives you space to understand what the friendship has meant, what's d
     shortDescription: "You feel pushed aside as two friends get closer.",
     situation: "You feel pushed aside as two friends get closer.",
     openingTitle: "The Third Wheel",
-    openingBody: `Three-person friendships can get complicated fast.
+    openingBody: `Three-person friendships get complicated fast.
 
-Two people being close doesn't automatically mean you're being rejected — but feeling pushed to the side still matters.
+Two people getting closer doesn't automatically mean you're being rejected. Feeling pushed aside still counts.
 
-This Orbit helps you understand what's actually happening and what you need.`,
+Get clear on what's actually happening and what you need.`,
     sortOrder: 6,
     questions: [
       {
@@ -299,20 +297,20 @@ This Orbit helps you understand what's actually happening and what you need.`,
         prompt:
           "When do you notice yourself feeling like the third wheel most?",
         explanation:
-          "Specific situations can reveal whether the feeling is occasional or part of a larger pattern.",
+          "Specific situations show whether it's occasional or a pattern.",
       },
       {
         planet: "express",
         prompt: "What does it feel like when that happens?",
         explanation:
-          "Naming the feeling helps separate hurt from the assumptions that may follow it.",
+          "Say the feeling out loud so it doesn't quietly turn into a whole story about your worth.",
       },
       {
         planet: "explore",
         prompt:
-          "What do you find yourself assuming about their friendship and your place in it?",
+          "What are you assuming about their friendship and your place in it?",
         explanation:
-          "Your fear and the actual situation may not be identical.",
+          "Your fear and the actual situation may not match.",
       },
       {
         planet: "stand",
@@ -325,14 +323,14 @@ This Orbit helps you understand what's actually happening and what you need.`,
         prompt:
           "What could you say to one or both of them without asking them to be less close?",
         explanation:
-          "You can advocate for your place without treating someone else's closeness as the problem.",
+          "You can ask for your place without treating their closeness as the problem.",
       },
       {
         planet: "connect",
         prompt:
-          "What other relationships or connections do you want to invest in too?",
+          "What other friendships do you want to put energy into too?",
         explanation:
-          "Your sense of belonging doesn't have to rest on one friendship dynamic.",
+          "Your sense of belonging doesn't have to hang on one trio.",
       },
     ],
   }),
@@ -348,19 +346,19 @@ This Orbit helps you understand what's actually happening and what you need.`,
 
 You can miss someone and still know they crossed a line.
 
-Two things can be true at the same time.`,
+Both can be true at the same time.`,
     sortOrder: 7,
     questions: [
       {
         planet: "express",
         prompt: "What did they do that hurt you?",
-        explanation: "Start by putting the experience into clear words.",
+        explanation: "Put the experience into clear words first.",
       },
       {
         planet: "explore",
-        prompt: "Why did this particular thing hurt as much as it did?",
+        prompt: "Why did this particular thing hit as hard as it did?",
         explanation:
-          "The deeper reason may tell you what mattered most.",
+          "The reason underneath often shows what mattered most.",
       },
       {
         planet: "explore",
@@ -372,21 +370,21 @@ Two things can be true at the same time.`,
         prompt:
           "What would have to change for you to feel okay moving forward?",
         explanation:
-          "Forgiveness and trust don't necessarily require the same things.",
+          "Forgiving someone and trusting them again aren't always the same ask.",
       },
       {
         planet: "connect",
         prompt:
           "What would you want them to understand about the impact of what happened?",
         explanation:
-          "Being understood may be part of what you need before moving forward.",
+          "Being understood may be part of what you need before anything else.",
       },
       {
         planet: "connect",
         prompt:
-          "What would a healthy next step look like for you right now?",
+          "What would a solid next step look like for you right now?",
         explanation:
-          "The next step could be talking, creating distance, rebuilding slowly, or simply waiting.",
+          "That could be talking, creating distance, rebuilding slowly, or just waiting.",
       },
     ],
   }),
@@ -398,31 +396,31 @@ Two things can be true at the same time.`,
     shortDescription: "A new friendship is starting, and you're not sure how to move into it.",
     situation: "A new friendship is starting, and you're not sure how to move into it.",
     openingTitle: "New Friend, Now What?",
-    openingBody: `Sometimes meeting someone is easy.
+    openingBody: `Meeting someone can be easy.
 
-Figuring out how a new friendship actually becomes a real friendship can feel less obvious.
+Figuring out how a new friendship actually becomes a real one can feel less obvious.
 
-This Orbit helps you notice what you like about the connection and how you might keep building it naturally.`,
+Notice what you like about the connection and how you might keep building it without forcing it.`,
     sortOrder: 8,
     questions: [
       {
         planet: "explore",
         prompt: "What do you like about being around this person?",
         explanation:
-          "Knowing what draws you toward someone helps you understand the connection.",
+          "Knowing what pulls you toward someone helps you understand the connection.",
       },
       {
         planet: "connect",
         prompt: "What have you already connected over?",
         explanation:
-          "Shared interests or experiences can give a friendship somewhere to grow.",
+          "Shared interests or weird inside jokes give a friendship something to build on.",
       },
       {
         planet: "express",
         prompt:
-          "What is something about yourself you'd actually enjoy sharing with them?",
+          "What's something about yourself you'd actually enjoy sharing with them?",
         explanation:
-          "Closeness usually grows when people slowly reveal more of themselves.",
+          "Closeness usually grows when people slowly show more of themselves.",
       },
       {
         planet: "connect",
@@ -434,14 +432,14 @@ This Orbit helps you notice what you like about the connection and how you might
         planet: "explore",
         prompt: "What are you worried might make things awkward?",
         explanation:
-          "Naming the fear can stop it from quietly controlling your behavior.",
+          "Saying the fear out loud can stop it from quietly running the show.",
       },
       {
         planet: "connect",
         prompt:
-          "How could you show interest in the friendship without trying to force it?",
+          "How could you show interest without trying to force the friendship?",
         explanation:
-          "Connection grows best when there is room for both people to choose it.",
+          "Connection works better when both people get to choose it.",
       },
     ],
   }),
@@ -453,16 +451,16 @@ This Orbit helps you notice what you like about the connection and how you might
     shortDescription: "Tension or conflict is stirring inside your friend group.",
     situation: "Tension or conflict is stirring inside your friend group.",
     openingTitle: "Friend Group Drama",
-    openingBody: `When a whole group gets involved, it can become hard to tell what you actually think from what everyone else is saying.
+    openingBody: `When a whole group gets involved, it gets hard to tell what you actually think from what everyone else is saying.
 
-This Orbit helps you step outside the noise and figure out your own position.`,
+Step outside the noise and figure out your own position.`,
     sortOrder: 9,
     questions: [
       {
         planet: "explore",
         prompt: "What actually happened, as far as you know?",
         explanation:
-          "Group drama grows quickly when facts and retellings start blending together.",
+          "Group drama grows fast when facts and retellings blend together.",
       },
       {
         planet: "explore",
@@ -475,26 +473,26 @@ This Orbit helps you step outside the noise and figure out your own position.`,
         planet: "express",
         prompt: "How is being caught in this affecting you?",
         explanation:
-          "You are allowed to notice the impact of the situation on you too.",
+          "It's fair to notice what this is doing to you too.",
       },
       {
         planet: "stand",
         prompt: "What do you personally think is fair here?",
         explanation:
-          "Your position doesn't have to match whichever friend is speaking the loudest.",
+          "Your take doesn't have to match whichever friend is talking loudest.",
       },
       {
         planet: "connect",
         prompt:
-          "Is there anyone involved whose perspective you want to understand better?",
+          "Is there anyone involved whose side you want to understand better?",
         explanation:
-          "Understanding does not automatically mean taking their side.",
+          "Understanding someone doesn't automatically mean taking their side.",
       },
       {
         planet: "stand",
-        prompt: "What role do you actually want to play in this situation?",
+        prompt: "What role do you actually want to play in this?",
         explanation:
-          "You can choose whether to mediate, support someone, step away, or refuse to participate in gossip.",
+          "You can mediate, support someone, step away, or refuse to pass gossip.",
       },
     ],
   }),
@@ -506,9 +504,9 @@ This Orbit helps you step outside the noise and figure out your own position.`,
     shortDescription: "You act differently around them, and it doesn't feel like you.",
     situation: "You act differently around them, and it doesn't feel like you.",
     openingTitle: "I Don't Feel Like Myself Around Them",
-    openingBody: `Sometimes you can like people and still notice that you become a different version of yourself around them.
+    openingBody: `Sometimes you can like people and still notice you become a different version of yourself around them.
 
-This Orbit helps you notice what you're changing and whether that change actually feels okay to you.`,
+Notice what you're changing, and whether that change actually feels okay to you.`,
     sortOrder: 10,
     questions: [
       {
@@ -521,34 +519,34 @@ This Orbit helps you notice what you're changing and whether that change actuall
         planet: "express",
         prompt: "What parts of yourself do you hold back?",
         explanation:
-          "What you hide can reveal where you don't feel fully comfortable.",
+          "What you hide can show where you don't feel comfortable.",
       },
       {
         planet: "explore",
         prompt:
           "What are you worried would happen if you acted more like yourself?",
         explanation:
-          "The fear underneath the performance may matter more than the performance itself.",
+          "The fear underneath the performance may matter more than the performance.",
       },
       {
         planet: "stand",
         prompt: "What part of yourself do you not want to keep shrinking?",
         explanation:
-          "Belonging shouldn't always require becoming smaller.",
+          "Fitting in shouldn't always mean getting quieter or smaller.",
       },
       {
         planet: "connect",
         prompt:
           "Is there anyone in the group you feel more yourself around? Why?",
         explanation:
-          "That relationship may show you what safer connection feels like.",
+          "That person may show you what easier connection looks like.",
       },
       {
         planet: "explore",
         prompt:
-          "What would feeling more like yourself in this friendship actually look like?",
+          "What would feeling more like yourself in this friendship actually look like day to day?",
         explanation:
-          "You don't need to become completely unfiltered to become more authentic.",
+          "You don't need to say every thought out loud to stop performing.",
       },
     ],
   }),

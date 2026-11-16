@@ -8,6 +8,12 @@ All pages and components should follow the colors, typography, spacing, visual p
 
 Do not introduce new brand colors or dramatically different visual styles without being explicitly asked.
 
+## Halo Brand Voice
+
+All user-facing copy follows `docs/HAELO_BRAND_VOICE.md` and the Cursor rule `.cursor/rules/haelo-brand-voice.mdc`.
+
+Runtime AI text uses `src/lib/ai/brandVoice.ts`. Never use em dashes in user-facing copy. Prefer fewer words and skip unnecessary subtitles.
+
 
 
 # This is NOT the Next.js you know

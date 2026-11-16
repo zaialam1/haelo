@@ -6,6 +6,7 @@
  * or advice. Raw query text is never persisted.
  */
 
+import { tidyGeneratedCopy, withBrandVoice } from "@/lib/ai/brandVoice";
 import {
   getOpenAIAnalysisModel,
   getOpenAIApiKey,
@@ -40,7 +41,11 @@ type CompactOrbitMeta = {
   regionKey: OrbitRegionKey;
 };
 
-const SEARCH_SYSTEM_PROMPT = `You help teens find relevant guided reflection Orbits in Halo.
+/**
+ * Shared writing rules are appended by withBrandVoice
+ * (see src/lib/ai/brandVoice.ts and docs/HAELO_BRAND_VOICE.md).
+ */
+const SEARCH_SYSTEM_PROMPT = withBrandVoice(`You help teens find relevant Orbits in Halo. An Orbit is a set of six spoken questions about one real situation.
 
 Your only job is to classify which Orbits (if any) fit the user's situation description.
 Return at most 3 strong matches. Prefer quality over quantity.
@@ -48,9 +53,9 @@ Return at most 3 strong matches. Prefer quality over quantity.
 Rules:
 - Do NOT diagnose, give therapy, interpret crisis, or tell the user what to do.
 - Do NOT invent Orbits. Only use orbitKeys from the provided catalog.
-- Each "why" must be one concise sentence grounded in the user's words (not clinical).
+- Each "why" is the only text the user reads. Make it one short sentence that links what they typed to what the Orbit covers (e.g. "This one is about telling a friend something they won't want to hear."). Don't comment on how they feel and don't restate their whole situation.
 - If nothing is a good fit, return an empty matches array.
-- Respond with JSON only: { "matches": [ { "orbitKey": string, "why": string } ] }`;
+- Respond with JSON only: { "matches": [ { "orbitKey": string, "why": string } ] }`);
 
 function compactCatalog(): CompactOrbitMeta[] {
   return getActiveOrbits().map((orbit) => ({
@@ -69,7 +74,10 @@ function toMatch(
 ): OrbitSearchMatch | null {
   const orbit = getOrbitByKey(orbitKey);
   if (!orbit || !orbit.isActive) return null;
-  const cleanedWhy = why.trim().replace(/\s+/g, " ").slice(0, 180);
+  const cleanedWhy = tidyGeneratedCopy(why.trim().replace(/\s+/g, " ")).slice(
+    0,
+    180,
+  );
   if (!cleanedWhy) return null;
   return {
     orbitKey: orbit.orbitKey,
@@ -180,7 +188,7 @@ export function fallbackOrbitSearch(
       title: item.definition.title,
       shortDescription: item.definition.shortDescription,
       regionKey: item.definition.regionKey,
-      why: "This Orbit’s title or description mentions something close to what you typed.",
+      why: "Its title or description is close to what you typed.",
     });
     if (scored.length >= 3) break;
   }

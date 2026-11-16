@@ -32,7 +32,7 @@ export async function blockUserAction(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { ok: false, message: "Sign in to continue." };
+  if (!user) return { ok: false, message: "Log in to continue." };
 
   const { data, error } = await supabase.rpc("block_user", {
     p_target: target,
@@ -68,7 +68,7 @@ export async function unblockUserAction(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { ok: false, message: "Sign in to continue." };
+  if (!user) return { ok: false, message: "Log in to continue." };
 
   const { data, error } = await supabase.rpc("unblock_user", {
     p_target: target,
@@ -136,7 +136,7 @@ export async function submitReportAction(input: {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { ok: false, message: "Sign in to continue." };
+  if (!user) return { ok: false, message: "Log in to continue." };
   if (user.id === reportedUserId) {
     return { ok: false, message: "You can’t report yourself." };
   }

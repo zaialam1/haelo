@@ -19,8 +19,8 @@ export async function generateMetadata({
   return {
     title:
       intent === "experiment"
-        ? "Try the Experiment — Halo"
-        : "Try Again — Halo",
+        ? "Try the Experiment | Halo"
+        : "Try Again | Halo",
   };
 }
 

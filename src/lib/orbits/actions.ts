@@ -61,7 +61,7 @@ export async function runOrbitSynthesisAction(
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return { ok: false, message: "Sign in to continue." };
+    return { ok: false, message: "Log in to continue." };
   }
 
   const progress = await getUserOrbitProgress(user.id, orbitKey);

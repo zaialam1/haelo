@@ -155,7 +155,7 @@ export function JourneyExperience({
                 color: "var(--violet)",
               }}
             >
-              Development preview — not your real history. Disable via{" "}
+              Development preview. Not your real history. Disable via{" "}
               <code className="text-[0.65rem]">?preview=1</code> removal or{" "}
               <code className="text-[0.65rem]">JOURNEY_PREVIEW_ENABLED</code>.
             </p>
@@ -193,7 +193,7 @@ export function JourneyExperience({
             >
               {filter === "all"
                 ? "Complete an Orbit or a planet session to place a star in your overall Journey."
-                : `Practice on ${filterLabel ?? "this planet"} to add stars here — or switch back to All.`}
+                : `Practice on ${filterLabel ?? "this planet"} to add stars here, or switch back to All.`}
             </p>
           </div>
         ) : null}

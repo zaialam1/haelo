@@ -254,19 +254,19 @@ function SummativeBlock({
       {localStatus === "ready" && localAnalysis && !showPending ? (
         <div className="space-y-7">
           <AnalysisSection
-            title="What Became Clearer"
+            title="What got clearer"
             body={localAnalysis.whatBecameClearer}
           />
           <AnalysisSection
-            title="What Kept Coming Up"
+            title="What kept coming up"
             body={localAnalysis.whatKeptComingUp}
           />
           <AnalysisSection
-            title="How Your Voice Moved"
+            title="How you said it"
             body={localAnalysis.howYourVoiceMoved}
           />
           <AnalysisSection
-            title="Carry This With You"
+            title="Worth keeping"
             body={localAnalysis.carryThisWithYou}
           />
         </div>

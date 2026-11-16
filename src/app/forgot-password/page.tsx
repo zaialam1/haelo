@@ -3,7 +3,7 @@ import { AuthShell } from "@/components/auth/AuthShell";
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 
 export const metadata: Metadata = {
-  title: "Forgot password — Halo",
+  title: "Forgot password | Halo",
   description: "Reset your Halo password.",
 };
 
@@ -12,18 +12,8 @@ export default function ForgotPasswordPage() {
     <AuthShell
       brand={
         <>
-          <p
-            className="inline-flex rounded-full px-3 py-1 text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
-            style={{
-              color: "var(--violet)",
-              backgroundColor:
-                "color-mix(in srgb, var(--gold) 45%, var(--rose) 25%, var(--background))",
-            }}
-          >
-            Almost there
-          </p>
           <h2
-            className="mt-5 font-[family-name:var(--font-fraunces)] text-[2.15rem] leading-tight text-[var(--violet)] sm:text-[2.6rem] lg:text-[2.85rem]"
+            className="font-[family-name:var(--font-fraunces)] text-[2.15rem] leading-tight text-[var(--violet)] sm:text-[2.6rem] lg:text-[2.85rem]"
             style={{
               fontVariationSettings: '"opsz" 84, "SOFT" 55, "WONK" 1, "wght" 550',
               letterSpacing: "-0.02em",
@@ -31,12 +21,6 @@ export default function ForgotPasswordPage() {
           >
             We&rsquo;ll help you get back in.
           </h2>
-          <p
-            className="mt-4 max-w-md text-[1.0625rem] leading-relaxed sm:text-[1.125rem]"
-            style={{ color: "var(--foreground)" }}
-          >
-            Enter the email on your account and we&rsquo;ll send a reset link.
-          </p>
           <div className="mt-8 flex gap-2" aria-hidden="true">
             <span
               className="size-3 rounded-full"

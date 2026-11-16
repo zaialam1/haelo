@@ -31,8 +31,8 @@ import { TODAYS_QUESTION } from "@/lib/home/voicePlanets";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Home — Halo",
-  description: "Explore your personal voice universe in Halo.",
+  title: "Home | Halo",
+  description: "Your Halo Universe.",
 };
 
 export default async function HomePage() {

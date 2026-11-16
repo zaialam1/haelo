@@ -132,7 +132,7 @@ export function UsernameSetupForm({
           Choose your Halo name
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-[var(--foreground-muted)]">
-          This is how people you choose to connect with can find you.
+          People use it to find you and ask to connect.
         </p>
       </div>
 
@@ -220,12 +220,12 @@ export function UsernameSetupForm({
           {statusMessage ??
             (normalized
               ? formatUsernameDisplay(normalized)
-              : "Letters, numbers, and underscores · 3–20 characters")}
+              : "3 to 20 letters, numbers, or underscores")}
         </p>
       </div>
 
       <p className="text-sm leading-relaxed text-[var(--foreground-muted)]">
-        Your recordings, Journey, and analyses stay private.
+        Your recordings, Journey, and feedback stay private.
       </p>
 
       <button

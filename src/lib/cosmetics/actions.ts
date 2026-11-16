@@ -31,7 +31,7 @@ async function requireUserClient() {
   if (!user) {
     return {
       ok: false as const,
-      message: "Sign in to continue.",
+      message: "Log in to continue.",
       supabase: null,
       user: null,
     };
@@ -74,7 +74,7 @@ function revalidateCosmeticsPaths() {
 export async function getCosmeticsStateAction(): Promise<CosmeticsActionResult> {
   const gate = await requireUserClient();
   if (!gate.ok || !gate.supabase || !gate.user) {
-    return { ok: false, message: gate.message ?? "Sign in to continue." };
+    return { ok: false, message: gate.message ?? "Log in to continue." };
   }
   const state = await getCosmeticsState(gate.supabase, gate.user.id);
   return { ok: true, state };
@@ -85,7 +85,7 @@ export async function purchaseCosmeticAction(
 ): Promise<CosmeticsActionResult> {
   const gate = await requireUserClient();
   if (!gate.ok || !gate.supabase || !gate.user) {
-    return { ok: false, message: gate.message ?? "Sign in to continue." };
+    return { ok: false, message: gate.message ?? "Log in to continue." };
   }
 
   const item = getCosmeticByKey(cosmeticKey);
@@ -115,7 +115,7 @@ export async function purchaseCosmeticAction(
     if (payload?.error === "insufficient_stardust") {
       return {
         ok: false,
-        message: "Not enough Stardust yet — keep practicing.",
+        message: "Not enough Stardust yet. Keep practicing.",
       };
     }
     return {
@@ -153,7 +153,7 @@ export async function placeCosmeticAction(input: {
 }): Promise<CosmeticsActionResult> {
   const gate = await requireUserClient();
   if (!gate.ok || !gate.supabase || !gate.user) {
-    return { ok: false, message: gate.message ?? "Sign in to continue." };
+    return { ok: false, message: gate.message ?? "Log in to continue." };
   }
 
   if (!isValidPlanet(input.planet)) {
@@ -237,7 +237,7 @@ export async function removeCosmeticPlacementAction(
 ): Promise<CosmeticsActionResult> {
   const gate = await requireUserClient();
   if (!gate.ok || !gate.supabase || !gate.user) {
-    return { ok: false, message: gate.message ?? "Sign in to continue." };
+    return { ok: false, message: gate.message ?? "Log in to continue." };
   }
 
   const { error } = await gate.supabase
@@ -280,7 +280,7 @@ export async function assignCosmeticSlotAction(input: {
 
   const gate = await requireUserClient();
   if (!gate.ok || !gate.supabase || !gate.user) {
-    return { ok: false, message: gate.message ?? "Sign in to continue." };
+    return { ok: false, message: gate.message ?? "Log in to continue." };
   }
   if (!isValidPlanet(input.planet) || !isValidSlotForPlanet(input.planet, input.slotKey)) {
     return { ok: false, message: "Invalid placement." };

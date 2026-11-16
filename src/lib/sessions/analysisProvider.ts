@@ -12,6 +12,7 @@
  * The model receives transcript + derived speech metrics — not raw audio.
  */
 
+import { tidyGeneratedCopy } from "@/lib/ai/brandVoice";
 import {
   getOpenAIAnalysisModel,
   getOpenAIApiKey,
@@ -94,7 +95,9 @@ function requireNonEmptyString(value: unknown, field: string): string {
   if (typeof value !== "string" || !value.trim()) {
     throw new Error(`Analysis response missing ${field}.`);
   }
-  return value.trim();
+  // Model-written prose only. Evidence quotes are grounded separately and
+  // stay verbatim.
+  return tidyGeneratedCopy(value.trim());
 }
 
 /**

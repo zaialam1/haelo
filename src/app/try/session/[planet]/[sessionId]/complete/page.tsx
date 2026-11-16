@@ -12,7 +12,7 @@ type PageProps = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  return { title: "Guest practice complete — Halo" };
+  return { title: "Guest practice complete | Halo" };
 }
 
 export default async function GuestSessionCompletePage({ params }: PageProps) {

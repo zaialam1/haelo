@@ -120,7 +120,7 @@ export function SessionCompareClient({
       router.push(flow.afterCompleteHref(sessionId));
     } catch (e) {
       setError(
-        e instanceof Error ? e.message : "Could not finish this session.",
+        e instanceof Error ? e.message : "Couldn’t finish this session. Try again.",
       );
       setBusy(false);
     }
@@ -145,7 +145,7 @@ export function SessionCompareClient({
             fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
           }}
         >
-          {isExperiment ? "What changed" : "Hear the Difference"}
+          {isExperiment ? "What changed" : "Hear the difference"}
         </h1>
         <p
           className="mt-4 max-w-2xl text-[0.9375rem] leading-relaxed"
@@ -196,7 +196,7 @@ export function SessionCompareClient({
               className="mt-1 text-[0.75rem]"
               style={{ color: "var(--foreground-muted)" }}
             >
-              Experiment attempt
+              With the experiment
             </p>
           ) : null}
           <div className="mt-4">
@@ -234,15 +234,14 @@ export function SessionCompareClient({
               style={{ color: "var(--foreground-muted)" }}
               aria-live="polite"
             >
-              Halo is looking at your responses…
+              Comparing your two takes…
             </p>
           ) : (
             <p
               className="text-[0.9375rem] leading-relaxed"
               style={{ color: "var(--foreground-muted)" }}
             >
-              Comparison notes aren&rsquo;t available yet. You can still listen
-              to both recordings and decide for yourself.
+              No comparison yet. Listen to both and see what you think.
             </p>
           )}
         </div>

@@ -160,7 +160,7 @@ export function ProfessionalSignupForm() {
           }
           setErrors({
             form:
-              "An account with this email already exists. Use Professional login with the same password to finish setup.",
+              "There’s already an account with this email. Use Professional login to finish setting up.",
           });
           return;
         }
@@ -191,7 +191,7 @@ export function ProfessionalSignupForm() {
 
       if (!finish.ok) {
         setErrors({
-          form: `${finish.message} You can also open Professional login to complete setup.`,
+          form: `${finish.message} You can finish setting up from Professional login.`,
         });
         return;
       }
@@ -209,7 +209,7 @@ export function ProfessionalSignupForm() {
           ? err.message
           : "Something went wrong. Try again.";
       setErrors({
-        form: `${message} If an account was created, use Professional login to finish setup.`,
+        form: `${message} If your account was created, use Professional login to finish setting up.`,
       });
     } finally {
       setSubmitting(false);
@@ -234,7 +234,8 @@ export function ProfessionalSignupForm() {
             <span className="font-semibold text-[var(--foreground)]">
               {email.trim().toLowerCase()}
             </span>
-            . After you confirm, log in with Professional login to finish setup.
+            . Once you&rsquo;ve confirmed, use Professional login to finish
+            setting up.
           </p>
         </div>
         <TransitionLink
@@ -261,9 +262,8 @@ export function ProfessionalSignupForm() {
           Create professional account
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-[var(--foreground-muted)]">
-          Professional accounts include Halo&rsquo;s normal voice-growth
-          experience plus tools for connecting with people and recommending
-          guided Orbits.
+          You get everything in a personal account, plus tools to connect with
+          people and recommend Orbits to them.
         </p>
       </div>
 
