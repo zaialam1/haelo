@@ -75,8 +75,25 @@ export function OrbitCompleteClient({
 
   return (
     <article className="mx-auto w-full max-w-2xl">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <TransitionLink
+          href="/orbits"
+          variant="fade"
+          className="text-sm font-medium text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+        >
+          ← Back to Orbits
+        </TransitionLink>
+        <TransitionLink
+          href="/home"
+          variant="fade"
+          className="text-sm font-medium underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+          style={{ color: "var(--foreground-muted)" }}
+        >
+          Universe
+        </TransitionLink>
+      </div>
       <p
-        className="text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
+        className="mt-5 text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
         style={{ color: "var(--gold)" }}
       >
         Orbit Complete
@@ -201,14 +218,14 @@ export function OrbitCompleteClient({
 
       <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <TransitionLink
-          href="/home"
+          href="/journey"
           variant="fade"
           className="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3 text-sm font-semibold text-[var(--on-violet)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
-          Return to Universe
+          View in Journey
         </TransitionLink>
         <TransitionLink
-          href="/journey"
+          href="/orbits"
           variant="fade"
           className="inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3 text-sm font-semibold transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           style={{
@@ -216,7 +233,7 @@ export function OrbitCompleteClient({
             color: "var(--foreground)",
           }}
         >
-          View in Journey
+          More Orbits
         </TransitionLink>
       </div>
 

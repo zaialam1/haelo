@@ -73,8 +73,15 @@ export function StoreClient({ initialState }: StoreClientProps) {
     <div className="mx-auto w-full max-w-3xl">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
+          <TransitionLink
+            href="/home"
+            variant="fade"
+            className="text-sm font-medium text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+          >
+            ← Back to Universe
+          </TransitionLink>
           <p
-            className="text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
+            className="mt-3 text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
             style={{ color: "var(--gold)" }}
           >
             Universe store
@@ -223,17 +230,6 @@ export function StoreClient({ initialState }: StoreClientProps) {
           }}
         >
           Decorate Universe
-        </TransitionLink>
-        <TransitionLink
-          href="/home"
-          variant="fade"
-          className="inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3 text-sm font-semibold"
-          style={{
-            background: "color-mix(in srgb, var(--violet) 12%, transparent)",
-            color: "var(--foreground)",
-          }}
-        >
-          Back to Universe
         </TransitionLink>
       </div>
     </div>

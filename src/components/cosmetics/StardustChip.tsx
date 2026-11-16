@@ -17,11 +17,14 @@ export function StardustChip({
   className,
   compact = false,
 }: StardustChipProps) {
+  const interactive = Boolean(href);
   const content = (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full font-semibold transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)] ${
-        compact ? "px-2.5 py-1 text-[0.75rem]" : "px-3.5 py-1.5 text-sm"
-      } ${className ?? ""}`}
+      className={`inline-flex items-center gap-1.5 rounded-full font-semibold ${
+        interactive
+          ? "transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+          : ""
+      } ${compact ? "px-2.5 py-1 text-[0.75rem]" : "px-3.5 py-1.5 text-sm"} ${className ?? ""}`}
       style={{
         background: "color-mix(in srgb, var(--violet) 12%, var(--surface))",
         color: "var(--foreground)",

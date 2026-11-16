@@ -70,6 +70,14 @@ html.dark {
 
 html {
   scroll-behavior: smooth;
+  /* Keep in-page anchors clear of the fixed/sticky app header */
+  scroll-padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));
+}
+
+@media (min-width: 640px) {
+  html {
+    scroll-padding-top: calc(4rem + env(safe-area-inset-top, 0px));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -119,9 +127,17 @@ html.dark .halo-logo-dark {
 /* Every button / button-like control eases its interactive states */
 button,
 [role="button"],
+a[href],
 input[type="button"],
 input[type="submit"],
 input[type="reset"],
+input[type="checkbox"],
+input[type="radio"],
+select,
+summary,
+label:has(input[type="checkbox"]),
+label:has(input[type="radio"]),
+[role="slider"],
 .halo-btn {
   cursor: pointer;
   transition:
@@ -139,12 +155,29 @@ input[type="reset"],
 
 button:disabled,
 [role="button"][aria-disabled="true"],
+a[aria-disabled="true"],
 input[type="button"]:disabled,
 input[type="submit"]:disabled,
 input[type="reset"]:disabled,
+input[type="checkbox"]:disabled,
+input[type="radio"]:disabled,
+select:disabled,
+label:has(input[type="checkbox"]:disabled),
+label:has(input[type="radio"]:disabled),
 .halo-btn:disabled,
 .halo-btn[aria-disabled="true"] {
   cursor: not-allowed;
+}
+
+/* Text fields keep a text caret cursor */
+input:not([type="button"]):not([type="submit"]):not([type="reset"]):not(
+    [type="checkbox"]
+  ):not([type="radio"]):not([type="file"]):not([type="range"]):not(
+    [type="color"]
+  ):not([type="image"]),
+textarea,
+[contenteditable="true"] {
+  cursor: text;
 }
 
 /* Soft press — native buttons only (links keep their own hover scales) */
@@ -1132,11 +1165,6 @@ html.dark .journey-orbit-panel[data-open="true"] {
 
 .planet-page {
   --planet-page-bg: var(--universe-map);
-}
-
-.planet-page .home-bottom-nav,
-.universe-empty-page .home-bottom-nav {
-  position: fixed;
 }
 
 .planet-page-haze {

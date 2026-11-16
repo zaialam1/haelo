@@ -64,7 +64,7 @@ export function HomeBottomNav() {
 
   return (
     <nav
-      className="home-bottom-nav pointer-events-auto absolute inset-x-0 bottom-0 z-40"
+      className="home-bottom-nav pointer-events-auto fixed inset-x-0 bottom-0 z-40"
       aria-label="Primary"
       data-tour="bottom-nav"
     >
@@ -72,7 +72,7 @@ export function HomeBottomNav() {
         className="mx-auto flex h-[4.25rem] items-center justify-center gap-1 px-3 pb-[env(safe-area-inset-bottom)] sm:h-20 sm:gap-2 sm:px-6"
         style={{
           background:
-            "linear-gradient(to top, color-mix(in srgb, var(--background) 92%, transparent), color-mix(in srgb, var(--background) 55%, transparent) 70%, transparent)",
+            "linear-gradient(to top, color-mix(in srgb, var(--background) 96%, transparent), color-mix(in srgb, var(--background) 72%, transparent) 65%, transparent)",
         }}
       >
         <div className="flex items-center gap-0.5 sm:gap-1">

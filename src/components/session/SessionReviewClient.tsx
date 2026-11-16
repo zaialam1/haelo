@@ -294,23 +294,42 @@ export function SessionReviewClient({
 
   const hasExperiment = Boolean(session.analysis?.experiment);
 
+  const exitLabel = guestMode
+    ? flow.exitLabel
+    : flow.source === "orbit"
+      ? "Back to Orbit"
+      : showAnalysis
+        ? "Back to Universe"
+        : `Back to ${content.label}`;
+
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <header>
-        <p
-          className="text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
-          style={{ color: accent }}
+      <header className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <p
+            className="text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
+            style={{ color: accent }}
+          >
+            {content.label}
+          </p>
+          <h1
+            className="mt-2 font-[family-name:var(--font-fraunces)] text-3xl leading-tight sm:text-4xl"
+            style={{
+              fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
+            }}
+          >
+            {flow.reviewTitle ?? "Session review"}
+          </h1>
+        </div>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => void handleExit()}
+          className="halo-btn shrink-0 pt-1 text-sm font-medium underline-offset-2 transition-opacity hover:opacity-70 hover:underline disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+          style={{ color: "var(--foreground-muted)" }}
         >
-          {content.label}
-        </p>
-        <h1
-          className="mt-2 font-[family-name:var(--font-fraunces)] text-3xl leading-tight sm:text-4xl"
-          style={{
-            fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
-          }}
-        >
-          {flow.reviewTitle ?? "Session review"}
-        </h1>
+          {exitLabel}
+        </button>
       </header>
 
       <section className="mt-10">
@@ -614,24 +633,6 @@ export function SessionReviewClient({
           {error}
         </p>
       ) : null}
-
-      <div className="mt-auto pt-12">
-        <button
-          type="button"
-          disabled={busy}
-          onClick={() => void handleExit()}
-          className="halo-btn text-sm font-medium underline-offset-2 transition-opacity hover:opacity-70 hover:underline disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
-          style={{ color: "var(--foreground-muted)" }}
-        >
-          {guestMode
-            ? flow.exitLabel
-            : flow.source === "orbit"
-              ? "Back to Orbit"
-              : showAnalysis
-                ? "Back to Universe"
-                : `Back to ${content.label}`}
-        </button>
-      </div>
 
       {showFirstStar ? (
         <FirstStarMoment continueHref={flow.afterCompleteHref(sessionId)} />

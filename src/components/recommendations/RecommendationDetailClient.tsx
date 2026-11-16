@@ -109,6 +109,13 @@ export function RecommendationDetailClient({
 
   return (
     <div className="space-y-6">
+      <TransitionLink
+        href="/orbits"
+        variant="fade"
+        className="inline-flex text-sm font-medium text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+      >
+        ← Back to Orbits
+      </TransitionLink>
       <div>
         <p
           className="text-[0.6875rem] font-semibold tracking-[0.12em] uppercase"
@@ -209,14 +216,6 @@ export function RecommendationDetailClient({
                   : orbitCtaLabel(orbitStatus)}
           </button>
         ) : null}
-        <TransitionLink
-          href="/orbits"
-          variant="fade"
-          className="inline-flex justify-center rounded-full border px-5 py-3 text-sm font-semibold text-[var(--violet)]"
-          style={{ borderColor: "var(--hairline)" }}
-        >
-          Back to Orbits
-        </TransitionLink>
         {status !== "dismissed" && status !== "completed" ? (
           <button
             type="button"

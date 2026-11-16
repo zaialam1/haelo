@@ -444,7 +444,7 @@ export function ProfessionalSignupForm() {
         </p>
         <label
           htmlFor={ageId}
-          className="mt-3 flex items-start gap-3 text-sm leading-relaxed"
+          className="mt-3 flex cursor-pointer items-start gap-3 text-sm leading-relaxed"
         >
           <input
             id={ageId}

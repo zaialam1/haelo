@@ -219,7 +219,9 @@ function FocusQuestionRow({
   return (
     <li>
       <label
-        className="flex cursor-pointer gap-3 rounded-2xl px-3 py-3 transition-colors"
+        className={`flex gap-3 rounded-2xl px-3 py-3 transition-colors ${
+          disabled ? "cursor-not-allowed" : "cursor-pointer"
+        }`}
         style={{
           background: checked
             ? "color-mix(in srgb, var(--violet) 12%, var(--surface))"

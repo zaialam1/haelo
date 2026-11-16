@@ -326,7 +326,8 @@ export function JourneyOrbitDetailPanel({
 
   return (
     <>
-      <div
+      <button
+        type="button"
         className="journey-panel-backdrop fixed inset-0 z-40 bg-black/25"
         data-open={open}
         style={{
@@ -334,7 +335,8 @@ export function JourneyOrbitDetailPanel({
           pointerEvents: open ? "auto" : "none",
         }}
         onClick={onClose}
-        aria-hidden={!open}
+        aria-label="Close panel"
+        tabIndex={open ? 0 : -1}
       />
       <aside
         ref={panelRef}

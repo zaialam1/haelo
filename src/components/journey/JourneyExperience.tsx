@@ -23,13 +23,6 @@ type JourneyExperienceProps = {
   initialFilter?: JourneyPlanetFilter;
 };
 
-function formatBegan(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric",
-  });
-}
-
 export function JourneyExperience({
   model,
   initialFilter = "all",
@@ -53,30 +46,10 @@ export function JourneyExperience({
 
   const journeyEmpty = model.isEmpty;
   const filterEmpty = !journeyEmpty && filteredModel.isEmpty;
-  const count = filteredModel.sessions.length;
   const orbitClusterOpen = Boolean(selected?.isOrbitCluster && panelOpen);
   const sessionPanelOpen = Boolean(
     panelOpen && selected && !selected.isOrbitCluster,
   );
-
-  let contextLine: string | null = null;
-  if (journeyEmpty) {
-    contextLine = "Finish a session to add a star.";
-  } else if (filterEmpty && filter === "all") {
-    contextLine =
-      "Orbit sessions show on their planets until you finish the full Orbit.";
-  } else if (filter === "all" && count === 1) {
-    contextLine = "1 session so far.";
-  } else if (filter === "all" && model.beganAt) {
-    contextLine = `Started ${formatBegan(model.beganAt)} · ${count} sessions`;
-  } else if (filter !== "all") {
-    contextLine =
-      count === 0
-        ? null
-        : `${count} ${filterLabel ?? "planet"} session${count === 1 ? "" : "s"}`;
-  } else {
-    contextLine = `${count} sessions`;
-  }
 
   function handleSelect(node: JourneyNode) {
     setSelected(node);
@@ -108,23 +81,11 @@ export function JourneyExperience({
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <h1
-                className="font-[family-name:var(--font-fraunces)] text-2xl tracking-tight sm:text-3xl"
-                style={{
-                  color: "var(--foreground)",
-                  fontVariationSettings:
-                    '"opsz" 72, "SOFT" 45, "WONK" 0, "wght" 550',
-                }}
+                className="font-sans text-2xl font-semibold tracking-tight sm:text-3xl"
+                style={{ color: "var(--foreground)" }}
               >
                 Journey
               </h1>
-              {contextLine ? (
-                <p
-                  className="mt-1.5 text-xs"
-                  style={{ color: "var(--foreground-muted)" }}
-                >
-                  {contextLine}
-                </p>
-              ) : null}
             </div>
 
             {!journeyEmpty ? (

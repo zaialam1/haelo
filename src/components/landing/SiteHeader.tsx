@@ -7,11 +7,12 @@ import { TransitionLink } from "@/components/transitions/TransitionLink";
 export function SiteHeader() {
   return (
     <header
-      className="sticky top-0 z-40 border-b backdrop-blur-md"
+      className="sticky top-0 z-40 border-b"
       style={{
+        paddingTop: "env(safe-area-inset-top)",
         borderColor: "color-mix(in srgb, var(--rose) 35%, transparent)",
         backgroundColor:
-          "color-mix(in srgb, var(--rose) 12%, var(--background) 88%)",
+          "color-mix(in srgb, var(--rose) 10%, var(--background) 90%)",
       }}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">

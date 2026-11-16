@@ -1,7 +1,7 @@
 /**
  * Regression tests for interaction/navigation fixes:
- * guest Leave exit destination, session flow exit labels, and
- * interactive cursor rules in globals.css.
+ * guest Leave exit destination, session flow exit labels,
+ * sticky/fixed chrome, Journey typography, and interactive cursor rules.
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -50,13 +50,97 @@ console.log("interaction-regression tests…");
   const css = readFileSync(join(process.cwd(), "src/app/globals.css"), "utf8");
   assert.match(
     css,
-    /button,\s*\n\[role="button"\][\s\S]*?\.halo-btn \{\s*\n\s*cursor: pointer;/,
-    "Interactive controls must use pointer cursor by default",
+    /button,\s*\n\[role="button"\][\s\S]*?a\[href\][\s\S]*?\.halo-btn \{\s*\n\s*cursor: pointer;/,
+    "Interactive controls and links must use pointer cursor by default",
   );
   assert.match(
     css,
     /button:disabled[\s\S]*?cursor: not-allowed;/,
     "Disabled controls must use not-allowed cursor",
+  );
+  assert.match(
+    css,
+    /textarea[\s\S]*?cursor: text;/,
+    "Text fields must use text cursor",
+  );
+  assert.match(
+    css,
+    /scroll-padding-top:/,
+    "Document must account for sticky/fixed header height on anchors",
+  );
+}
+
+{
+  const homeNav = readFileSync(
+    join(process.cwd(), "src/components/home/HomeNav.tsx"),
+    "utf8",
+  );
+  assert.match(
+    homeNav,
+    /pinned = true/,
+    "HomeNav must pin by default so long pages keep chrome reachable",
+  );
+  assert.match(
+    homeNav,
+    /safe-area-inset-top/,
+    "HomeNav must respect mobile safe areas",
+  );
+  assert.doesNotMatch(
+    homeNav,
+    /backdrop-blur/,
+    "HomeNav must not use glassmorphism blur",
+  );
+}
+
+{
+  const bottomNav = readFileSync(
+    join(process.cwd(), "src/components/home/HomeBottomNav.tsx"),
+    "utf8",
+  );
+  assert.match(
+    bottomNav,
+    /className="home-bottom-nav[^"]*\bfixed\b/,
+    "Primary bottom nav must stay fixed so tabs remain reachable while scrolling",
+  );
+}
+
+{
+  const journey = readFileSync(
+    join(process.cwd(), "src/components/journey/JourneyExperience.tsx"),
+    "utf8",
+  );
+  assert.match(
+    journey,
+    /font-sans text-2xl font-semibold/,
+    "Journey heading must use the standard sans heading font",
+  );
+  assert.doesNotMatch(
+    journey,
+    /font-fraunces|font-display|WONK|SOFT/,
+    "Journey heading must not use Fraunces/display variation settings",
+  );
+  assert.doesNotMatch(
+    journey,
+    /contextLine|Finish a session to add a star\.|1 session so far/,
+    "Journey must not render redundant subtitle copy under the title",
+  );
+  assert.match(
+    journey,
+    />\s*Journey\s*</,
+    "Journey page must keep a clear Journey title",
+  );
+}
+
+{
+  const siteHeader = readFileSync(
+    join(process.cwd(), "src/components/landing/SiteHeader.tsx"),
+    "utf8",
+  );
+  assert.match(siteHeader, /sticky top-0/);
+  assert.doesNotMatch(
+    siteHeader,
+    /backdrop-blur/,
+    "Marketing header must stay solid, not glassmorphic",
   );
 }
 
@@ -84,8 +168,13 @@ console.log("interaction-regression tests…");
   );
   assert.match(
     review,
-    /guestMode\s*\n\s*\? flow\.exitLabel/,
+    /const exitLabel = guestMode/,
     "Guest review exit should use Leave label",
+  );
+  assert.match(
+    review,
+    /onClick=\{\(\) => void handleExit\(\)\}/,
+    "Review exit must stay reachable near the top of long analysis pages",
   );
 }
 

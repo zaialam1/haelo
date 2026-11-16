@@ -70,11 +70,11 @@ export function ConnectionsClient({
     >
       {!isProfessionalVariant ? (
         <header
-          className="sticky top-0 z-40 border-b backdrop-blur-md"
+          className="sticky top-0 z-40 border-b"
           style={{
+            paddingTop: "env(safe-area-inset-top)",
             borderColor: "var(--hairline)",
-            backgroundColor:
-              "color-mix(in srgb, var(--background) 88%, transparent)",
+            backgroundColor: "var(--background)",
           }}
         >
           <div className="mx-auto flex h-14 max-w-lg items-center gap-3 px-4 sm:h-16 sm:px-6">

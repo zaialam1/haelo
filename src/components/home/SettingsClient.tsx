@@ -1,15 +1,15 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
+import { ChangePasswordPanel } from "@/components/home/ChangePasswordPanel";
 import { ThemeIconToggle } from "@/components/theme/ThemeIconToggle";
+import { TransitionLink } from "@/components/transitions/TransitionLink";
 import {
   getAccountProfile,
   signOut,
   type AccountProfile,
 } from "@/lib/auth/account";
-import { ChangePasswordPanel } from "@/components/home/ChangePasswordPanel";
 import { deleteAccountAction } from "@/lib/auth/actions";
 import { submitProductFeedbackAction } from "@/lib/feedback/actions";
 import { startTourSession } from "@/lib/onboarding/productTour";
@@ -255,21 +255,22 @@ export function SettingsClient({
       }}
     >
       <header
-        className="sticky top-0 z-40 border-b backdrop-blur-md"
+        className="sticky top-0 z-40 border-b"
         data-tour="settings-page"
         style={{
+          paddingTop: "env(safe-area-inset-top)",
           borderColor: "var(--hairline)",
-          backgroundColor:
-            "color-mix(in srgb, var(--background) 88%, transparent)",
+          backgroundColor: "var(--background)",
         }}
       >
         <div className="mx-auto flex h-14 max-w-lg items-center gap-3 px-4 sm:h-16 sm:px-6">
-          <Link
+          <TransitionLink
             href="/home"
+            variant="fade"
             className="rounded-full px-2 py-1.5 text-sm font-medium text-[var(--violet)] transition-colors hover:bg-[var(--violet-soft)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           >
             ← Back
-          </Link>
+          </TransitionLink>
           <h1
             className="min-w-0 flex-1 font-[family-name:var(--font-fraunces)] text-xl tracking-tight"
             style={{
@@ -383,12 +384,13 @@ export function SettingsClient({
               style={{ color: "var(--foreground-muted)" }}
             >
               You&rsquo;re not logged in.{" "}
-              <Link
+              <TransitionLink
                 href="/login"
+                variant="fade"
                 className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline"
               >
                 Log in
-              </Link>{" "}
+              </TransitionLink>{" "}
               to see your account.
             </p>
           )}
@@ -498,12 +500,13 @@ export function SettingsClient({
                 <li>AI analyses</li>
                 <li>Internal Journey scores</li>
               </ul>
-              <Link
+              <TransitionLink
                 href={connectionsHref}
+                variant="fade"
                 className="mt-4 inline-flex rounded-full bg-[var(--violet)] px-5 py-2.5 text-sm font-semibold text-[var(--on-violet)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
               >
                 Manage connections
-              </Link>
+              </TransitionLink>
               {account.accountRole === "professional" ? (
                 <p
                   className="mt-3 text-sm leading-relaxed"

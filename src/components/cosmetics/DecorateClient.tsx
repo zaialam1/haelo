@@ -139,8 +139,15 @@ export function DecorateClient({ initialState }: DecorateClientProps) {
     <div className="mx-auto w-full max-w-3xl">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
+          <TransitionLink
+            href="/home"
+            variant="fade"
+            className="text-sm font-medium text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+          >
+            ← Back to Universe
+          </TransitionLink>
           <p
-            className="text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
+            className="mt-3 text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
             style={{ color: "var(--violet)" }}
           >
             Decorate

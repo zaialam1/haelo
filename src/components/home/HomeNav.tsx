@@ -6,7 +6,11 @@ import { ProfessionalModeSwitch } from "@/components/professional/ProfessionalMo
 import { ThemeIconToggle } from "@/components/theme/ThemeIconToggle";
 
 type HomeNavProps = {
-  /** Pin to the viewport (for scrollable pages like planet detail) */
+  /**
+   * Keep the header visible while the page scrolls.
+   * Defaults to true so long browse pages keep Settings / theme reachable.
+   * Immersive session shells do not mount HomeNav.
+   */
   pinned?: boolean;
   /** @deprecated Prefer showModeSwitch */
   showProfessional?: boolean;
@@ -18,7 +22,7 @@ type HomeNavProps = {
 };
 
 export function HomeNav({
-  pinned = false,
+  pinned = true,
   showProfessional = false,
   showModeSwitch = false,
   professionalUsername = null,
@@ -30,12 +34,13 @@ export function HomeNav({
   return (
     <header
       className={`pointer-events-none inset-x-0 top-0 z-40 ${pinned ? "fixed" : "absolute"}`}
+      style={{ paddingTop: "env(safe-area-inset-top)" }}
     >
       <div
-        className="pointer-events-auto relative mx-auto flex h-14 w-full items-center justify-between gap-2 px-3 sm:h-16 sm:px-6"
+        className="pointer-events-auto relative mx-auto flex h-14 w-full items-center justify-between gap-2 border-b px-3 sm:h-16 sm:px-6"
         style={{
-          background:
-            "linear-gradient(to bottom, color-mix(in srgb, var(--background) 88%, transparent), transparent)",
+          background: "color-mix(in srgb, var(--background) 96%, transparent)",
+          borderColor: "color-mix(in srgb, var(--hairline) 80%, transparent)",
         }}
       >
         <HaloLogo href="/home" size={36} label="Halo home" />
