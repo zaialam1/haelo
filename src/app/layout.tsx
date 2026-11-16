@@ -17,10 +17,24 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://halo-speak.com"),
+  metadataBase: new URL("https://www.halo-speak.com"),
   title: "Halo — Notice the different versions of your voice",
   description:
     "Halo helps you notice how your voice changes across school, friends, family, passion, and challenge — and how it evolves over time.",
+  openGraph: {
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 629,
+        type: "image/png",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/og.png"],
+  },
 };
 
 const themeInitScript = `
