@@ -44,9 +44,9 @@ export default async function AuthErrorPage({
         <p className="text-sm leading-relaxed text-[var(--foreground-muted)]">
           {isRecovery ? (
             <>
-              Reset links only work once. Request a new one and open it in
-              this browser. If you&rsquo;re already logged in, you can change
-              your password in Settings.
+              This reset link has expired or already been used. Request a new
+              one. If you&rsquo;re already logged in, you can change your
+              password in Settings.
             </>
           ) : (
             <>

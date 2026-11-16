@@ -14,7 +14,7 @@ function inputClassName(hasError: boolean) {
 
 /**
  * In-app password change for signed-in users (Settings).
- * Avoids the broken /forgot-password redirect while authenticated.
+ * Prefer this over email recovery when the user already knows their password.
  */
 export function ChangePasswordPanel() {
   const formId = useId();

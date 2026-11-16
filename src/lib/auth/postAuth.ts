@@ -3,6 +3,10 @@
 import { claimPendingUsernameFromMetadataAction } from "@/lib/profiles/actions";
 import { getOwnProfile } from "@/lib/profiles/data";
 import { safeNextPath } from "@/lib/auth/paths";
+import {
+  PASSWORD_UPDATE_PATH,
+  isPasswordRecoveryNext,
+} from "@/lib/auth/passwordReset";
 
 /**
  * After login/signup/email confirm: claim any pending username from metadata,
@@ -16,8 +20,8 @@ export async function resolvePostAuthPathAction(
   await claimPendingUsernameFromMetadataAction();
 
   const next = safeNextPath(requestedNext, fallback);
-  if (next === "/auth/update-password" || next.startsWith("/auth/update-password?")) {
-    return "/auth/update-password";
+  if (isPasswordRecoveryNext(next)) {
+    return PASSWORD_UPDATE_PATH;
   }
 
   const profile = await getOwnProfile();

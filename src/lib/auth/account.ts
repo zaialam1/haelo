@@ -1,4 +1,9 @@
 import { createClient } from "@/lib/supabase/client";
+import {
+  buildPasswordResetRedirectTo,
+  mapPasswordResetRequestError,
+  mapPasswordUpdateError,
+} from "@/lib/auth/passwordReset";
 import type {
   AccountProfile,
   ResetPasswordResult,
@@ -6,6 +11,8 @@ import type {
 } from "./types";
 
 export type { AccountProfile };
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
  * Load the signed-in user's profile from Supabase Auth.
@@ -35,19 +42,35 @@ export async function signOut(): Promise<void> {
   await supabase.auth.signOut();
 }
 
+/**
+ * True when a non-anonymous user has an active session suitable for
+ * updating their password (recovery link or already signed in).
+ */
+export async function hasPasswordUpdateSession(): Promise<boolean> {
+  const supabase = createClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+  if (error || !user) return false;
+  if (user.is_anonymous) return false;
+  return true;
+}
+
 export async function requestPasswordReset(
   email: string,
 ): Promise<ResetPasswordResult> {
   const normalized = email.trim().toLowerCase();
-  if (!normalized) {
-    return { ok: false, message: "Enter your email." };
+  if (!normalized || !EMAIL_RE.test(normalized)) {
+    return { ok: false, message: "Enter a valid email." };
+  }
+
+  if (typeof window === "undefined") {
+    return { ok: false, message: "Couldn’t send a reset email. Try again." };
   }
 
   const supabase = createClient();
-  const redirectTo =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/auth/callback?next=/auth/update-password`
-      : undefined;
+  const redirectTo = buildPasswordResetRedirectTo(window.location.origin);
 
   const { error } = await supabase.auth.resetPasswordForEmail(normalized, {
     redirectTo,
@@ -56,10 +79,12 @@ export async function requestPasswordReset(
   if (error) {
     return {
       ok: false,
-      message: error.message || "Could not send reset email. Try again.",
+      message: mapPasswordResetRequestError(error.message || ""),
     };
   }
 
+  // Always succeed from the UI's perspective when Supabase accepts the call.
+  // Do not reveal whether the email is registered.
   return { ok: true };
 }
 
@@ -71,12 +96,23 @@ export async function updatePassword(
   }
 
   const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user || user.is_anonymous) {
+    return {
+      ok: false,
+      message: "This reset link has expired. Request a new one.",
+    };
+  }
+
   const { error } = await supabase.auth.updateUser({ password });
 
   if (error) {
     return {
       ok: false,
-      message: error.message || "Could not update password. Try again.",
+      message: mapPasswordUpdateError(error.message || ""),
     };
   }
 

@@ -1,15 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useId, useState } from "react";
-import { updatePassword } from "@/lib/auth/account";
+import { useEffect, useId, useState } from "react";
+import {
+  hasPasswordUpdateSession,
+  signOut,
+  updatePassword,
+} from "@/lib/auth/account";
+import { validateNewPassword } from "@/lib/auth/passwordReset";
 
 type FieldErrors = {
   password?: string;
   confirmPassword?: string;
   form?: string;
 };
+
+type Gate = "loading" | "allowed" | "expired" | "done";
 
 function inputClassName(hasError: boolean) {
   return [
@@ -21,8 +27,8 @@ function inputClassName(hasError: boolean) {
 }
 
 export function UpdatePasswordForm() {
-  const router = useRouter();
   const formId = useId();
+  const [gate, setGate] = useState<Gate>("loading");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -32,14 +38,20 @@ export function UpdatePasswordForm() {
   const passwordId = `${formId}-password`;
   const confirmId = `${formId}-confirm`;
 
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const ok = await hasPasswordUpdateSession();
+      if (!cancelled) setGate(ok ? "allowed" : "expired");
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const next: FieldErrors = {};
-    if (!password) next.password = "Enter a new password.";
-    else if (password.length < 8) next.password = "Use at least 8 characters.";
-    if (!confirmPassword) next.confirmPassword = "Confirm your password.";
-    else if (confirmPassword !== password)
-      next.confirmPassword = "Passwords don’t match.";
+    const next = validateNewPassword(password, confirmPassword);
     setErrors(next);
     if (Object.keys(next).length > 0) return;
 
@@ -48,16 +60,89 @@ export function UpdatePasswordForm() {
     try {
       const result = await updatePassword(password);
       if (!result.ok) {
+        if (result.message.toLowerCase().includes("expired")) {
+          setGate("expired");
+          return;
+        }
         setErrors({ form: result.message });
         return;
       }
-      router.push("/home");
-      router.refresh();
+      // End the recovery session so the user signs in with the new password.
+      await signOut();
+      setGate("done");
     } catch {
       setErrors({ form: "Something went wrong. Try again." });
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (gate === "loading") {
+    return (
+      <p className="text-sm text-[var(--foreground-muted)]">Checking link…</p>
+    );
+  }
+
+  if (gate === "expired") {
+    return (
+      <div className="flex flex-col gap-5">
+        <div>
+          <h1
+            className="font-[family-name:var(--font-fraunces)] text-[1.85rem] leading-tight text-[var(--foreground)] sm:text-[2rem]"
+            style={{
+              fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
+              letterSpacing: "-0.015em",
+            }}
+          >
+            This reset link has expired
+          </h1>
+          <p className="mt-2 text-sm text-[var(--foreground-muted)]">
+            Request a new one and open it soon.
+          </p>
+        </div>
+        <Link
+          href="/forgot-password"
+          className="halo-btn inline-flex w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)] shadow-[0_10px_28px_color-mix(in_srgb,var(--violet)_30%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+        >
+          Request a new reset link
+        </Link>
+        <p className="text-center text-sm text-[var(--foreground)]">
+          <Link
+            href="/login"
+            className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline"
+          >
+            Back to log in
+          </Link>
+        </p>
+      </div>
+    );
+  }
+
+  if (gate === "done") {
+    return (
+      <div className="flex flex-col gap-5">
+        <div>
+          <h1
+            className="font-[family-name:var(--font-fraunces)] text-[1.85rem] leading-tight text-[var(--foreground)] sm:text-[2rem]"
+            style={{
+              fontVariationSettings: '"opsz" 72, "SOFT" 50, "WONK" 1, "wght" 550',
+              letterSpacing: "-0.015em",
+            }}
+          >
+            Password updated
+          </h1>
+          <p className="mt-2 text-sm text-[var(--foreground-muted)]">
+            You can log in now.
+          </p>
+        </div>
+        <Link
+          href="/login"
+          className="halo-btn inline-flex w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)] shadow-[0_10px_28px_color-mix(in_srgb,var(--violet)_30%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+        >
+          Log in
+        </Link>
+      </div>
+    );
   }
 
   return (
@@ -159,15 +244,6 @@ export function UpdatePasswordForm() {
       >
         {submitting ? "Saving…" : "Save password"}
       </button>
-
-      <p className="text-center text-sm text-[var(--foreground)]">
-        <Link
-          href="/home"
-          className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline"
-        >
-          Back to Halo
-        </Link>
-      </p>
     </form>
   );
 }

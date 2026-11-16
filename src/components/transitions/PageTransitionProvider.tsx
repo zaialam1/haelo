@@ -26,7 +26,10 @@ type TransitionRequest = {
 };
 
 type PageTransitionContextValue = {
-  navigate: (request: TransitionRequest) => void;
+  /** Returns false when navigation was skipped (same path). */
+  navigate: (
+    request: TransitionRequest,
+  ) => boolean | void | Promise<boolean | void>;
   /** Soft cover for form submits that redirect via server actions */
   cover: (variant?: TransitionVariant) => void;
   isTransitioning: boolean;
@@ -89,19 +92,6 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
         runId: "post-fix",
       });
       // #endregion
-      if (currentPhase !== "idle") {
-        // #region agent log
-        agentLog({
-          hypothesisId: "A",
-          location: "PageTransitionProvider.tsx:navigate:earlyPhase",
-          message: "blocked: phase not idle",
-          data: { phase: currentPhase, target: request.href },
-          runId: "post-fix",
-        });
-        // #endregion
-        return;
-      }
-
       const target = request.href;
       if (target === pathname || target === `${pathname}/`) {
         // #region agent log
@@ -113,7 +103,22 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
           runId: "post-fix",
         });
         // #endregion
-        return;
+        return false;
+      }
+
+      // Never leave a TransitionLink click dead if a prior transition is mid-flight.
+      if (currentPhase !== "idle") {
+        // #region agent log
+        agentLog({
+          hypothesisId: "A",
+          location: "PageTransitionProvider.tsx:navigate:earlyPhase",
+          message: "phase not idle; falling back to router.push",
+          data: { phase: currentPhase, target: request.href },
+          runId: "post-fix",
+        });
+        // #endregion
+        router.push(target);
+        return true;
       }
 
       pendingHref.current = target;
@@ -161,6 +166,7 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
       });
       // #endregion
       router.push(target);
+      return true;
     },
     [pathname, router],
   );

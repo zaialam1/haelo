@@ -20,6 +20,7 @@
     "test:my-voice": "npx tsx scripts/test-my-voice.ts",
     "test:gamification": "npx tsx scripts/test-gamification.ts",
     "test:launch-readiness": "npx tsx scripts/test-launch-readiness.ts",
+    "test:password-reset": "npx tsx scripts/test-password-reset.ts",
     "test:interactions": "npx tsx scripts/test-interaction-regression.ts"
   },
   "dependencies": {

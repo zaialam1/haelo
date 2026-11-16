@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { useOptionalPageTransition } from "@/components/transitions/PageTransitionProvider";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -179,13 +180,12 @@ export function LoginForm() {
           >
             Password
           </label>
-          <TransitionLink
+          <Link
             href="/forgot-password"
-            variant="fade"
-            className="text-xs font-medium text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+            className="halo-btn text-xs font-medium text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           >
             Forgot password?
-          </TransitionLink>
+          </Link>
         </div>
         <div className="relative">
           <input

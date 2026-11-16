@@ -30,6 +30,8 @@ export function ForgotPasswordForm() {
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submitting) return;
+
     const next: FieldErrors = {};
     if (!email.trim()) next.email = "Enter your email.";
     else if (!EMAIL_RE.test(email.trim())) next.email = "Enter a valid email.";
@@ -66,13 +68,13 @@ export function ForgotPasswordForm() {
             Check your email
           </h1>
           <p className="mt-2 text-sm text-[var(--foreground-muted)]">
-            If there&rsquo;s an account with that email, we sent it a reset
+            If an account exists for that email, you&rsquo;ll receive a reset
             link.
           </p>
         </div>
         <Link
           href="/login"
-          className="inline-flex w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)] shadow-[0_10px_28px_color-mix(in_srgb,var(--violet)_30%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+          className="halo-btn inline-flex w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)] shadow-[0_10px_28px_color-mix(in_srgb,var(--violet)_30%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
           Back to log in
         </Link>
@@ -150,7 +152,7 @@ export function ForgotPasswordForm() {
         Remembered it?{" "}
         <Link
           href="/login"
-          className="font-semibold text-[var(--violet)] underline-offset-2 hover:underline"
+          className="halo-btn font-semibold text-[var(--violet)] underline-offset-2 hover:underline"
         >
           Log in
         </Link>
