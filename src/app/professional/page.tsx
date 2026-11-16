@@ -22,7 +22,9 @@ export default async function ProfessionalPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
+  // Anonymous guest sessions are not product accounts — show marketing, not
+  // a personal-shell nav whose Settings link bounces them back into /try.
+  if (!user || user.is_anonymous) {
     return <ProfessionalMarketing />;
   }
 

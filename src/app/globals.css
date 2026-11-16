@@ -150,6 +150,7 @@ input[type="button"],
 input[type="submit"],
 input[type="reset"],
 .halo-btn {
+  cursor: pointer;
   transition:
     color 280ms ease,
     background-color 280ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -161,6 +162,16 @@ input[type="reset"],
     filter 250ms ease,
     outline-color 200ms ease,
     gap 250ms ease;
+}
+
+button:disabled,
+[role="button"][aria-disabled="true"],
+input[type="button"]:disabled,
+input[type="submit"]:disabled,
+input[type="reset"]:disabled,
+.halo-btn:disabled,
+.halo-btn[aria-disabled="true"] {
+  cursor: not-allowed;
 }
 
 /* Soft press — native buttons only (links keep their own hover scales) */

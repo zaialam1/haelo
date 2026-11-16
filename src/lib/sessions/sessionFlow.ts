@@ -59,7 +59,8 @@ export function planetSessionFlow(planet: Planet): SessionFlowConfig {
 export function guestSessionFlow(planet: Planet): SessionFlowConfig {
   return {
     source: "planet",
-    exitHref: "/try",
+    // Leave must exit the guest demo entirely — not restart /try.
+    exitHref: "/",
     exitLabel: "Leave",
     reviewHref: (sessionId) =>
       `/try/session/${planet}/${sessionId}/review`,

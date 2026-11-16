@@ -19,7 +19,8 @@
     "test:orbit-recommendations": "npx tsx scripts/test-orbit-recommendations.ts",
     "test:my-voice": "npx tsx scripts/test-my-voice.ts",
     "test:gamification": "npx tsx scripts/test-gamification.ts",
-    "test:launch-readiness": "npx tsx scripts/test-launch-readiness.ts"
+    "test:launch-readiness": "npx tsx scripts/test-launch-readiness.ts",
+    "test:interactions": "npx tsx scripts/test-interaction-regression.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",

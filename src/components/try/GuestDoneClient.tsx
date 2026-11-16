@@ -75,7 +75,7 @@ export function GuestDoneClient({ skipped = false }: GuestDoneClientProps) {
         <TransitionLink
           href="/"
           variant="fade"
-          className="inline-flex min-h-11 w-full items-center justify-center rounded-full px-6 py-3 text-sm font-medium"
+          className="inline-flex min-h-11 w-full items-center justify-center rounded-full px-6 py-3 text-sm font-medium underline-offset-2 transition-opacity hover:opacity-80 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           style={{ color: "var(--foreground-muted)" }}
         >
           Leave

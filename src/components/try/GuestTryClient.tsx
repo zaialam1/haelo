@@ -270,14 +270,14 @@ export function GuestTryClient({
         <button
           type="button"
           onClick={handleSkip}
-          className="text-sm font-semibold text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+          className="halo-btn text-sm font-semibold text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
           Skip this question
         </button>
         <TransitionLink
           href="/"
           variant="fade"
-          className="text-sm font-medium"
+          className="text-sm font-medium underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           style={{ color: "var(--foreground-muted)" }}
         >
           Leave

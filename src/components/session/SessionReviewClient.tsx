@@ -610,14 +610,16 @@ export function SessionReviewClient({
           type="button"
           disabled={busy}
           onClick={() => void handleExit()}
-          className="text-sm font-medium transition-opacity hover:opacity-70 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+          className="halo-btn text-sm font-medium underline-offset-2 transition-opacity hover:opacity-70 hover:underline disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           style={{ color: "var(--foreground-muted)" }}
         >
-          {flow.source === "orbit"
-            ? "Back to Orbit"
-            : showAnalysis
-              ? "Back to Universe"
-              : `Back to ${content.label}`}
+          {guestMode
+            ? flow.exitLabel
+            : flow.source === "orbit"
+              ? "Back to Orbit"
+              : showAnalysis
+                ? "Back to Universe"
+                : `Back to ${content.label}`}
         </button>
       </div>
 

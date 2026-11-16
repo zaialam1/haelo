@@ -245,7 +245,8 @@ export function RecordingSession({
           <button
             type="button"
             onClick={handleExit}
-            className="rounded-full px-2 py-2 text-sm font-medium transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+            aria-label={flow.exitLabel}
+            className="halo-btn rounded-full px-2 py-2 text-sm font-medium underline-offset-2 transition-opacity hover:opacity-70 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
             style={{ color: "var(--foreground-muted)" }}
           >
             {flow.exitLabel}
@@ -489,7 +490,11 @@ export function RecordingSession({
             variant="fade"
             className="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3 text-sm font-semibold text-[var(--on-violet)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           >
-            {flow.source === "orbit" ? "Back to Orbit" : `Back to ${content.label}`}
+            {guestMode
+              ? flow.exitLabel
+              : flow.source === "orbit"
+                ? "Back to Orbit"
+                : `Back to ${content.label}`}
           </TransitionLink>
         )}
       </div>
