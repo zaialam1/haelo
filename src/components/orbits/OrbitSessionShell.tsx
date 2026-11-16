@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { Planet } from "@/lib/prompts";
 import { getPlanetPageContent } from "@/lib/planets/content";
+import { ThemeIconCorner } from "@/components/theme/ThemeIconToggle";
 
 /** Orbit-flavored atmosphere around the shared session engine. */
 export function OrbitSessionShell({
@@ -18,6 +19,7 @@ export function OrbitSessionShell({
       data-atmosphere={content.atmosphere}
       style={{ background: "var(--planet-page-bg, var(--background))" }}
     >
+      <ThemeIconCorner />
       <div
         className="universe-nebula-stars pointer-events-none absolute inset-0 z-0 opacity-40"
         aria-hidden="true"

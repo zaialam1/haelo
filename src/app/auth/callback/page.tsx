@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ThemeIconCorner } from "@/components/theme/ThemeIconToggle";
 import { safeNextPath } from "@/lib/auth/paths";
 import { createClient } from "@/lib/supabase/client";
 
@@ -67,9 +68,10 @@ export default function AuthCallbackPage() {
 
   return (
     <main
-      className="flex min-h-dvh items-center justify-center px-6"
+      className="relative flex min-h-dvh items-center justify-center px-6"
       style={{ background: "var(--background)" }}
     >
+      <ThemeIconCorner />
       <p className="text-sm text-[var(--foreground-muted)]">{message}</p>
     </main>
   );

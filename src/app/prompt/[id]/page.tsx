@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ThemeIconCorner } from "@/components/theme/ThemeIconToggle";
 import { SHOOTING_STAR_PROMPTS } from "@/lib/home/universe";
 
 type PromptPageProps = {
@@ -24,12 +25,13 @@ export default async function PromptStubPage({ params }: PromptPageProps) {
 
   return (
     <main
-      className="mx-auto flex min-h-full max-w-lg flex-col justify-center px-5 py-16 sm:px-8"
+      className="relative mx-auto flex min-h-full max-w-lg flex-col justify-center px-5 py-16 sm:px-8"
       style={{
         background:
           "radial-gradient(ellipse 60% 40% at 50% 0%, color-mix(in srgb, var(--gold) 28%, transparent), transparent 55%), var(--background)",
       }}
     >
+      <ThemeIconCorner />
       <p
         className="text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
         style={{ color: "var(--violet)" }}

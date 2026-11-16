@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { RecordingSession } from "@/components/recording/RecordingSession";
+import { ThemeIconCorner } from "@/components/theme/ThemeIconToggle";
 import {
   countCompletedSessions,
   getOnboardingSnapshot,
@@ -41,12 +42,13 @@ export default async function SessionPage({
   if (!isPlanet(planetParam)) {
     return (
       <main
-        className="flex min-h-dvh w-full flex-col px-5 py-8 sm:px-10 sm:py-10"
+        className="relative flex min-h-dvh w-full flex-col px-5 py-8 sm:px-10 sm:py-10"
         style={{
           background:
             "radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in srgb, var(--gold) 28%, transparent), transparent 55%), var(--background)",
         }}
       >
+        <ThemeIconCorner />
         <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center">
           <p
             className="text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
@@ -124,10 +126,11 @@ export default async function SessionPage({
     console.error("[session] prompt resolve failed:", e);
     return (
       <main
-        className="flex min-h-dvh w-full flex-col px-5 py-8 sm:px-10 sm:py-10"
+        className="relative flex min-h-dvh w-full flex-col px-5 py-8 sm:px-10 sm:py-10"
         style={{ background: "var(--planet-page-bg, var(--background))" }}
         data-atmosphere={content.atmosphere}
       >
+        <ThemeIconCorner />
         <div className="planet-page mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center">
           <h1
             className="font-[family-name:var(--font-fraunces)] text-3xl"

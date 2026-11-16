@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ThemeIconToggle } from "@/components/theme/ThemeIconToggle";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { useOptionalPageTransition } from "@/components/transitions/PageTransitionProvider";
 import { getTopicById, DAILY_COMPLETED_KEY } from "@/lib/home/universe";
@@ -493,6 +494,9 @@ export function SpeakSession({
   if (phase === "done") {
     return (
       <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div className="mb-6 flex justify-end">
+          <ThemeIconToggle />
+        </div>
         <p
           className="text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"
           style={{ color: "var(--violet)" }}
@@ -545,14 +549,17 @@ export function SpeakSession({
         >
           {modeLabel}
         </p>
-        <button
-          type="button"
-          onClick={abandon}
-          className="text-sm font-medium transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
-          style={{ color: "var(--foreground-muted)" }}
-        >
-          Exit
-        </button>
+        <div className="flex items-center gap-0.5">
+          <ThemeIconToggle />
+          <button
+            type="button"
+            onClick={abandon}
+            className="rounded-full px-2 py-2 text-sm font-medium transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+            style={{ color: "var(--foreground-muted)" }}
+          >
+            Exit
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-1 flex-col justify-center py-8 sm:py-12">

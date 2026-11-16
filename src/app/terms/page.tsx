@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ThemeIconCorner } from "@/components/theme/ThemeIconToggle";
 
 export const metadata: Metadata = {
   title: "Terms | Halo",
@@ -7,7 +8,8 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <main className="mx-auto max-w-lg px-5 py-16 sm:px-8">
+    <main className="relative mx-auto max-w-lg px-5 py-16 sm:px-8">
+      <ThemeIconCorner />
       <h1
         className="font-[family-name:var(--font-fraunces)] text-3xl"
         style={{

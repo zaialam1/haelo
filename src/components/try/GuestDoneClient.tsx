@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemeIconToggle } from "@/components/theme/ThemeIconToggle";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 
 type GuestDoneClientProps = {
@@ -9,13 +10,16 @@ type GuestDoneClientProps = {
 export function GuestDoneClient({ skipped = false }: GuestDoneClientProps) {
   return (
     <div className="mx-auto flex w-full max-w-lg flex-col px-5 py-14 sm:px-8">
-      <TransitionLink
-        href="/"
-        variant="fade"
-        className="self-start text-sm font-medium text-[var(--violet)] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
-      >
-        ← Home
-      </TransitionLink>
+      <div className="flex items-center justify-between gap-3">
+        <TransitionLink
+          href="/"
+          variant="fade"
+          className="self-start text-sm font-medium text-[var(--violet)] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+        >
+          ← Home
+        </TransitionLink>
+        <ThemeIconToggle />
+      </div>
 
       <div
         className="mt-10 flex flex-col items-center rounded-3xl px-6 py-10 text-center"

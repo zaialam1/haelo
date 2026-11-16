@@ -24,6 +24,7 @@ import type { BlockedAccount } from "@/lib/safety/types";
 import { ProfessionalModeNav } from "@/components/professional/ProfessionalModeNav";
 import { IntroMoment } from "@/components/onboarding/IntroMoment";
 import { ReportModal } from "@/components/safety/ReportModal";
+import { ThemeIconToggle } from "@/components/theme/ThemeIconToggle";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 
 function connectionUsernameLabel(username: string | null | undefined) {
@@ -85,13 +86,14 @@ export function ConnectionsClient({
               ← Settings
             </TransitionLink>
             <h1
-              className="font-[family-name:var(--font-fraunces)] text-xl tracking-tight"
+              className="min-w-0 flex-1 font-[family-name:var(--font-fraunces)] text-xl tracking-tight"
               style={{
                 fontVariationSettings: '"opsz" 72, "SOFT" 40, "WONK" 0, "wght" 550',
               }}
             >
               Connections
             </h1>
+            <ThemeIconToggle />
           </div>
         </header>
       ) : null}

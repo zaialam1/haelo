@@ -1,6 +1,6 @@
 "use client";
 
-import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { ThemeIconToggle } from "@/components/theme/ThemeIconToggle";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 
 export function SiteHeader() {
@@ -26,7 +26,7 @@ export function SiteHeader() {
         </TransitionLink>
 
         <nav className="flex items-center gap-2 sm:gap-3" aria-label="Account">
-          <ThemeToggle />
+          <ThemeIconToggle />
           <TransitionLink
             href="/login"
             variant="fade"

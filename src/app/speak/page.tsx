@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { IntroMoment } from "@/components/onboarding/IntroMoment";
 import { SpeakSession } from "@/components/speak/SpeakSession";
+import { ThemeIconCorner } from "@/components/theme/ThemeIconToggle";
 import { getOnboardingSnapshot } from "@/lib/onboarding/data";
 import { hasSeenMilestone } from "@/lib/preferences/types";
 import { resolveSpeakSession } from "@/lib/questions/sessions";
@@ -28,12 +29,13 @@ export default async function SpeakPage({ searchParams }: SpeakPageProps) {
   if ("error" in resolved) {
     return (
       <main
-        className="flex min-h-dvh w-full flex-col px-5 py-8 sm:px-10 sm:py-10"
+        className="relative flex min-h-dvh w-full flex-col px-5 py-8 sm:px-10 sm:py-10"
         style={{
           background:
             "radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in srgb, var(--gold) 28%, transparent), transparent 55%), radial-gradient(ellipse 50% 40% at 100% 100%, color-mix(in srgb, var(--rose) 18%, transparent), transparent 50%), var(--background)",
         }}
       >
+        <ThemeIconCorner />
         <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center">
           <p
             className="text-[0.6875rem] font-semibold tracking-[0.14em] uppercase"

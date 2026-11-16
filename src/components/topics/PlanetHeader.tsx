@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemeIconToggle } from "@/components/theme/ThemeIconToggle";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { FocusSectionButton } from "@/components/topics/FocusSectionButton";
 import type { SummaryInsight, TopicCatalogEntry } from "@/lib/topics/types";
@@ -12,15 +13,18 @@ type PlanetHeaderProps = {
 export function PlanetHeader({ topic, insights }: PlanetHeaderProps) {
   return (
     <header className="relative z-10 px-5 pt-6 sm:px-8 sm:pt-8">
-      <TransitionLink
-        href="/home"
-        variant="fade"
-        className="inline-flex items-center gap-1.5 text-sm font-medium transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
-        style={{ color: "var(--violet)" }}
-      >
-        <span aria-hidden="true">←</span>
-        Back to Map
-      </TransitionLink>
+      <div className="flex items-center justify-between gap-3">
+        <TransitionLink
+          href="/home"
+          variant="fade"
+          className="inline-flex items-center gap-1.5 text-sm font-medium transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+          style={{ color: "var(--violet)" }}
+        >
+          <span aria-hidden="true">←</span>
+          Back to Map
+        </TransitionLink>
+        <ThemeIconToggle />
+      </div>
 
       <div className="mt-5 flex items-start gap-4">
         <span

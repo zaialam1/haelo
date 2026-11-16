@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { ResponseReview } from "@/components/session/ResponseReview";
 import { IntroMoment } from "@/components/onboarding/IntroMoment";
+import { ThemeIconToggle } from "@/components/theme/ThemeIconToggle";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { useOptionalPageTransition } from "@/components/transitions/PageTransitionProvider";
 import { DEFAULT_MAX_RECORDING_SECONDS } from "@/config/recording";
@@ -239,14 +240,17 @@ export function RecordingSession({
             {content.label}
           </p>
         </div>
-        <button
-          type="button"
-          onClick={handleExit}
-          className="text-sm font-medium transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
-          style={{ color: "var(--foreground-muted)" }}
-        >
-          {flow.exitLabel}
-        </button>
+        <div className="flex items-center gap-0.5">
+          <ThemeIconToggle />
+          <button
+            type="button"
+            onClick={handleExit}
+            className="rounded-full px-2 py-2 text-sm font-medium transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+            style={{ color: "var(--foreground-muted)" }}
+          >
+            {flow.exitLabel}
+          </button>
+        </div>
       </div>
 
       {showIntro ? (

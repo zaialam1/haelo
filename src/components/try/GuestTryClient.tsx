@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { RecordingSession } from "@/components/recording/RecordingSession";
+import { ThemeIconToggle } from "@/components/theme/ThemeIconToggle";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 import {
   ensureGuestSession,
@@ -126,6 +127,9 @@ export function GuestTryClient({
   if (phase === "boot") {
     return (
       <div className="mx-auto flex w-full max-w-lg flex-col px-5 py-16 sm:px-8">
+        <div className="mb-8 flex justify-end">
+          <ThemeIconToggle />
+        </div>
         <p
           className="text-sm"
           style={{ color: "var(--foreground-muted)" }}
@@ -139,13 +143,16 @@ export function GuestTryClient({
   if (phase === "error") {
     return (
       <div className="mx-auto flex w-full max-w-lg flex-col px-5 py-14 sm:px-8">
-        <TransitionLink
-          href="/"
-          variant="fade"
-          className="self-start text-sm font-medium text-[var(--violet)] underline-offset-4 hover:underline"
-        >
-          ← Home
-        </TransitionLink>
+        <div className="flex items-center justify-between gap-3">
+          <TransitionLink
+            href="/"
+            variant="fade"
+            className="self-start text-sm font-medium text-[var(--violet)] underline-offset-4 hover:underline"
+          >
+            ← Home
+          </TransitionLink>
+          <ThemeIconToggle />
+        </div>
         <h1
           className="mt-8 font-[family-name:var(--font-fraunces)] text-[1.85rem] leading-tight"
           style={{
@@ -184,13 +191,16 @@ export function GuestTryClient({
   if (phase === "quota") {
     return (
       <div className="mx-auto flex w-full max-w-lg flex-col px-5 py-14 sm:px-8">
-        <TransitionLink
-          href="/"
-          variant="fade"
-          className="self-start text-sm font-medium text-[var(--violet)] underline-offset-4 hover:underline"
-        >
-          ← Home
-        </TransitionLink>
+        <div className="flex items-center justify-between gap-3">
+          <TransitionLink
+            href="/"
+            variant="fade"
+            className="self-start text-sm font-medium text-[var(--violet)] underline-offset-4 hover:underline"
+          >
+            ← Home
+          </TransitionLink>
+          <ThemeIconToggle />
+        </div>
         <h1
           className="mt-8 font-[family-name:var(--font-fraunces)] text-[1.85rem] leading-tight"
           style={{

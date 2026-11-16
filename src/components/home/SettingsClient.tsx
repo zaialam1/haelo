@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
+import { ThemeIconToggle } from "@/components/theme/ThemeIconToggle";
 import {
   getAccountProfile,
   signOut,
@@ -270,13 +271,14 @@ export function SettingsClient({
             ← Back
           </Link>
           <h1
-            className="font-[family-name:var(--font-fraunces)] text-xl tracking-tight"
+            className="min-w-0 flex-1 font-[family-name:var(--font-fraunces)] text-xl tracking-tight"
             style={{
               fontVariationSettings: '"opsz" 72, "SOFT" 40, "WONK" 0, "wght" 550',
             }}
           >
             Settings
           </h1>
+          <ThemeIconToggle />
         </div>
       </header>
 
@@ -786,12 +788,6 @@ export function SettingsClient({
           </button>
         </section>
 
-        <p
-          className="mt-6 text-center text-xs"
-          style={{ color: "var(--foreground-muted)" }}
-        >
-          Theme can be changed from the moon/sun icon on Home.
-        </p>
       </main>
     </div>
   );

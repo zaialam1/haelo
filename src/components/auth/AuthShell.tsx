@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemeIconToggle } from "@/components/theme/ThemeIconToggle";
 import { TransitionLink } from "@/components/transitions/TransitionLink";
 
 type AuthShellProps = {
@@ -10,7 +11,7 @@ type AuthShellProps = {
 
 export function AuthShell({ children, brand }: AuthShellProps) {
   return (
-    <div className="flex min-h-dvh flex-col lg:flex-row">
+    <div className="relative flex min-h-dvh flex-col lg:flex-row">
       {/* Mobile: compact brand bar only — form comes first below */}
       <div
         className="flex items-center justify-between border-b px-5 py-4 lg:hidden"
@@ -30,13 +31,16 @@ export function AuthShell({ children, brand }: AuthShellProps) {
         >
           Halo
         </TransitionLink>
-        <TransitionLink
-          href="/"
-          variant="fade"
-          className="text-sm font-medium text-[var(--violet)] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
-        >
-          Home
-        </TransitionLink>
+        <div className="flex items-center gap-0.5">
+          <ThemeIconToggle />
+          <TransitionLink
+            href="/"
+            variant="fade"
+            className="rounded-full px-2 py-1.5 text-sm font-medium text-[var(--violet)] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+          >
+            Home
+          </TransitionLink>
+        </div>
       </div>
 
       {/* Desktop brand panel */}
@@ -82,7 +86,10 @@ export function AuthShell({ children, brand }: AuthShellProps) {
         />
       </aside>
 
-      <div className="flex flex-1 flex-col justify-center px-5 py-10 sm:px-10 lg:px-16 lg:py-16 xl:px-24">
+      <div className="relative flex flex-1 flex-col justify-center px-5 py-10 sm:px-10 lg:px-16 lg:py-16 xl:px-24">
+        <div className="absolute right-6 top-4 hidden lg:block">
+          <ThemeIconToggle />
+        </div>
         <div className="mx-auto w-full max-w-lg">{children}</div>
       </div>
     </div>
