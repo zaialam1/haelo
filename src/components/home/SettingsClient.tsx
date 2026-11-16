@@ -414,12 +414,6 @@ export function SettingsClient({
             </SettingsSection>
 
             <SettingsSection title="Notifications">
-              <p
-                className="mb-3 text-sm leading-relaxed"
-                style={{ color: "var(--foreground-muted)" }}
-              >
-                Critical connection notices stay on. Everything else is optional.
-              </p>
               <ul className="space-y-3">
                 {NOTIFICATION_CATEGORIES.map((category) => {
                   const meta = NOTIFICATION_CATEGORY_LABELS[category];
@@ -436,12 +430,14 @@ export function SettingsClient({
                         >
                           {meta.title}
                         </p>
-                        <p
-                          className="mt-0.5 text-[0.8125rem] leading-relaxed"
-                          style={{ color: "var(--foreground-muted)" }}
-                        >
-                          {meta.description}
-                        </p>
+                        {meta.description ? (
+                          <p
+                            className="mt-0.5 text-[0.8125rem] leading-relaxed"
+                            style={{ color: "var(--foreground-muted)" }}
+                          >
+                            {meta.description}
+                          </p>
+                        ) : null}
                       </div>
                       <button
                         type="button"

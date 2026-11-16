@@ -2,7 +2,6 @@
 
 import { HaloLogo } from "@/components/branding/HaloLogo";
 import { ThemeIconToggle } from "@/components/theme/ThemeIconToggle";
-import { TransitionLink } from "@/components/transitions/TransitionLink";
 
 type AuthShellProps = {
   children: React.ReactNode;
@@ -10,6 +9,10 @@ type AuthShellProps = {
   brand: React.ReactNode;
 };
 
+/**
+ * Auth layout. The Halo logo is the only home control — no redundant
+ * "Back to Home" link that competed with the mark on small screens.
+ */
 export function AuthShell({ children, brand }: AuthShellProps) {
   return (
     <div
@@ -25,16 +28,7 @@ export function AuthShell({ children, brand }: AuthShellProps) {
         }}
       >
         <HaloLogo href="/" size="md" priority />
-        <div className="flex items-center gap-0.5">
-          <ThemeIconToggle />
-          <TransitionLink
-            href="/"
-            variant="fade"
-            className="rounded-full px-2 py-1.5 text-sm font-medium text-[var(--violet)] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
-          >
-            Home
-          </TransitionLink>
-        </div>
+        <ThemeIconToggle />
       </div>
 
       {/* Desktop brand panel */}
@@ -45,16 +39,7 @@ export function AuthShell({ children, brand }: AuthShellProps) {
           background: "var(--auth-panel)",
         }}
       >
-        <div>
-          <HaloLogo href="/" size="lg" priority />
-          <TransitionLink
-            href="/"
-            variant="fade"
-            className="mt-4 inline-flex text-sm font-medium text-[var(--violet)] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
-          >
-            ← Back to home
-          </TransitionLink>
-        </div>
+        <HaloLogo href="/" size="lg" priority />
 
         <div className="mt-0 flex max-w-lg flex-1 flex-col justify-center pb-8">
           {brand}

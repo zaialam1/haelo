@@ -7,8 +7,7 @@ import {
   formatDisplayDate,
   getDailyQuestionForDate,
 } from "@/lib/questions/bank";
-import { getTopicById, DAILY_COMPLETED_KEY } from "@/lib/home/universe";
-import { getVoicePlanetById } from "@/lib/home/voicePlanets";
+import { DAILY_COMPLETED_KEY } from "@/lib/home/universe";
 import {
   fetchStreakStats,
   type StreakStats,
@@ -24,11 +23,13 @@ function Sheet({
   onClose,
   titleId,
   children,
+  tone = "surface",
 }: {
   open: boolean;
   onClose: () => void;
   titleId: string;
   children: React.ReactNode;
+  tone?: "surface" | "lilac";
 }) {
   const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -79,14 +80,16 @@ function Sheet({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative z-10 mx-4 mb-[max(1rem,env(safe-area-inset-bottom))] w-full max-w-md rounded-3xl px-6 py-6 sm:mb-0 sm:px-7 sm:py-7"
+        className="relative z-10 mx-4 mb-[max(1rem,env(safe-area-inset-bottom))] w-full max-w-md rounded-xl px-6 py-6 sm:mb-0 sm:px-7 sm:py-7"
         style={{
-          background: "var(--surface)",
-          border: "1px solid var(--surface-border)",
+          background: tone === "lilac" ? "var(--lilac-soft)" : "var(--surface)",
+          border:
+            tone === "lilac"
+              ? "1px solid color-mix(in srgb, var(--violet) 22%, transparent)"
+              : "1px solid var(--surface-border)",
           boxShadow: "var(--shadow-soft)",
-          transform: visible ? "translateY(0)" : "translateY(12px)",
-          transition:
-            "transform 260ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease",
+          transform: visible ? "translateY(0)" : "translateY(8px)",
+          transition: "transform 160ms ease, opacity 140ms ease",
           opacity: visible ? 1 : 0,
         }}
       >
@@ -107,8 +110,6 @@ export function HomeSideStats() {
   const dailyTitleId = useId();
 
   const question = getDailyQuestionForDate();
-  const topic =
-    getTopicById(question.topicId) ?? getVoicePlanetById(question.topicId);
   const streakDays = stats?.streakDays ?? 0;
 
   useEffect(() => {
@@ -344,23 +345,16 @@ export function HomeSideStats() {
         open={dailyOpen}
         onClose={() => setDailyOpen(false)}
         titleId={dailyTitleId}
+        tone="lilac"
       >
         <div className="flex items-start justify-between gap-3">
-          <div>
-            <p
-              id={dailyTitleId}
-              className="text-[0.6875rem] font-semibold tracking-[0.12em] uppercase"
-              style={{ color: "var(--violet)" }}
-            >
-              Daily prompt
-            </p>
-            <p
-              className="mt-1 text-sm"
-              style={{ color: "var(--foreground-muted)" }}
-            >
-              {formatDisplayDate()}
-            </p>
-          </div>
+          <p
+            id={dailyTitleId}
+            className="text-[0.75rem] font-semibold"
+            style={{ color: "var(--foreground-muted)" }}
+          >
+            Today&rsquo;s question
+          </p>
           <button
             type="button"
             onClick={() => setDailyOpen(false)}
@@ -372,23 +366,6 @@ export function HomeSideStats() {
           </button>
         </div>
 
-        {topic && (
-          <p
-            className="mt-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold"
-            style={{
-              background: `color-mix(in srgb, ${topic.color} 28%, var(--surface))`,
-              color: "var(--foreground)",
-            }}
-          >
-            <span
-              className="size-2 rounded-full"
-              style={{ background: topic.color }}
-              aria-hidden="true"
-            />
-            {topic.label}
-          </p>
-        )}
-
         <p
           className="mt-4 font-[family-name:var(--font-fraunces)] text-xl leading-snug sm:text-2xl"
           style={{
@@ -396,16 +373,15 @@ export function HomeSideStats() {
             color: "var(--foreground)",
           }}
         >
-          &ldquo;{question.text}&rdquo;
+          {question.text}
         </p>
 
         {dailyCompleted ? (
           <p
-            className="mt-6 text-sm font-medium"
-            style={{ color: "var(--violet)" }}
+            className="mt-6 text-sm"
+            style={{ color: "var(--foreground-muted)" }}
           >
-            You already recorded today&rsquo;s daily. Come back tomorrow for a
-            new question.
+            Answered. A new one lands tomorrow.
           </p>
         ) : (
           <TransitionLink
@@ -414,7 +390,7 @@ export function HomeSideStats() {
             className="mt-6 inline-flex rounded-full bg-[var(--violet)] px-5 py-3 text-sm font-semibold text-[var(--on-violet)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
             onClick={() => setDailyOpen(false)}
           >
-            Start
+            Answer
           </TransitionLink>
         )}
       </Sheet>

@@ -1,7 +1,7 @@
 "use client";
 
 import { TransitionLink } from "@/components/transitions/TransitionLink";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { DAILY_COMPLETED_KEY, DAILY_PROMPT } from "@/lib/home/universe";
 
 function todayKey() {
@@ -9,23 +9,38 @@ function todayKey() {
   return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
 }
 
-export function DailyPromptCard() {
-  const [completed, setCompleted] = useState(false);
-
-  useEffect(() => {
-    try {
-      setCompleted(localStorage.getItem(DAILY_COMPLETED_KEY) === todayKey());
-    } catch {
-      setCompleted(false);
+function subscribeDailyCompleted(onStoreChange: () => void) {
+  if (typeof window === "undefined") return () => {};
+  const onStorage = (event: StorageEvent) => {
+    if (event.key === DAILY_COMPLETED_KEY || event.key === null) {
+      onStoreChange();
     }
-  }, []);
+  };
+  window.addEventListener("storage", onStorage);
+  return () => window.removeEventListener("storage", onStorage);
+}
+
+function readDailyCompleted(): boolean {
+  try {
+    return localStorage.getItem(DAILY_COMPLETED_KEY) === todayKey();
+  } catch {
+    return false;
+  }
+}
+
+export function DailyPromptCard() {
+  const completed = useSyncExternalStore(
+    subscribeDailyCompleted,
+    readDailyCompleted,
+    () => false,
+  );
 
   return (
     <section
-      className="mx-auto w-full rounded-2xl border px-5 py-4 backdrop-blur-md sm:px-6 sm:py-5"
+      className="mx-auto w-full rounded-xl border px-5 py-4 sm:px-6 sm:py-5"
       style={{
-        background: "color-mix(in srgb, var(--surface) 78%, transparent)",
-        borderColor: "color-mix(in srgb, var(--rose) 35%, transparent)",
+        background: "var(--lilac-soft)",
+        borderColor: "color-mix(in srgb, var(--violet) 22%, transparent)",
         boxShadow: "var(--shadow-soft)",
       }}
       aria-labelledby="daily-prompt-heading"
@@ -35,43 +50,41 @@ export function DailyPromptCard() {
           <p
             id="daily-prompt-heading"
             className="text-sm font-semibold"
-            style={{ color: "var(--violet)" }}
+            style={{ color: "var(--foreground)" }}
           >
-            Today&rsquo;s recording completed!
+            Today&rsquo;s question
           </p>
           <p
-            className="mt-2 text-[1.0625rem] leading-relaxed"
+            className="mt-2 text-sm leading-relaxed"
             style={{ color: "var(--foreground-muted)" }}
           >
-            Nice work!
+            Answered. A new one lands tomorrow.
           </p>
         </>
       ) : (
         <>
           <p
             id="daily-prompt-heading"
-            className="text-[0.6875rem] font-semibold tracking-[0.12em] uppercase"
-            style={{ color: "var(--violet)" }}
+            className="text-[0.75rem] font-semibold"
+            style={{ color: "var(--foreground-muted)" }}
           >
-            <span aria-hidden="true" className="mr-1">
-              ✦
-            </span>
-            Daily Prompt
+            Today&rsquo;s question
           </p>
           <p
             className="mt-3 font-[family-name:var(--font-fraunces)] text-xl leading-snug sm:text-2xl"
             style={{
               fontVariationSettings: '"opsz" 72, "SOFT" 40, "WONK" 0, "wght" 500',
+              color: "var(--foreground)",
             }}
           >
-            &ldquo;{DAILY_PROMPT.text}&rdquo;
+            {DAILY_PROMPT.text}
           </p>
           <TransitionLink
             href="/speak"
             variant="fade"
             className="mt-5 inline-flex rounded-full bg-[var(--violet)] px-5 py-2.5 text-sm font-semibold text-[var(--on-violet)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
           >
-            Start Session
+            Answer
           </TransitionLink>
         </>
       )}

@@ -7,6 +7,10 @@ type StardustChipProps = {
   compact?: boolean;
 };
 
+/**
+ * Stardust balance chip. Uses the same purple ✦ mark found across Halo
+ * (nav, store, streak utilities) instead of a decorative gold dot.
+ */
 export function StardustChip({
   balance,
   href = "/store",
@@ -19,21 +23,25 @@ export function StardustChip({
         compact ? "px-2.5 py-1 text-[0.75rem]" : "px-3.5 py-1.5 text-sm"
       } ${className ?? ""}`}
       style={{
-        background: "color-mix(in srgb, var(--gold) 28%, var(--surface))",
+        background: "color-mix(in srgb, var(--violet) 12%, var(--surface))",
         color: "var(--foreground)",
-        border: "1px solid color-mix(in srgb, var(--gold) 45%, transparent)",
+        border: "1px solid color-mix(in srgb, var(--violet) 28%, transparent)",
       }}
     >
       <span
         aria-hidden="true"
-        className="inline-block size-2 rounded-full"
+        className="inline-flex leading-none"
         style={{
-          background: "var(--gold)",
-          boxShadow: "0 0 10px color-mix(in srgb, var(--gold) 60%, transparent)",
+          color: "var(--violet)",
+          fontSize: compact ? "0.7rem" : "0.8rem",
         }}
-      />
+      >
+        ✦
+      </span>
       <span className="tabular-nums">{balance}</span>
-      <span className="font-medium opacity-80">Stardust</span>
+      <span className="font-medium" style={{ color: "var(--foreground-muted)" }}>
+        Stardust
+      </span>
     </span>
   );
 

@@ -156,8 +156,8 @@ export async function computeNextAction(opts: {
   if (!reflectedToday) {
     return {
       kind: "daily_reflection",
-      title: "Today's question is up.",
-      cta: "Answer it",
+      title: "Today's question",
+      cta: "Answer",
       href: "/practice?from=today",
       welcomeBack,
     };

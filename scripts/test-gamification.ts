@@ -105,14 +105,15 @@ assert.equal(changes[0]!.previousStage, 1);
 // Same counts again → no change
 assert.equal(detectStageChanges(after, after).length, 0);
 
-// Teaser mystery — no visual upgrade spoilers
+// Teaser — clear session counts, no visual upgrade spoilers
 const teaser = planetEvolutionTeaser("stand", 1);
 assert.ok(teaser.hint);
-assert.ok(!/level|stage|glow|ring|moon/i.test(teaser.hint!));
+assert.match(teaser.hint!, /\d+ of \d+ sessions/);
+assert.ok(!/level|stage|glow|ring|moon|something changes/i.test(teaser.hint!));
 assert.equal(reflectionsUntilNextStage(1), PLANET_STAGE_THRESHOLDS[2] - 1);
 
 const near = planetEvolutionTeaser("stand", PLANET_STAGE_THRESHOLDS[2] - 1);
-assert.match(near.hint ?? "", /close to changing/i);
+assert.match(near.hint ?? "", /\d+ of \d+ sessions/);
 
 // --- Weekly goal ---
 assert.equal(WEEKLY_VOICE_GOAL, 3);

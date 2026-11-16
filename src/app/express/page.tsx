@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Express | Halo",
-  description: "Practice putting what you think and feel into words.",
+  description: "Express practice in Halo.",
 };
 
 export default async function ExpressPage() {

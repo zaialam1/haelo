@@ -6,8 +6,8 @@ import { HomeBottomNav } from "@/components/home/HomeBottomNav";
 import { HomeUtilities } from "@/components/home/HomeUtilities";
 import { ContinueCue } from "@/components/home/ContinueCue";
 import { ConversationUniverse } from "@/components/home/ConversationUniverse";
-import { GamificationRevealOverlay } from "@/components/gamification/GamificationRevealOverlay";
-import { ProductTour } from "@/components/onboarding/ProductTour";
+import { LazyGamificationReveal } from "@/components/gamification/LazyGamificationReveal";
+import { LazyProductTour } from "@/components/onboarding/LazyProductTour";
 import { WEEKLY_GOAL_INTRO_AFTER_SESSIONS } from "@/lib/gamification/config";
 import {
   countEligibleReflections,
@@ -128,9 +128,9 @@ export default async function HomePage() {
         weeklyProgress={showWeeklyGoal ? weeklyProgress : null}
       />
       <HomeBottomNav />
-      <ProductTour autoStart={autoStartProductTour} />
+      <LazyProductTour autoStart={autoStartProductTour} />
       {!autoStartProductTour && revealsToShow.length > 0 ? (
-        <GamificationRevealOverlay
+        <LazyGamificationReveal
           reveals={revealsToShow}
           explainPlanetGrowth={explainPlanetGrowth}
         />

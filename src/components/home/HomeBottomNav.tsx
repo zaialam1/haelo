@@ -32,7 +32,7 @@ function NavItem({
         color: active
           ? "var(--violet)"
           : emphasize
-            ? "color-mix(in srgb, var(--foreground) 72%, var(--foreground-muted))"
+            ? "var(--foreground)"
             : "var(--foreground-muted)",
       }}
       aria-current={active ? "page" : undefined}

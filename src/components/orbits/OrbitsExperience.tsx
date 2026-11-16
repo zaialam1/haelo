@@ -149,20 +149,13 @@ export function OrbitsExperience({
           >
             What&apos;s going on?
           </label>
-          <p
-            className="mt-1 text-[0.75rem] leading-relaxed sm:text-[0.8125rem]"
-            style={{ color: "var(--foreground-muted)" }}
-          >
-            Try something like “{SEARCH_PLACEHOLDERS[0]}” or “
-            {SEARCH_PLACEHOLDERS[2]}”.
-          </p>
           <div className="mt-3 flex gap-2">
             <input
               id="orbit-situation-search"
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="I need to tell my friend I'm upset"
+              placeholder={SEARCH_PLACEHOLDERS[0]}
               autoComplete="off"
               className="min-w-0 flex-1 rounded-2xl px-4 py-2.5 text-[0.875rem] outline-none focus-visible:ring-2 focus-visible:ring-[var(--violet)]"
               style={{
@@ -249,13 +242,6 @@ export function OrbitsExperience({
                     >
                       {match.shortDescription}
                     </span>
-                    <span
-                      className="mt-1.5 block text-[0.75rem] leading-snug"
-                      style={{ color: "var(--foreground)" }}
-                    >
-                      <span className="font-semibold">Why this might fit: </span>
-                      {match.why}
-                    </span>
                   </TransitionLink>
                 </li>
               ))}
@@ -276,37 +262,14 @@ export function OrbitsExperience({
 
         <div className="mt-5 min-w-0 max-w-lg">
           {region && regionMeta ? (
-            <>
-              <h2
-                className="font-[family-name:var(--font-display)] text-xl font-semibold tracking-tight sm:text-2xl"
-                style={{ color: "var(--foreground)" }}
-              >
-                {regionMeta.title}
-              </h2>
-              <p
-                className="mt-1 text-[0.8125rem] leading-relaxed sm:text-[0.875rem]"
-                style={{ color: "var(--foreground-muted)" }}
-              >
-                {regionMeta.description}
-              </p>
-              <p
-                className="mt-1.5 text-[0.75rem]"
-                style={{ color: "var(--foreground-muted)" }}
-                aria-live="polite"
-              >
-                Tap a star to open an Orbit, or choose another corner of the
-                sky.
-              </p>
-            </>
-          ) : (
-            <p
-              className="text-[0.8125rem] leading-relaxed sm:text-[0.875rem]"
-              style={{ color: "var(--foreground-muted)" }}
+            <h2
+              className="font-[family-name:var(--font-display)] text-xl font-semibold tracking-tight sm:text-2xl"
+              style={{ color: "var(--foreground)" }}
               aria-live="polite"
             >
-              Choose a region of the sky to begin.
-            </p>
-          )}
+              {regionMeta.title}
+            </h2>
+          ) : null}
         </div>
       </div>
 

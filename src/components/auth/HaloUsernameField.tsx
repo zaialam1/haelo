@@ -131,7 +131,7 @@ export function HaloUsernameField({
             availability === "reserved"
           }
           aria-describedby={statusId}
-          className="w-full bg-transparent px-2 py-3 text-[0.9375rem] text-[var(--foreground)] outline-none placeholder:text-[var(--foreground-muted)]"
+          className="w-full bg-transparent px-2 py-3 text-[0.9375rem] text-[var(--foreground)] outline-none placeholder:text-[var(--placeholder)]"
           disabled={disabled}
           maxLength={20}
         />

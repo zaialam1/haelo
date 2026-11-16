@@ -387,17 +387,14 @@ export function HomeUtilities({
         aria-modal="true"
         aria-labelledby={dailyTitleId}
         aria-hidden={panel !== "daily"}
-        className="home-utility-panel"
+        className="home-utility-panel home-utility-panel--daily"
         data-open={panel === "daily" ? "true" : "false"}
       >
         <div className="flex items-start justify-between gap-3">
           <p
             id={dailyTitleId}
-            className="font-[family-name:var(--font-fraunces)] text-lg tracking-tight"
-            style={{
-              fontVariationSettings: '"opsz" 72, "SOFT" 40, "WONK" 0, "wght" 550',
-              color: "var(--foreground)",
-            }}
+            className="text-[0.75rem] font-semibold tracking-[0.04em]"
+            style={{ color: "var(--foreground-muted)" }}
           >
             Today&apos;s question
           </p>
@@ -412,31 +409,33 @@ export function HomeUtilities({
           </button>
         </div>
         <p
-          className="mt-3 font-[family-name:var(--font-fraunces)] text-base leading-snug sm:text-lg"
+          className="mt-3 font-[family-name:var(--font-fraunces)] text-[1.0625rem] leading-snug sm:text-lg"
           style={{
             fontVariationSettings: '"opsz" 72, "SOFT" 35, "WONK" 0, "wght" 500',
             color: "var(--foreground)",
           }}
         >
-          &ldquo;{questionText}&rdquo;
+          {questionText}
         </p>
         {dailyCompleted ? (
           <p
-            className="mt-5 text-sm"
+            className="mt-4 text-sm"
             style={{ color: "var(--foreground-muted)" }}
           >
-            You&apos;ve answered today&apos;s question. There&apos;s a new one
-            tomorrow.
+            Answered. A new one lands tomorrow.
           </p>
         ) : (
           <TransitionLink
             href="/practice?from=today"
             variant="fade"
-            className="mt-5 inline-flex text-sm font-semibold transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
-            style={{ color: "var(--violet)" }}
+            className="mt-5 inline-flex min-h-10 items-center rounded-full px-4 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+            style={{
+              background: "var(--violet)",
+              color: "var(--on-violet)",
+            }}
             onClick={() => setPanel(null)}
           >
-            Answer out loud →
+            Answer
           </TransitionLink>
         )}
       </div>

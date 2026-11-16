@@ -120,24 +120,48 @@ export async function PlanetPage({ planetId }: PlanetPageProps) {
               {content.label}
             </h1>
 
-            <p
-              className="mt-3 max-w-md font-[family-name:var(--font-fraunces)] text-base leading-snug sm:text-lg lg:max-w-lg"
-              style={{
-                color: "var(--foreground)",
-                fontVariationSettings: '"opsz" 72, "SOFT" 40, "WONK" 0, "wght" 500',
-              }}
-            >
-              {content.shortLine}
-            </p>
-
-            {teaser.hint ? (
-              <p
-                className="mt-4 max-w-md text-[0.8125rem] leading-relaxed sm:text-sm"
-                style={{ color: "color-mix(in srgb, var(--gold) 70%, var(--foreground-muted))" }}
+            {teaser.hint && teaser.remainingToNext != null ? (
+              <div
+                className="mt-5 w-full max-w-[12rem] lg:max-w-[14rem]"
                 aria-live="polite"
               >
-                {teaser.hint}
-              </p>
+                <div
+                  className="flex items-baseline justify-between gap-3 text-[0.75rem] font-medium tabular-nums"
+                  style={{ color: "var(--foreground-muted)" }}
+                >
+                  <span>{teaser.hint}</span>
+                </div>
+                <div
+                  className="mt-2 h-1.5 overflow-hidden rounded-full"
+                  style={{
+                    background:
+                      "color-mix(in srgb, var(--violet) 16%, transparent)",
+                  }}
+                  role="progressbar"
+                  aria-valuemin={0}
+                  aria-valuenow={teaser.experienceCount}
+                  aria-valuemax={
+                    teaser.experienceCount + (teaser.remainingToNext || 0)
+                  }
+                  aria-label={`${content.label} session progress`}
+                >
+                  <div
+                    className="h-full rounded-full"
+                    style={{
+                      width: `${Math.min(
+                        100,
+                        (teaser.experienceCount /
+                          Math.max(
+                            1,
+                            teaser.experienceCount + (teaser.remainingToNext || 0),
+                          )) *
+                          100,
+                      )}%`,
+                      background: "var(--violet)",
+                    }}
+                  />
+                </div>
+              </div>
             ) : null}
           </header>
 

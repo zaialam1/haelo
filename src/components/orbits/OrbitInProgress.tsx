@@ -27,14 +27,8 @@ export function OrbitInProgress({ items }: OrbitInProgressProps) {
           className="font-[family-name:var(--font-display)] text-lg font-semibold tracking-tight"
           style={{ color: "var(--foreground)" }}
         >
-          Continue your Orbits
+          Continue
         </h2>
-        <p
-          className="mt-1 text-[0.8125rem] leading-relaxed"
-          style={{ color: "var(--foreground-muted)" }}
-        >
-          Pick up where you left off.
-        </p>
       </div>
 
       <ul className="space-y-3" role="list">

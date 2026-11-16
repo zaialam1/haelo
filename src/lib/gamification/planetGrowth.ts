@@ -46,7 +46,8 @@ export function reflectionsUntilNextStage(
 }
 
 /**
- * Mystery-preserving teaser — never names the next visual upgrade.
+ * Clear numerical progress toward the next planet visual.
+ * Avoids vague "until something changes" copy; never names the upgrade.
  */
 export function planetEvolutionTeaser(
   planet: VoicePlanetId,
@@ -54,16 +55,17 @@ export function planetEvolutionTeaser(
 ): PlanetEvolutionTeaser {
   const stage = evolutionStageFromExperience(experienceCount);
   const remaining = reflectionsUntilNextStage(experienceCount);
+  const next = nextStageThreshold(stage);
 
   let hint: string | null = null;
-  if (remaining == null) {
+  if (remaining == null || next == null) {
     hint = null;
   } else if (remaining === 0) {
-    hint = "This planet is ready to change";
+    hint = `${experienceCount} sessions`;
   } else if (remaining <= PLANET_EVOLUTION_CLOSE_REMAINING) {
-    hint = "This planet is close to changing";
+    hint = `${experienceCount} of ${next} sessions`;
   } else {
-    hint = `${remaining} more sessions until something changes`;
+    hint = `${experienceCount} of ${next} sessions`;
   }
 
   return {

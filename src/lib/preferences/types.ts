@@ -64,24 +64,22 @@ export const NOTIFICATION_CATEGORIES: readonly NotificationCategory[] = [
 
 export const NOTIFICATION_CATEGORY_LABELS: Record<
   NotificationCategory,
-  { title: string; description: string }
+  { title: string; description?: string }
 > = {
   weekly_encouragement: {
     title: "Weekly goal updates",
-    description: "Updates about your weekly session goal.",
   },
   orbit_reminders: {
     title: "Unfinished Orbit reminders",
-    description: "A reminder when a recommended Orbit is waiting.",
   },
   orbit_recommendations: {
     title: "Orbit recommendations",
+    // Essential: muting still leaves recs visible on Orbits
     description:
-      "When someone you're connected with recommends an Orbit. Muted recommendations still appear on your Orbits page.",
+      "Muted recommendations still appear on your Orbits page.",
   },
   milestones_discoveries: {
     title: "Milestones & decorations",
-    description: "New decorations and milestone moments.",
   },
 };
 

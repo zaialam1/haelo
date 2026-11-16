@@ -178,11 +178,10 @@ export function ProductTour({ autoStart = false }: ProductTourProps) {
         className="pointer-events-auto absolute inset-x-0 bottom-0 z-10 mx-auto w-full max-w-lg px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] outline-none sm:bottom-6 sm:px-5"
       >
         <div
-          className="overflow-hidden rounded-3xl px-5 py-5 shadow-[var(--shadow-soft)] motion-safe:animate-[reveal-rise_0.4s_ease-out] sm:px-6 sm:py-6"
+          className="overflow-hidden rounded-xl px-5 py-5 shadow-[var(--shadow-soft)] sm:px-6 sm:py-6"
           style={{
-            background:
-              "linear-gradient(165deg, color-mix(in srgb, var(--violet) 16%, var(--surface)), var(--surface))",
-            border: "1px solid color-mix(in srgb, var(--gold) 28%, transparent)",
+            background: "var(--surface)",
+            border: "1px solid var(--surface-border)",
           }}
         >
           <div className="flex items-center justify-between gap-3">

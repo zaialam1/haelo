@@ -3,7 +3,7 @@ import { PageView } from "@/components/analytics/PageView";
 import { HomeBottomNav } from "@/components/home/HomeBottomNav";
 import { HomeNavWithRole } from "@/components/home/HomeNavWithRole";
 import { IntroMoment } from "@/components/onboarding/IntroMoment";
-import { ProductTour } from "@/components/onboarding/ProductTour";
+import { LazyProductTour } from "@/components/onboarding/LazyProductTour";
 import { OrbitsExperience } from "@/components/orbits/OrbitsExperience";
 import { getOnboardingSnapshot } from "@/lib/onboarding/data";
 import { ORBIT_REGIONS, isOrbitRegionKey } from "@/lib/orbits/regions";
@@ -41,12 +41,21 @@ export default async function OrbitsPage({ searchParams }: OrbitsPageProps) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    items = await buildOrbitList({
-      userId: user?.id ?? null,
-    });
-    if (user?.id) {
-      recommendations = await listRecipientActiveRecommendations(user.id);
-      const onboarding = await getOnboardingSnapshot(user.id);
+    const userId = user?.id ?? null;
+
+    // Parallelize independent orbit + recommendation + onboarding loads
+    const [orbitItems, recs, onboarding] = await Promise.all([
+      buildOrbitList({ userId }),
+      userId
+        ? listRecipientActiveRecommendations(userId)
+        : Promise.resolve([]),
+      userId ? getOnboardingSnapshot(userId) : Promise.resolve(null),
+    ]);
+
+    items = orbitItems;
+    recommendations = recs;
+
+    if (onboarding) {
       const tourAlreadyDone =
         hasSeenMilestone(onboarding.preferences, "product_tour_completed") ||
         hasSeenMilestone(onboarding.preferences, "universe_seen");
@@ -80,7 +89,7 @@ export default async function OrbitsPage({ searchParams }: OrbitsPageProps) {
         aria-hidden="true"
       />
 
-      <HomeNavWithRole  />
+      <HomeNavWithRole />
 
       <main className="relative z-10 w-full pb-28 pt-16 sm:pt-20">
         <header className="mb-5 max-w-xl px-4 sm:mb-6 sm:px-8 lg:px-12">
@@ -116,7 +125,7 @@ export default async function OrbitsPage({ searchParams }: OrbitsPageProps) {
       </main>
 
       <HomeBottomNav />
-      <ProductTour />
+      <LazyProductTour />
     </div>
   );
 }

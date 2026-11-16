@@ -20,7 +20,7 @@ type Gate = "loading" | "allowed" | "expired" | "done";
 function inputClassName(hasError: boolean) {
   return [
     "w-full rounded-2xl border-2 bg-[var(--surface)] px-4 py-3 text-[0.9375rem] text-[var(--foreground)] outline-none transition-colors",
-    "placeholder:text-[var(--foreground-muted)]",
+    "placeholder:text-[var(--placeholder)]",
     "focus-visible:border-[var(--violet)] focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--violet)_25%,transparent)]",
     hasError ? "border-[#E8A0A0]" : "border-[var(--surface-border)]",
   ].join(" ");

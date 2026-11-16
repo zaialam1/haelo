@@ -4,25 +4,25 @@ export const ORBIT_REGIONS: readonly OrbitRegionDefinition[] = [
   {
     key: "friendships_people",
     title: "Friendships & People",
-    description: "Friendship, closeness, conflict, and the people around you.",
+    description: "Friends, closeness, and conflict.",
     sortOrder: 1,
   },
   {
     key: "speaking_up",
     title: "Speaking Up",
-    description: "Boundaries, asking, disagreement, and saying what you need.",
+    description: "Boundaries, asking, and disagreement.",
     sortOrder: 2,
   },
   {
     key: "figuring_things_out",
     title: "Figuring Things Out",
-    description: "Decisions, identity, change, and what matters to you.",
+    description: "Decisions, identity, and change.",
     sortOrder: 3,
   },
   {
     key: "putting_yourself_out_there",
     title: "Putting Yourself Out There",
-    description: "Ideas, opportunities, sharing, and taking a chance.",
+    description: "Sharing ideas and taking a chance.",
     sortOrder: 4,
   },
 ] as const;

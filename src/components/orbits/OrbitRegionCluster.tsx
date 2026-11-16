@@ -143,15 +143,6 @@ export function OrbitRegionCluster({
             <span className="sm:hidden">{REGION_SHORT[region.key]}</span>
             <span className="hidden sm:inline">{region.title}</span>
           </span>
-          <span
-            className="mt-1 hidden text-[0.8125rem] leading-snug sm:block"
-            style={{
-              color: "var(--foreground)",
-              opacity: 0.75,
-            }}
-          >
-            {region.description}
-          </span>
         </span>
       ) : null}
     </button>
