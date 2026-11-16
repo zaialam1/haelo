@@ -16,10 +16,7 @@ export default async function GuestDonePage({ searchParams }: PageProps) {
   return (
     <main
       className="min-h-dvh"
-      style={{
-        background:
-          "radial-gradient(ellipse 80% 50% at 90% 0%, color-mix(in srgb, var(--rose) 35%, transparent), transparent 55%), radial-gradient(ellipse 50% 40% at 10% 100%, color-mix(in srgb, var(--gold) 35%, transparent), transparent 50%), var(--background)",
-      }}
+      style={{ background: "var(--universe-map)" }}
     >
       <GuestDoneClient skipped={skipped === "1"} />
     </main>

@@ -19,7 +19,7 @@ export default function UpdatePasswordPage() {
               letterSpacing: "-0.02em",
             }}
           >
-            Set a password you&rsquo;ll remember.
+            Practice saying it out loud.
           </h2>
         </>
       }

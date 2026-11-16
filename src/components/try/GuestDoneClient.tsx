@@ -17,18 +17,16 @@ export function GuestDoneClient({ skipped = false }: GuestDoneClientProps) {
       </div>
 
       <div
-        className="mt-10 flex flex-col items-center rounded-3xl px-6 py-10 text-center"
+        className="mt-10 flex flex-col items-center rounded-3xl border px-6 py-10 text-center"
         style={{
-          background:
-            "linear-gradient(165deg, color-mix(in srgb, var(--violet) 16%, var(--surface)), var(--surface))",
-          border: "1px solid color-mix(in srgb, var(--gold) 30%, transparent)",
+          background: "var(--surface)",
+          borderColor: "color-mix(in srgb, var(--violet) 18%, transparent)",
         }}
       >
         <span
           className="inline-flex size-16 items-center justify-center rounded-full text-2xl"
           style={{
-            background:
-              "radial-gradient(circle, var(--gold), color-mix(in srgb, var(--rose) 50%, transparent))",
+            background: "var(--violet-soft)",
             color: "var(--violet)",
           }}
           aria-hidden="true"
@@ -47,25 +45,24 @@ export function GuestDoneClient({ skipped = false }: GuestDoneClientProps) {
           className="mt-3 max-w-sm text-[0.9375rem] leading-relaxed"
           style={{ color: "var(--foreground-muted)" }}
         >
-          Guest sessions aren’t saved. Create a free account to keep the ones
-          you do next.
+          Create an account to keep your practice in your Journey.
         </p>
       </div>
 
       <div className="mt-8 flex flex-col gap-3">
         <TransitionLink
-          href="/try"
+          href="/signup"
           variant="fade"
           className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)] shadow-[0_10px_28px_color-mix(in_srgb,var(--violet)_30%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
-          Try another question
+          Create account
         </TransitionLink>
         <TransitionLink
-          href="/signup"
+          href="/try"
           variant="fade"
           className="inline-flex min-h-11 w-full items-center justify-center rounded-full border-2 border-[var(--violet)] px-6 py-3 text-sm font-semibold text-[var(--violet)] transition-colors hover:bg-[var(--violet-soft)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
-          Create a free account
+          Try another question
         </TransitionLink>
         <TransitionLink
           href="/"

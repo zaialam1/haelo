@@ -203,8 +203,7 @@ export function GuestTryClient({
           className="mt-4 text-[1.0625rem] leading-relaxed"
           style={{ color: "var(--foreground-muted)" }}
         >
-          Create a free account to keep going. Your sessions will be saved
-          from then on.
+          Create an account to keep going and save what you already practiced.
         </p>
         <div className="mt-8 flex flex-col gap-3">
           <TransitionLink
@@ -212,7 +211,7 @@ export function GuestTryClient({
             variant="fade"
             className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)]"
           >
-            Create a free account
+            Create account
           </TransitionLink>
           <TransitionLink
             href="/"
@@ -248,9 +247,15 @@ export function GuestTryClient({
             className="text-sm"
             style={{ color: "var(--foreground-muted)" }}
           >
-            {remaining} of {GUEST_MAX_SESSIONS} left · not saved
+            {remaining} of {GUEST_MAX_SESSIONS} left
           </p>
-          <ThemeIconToggle />
+          <TransitionLink
+            href="/signup"
+            variant="fade"
+            className="text-sm font-medium text-[var(--violet)] underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+          >
+            Create account
+          </TransitionLink>
         </div>
       </div>
 

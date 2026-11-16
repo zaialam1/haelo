@@ -224,10 +224,6 @@ export function UsernameSetupForm({
         </p>
       </div>
 
-      <p className="text-sm leading-relaxed text-[var(--foreground-muted)]">
-        Your recordings, Journey, and feedback stay private.
-      </p>
-
       <button
         type="submit"
         disabled={!canSubmit}

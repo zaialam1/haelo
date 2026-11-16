@@ -7,6 +7,7 @@ import { ResponseReview } from "@/components/session/ResponseReview";
 import { AnalysisFeedback } from "@/components/session/AnalysisFeedback";
 import { SessionAnalysisPanel } from "@/components/session/SessionAnalysisPanel";
 import { useOptionalPageTransition } from "@/components/transitions/PageTransitionProvider";
+import { TransitionLink } from "@/components/transitions/TransitionLink";
 import { trackEvent } from "@/lib/analytics/track";
 import { markOnboardingMilestoneAction } from "@/lib/preferences/actions";
 import { getVoicePlanetById } from "@/lib/home/voicePlanets";
@@ -591,6 +592,15 @@ export function SessionReviewClient({
             >
               {flow.finishLabel}
             </button>
+            {guestMode ? (
+              <TransitionLink
+                href="/signup"
+                variant="fade"
+                className="inline-flex min-h-12 items-center justify-center rounded-full border-2 border-[var(--violet)] px-6 py-3.5 text-sm font-semibold text-[var(--violet)] transition-colors hover:bg-[var(--violet-soft)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
+              >
+                Create account
+              </TransitionLink>
+            ) : null}
           </div>
         </section>
       )}

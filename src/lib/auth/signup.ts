@@ -50,9 +50,33 @@ function mapSignUpError(message: string): SignUpResult {
   };
 }
 
+async function claimUsernameIfPossible(
+  supabase: ReturnType<typeof createClient>,
+  normalized: string,
+): Promise<SignUpResult | { ok: true; usernameClaimed: boolean }> {
+  const { data: claimData } = await supabase.rpc("claim_username", {
+    raw_username: normalized,
+  });
+  const payload = claimData as
+    | { ok?: boolean; username?: string; error?: string }
+    | null;
+  if (payload?.ok || payload?.error === "already_set") {
+    return { ok: true, usernameClaimed: Boolean(payload?.ok || payload?.error === "already_set") };
+  }
+  if (payload?.error === "taken") {
+    return {
+      ok: false,
+      code: "username_taken",
+      message: "That Halo name is already taken.",
+    };
+  }
+  return { ok: true, usernameClaimed: false };
+}
+
 /**
  * Create a Halo account with Supabase Auth (email + password + username).
- * Username is stored in auth metadata and claimed on profiles when a session exists.
+ * If the browser already has an anonymous guest session, convert that user
+ * in place so demo sessions stay on the same user_id (and appear in Journey).
  */
 export async function signUp(input: SignUpInput): Promise<SignUpResult> {
   const email = input.email.trim().toLowerCase();
@@ -136,6 +160,57 @@ export async function signUp(input: SignUpInput): Promise<SignUpResult> {
       ? `${window.location.origin}/auth/callback?next=/home`
       : undefined;
 
+  const {
+    data: { user: existingUser },
+  } = await supabase.auth.getUser();
+
+  // Convert anonymous guest → permanent account without losing session rows.
+  if (existingUser?.is_anonymous) {
+    const { data, error } = await supabase.auth.updateUser(
+      {
+        email,
+        password,
+        data: {
+          first_name: firstName,
+          halo_username: usernameResult.normalized,
+        },
+      },
+      emailRedirectTo ? { emailRedirectTo } : undefined,
+    );
+
+    if (error) {
+      return mapSignUpError(error.message);
+    }
+
+    const converted = data.user;
+    // Anonymous until the confirmation email is opened (when confirmations are on).
+    const needsEmailConfirmation = Boolean(converted?.is_anonymous);
+
+    let usernameClaimed = false;
+    if (converted && !needsEmailConfirmation) {
+      const claim = await claimUsernameIfPossible(
+        supabase,
+        usernameResult.normalized,
+      );
+      if (!claim.ok) return claim;
+      usernameClaimed = claim.usernameClaimed;
+    } else if (converted) {
+      // Session still exists while awaiting email confirm — claim now when possible.
+      const claim = await claimUsernameIfPossible(
+        supabase,
+        usernameResult.normalized,
+      );
+      if (claim.ok) usernameClaimed = claim.usernameClaimed;
+    }
+
+    return {
+      ok: true,
+      needsEmailConfirmation,
+      usernameClaimed,
+      convertedFromGuest: true,
+    };
+  }
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -154,21 +229,12 @@ export async function signUp(input: SignUpInput): Promise<SignUpResult> {
 
   let usernameClaimed = false;
   if (data.session) {
-    const { data: claimData } = await supabase.rpc("claim_username", {
-      raw_username: usernameResult.normalized,
-    });
-    const payload = claimData as
-      | { ok?: boolean; username?: string; error?: string }
-      | null;
-    if (payload?.ok) {
-      usernameClaimed = true;
-    } else if (payload?.error === "taken") {
-      return {
-        ok: false,
-        code: "username_taken",
-        message: "That Halo name is already taken.",
-      };
-    }
+    const claim = await claimUsernameIfPossible(
+      supabase,
+      usernameResult.normalized,
+    );
+    if (!claim.ok) return claim;
+    usernameClaimed = claim.usernameClaimed;
   }
 
   return {

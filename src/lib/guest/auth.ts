@@ -55,7 +55,11 @@ export async function ensureGuestSession(): Promise<{ userId: string }> {
   return { userId: data.user.id };
 }
 
-/** Sign out an anonymous guest before email signup (no data conversion). */
+/**
+ * Sign out an anonymous guest.
+ * Prefer converting via signUp (updateUser) so demo sessions stay attached.
+ * Keep this for explicit cleanup paths that intentionally discard the guest.
+ */
 export async function clearGuestSessionIfAnonymous(): Promise<boolean> {
   const supabase = createClient();
   const {

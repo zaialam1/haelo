@@ -22,20 +22,6 @@ export default function LoginPage() {
           >
             Practice saying it out loud.
           </h2>
-          <div className="mt-8 flex gap-2" aria-hidden="true">
-            <span
-              className="size-3 rounded-full"
-              style={{ backgroundColor: "var(--violet)" }}
-            />
-            <span
-              className="size-3 rounded-full"
-              style={{ backgroundColor: "var(--rose)" }}
-            />
-            <span
-              className="size-3 rounded-full"
-              style={{ backgroundColor: "var(--gold)" }}
-            />
-          </div>
         </>
       }
     >

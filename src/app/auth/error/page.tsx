@@ -26,7 +26,7 @@ export default async function AuthErrorPage({
               letterSpacing: "-0.02em",
             }}
           >
-            That link didn&rsquo;t work.
+            Practice saying it out loud.
           </h2>
         </>
       }

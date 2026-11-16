@@ -27,8 +27,7 @@ export default async function PromptStubPage({ params }: PromptPageProps) {
     <main
       className="relative mx-auto flex min-h-full max-w-lg flex-col justify-center px-5 py-16 sm:px-8"
       style={{
-        background:
-          "radial-gradient(ellipse 60% 40% at 50% 0%, color-mix(in srgb, var(--gold) 28%, transparent), transparent 55%), var(--background)",
+        background: "var(--universe-map)",
       }}
     >
       <ThemeIconCorner />

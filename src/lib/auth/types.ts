@@ -21,7 +21,13 @@ export type SignUpErrorCode =
   | "unknown";
 
 export type SignUpResult =
-  | { ok: true; needsEmailConfirmation: boolean; usernameClaimed: boolean }
+  | {
+      ok: true;
+      needsEmailConfirmation: boolean;
+      usernameClaimed: boolean;
+      /** True when an anonymous guest was converted in place (sessions kept). */
+      convertedFromGuest?: boolean;
+    }
   | { ok: false; code: SignUpErrorCode; message: string };
 
 export type SignInInput = {

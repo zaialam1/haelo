@@ -148,10 +148,8 @@ export function SignupForm() {
       .then((m) => m.peekGuestConversionFlag())
       .catch(() => false);
 
-    // Guests do not convert session data — clear anonymous session first.
-    await import("@/lib/guest/auth")
-      .then((m) => m.clearGuestSessionIfAnonymous())
-      .catch(() => {});
+    // Keep the anonymous session so signUp can convert it in place and
+    // preserve demo recordings under the same user_id.
 
     async function ensureUsernameClaimed(normalized: string): Promise<boolean> {
       const supabase = createClient();
@@ -192,6 +190,15 @@ export function SignupForm() {
 
       if (!result.ok) {
         if (result.code === "email_taken") {
+          // Guests keep their anonymous session — do not sign in over it,
+          // or demo recordings on that guest user would be dropped.
+          if (wasGuest) {
+            setErrors({
+              form:
+                "There’s already an account with this email. Log in instead.",
+            });
+            return;
+          }
           // Auth user often already exists from a previous partial signup attempt.
           const signedIn = await signIn({
             email: email.trim(),
@@ -287,7 +294,7 @@ export function SignupForm() {
             <span className="font-semibold text-[var(--foreground)]">
               {email.trim().toLowerCase()}
             </span>
-            . Open it to finish creating your account.
+            . Open it to finish.
           </p>
         </div>
         <TransitionLink
@@ -314,7 +321,7 @@ export function SignupForm() {
             letterSpacing: "-0.015em",
           }}
         >
-          Create your account
+          Create account
         </h1>
       </div>
 
@@ -365,9 +372,6 @@ export function SignupForm() {
             {errors.username}
           </p>
         ) : null}
-        <p className="mt-2 text-xs leading-relaxed text-[var(--foreground-muted)]">
-          Your recordings, Journey, and feedback stay private.
-        </p>
       </div>
 
       <Field id={emailId} label="Email" error={errors.email}>

@@ -68,7 +68,7 @@ export default function Home() {
             aria-hidden="true"
             style={{
               background:
-                "radial-gradient(ellipse 80% 60% at 85% 10%, color-mix(in srgb, var(--rose) 55%, transparent), transparent 55%), radial-gradient(ellipse 55% 50% at 5% 90%, color-mix(in srgb, var(--gold) 50%, transparent), transparent 50%), radial-gradient(ellipse 45% 40% at 40% 0%, color-mix(in srgb, var(--violet) 28%, transparent), transparent 60%)",
+                "color-mix(in srgb, var(--lilac) 55%, var(--background))",
             }}
           />
 
@@ -155,7 +155,7 @@ export default function Home() {
           style={{
             borderColor: "color-mix(in srgb, var(--rose) 40%, transparent)",
             background:
-              "linear-gradient(180deg, color-mix(in srgb, var(--rose) 22%, var(--background)), var(--background))",
+              "color-mix(in srgb, var(--rose) 12%, var(--background))",
           }}
           aria-labelledby="idea-heading"
         >
@@ -196,7 +196,7 @@ export default function Home() {
           style={{
             borderColor: "color-mix(in srgb, var(--gold) 45%, transparent)",
             background:
-              "linear-gradient(180deg, color-mix(in srgb, var(--gold) 18%, var(--background)), var(--background))",
+              "color-mix(in srgb, var(--gold) 10%, var(--background))",
           }}
           aria-labelledby="do-heading"
         >
@@ -269,8 +269,7 @@ export default function Home() {
           className="relative overflow-hidden border-t"
           style={{
             borderColor: "color-mix(in srgb, var(--violet) 35%, transparent)",
-            background:
-              "radial-gradient(ellipse 70% 80% at 100% 50%, color-mix(in srgb, var(--violet) 22%, transparent), transparent 55%), radial-gradient(ellipse 50% 60% at 0% 80%, color-mix(in srgb, var(--gold) 28%, transparent), transparent 50%), var(--background)",
+            background: "var(--lilac-soft)",
           }}
           aria-labelledby="see-heading"
         >
@@ -354,8 +353,7 @@ export default function Home() {
           className="border-t"
           style={{
             borderColor: "transparent",
-            background:
-              "linear-gradient(135deg, var(--violet) 0%, color-mix(in srgb, var(--violet) 75%, var(--rose)) 55%, color-mix(in srgb, var(--rose) 70%, var(--gold)) 100%)",
+            background: "var(--violet)",
           }}
           aria-labelledby="cta-heading"
         >

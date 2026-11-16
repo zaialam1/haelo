@@ -42,24 +42,23 @@ export function GuestCompleteClient({ planet }: GuestCompleteClientProps) {
         className="mt-4 max-w-xl text-[1.0625rem] leading-relaxed"
         style={{ color: "var(--foreground-muted)" }}
       >
-        Guest sessions aren’t saved. Create a free account to keep the ones
-        you do next.
+        Create an account to keep this practice in your Journey.
       </p>
 
       <div className="mt-10 flex flex-col gap-3 sm:max-w-sm">
         <TransitionLink
-          href="/try"
+          href="/signup"
           variant="fade"
           className="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--violet)] px-6 py-3.5 text-[0.9375rem] font-semibold text-[var(--on-violet)] shadow-[0_10px_28px_color-mix(in_srgb,var(--violet)_30%,transparent)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
-          Try another question
+          Create account
         </TransitionLink>
         <TransitionLink
-          href="/signup"
+          href="/try"
           variant="fade"
           className="inline-flex min-h-11 items-center justify-center rounded-full border-2 border-[var(--violet)] px-6 py-3 text-sm font-semibold text-[var(--violet)] transition-colors hover:bg-[var(--violet-soft)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--violet)]"
         >
-          Create a free account
+          Try another question
         </TransitionLink>
         <TransitionLink
           href="/"

@@ -30,10 +30,7 @@ export default async function SpeakPage({ searchParams }: SpeakPageProps) {
     return (
       <main
         className="relative flex min-h-dvh w-full flex-col px-5 py-8 sm:px-10 sm:py-10"
-        style={{
-          background:
-            "radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in srgb, var(--gold) 28%, transparent), transparent 55%), radial-gradient(ellipse 50% 40% at 100% 100%, color-mix(in srgb, var(--rose) 18%, transparent), transparent 50%), var(--background)",
-        }}
+        style={{ background: "var(--universe-map)" }}
       >
         <ThemeIconCorner />
         <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center">
@@ -84,10 +81,7 @@ export default async function SpeakPage({ searchParams }: SpeakPageProps) {
   return (
     <main
       className="flex min-h-dvh w-full flex-col"
-      style={{
-        background:
-          "radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in srgb, var(--gold) 28%, transparent), transparent 55%), radial-gradient(ellipse 50% 40% at 0% 100%, color-mix(in srgb, var(--rose) 16%, transparent), transparent 50%), radial-gradient(ellipse 40% 35% at 100% 80%, color-mix(in srgb, var(--violet) 12%, transparent), transparent 50%), var(--background)",
-      }}
+      style={{ background: "var(--universe-map)" }}
     >
       <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-5 py-8 sm:px-10 sm:py-12">
         {showIntro ? (

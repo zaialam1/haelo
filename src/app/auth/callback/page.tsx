@@ -119,7 +119,7 @@ export default function AuthCallbackPage() {
   return (
     <main
       className="relative flex min-h-dvh items-center justify-center px-6"
-      style={{ background: "var(--background)" }}
+      style={{ background: "var(--universe-map)" }}
     >
       <ThemeIconCorner />
       <p className="text-sm text-[var(--foreground-muted)]">{message}</p>

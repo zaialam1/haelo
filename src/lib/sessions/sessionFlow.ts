@@ -74,7 +74,7 @@ export function guestSessionFlow(planet: Planet): SessionFlowConfig {
     reviewTitle: "Session review",
     completeTitle: "Session complete",
     completeBody:
-      "Guest sessions aren’t saved. Create an account to keep the ones you do next.",
+      "Create an account to keep this practice in your Journey.",
     journeyHref: "/signup",
   };
 }

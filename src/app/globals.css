@@ -16,49 +16,13 @@
   --orbit-ring: color-mix(in srgb, var(--violet) 18%, transparent);
   --shadow-soft: 0 1px 2px rgba(51, 51, 51, 0.05),
     0 12px 32px rgba(51, 51, 51, 0.07);
-  --universe-page: radial-gradient(
-      ellipse 90% 55% at 50% -10%,
-      color-mix(in srgb, var(--violet) 28%, transparent),
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse 60% 40% at 100% 60%,
-      color-mix(in srgb, var(--rose) 22%, transparent),
-      transparent 50%
-    ),
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, #9b8ec4 35%, #fff8f0),
-      var(--background) 48%
-    );
-  --universe-map: radial-gradient(
-      ellipse 50% 42% at 50% 42%,
-      color-mix(in srgb, #fff8e8 75%, transparent),
-      transparent 58%
-    ),
-    radial-gradient(
-      ellipse 85% 70% at 18% 78%,
-      color-mix(in srgb, var(--rose) 18%, transparent),
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse 70% 55% at 88% 18%,
-      color-mix(in srgb, #b8a8d8 28%, transparent),
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse 90% 60% at 50% 100%,
-      color-mix(in srgb, #fff8f0 90%, transparent),
-      transparent 45%
-    ),
-    linear-gradient(
-      165deg,
-      #d4c8e8 0%,
-      #e4daf2 28%,
-      #efe8f6 55%,
-      #f7f1f4 78%,
-      #fff8f0 100%
-    );
+  /* Soft solid lilac surfaces — depth comes from layering, not glow blobs */
+  --lilac: #efe8f6;
+  --lilac-deep: #e4daf2;
+  --lilac-soft: #f5f0f8;
+  --universe-page: var(--lilac-soft);
+  --universe-map: var(--lilac);
+  --auth-panel: var(--lilac-soft);
 }
 
 html.dark {
@@ -76,33 +40,12 @@ html.dark {
   --hairline: rgba(242, 234, 227, 0.12);
   --orbit-ring: color-mix(in srgb, var(--violet) 28%, transparent);
   --shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.45);
-  --universe-page: radial-gradient(
-      ellipse 90% 55% at 50% -10%,
-      color-mix(in srgb, var(--violet) 40%, transparent),
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse 60% 40% at 100% 60%,
-      color-mix(in srgb, var(--rose) 14%, transparent),
-      transparent 50%
-    ),
-    linear-gradient(180deg, #1a1524, var(--background) 48%);
-  --universe-map: radial-gradient(
-      ellipse 70% 55% at 50% 35%,
-      color-mix(in srgb, var(--gold) 14%, transparent),
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse 80% 70% at 20% 80%,
-      color-mix(in srgb, var(--rose) 16%, transparent),
-      transparent 50%
-    ),
-    radial-gradient(
-      ellipse 60% 50% at 85% 20%,
-      color-mix(in srgb, var(--violet) 38%, transparent),
-      transparent 55%
-    ),
-    linear-gradient(165deg, #1e1830, #221d24 45%, #2a2233);
+  --lilac: #2a2233;
+  --lilac-deep: #1e1830;
+  --lilac-soft: #241e2c;
+  --universe-page: var(--lilac-soft);
+  --universe-map: var(--lilac);
+  --auth-panel: var(--lilac-soft);
 }
 
 @theme inline {
@@ -1175,82 +1118,28 @@ html.dark .journey-orbit-panel[data-open="true"] {
 }
 
 .planet-page-haze {
-  opacity: 0.9;
-  background:
-    radial-gradient(
-      ellipse 55% 40% at 50% 18%,
-      color-mix(in srgb, #ffffff 22%, transparent),
-      transparent 62%
-    ),
-    radial-gradient(
-      ellipse 70% 50% at 50% 100%,
-      color-mix(in srgb, var(--background) 70%, transparent),
-      transparent 55%
-    );
+  opacity: 0.35;
+  background: color-mix(in srgb, var(--background) 28%, transparent);
 }
 
-/* Express — warm rose bloom */
+/* Express — warm rose tint */
 .planet-page[data-atmosphere="warm"] {
-  --planet-page-bg:
-    radial-gradient(
-      ellipse 60% 45% at 50% 12%,
-      color-mix(in srgb, var(--rose) 32%, transparent),
-      transparent 58%
-    ),
-    radial-gradient(
-      ellipse 50% 40% at 85% 70%,
-      color-mix(in srgb, #f2c4d4 22%, transparent),
-      transparent 55%
-    ),
-    var(--universe-map);
+  --planet-page-bg: color-mix(in srgb, var(--rose) 14%, var(--universe-map));
 }
 
-/* Stand — deeper violet with gold edge light */
+/* Stand — deeper violet tint */
 .planet-page[data-atmosphere="deep"] {
-  --planet-page-bg:
-    radial-gradient(
-      ellipse 55% 42% at 50% 10%,
-      color-mix(in srgb, var(--violet) 36%, transparent),
-      transparent 58%
-    ),
-    radial-gradient(
-      ellipse 40% 35% at 18% 75%,
-      color-mix(in srgb, var(--gold) 12%, transparent),
-      transparent 55%
-    ),
-    var(--universe-map);
+  --planet-page-bg: color-mix(in srgb, var(--violet) 16%, var(--universe-map));
 }
 
-/* Connect — soft blue connection haze */
+/* Connect — soft blue tint */
 .planet-page[data-atmosphere="soft"] {
-  --planet-page-bg:
-    radial-gradient(
-      ellipse 48% 40% at 38% 16%,
-      color-mix(in srgb, #6b9bc7 28%, transparent),
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse 48% 40% at 68% 22%,
-      color-mix(in srgb, #8eb4d4 18%, transparent),
-      transparent 55%
-    ),
-    var(--universe-map);
+  --planet-page-bg: color-mix(in srgb, #6b9bc7 12%, var(--universe-map));
 }
 
-/* Explore — warm peach discovery field */
+/* Explore — warm peach tint */
 .planet-page[data-atmosphere="spark"] {
-  --planet-page-bg:
-    radial-gradient(
-      ellipse 55% 42% at 50% 14%,
-      color-mix(in srgb, #e9a98a 26%, transparent),
-      transparent 58%
-    ),
-    radial-gradient(
-      ellipse 45% 38% at 80% 65%,
-      color-mix(in srgb, var(--gold) 16%, transparent),
-      transparent 55%
-    ),
-    var(--universe-map);
+  --planet-page-bg: color-mix(in srgb, #e9a98a 14%, var(--universe-map));
 }
 
 .planet-hero-dust {
