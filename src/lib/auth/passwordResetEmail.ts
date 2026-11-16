@@ -2,6 +2,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { sendTransactionalEmail } from "@/lib/email/resend";
 import {
   PASSWORD_UPDATE_PATH,
+  buildPasswordResetConfirmPath,
   buildPasswordResetRedirectTo,
 } from "@/lib/auth/passwordReset";
 
@@ -105,9 +106,10 @@ export async function sendPasswordResetEmail(input: {
     };
   }
 
-  const resetUrl =
-    `${origin}/auth/confirm?token_hash=${encodeURIComponent(hashedToken)}` +
-    `&type=recovery&next=${encodeURIComponent(PASSWORD_UPDATE_PATH)}`;
+  const resetUrl = `${origin}${buildPasswordResetConfirmPath(
+    hashedToken,
+    PASSWORD_UPDATE_PATH,
+  )}`;
 
   const content = buildRecoveryEmail(resetUrl);
   const send = await sendTransactionalEmail({

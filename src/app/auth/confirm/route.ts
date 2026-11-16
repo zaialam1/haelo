@@ -8,19 +8,31 @@ import {
 import { createClient } from "@/lib/supabase/server";
 
 /**
- * Token-hash email links land here (works across browsers / devices).
- * Template example:
- * {{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/auth/update-password
+ * Token-hash email links land here.
+ * Recovery links redirect to `/auth/recover` without verifying yet, so
+ * email scanners that prefetch GET URLs cannot burn the one-time token.
+ * Other confirm types still verify on GET.
  */
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const token_hash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
-  const isRecovery = type === "recovery" || isPasswordRecoveryNext(searchParams.get("next"));
+  const isRecovery =
+    type === "recovery" || isPasswordRecoveryNext(searchParams.get("next"));
   const next = safeNextPath(
     searchParams.get("next"),
     isRecovery ? PASSWORD_UPDATE_PATH : "/home",
   );
+
+  if (isRecovery && token_hash) {
+    const recover = request.nextUrl.clone();
+    recover.pathname = "/auth/recover";
+    recover.search = "";
+    recover.searchParams.set("token_hash", token_hash);
+    recover.searchParams.set("type", "recovery");
+    recover.searchParams.set("next", next);
+    return NextResponse.redirect(recover);
+  }
 
   const redirectTo = request.nextUrl.clone();
   redirectTo.pathname = next;

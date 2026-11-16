@@ -32,7 +32,7 @@ console.log("password-reset tests…");
   const path = buildPasswordResetConfirmPath("abcTOKEN", PASSWORD_UPDATE_PATH);
   assert.equal(
     path,
-    "/auth/confirm?token_hash=abcTOKEN&type=recovery&next=%2Fauth%2Fupdate-password",
+    "/auth/recover?token_hash=abcTOKEN&type=recovery&next=%2Fauth%2Fupdate-password",
   );
   // Reject open redirects in next
   const safe = buildPasswordResetConfirmPath("t", "https://evil.example");

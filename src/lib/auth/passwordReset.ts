@@ -13,8 +13,9 @@ export function buildPasswordResetRedirectTo(origin: string): string {
 }
 
 /**
- * Build a cross-browser recovery link target for Supabase email templates
- * that use {{ .TokenHash }} (recommended over PKCE-only ConfirmationURL).
+ * Build a cross-browser recovery link. Lands on an interstitial that only
+ * verifies the token after the user clicks Continue (avoids email prefetch
+ * burning one-time links).
  */
 export function buildPasswordResetConfirmPath(
   tokenHash: string,
@@ -25,7 +26,7 @@ export function buildPasswordResetConfirmPath(
     type: "recovery",
     next: safeNextPath(next, PASSWORD_UPDATE_PATH),
   });
-  return `/auth/confirm?${params.toString()}`;
+  return `/auth/recover?${params.toString()}`;
 }
 
 export function isPasswordRecoveryNext(

@@ -6,9 +6,10 @@ Halo uses **Supabase Auth** for password recovery tokens and **Resend** for deli
 
 1. `/login` → **Forgot password?** → `/forgot-password`
 2. Server action creates a Supabase recovery token (`generateLink`) and emails it with **Resend**
-3. Link opens `/auth/confirm?token_hash=…&type=recovery&next=/auth/update-password`
-4. Session established → `/auth/update-password`
-5. User sets a new password → signed out → **Log in** with the new password
+3. Link opens `/auth/recover?token_hash=…&type=recovery&next=/auth/update-password`
+4. User taps Continue (token is verified only then, so email prefetch cannot burn it)
+5. Session established → `/auth/update-password`
+6. User sets a new password → signed out → **Log in** with the new password
 
 Halo does **not** rely on Supabase’s built-in auth mailer for password reset (it often accepts the API call but never delivers). Delivery uses your `RESEND_API_KEY`.
 
@@ -52,10 +53,13 @@ https://www.halo-speak.com
 ```text
 http://localhost:3000/auth/callback
 http://localhost:3000/auth/confirm
+http://localhost:3000/auth/recover
 https://halo-speak.com/auth/callback
 https://halo-speak.com/auth/confirm
+https://halo-speak.com/auth/recover
 https://www.halo-speak.com/auth/callback
 https://www.halo-speak.com/auth/confirm
+https://www.halo-speak.com/auth/recover
 ```
 
 Also add preview hosts if you test on Vercel previews.

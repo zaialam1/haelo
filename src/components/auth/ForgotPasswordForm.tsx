@@ -58,6 +58,7 @@ export function ForgotPasswordForm() {
   }
 
   if (sent) {
+    const sentTo = email.trim().toLowerCase();
     return (
       <div className="flex flex-col gap-5">
         <div>
@@ -71,8 +72,13 @@ export function ForgotPasswordForm() {
             Check your email
           </h1>
           <p className="mt-2 text-sm text-[var(--foreground-muted)]">
-            If an account exists for that email, you&rsquo;ll receive a reset
-            link.
+            If an account exists for{" "}
+            <span className="font-medium text-[var(--foreground)]">{sentTo}</span>
+            , you&rsquo;ll get a reset link from{" "}
+            <span className="font-medium text-[var(--foreground)]">
+              noreply@halo-speak.com
+            </span>
+            . Check spam too.
           </p>
         </div>
         <Link
