@@ -207,7 +207,7 @@ export function UpdatePasswordForm() {
           </p>
         ) : (
           <p className="text-xs text-[var(--foreground-muted)]">
-            At least 8 characters
+            At least 8 characters, and different from your old password.
           </p>
         )}
       </div>

@@ -1,19 +1,43 @@
 # Halo password reset
 
-Halo uses **Supabase Auth** for password recovery.
+Halo uses **Supabase Auth** for password recovery tokens and **Resend** for delivery.
 
 ## App flow
 
 1. `/login` → **Forgot password?** → `/forgot-password`
-2. User submits email → `supabase.auth.resetPasswordForEmail` with  
-   `redirectTo = {origin}/auth/callback?next=/auth/update-password`
-3. Email link returns to Halo:
-   - **PKCE (default ConfirmationURL):** `/auth/callback?code=…&next=/auth/update-password` (same browser as the request)
-   - **Recommended token hash (cross-browser):** `/auth/confirm?token_hash=…&type=recovery&next=/auth/update-password`
+2. Server action creates a Supabase recovery token (`generateLink`) and emails it with **Resend**
+3. Link opens `/auth/confirm?token_hash=…&type=recovery&next=/auth/update-password`
 4. Session established → `/auth/update-password`
 5. User sets a new password → signed out → **Log in** with the new password
 
-## Supabase dashboard settings you must configure
+Halo does **not** rely on Supabase’s built-in auth mailer for password reset (it often accepts the API call but never delivers). Delivery uses your `RESEND_API_KEY`.
+
+## Env vars required for email delivery
+
+```bash
+RESEND_API_KEY=re_...
+# Must use a verified domain in Resend:
+RESEND_FROM_EMAIL=Halo <noreply@yourdomain.com>
+NEXT_PUBLIC_SITE_URL=https://www.halo-speak.com
+```
+
+### Verify a sending domain (required)
+
+Resend’s onboarding sender (`beth.t@example.com`) only delivers to the email on your Resend account. Real reset emails need a verified domain.
+
+1. Open [Resend → Domains](https://resend.com/domains).
+2. Add `halo-speak.com` (or a subdomain like `mail.halo-speak.com`).
+3. Add the DNS records Resend shows (DKIM TXT, SPF TXT, MX) at your DNS host.
+4. Wait until status is **Verified**.
+5. Set in `.env.local` and Vercel:
+
+```bash
+RESEND_FROM_EMAIL=Halo <noreply@halo-speak.com>
+```
+
+Without this, forgot-password shows a setup error instead of a fake “check your email” success.
+
+## Supabase dashboard settings
 
 ### Authentication → URL Configuration
 
@@ -22,8 +46,6 @@ Halo uses **Supabase Auth** for password recovery.
 ```text
 https://www.halo-speak.com
 ```
-
-(or `https://halo-speak.com` if that is your canonical host)
 
 **Redirect URLs** (add all that apply):
 
@@ -36,42 +58,18 @@ https://www.halo-speak.com/auth/callback
 https://www.halo-speak.com/auth/confirm
 ```
 
-Also add preview deployment callback URLs if you test resets on Vercel previews, e.g.:
+Also add preview hosts if you test on Vercel previews.
 
-```text
-https://*.vercel.app/auth/callback
-https://*.vercel.app/auth/confirm
-```
-
-(Only if your Supabase project allows wildcard redirect URLs; otherwise add specific preview hosts.)
-
-### Authentication → Email Templates → Reset password
-
-For recovery links that work when the email is opened on another device or browser, use the token hash template:
-
-```html
-<h2>Reset your Halo password</h2>
-<p>Someone requested a password reset for your Halo account.</p>
-<p>
-  <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/auth/update-password">
-    Choose a new password
-  </a>
-</p>
-<p>If you didn’t ask for this, you can ignore this email.</p>
-```
-
-If you keep Supabase’s default `{{ .ConfirmationURL }}`, same-browser PKCE via `/auth/callback` still works, but opening the link in a different browser often fails.
-
-### SMTP / email delivery
-
-Supabase must be able to send mail (built-in email or custom SMTP). Check Auth logs if requests succeed in the app but no email arrives.
+You do **not** need to customize the Supabase “Reset password” email template for the Resend path. Keep redirect URLs configured so `generateLink` accepts the app origin.
 
 ## Local testing checklist
 
-1. Sign out (or use a private window).
-2. Open `/login` → Forgot password?
-3. Submit a real test account email.
-4. Confirm Auth logs show a recovery email.
-5. Open the link → `/auth/update-password`.
-6. Set a new password → Log in with it.
-7. Confirm the old password fails.
+1. Confirm `RESEND_API_KEY` and `RESEND_FROM_EMAIL` (verified domain) are set.
+2. Restart the Next.js dev server after env changes.
+3. Sign out (or use a private window).
+4. Open `/login` → Forgot password?
+5. Submit a real test account email.
+6. Confirm the message arrives (and Resend → Emails shows it).
+7. Open the link → `/auth/update-password`.
+8. Set a new password → Log in with it.
+9. Confirm the old password fails.

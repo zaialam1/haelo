@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useId, useState } from "react";
-import { requestPasswordReset } from "@/lib/auth/account";
+import { requestPasswordResetAction } from "@/lib/auth/passwordResetActions";
 
 type FieldErrors = {
   email?: string;
@@ -41,7 +41,10 @@ export function ForgotPasswordForm() {
     setSubmitting(true);
     setErrors({});
     try {
-      const result = await requestPasswordReset(email);
+      const result = await requestPasswordResetAction(
+        email,
+        window.location.origin,
+      );
       if (!result.ok) {
         setErrors({ form: result.message });
         return;

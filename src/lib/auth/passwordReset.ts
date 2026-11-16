@@ -52,19 +52,27 @@ export function mapPasswordResetRequestError(message: string): string {
 
 export function mapPasswordUpdateError(message: string): string {
   const lower = message.toLowerCase();
-  if (lower.includes("same") || lower.includes("different")) {
-    return "Choose a password you haven’t used recently.";
+  // Supabase: "New password should be different from the old password."
+  if (
+    lower.includes("different from the old") ||
+    lower.includes("same as the old") ||
+    (lower.includes("different") && lower.includes("old password")) ||
+    (lower.includes("same") && lower.includes("password"))
+  ) {
+    return "Pick a different password than the one you have now.";
   }
   if (
     lower.includes("session") ||
     lower.includes("jwt") ||
-    lower.includes("auth") ||
-    lower.includes("logged") ||
-    lower.includes("not authenticated")
+    lower.includes("not authenticated") ||
+    lower.includes("logged in")
   ) {
     return "This reset link has expired. Request a new one.";
   }
-  if (lower.includes("weak") || lower.includes("least") || lower.includes("characters")) {
+  if (
+    lower.includes("weak") ||
+    (lower.includes("least") && lower.includes("character"))
+  ) {
     return "Use at least 8 characters.";
   }
   return "Couldn’t update password. Try again.";

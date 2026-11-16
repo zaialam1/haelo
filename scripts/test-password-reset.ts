@@ -13,6 +13,7 @@ import {
   mapPasswordUpdateError,
   validateNewPassword,
 } from "../src/lib/auth/passwordReset";
+import { resolvePasswordResetOrigin } from "../src/lib/auth/passwordResetEmail";
 
 console.log("password-reset tests…");
 
@@ -68,8 +69,10 @@ console.log("password-reset tests…");
     "This reset link has expired. Request a new one.",
   );
   assert.equal(
-    mapPasswordUpdateError("New password should be different"),
-    "Choose a password you haven’t used recently.",
+    mapPasswordUpdateError(
+      "New password should be different from the old password.",
+    ),
+    "Pick a different password than the one you have now.",
   );
   assert.equal(
     mapPasswordUpdateError("Password should contain at least 8 characters"),
@@ -102,6 +105,30 @@ console.log("password-reset tests…");
   assert.equal(update, "/auth/update-password");
   assert.equal(callbackNext, "/auth/update-password");
   assert.equal(isPasswordRecoveryNext(callbackNext), true);
+}
+
+{
+  const prev = process.env.NEXT_PUBLIC_SITE_URL;
+  delete process.env.NEXT_PUBLIC_SITE_URL;
+  assert.equal(
+    resolvePasswordResetOrigin("http://localhost:3000"),
+    "http://localhost:3000",
+  );
+  assert.equal(
+    resolvePasswordResetOrigin("https://www.halo-speak.com"),
+    "https://www.halo-speak.com",
+  );
+  assert.equal(
+    resolvePasswordResetOrigin("https://evil.example"),
+    "https://www.halo-speak.com",
+  );
+  process.env.NEXT_PUBLIC_SITE_URL = "https://www.halo-speak.com/";
+  assert.equal(
+    resolvePasswordResetOrigin("http://localhost:3000"),
+    "https://www.halo-speak.com",
+  );
+  if (prev === undefined) delete process.env.NEXT_PUBLIC_SITE_URL;
+  else process.env.NEXT_PUBLIC_SITE_URL = prev;
 }
 
 console.log("password-reset tests passed.");

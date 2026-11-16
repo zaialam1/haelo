@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import { updatePassword } from "@/lib/auth/account";
+import { validateNewPassword } from "@/lib/auth/passwordReset";
 
 function inputClassName(hasError: boolean) {
   return [
@@ -38,16 +39,13 @@ export function ChangePasswordPanel() {
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!password) {
-      setError("Enter a new password.");
+    const fieldErrors = validateNewPassword(password, confirmPassword);
+    if (fieldErrors.password) {
+      setError(fieldErrors.password);
       return;
     }
-    if (password.length < 8) {
-      setError("Use at least 8 characters.");
-      return;
-    }
-    if (confirmPassword !== password) {
-      setError("Passwords don’t match.");
+    if (fieldErrors.confirmPassword) {
+      setError(fieldErrors.confirmPassword);
       return;
     }
 
@@ -122,7 +120,11 @@ export function ChangePasswordPanel() {
             <p className="text-sm text-[#9B2C2C]" role="alert">
               {error}
             </p>
-          ) : null}
+          ) : (
+            <p className="text-xs text-[var(--foreground-muted)]">
+              Use something different from your current password.
+            </p>
+          )}
           <div className="relative">
             <label htmlFor={passwordId} className="sr-only">
               New password
@@ -133,7 +135,10 @@ export function ChangePasswordPanel() {
               type={showPassword ? "text" : "password"}
               autoComplete="new-password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (error) setError(null);
+              }}
               placeholder="New password (at least 8 characters)"
               className={`${inputClassName(Boolean(error))} pr-20`}
               disabled={submitting}
@@ -157,7 +162,10 @@ export function ChangePasswordPanel() {
               type={showPassword ? "text" : "password"}
               autoComplete="new-password"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={(e) => {
+                setConfirmPassword(e.target.value);
+                if (error) setError(null);
+              }}
               placeholder="Confirm new password"
               className={inputClassName(Boolean(error))}
               disabled={submitting}

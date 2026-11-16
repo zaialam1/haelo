@@ -57,6 +57,10 @@ export async function hasPasswordUpdateSession(): Promise<boolean> {
   return true;
 }
 
+/**
+ * @deprecated Prefer `requestPasswordResetAction` (Resend delivery).
+ * Kept for compatibility; client-only Supabase mailer path.
+ */
 export async function requestPasswordReset(
   email: string,
 ): Promise<ResetPasswordResult> {
@@ -83,8 +87,6 @@ export async function requestPasswordReset(
     };
   }
 
-  // Always succeed from the UI's perspective when Supabase accepts the call.
-  // Do not reveal whether the email is registered.
   return { ok: true };
 }
 
