@@ -143,6 +143,19 @@ body {
   font-family: var(--font-jakarta), system-ui, sans-serif;
 }
 
+/* Brand mark: both theme assets ship in HTML; html.dark toggles which shows */
+.halo-logo-dark {
+  display: none;
+}
+
+html.dark .halo-logo-light {
+  display: none;
+}
+
+html.dark .halo-logo-dark {
+  display: block;
+}
+
 /* Every button / button-like control eases its interactive states */
 button,
 [role="button"],
