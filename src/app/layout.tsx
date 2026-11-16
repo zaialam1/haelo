@@ -18,7 +18,7 @@ const jakarta = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.halo-speak.com"),
-  title: "Halo — Notice the different versions of your voice",
+  title: "Halo: Develop Your Own Unique Voice Through Practice",
   description:
     "Halo helps you notice how your voice changes across school, friends, family, passion, and challenge — and how it evolves over time.",
   openGraph: {
